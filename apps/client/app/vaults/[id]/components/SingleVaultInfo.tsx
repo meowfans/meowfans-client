@@ -1,9 +1,9 @@
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { Separator } from '@radix-ui/react-separator';
 import { VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@workspace/ui/components/card';
+import { Separator } from '@workspace/ui/components/separator';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { cn } from '@workspace/ui/lib/utils';
 import { Heart } from 'lucide-react';

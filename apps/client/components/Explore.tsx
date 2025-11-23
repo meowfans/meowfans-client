@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  CircleDollarSign,
-  Gem,
-  LoaderIcon,
-  LucideIcon,
-  MessageCircle,
-  NetworkIcon,
-  ShieldQuestionMark,
-  TableOfContents,
-  UserRoundCheck
-} from 'lucide-react';
+import { CircleDollarSign, Gem, LoaderIcon, LucideIcon, MessageCircle, NetworkIcon, ShieldQuestionIcon, TableOfContents, UserRoundCheck } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Suspense, useRef, useState } from 'react';
 
@@ -26,7 +16,7 @@ const ExplorePagePayRights = dynamic(() => import('@/components/PayRights'), { s
 
 const contents: Contents[] = [
   { label: 'How It Works?', icon: NetworkIcon, id: '1' },
-  { label: 'Why PayView?', icon: ShieldQuestionMark, id: '2' },
+  { label: 'Why PayView?', icon: ShieldQuestionIcon, id: '2' },
   { label: 'For Creators', icon: Gem, id: '3' },
   { label: 'For Viewers', icon: UserRoundCheck, id: '4' },
   { label: 'What People Say?', icon: MessageCircle, id: '5' },

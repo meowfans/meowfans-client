@@ -1,19 +1,19 @@
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
-import { cn } from '@/lib/utils';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
+import { authCookieKey } from '@workspace/ui/lib/constants';
+import { FetchMethods, UserRoles } from '@workspace/ui/lib/enums';
 import { JwtUser } from '@workspace/ui/lib/types';
+import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import './globals.css';
-import { FetchMethods, UserRoles } from '@workspace/ui/lib/enums';
-import { authCookieKey } from '@workspace/ui/lib/constants';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
