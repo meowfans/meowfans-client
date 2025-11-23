@@ -1,0 +1,52 @@
+'use client';
+
+import { useFan } from '@/hooks/context/UserContextWrapper';
+import type { ButtonSize, ButtonVariant } from '@workspace/ui/lib';
+import type { ButtonHTMLAttributes } from 'react';
+import { ClassAttributes } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@workspace/ui/components/button';
+
+export interface AuthAwareButtonProps extends ClassAttributes<HTMLButtonElement>, ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+  title?: string;
+  allowPropagation?: boolean;
+}
+
+export const AuthAwareButton = ({
+  children,
+  variant = 'default',
+  size = 'default',
+  className = '',
+  title = '',
+  onClick,
+  allowPropagation = false,
+  ...props
+}: AuthAwareButtonProps) => {
+  const { fan } = useFan();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!allowPropagation) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    if (!fan) {
+      toast.warning('Signup or login to access seamless benefits', {
+        description: 'Create an account on MeowFans or continue with an existing account'
+      });
+      return;
+    }
+
+    if (onClick) onClick(e);
+  };
+
+  return (
+    <Button {...props} variant={variant} size={size} onClick={handleClick} className={className} title={title}>
+      {children}
+    </Button>
+  );
+};

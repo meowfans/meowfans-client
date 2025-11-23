@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { createNoise3D } from 'simplex-noise';
@@ -61,7 +61,7 @@ export const Vortex = (props: VortexProps) => {
       const ctx = canvas.getContext('2d');
 
       if (ctx) {
-        resize(canvas, ctx);
+        resize(canvas);
         initParticles();
         draw(canvas, ctx);
       }
@@ -134,20 +134,20 @@ export const Vortex = (props: VortexProps) => {
 
     x = particleProps[i];
     y = particleProps[i2];
-    n = noise3D(x * xOff, y * yOff, tick * zOff) * noiseSteps * TAU;
-    vx = lerp(particleProps[i3], Math.cos(n), 0.5);
-    vy = lerp(particleProps[i4], Math.sin(n), 0.5);
+    n = noise3D((x ?? 0) * xOff, (y ?? 0) * yOff, tick * zOff) * noiseSteps * TAU;
+    vx = lerp(particleProps[i3] ?? 0, Math.cos(n), 0.5);
+    vy = lerp(particleProps[i4] ?? 0, Math.sin(n), 0.5);
     life = particleProps[i5];
     ttl = particleProps[i6];
     speed = particleProps[i7];
-    x2 = x + vx * speed;
-    y2 = y + vy * speed;
+    x2 = (x ?? 0) + vx * (speed ?? 0);
+    y2 = (y ?? 0) + vy * (speed ?? 0);
     radius = particleProps[i8];
     hue = particleProps[i9];
 
-    drawParticle(x, y, x2, y2, life, ttl, radius, hue, ctx);
+    drawParticle(x ?? 0, y ?? 0, x2, y2, life ?? 0, ttl ?? 0, radius ?? 0, hue ?? 0, ctx);
 
-    life++;
+    life = (life ?? 0) + 1;
 
     particleProps[i] = x2;
     particleProps[i2] = y2;
@@ -181,11 +181,11 @@ export const Vortex = (props: VortexProps) => {
     ctx.restore();
   };
 
-  const checkBounds = (x: number, y: number, canvas: HTMLCanvasElement) => {
-    return x > canvas.width || x < 0 || y > canvas.height || y < 0;
-  };
+  // const checkBounds = (x: number, y: number, canvas: HTMLCanvasElement) => {
+  //   return x > canvas.width || x < 0 || y > canvas.height || y < 0;
+  // };
 
-  const resize = (canvas: HTMLCanvasElement, ctx?: CanvasRenderingContext2D) => {
+  const resize = (canvas: HTMLCanvasElement) => {
     const { innerWidth, innerHeight } = window;
 
     canvas.width = innerWidth;
@@ -222,7 +222,7 @@ export const Vortex = (props: VortexProps) => {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext('2d');
       if (canvas && ctx) {
-        resize(canvas, ctx);
+        resize(canvas);
       }
     });
   }, []); //eslint-disable-line

@@ -81,7 +81,7 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
               stroke="var(--color-desktop)"
               stackId="a"
             />
-            <ChartLegend content={<ChartLegendContent payload={''} />} />
+            <ChartLegend content={<ChartLegendContent payload={[]} />} />
           </AreaChart>
         </ChartContainer>
       );
