@@ -5,6 +5,14 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:auth": "turbo dev --filter=auth",
+    "dev:web": "turbo dev --filter=web",
+    "dev:client": "turbo dev --filter=client",
+    "dev:admin": "turbo dev --filter=admin",
+    "build:auth": "turbo build --filter=auth",
+    "build:web": "turbo build --filter=web",
+    "build:client": "turbo build --filter=client",
+    "build:admin": "turbo build --filter=admin",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

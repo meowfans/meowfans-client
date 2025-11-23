@@ -1,0 +1,33 @@
+{
+  "name": "@workspace/gql",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "exports": {
+    "./ApolloClient": "./ApolloClient.tsx",
+    "./ApolloWrapper": "./ApolloWrapper.tsx",
+    "./api/*": "./api/*.ts",
+    "./generated/*": "./generated/*.ts"
+  },
+  "dependencies": {
+    "@apollo/client": "^4.0.0",
+    "@apollo/client-integration-nextjs": "^0.14.1",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@workspace/ui": "workspace:*",
+    "cookies-next": "^6.1.0",
+    "graphql": "^16.10.0",
+    "next": "^15.5.3",
+    "react": "^19.1.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/client-preset": "^4.6.1",
+    "@types/node": "^20.19.9",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "typescript": "^5.9.2"
+  }
+}

@@ -4,7 +4,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"]
+      "@workspace/ui/components/*": ["../../packages/ui/src/components/*"],
+      "@workspace/ui/components/shadcn-io/*": ["../../packages/ui/src/components/shadcn-io/*/index"],
+      "@workspace/ui/globals/*": ["../../packages/ui/src/globals/*"],
+      "@workspace/ui/lib/*": ["../../packages/ui/src/lib/*"],
+      "@workspace/ui/hooks/*": ["../../packages/ui/src/hooks/*"],
+      "@workspace/ui/globals.css": ["../../packages/ui/src/styles/globals.css"]
     },
     "plugins": [
       {
@@ -17,7 +22,9 @@
     "next.config.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }
