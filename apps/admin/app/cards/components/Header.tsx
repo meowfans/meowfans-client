@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { CardSim } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 export const CardsHeader = () => {
   return (
@@ -12,7 +12,7 @@ export const CardsHeader = () => {
           className="flex items-center gap-3"
         >
           <div className="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-3 text-white shadow-lg">
-            <CardSim size={20} />
+            <Calendar size={20} />
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-semibold">Cards</h1>

@@ -9,7 +9,7 @@ import { Input } from '@workspace/ui/components/input';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import { Ban, CheckLine, Download, ExternalLink, Funnel, FunnelX, ListTodo, LoaderIcon, RefreshCcw } from 'lucide-react';
+import { Ban, CheckCheck, Download, ExternalLink, ListTodo, LoaderIcon, RefreshCcw, TrainFrontTunnelIcon } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -19,7 +19,7 @@ export const statusButtons = [
     className: 'text-xs font-medium bg-blue-500 text-white',
     label: 'fulfilled',
     status: DownloadStates.Fulfilled,
-    icon: <CheckLine />
+    icon: <CheckCheck />
   },
   {
     className: 'text-xs font-medium animate-pulse',
@@ -128,14 +128,14 @@ export const VaultsHeader: React.FC<Props> = ({
             filterBy={filterBy}
             enumValue={DownloadStates}
             onFilterBy={(val) => onFilterBy(val as DownloadStates)}
-            trigger={{ icon: Funnel }}
+            trigger={{ icon: TrainFrontTunnelIcon }}
             label="State"
           />
           <Dropdown
             filterBy={sortBy}
             enumValue={SortBy}
             onFilterBy={(val) => onSortBy(val as SortBy)}
-            trigger={{ icon: FunnelX }}
+            trigger={{ icon: TrainFrontTunnelIcon }}
             label="Sort by"
           />
         </div>

@@ -1,5 +1,5 @@
+import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
-import { Button } from '@radix-ui/themes';
 import { Check, Crown, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 

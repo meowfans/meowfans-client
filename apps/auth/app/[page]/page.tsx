@@ -113,7 +113,7 @@ export default function Auth() {
     <Suspense>
       <div className="flex flex-col justify-between h-full">
         <div className="flex flex-row items-center justify-center overflow-hidden">
-          <RetroGrid angle={45} cellSize={80} opacity={0.1} lightLineColor="#000000" darkLineColor="#ffffff"  />
+          <RetroGrid angle={45} cellSize={80} opacity={0.1} lightLineColor="#000000" darkLineColor="#ffffff" />
         </div>
         <div>
           <div className="flex flex-col gap-6 overflow-hidden">

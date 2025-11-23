@@ -1,7 +1,7 @@
 import { ApplyNotificationContentFilterModal } from '@/components/modals/ApplyNotificationContentFilterModal';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { motion } from 'framer-motion';
-import { Bell, Funnel } from 'lucide-react';
+import { Bell, TrainFrontTunnelIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export const NotificationsHeader = () => {
@@ -26,7 +26,7 @@ export const NotificationsHeader = () => {
           </div>
         </motion.div>
       </div>
-      <TriggerModal onChangeModalState={setContentFilterOpen} modalIcon={{ icon: Funnel }} />
+      <TriggerModal onChangeModalState={setContentFilterOpen} modalIcon={{ icon: TrainFrontTunnelIcon }} />
       <ApplyNotificationContentFilterModal open={contentFilterOpen} setOpen={setContentFilterOpen} />
     </div>
   );

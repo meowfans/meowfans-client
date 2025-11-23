@@ -1,7 +1,6 @@
 import { Badge } from '@workspace/ui/components/badge';
-import { CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { ProfileCharts } from '@/lib/constants';
-import { Card } from '@radix-ui/themes';
 import { TrendingDown } from 'lucide-react';
 
 interface Props {

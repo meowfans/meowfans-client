@@ -12,10 +12,10 @@ import {
   HeartHandshake,
   Home,
   ImageDown,
+  Lightbulb,
   Mars,
   MarsStroke,
   Settings,
-  Spotlight,
   SquarePlay,
   Trophy,
   Type,
@@ -107,7 +107,7 @@ export const appSideBarButtonOptions = {
       title: 'Your favorites',
       items: [
         { label: 'Vaults ', url: '/liked/vaults', emoji: '', icon: Flame },
-        { label: 'Pictures', url: '/liked/pictures', emoji: '', icon: Spotlight },
+        { label: 'Pictures', url: '/liked/pictures', emoji: '', icon: Lightbulb },
         { label: 'Posts', url: '/liked/posts', emoji: '', icon: GalleryHorizontal }
       ]
     },
@@ -223,7 +223,7 @@ export const appSideBarButtonOptions = {
   ],
   navSecondary: [
     { title: 'Newest ', url: '/newest', icon: Flame },
-    { title: 'Best', url: '/best', icon: Spotlight },
+    { title: 'Best', url: '/best', icon: Lightbulb },
     { title: 'Shorts', url: '/shorts', icon: SquarePlay },
     { title: 'Top creators', url: '/top creators', icon: Trophy }
   ],
