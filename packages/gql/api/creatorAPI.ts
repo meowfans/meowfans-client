@@ -72,6 +72,25 @@ export const GET_RESTRICTED_FANS_QUERY = graphql(`
   }
 `);
 
+export const UPDATE_CREATOR_PROFILE_MUTATION = graphql(`
+  mutation UpdateCreatorProfile($input: UpdateCreatorProfileInput!) {
+    updateCreatorProfile(input: $input) {
+      allowsComment
+      allowsMessaging
+      bio
+      creatorId
+      displayOnlineStatus
+      displayTotalPost
+      displayTotalSubscriber
+      themeColor
+      totalExclusivePost
+      totalPost
+      totalPublicPost
+      totalSubscriber
+    }
+  }
+`);
+
 export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
   query GetPublicCreatorProfile($input: PaginationInput!) {
     getPublicCreatorProfile(input: $input) {

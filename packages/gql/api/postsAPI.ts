@@ -249,3 +249,145 @@ export const GET_LIKED_POSTS_QUERY = graphql(`
     }
   }
 `);
+
+export const GET_POSTS_QUERY = graphql(`
+  query GetPosts($input: PaginationInput!) {
+    getPosts(input: $input) {
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      lastCommentId
+      likeCount
+      saveCount
+      shareCount
+      totalEarning
+      types
+      preview
+      unlockPrice
+      updatedAt
+      postAssets {
+        id
+        deletedAt
+        assetId
+        createdAt
+        asset {
+          blurredUrl
+          createdAt
+          creatorId
+          fileType
+          id
+          mediaType
+          mimeType
+          rawUrl
+          updatedAt
+          vaultObjectId
+          viewCount
+        }
+      }
+    }
+  }
+`);
+
+export const GET_POSTS_INFO_QUERY = graphql(`
+  query GetPostsInfo($input: PaginationInput!) {
+    getPostsInfo(input: $input) {
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      lastCommentId
+      latestComment
+      likeCount
+      saveCount
+      shareCount
+      totalEarning
+      types
+      unlockPrice
+      updatedAt
+    }
+  }
+`);
+
+export const CREATE_POST_MUTATION = graphql(`
+  mutation CreatePost($input: CreatePostInput!) {
+    createPost(input: $input) {
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      lastCommentId
+      likeCount
+      saveCount
+      shareCount
+      totalEarning
+      types
+      unlockPrice
+      updatedAt
+    }
+  }
+`);
+
+export const UPDATE_POST_MUTATION = graphql(`
+  mutation UpdatePost($input: UpdatePostInput!) {
+    updatePost(input: $input) {
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      likeCount
+      saveCount
+      shareCount
+      totalEarning
+      types
+      unlockPrice
+      updatedAt
+    }
+  }
+`);
+
+export const DELETE_POST_MUTATION = graphql(`
+  mutation DeletePost($input: DeletePostInput!) {
+    deletePost(input: $input)
+  }
+`);
+
+export const DELETE_POSTS_MUTATION = graphql(`
+  mutation DeletePosts($input: DeletePostsInput!) {
+    deletePosts(input: $input)
+  }
+`);
+
+export const GET_POST_ASSETS_QUERY = graphql(`
+  query GetPostAssets($input: PaginationInput!) {
+    getPostAssets(input: $input) {
+      assetId
+      createdAt
+      deletedAt
+      id
+      postId
+      updatedAt
+      asset {
+        blurredUrl
+        createdAt
+        creatorId
+        fileType
+        id
+        mediaType
+        mimeType
+        rawUrl
+        updatedAt
+        vaultObjectId
+        viewCount
+      }
+    }
+  }
+`);
