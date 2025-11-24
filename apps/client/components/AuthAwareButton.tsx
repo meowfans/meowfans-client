@@ -28,8 +28,6 @@ export const AuthAwareButton = ({
 }: AuthAwareButtonProps) => {
   const { fan } = useFan();
 
-  console.log(fan);
-
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!allowPropagation) {
       e.preventDefault();
@@ -40,7 +38,6 @@ export const AuthAwareButton = ({
       toast.warning('Signup or login to access seamless benefits', {
         description: 'Create an account on MeowFans or continue with an existing account'
       });
-      console.log('toast');
       return;
     }
 
