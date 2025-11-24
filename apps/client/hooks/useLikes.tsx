@@ -9,12 +9,12 @@ import {
   VaultObjectLikeOutput,
   VaultObjectsLikesEntity
 } from '@workspace/gql/generated/graphql';
+import { triggerSparkles } from '@workspace/ui/lib/helpers';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import { useLikesActions } from './api/likes.actions';
 import { useFan } from './context/UserContextWrapper';
 import { useErrorHandler } from './useErrorHandler';
-import { triggerSparkles } from '@workspace/ui/lib/helpers';
+import { toast } from 'sonner';
 
 export const useLikes = () => {
   const {
