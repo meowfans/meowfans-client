@@ -12,22 +12,19 @@ import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
+import { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import './globals.css';
-import { Metadata, Viewport } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headerList = headers();
-  const pathname = (await headerList).get('x-pathname') ?? '';
-
   const metadata = {
     metadataBase: new URL(AppConfig.siteUrl),
     title: {
       template: AppConfig.template,
-      default: `${AppConfig.title} | ${pathname?.substring(1)}`
+      default: `${AppConfig.title} | `
     },
     alternates: {
       canonical: AppConfig.canonical
