@@ -8,7 +8,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
 import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
-import { SidebarProvider } from '@workspace/ui/components/sidebar';
+import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
+import '@workspace/ui/globals.css';
 import { authCookieKey, FetchMethods, UserRoles } from '@workspace/ui/lib';
 import { buildSafeUrl, decodeJwtToken } from '@workspace/ui/lib/helpers';
 import { cn } from '@workspace/ui/lib/utils';
@@ -19,7 +20,6 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Toaster } from 'sonner';
 import './globals.css';
-('@radix-ui/themes/styles.css');
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
@@ -122,7 +122,6 @@ export default async function RootLayout({ children }: Props) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
           <CreatorContextWrapper creator={creator}>
-            <Toaster richColors position="top-center" />
             <ThemeProvider
               attribute="class"
               defaultTheme="system"
@@ -130,9 +129,15 @@ export default async function RootLayout({ children }: Props) {
               disableTransitionOnChange
               value={{ light: 'light', dark: 'dark' }}
             >
+              <Toaster richColors position="top-center" closeButton theme={'system'} />
               <SidebarProvider>
-                <AppSidebar />
-                <main className="w-full">{children}</main>
+                <div className="flex w-full min-h-screen overflow-hidden">
+                  <AppSidebar />
+                  <SidebarInset className="flex flex-1 flex-col min-h-screen">
+                    <Toaster position="top-center" closeButton richColors theme="system" />
+                    <main className="flex-1 w-full overflow-x-hidden">{children}</main>
+                  </SidebarInset>
+                </div>
               </SidebarProvider>
               <AppBottomNav />
             </ThemeProvider>

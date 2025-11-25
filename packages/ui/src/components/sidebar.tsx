@@ -26,7 +26,7 @@ type SidebarContextProps = {
   setOpen: (open: boolean) => void;
   openMobile: boolean;
   setOpenMobile: (open: boolean) => void;
-  isMobile: boolean;
+  isMobile: boolean | undefined;
   toggleSidebar: () => void;
 };
 
@@ -157,6 +157,11 @@ function Sidebar({
         {children}
       </div>
     );
+  }
+
+  // Prevent flickering by not rendering until isMobile is determined
+  if (isMobile === undefined) {
+    return null;
   }
 
   if (isMobile) {
