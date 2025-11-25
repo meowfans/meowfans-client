@@ -18,7 +18,7 @@ export const CreatorNextImage: React.FC<NextImageProps> = ({
   alt = 'alt',
   ...props
 }) => {
-  const src = !isDev || !imageUrl ? MEOW_FANS_BANNER : imageUrl;
+  const src = isDev || !imageUrl ? MEOW_FANS_BANNER : imageUrl;
   return (
     <Image
       src={src}
