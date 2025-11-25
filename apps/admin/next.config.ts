@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
-  transpilePackages: ['@workspace/ui'],
+  transpilePackages: ['@workspace/ui', '@workspace/gql'],
   images: {
     remotePatterns: [
       {
