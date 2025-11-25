@@ -71,7 +71,7 @@ export const useAssets = () => {
   };
 
   // The assets which has fileType of Video
-  const getPublicShorts = ({ sortBy = SortBy.AssetViewCount, orderBy = SortOrder.Asc, take = 5 }: UseAssetsProps) => {
+  const getPublicShorts = ({ sortBy = SortBy.AssetViewCount, orderBy = SortOrder.Desc, take = 5 }: UseAssetsProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
