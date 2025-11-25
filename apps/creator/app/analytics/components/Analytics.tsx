@@ -7,12 +7,12 @@ import { TotalRevenue } from '@/app/profile/components/TotalRevenue';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { AnalyticsEarnings } from './Earnings';
-import { AnalyticsHeader } from './Header';
-import { AnalyticsMessages } from './Messages';
-import { AnalyticsPosts } from './Posts';
-import { AnalyticsPurchases } from './Purchases';
-import { AnalyticsVisitor } from './Visitors';
+import { AnalyticsEarnings } from './AnalyticsEarnings';
+import { AnalyticsHeader } from './AnalyticsHeader';
+import { AnalyticsMessages } from './AnalyticsMessages';
+import { AnalyticsPosts } from './AnalyticsPosts';
+import { AnalyticsPurchases } from './AnalyticsPurchases';
+import { AnalyticsVisitor } from './AnalyticsVisitors';
 
 export const Analytics = () => {
   return (

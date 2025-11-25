@@ -17,19 +17,22 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
   const _pathname = pathname === `/channels/${channelId}` ? '/channels' : pathname;
 
   return (
-    <div
-      className={`fixed z-50 top-0 left-0 bg-[var(--background)] ${open && 'md:left-64'} ${
-        _pathname === '/channels' ? 'right-64' : 'right-0'
-      } flex flex-row items-center justify-between border-b bg-gradient-to-bl px-2  h-16`}
+    <header
+      className={`sticky top-0 z-50 border-b
+        bg-gradient-to-bl from-[var(--background)]
+         to-[var(--background)]/80 backdrop-blur-md
+          px-4 py-2 flex flex-col w-full`}
     >
-      <div className="flex flex-row items-center gap-2">
-        <ReturnToPreviousPage />
-        <div className="cursor-pointer ">{Icons.appIcon()}</div>
-        <p className="font-semibold text-xl animate-pulse">{header}</p>
+      <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex flex-row items-center gap-2">
+          <ReturnToPreviousPage />
+          <div className="cursor-pointer ">{Icons.appIcon()}</div>
+          <p className="font-semibold text-xl animate-pulse">{header}</p>
+        </div>
+        <div className="flex flex-row items-center space-x-3">
+          <ApplyHeaderOptions />
+        </div>
       </div>
-      <div className="flex flex-row items-center space-x-3">
-        <ApplyHeaderOptions />
-      </div>
-    </div>
+    </header>
   );
 };

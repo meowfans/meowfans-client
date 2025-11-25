@@ -22,5 +22,8 @@ export const configService = {
   },
   get NEXT_PUBLIC_IMAGE_HOST_NAME() {
     return process.env.NEXT_PUBLIC_IMAGE_HOST_NAME!;
+  },
+  get NEXT_PUBLIC_NODE_ENV() {
+    return process.env.NEXT_PUBLIC_NODE_ENV!;
   }
 };

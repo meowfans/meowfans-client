@@ -12,12 +12,12 @@ import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
-import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import './globals.css';
+import { Metadata, Viewport } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
