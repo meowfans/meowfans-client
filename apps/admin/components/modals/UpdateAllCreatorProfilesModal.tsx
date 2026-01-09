@@ -1,12 +1,11 @@
 'use client';
 
-import { CreatorContext } from '@/hooks/context/AdminContextWrapper';
+import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useMutation } from '@apollo/client/react';
 import { UPDATE_ALL_CREATOR_PROFILES_MUTATION } from '@workspace/gql/api/userAPI';
 import { Button } from '@workspace/ui/components/button';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { useContext } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
@@ -16,7 +15,7 @@ interface Props {
 
 export const UpdateAllCreatorProfilesModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [updateAllCreatorProfiles, { loading }] = useMutation(UPDATE_ALL_CREATOR_PROFILES_MUTATION);
-  const [admin] = useContext(CreatorContext);
+  const { admin } = useAdmin();
 
   const handleClose = () => {
     onClose();
@@ -24,7 +23,7 @@ export const UpdateAllCreatorProfilesModal: React.FC<Props> = ({ isOpen, onClose
 
   const handleUpdateAllCreatorProfiles = async () => {
     try {
-      const { data } = await updateAllCreatorProfiles({ variables: { input: { adminId: admin.getCreatorProfile.creatorId } } });
+      const { data } = await updateAllCreatorProfiles({ variables: { input: { adminId: admin.creatorId } } });
       toast.success(data?.updateAllCreatorProfiles);
     } catch {
       toast.error('Something wrong happened!');

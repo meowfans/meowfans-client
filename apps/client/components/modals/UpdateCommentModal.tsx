@@ -1,6 +1,6 @@
 'use client';
 
-import { useComments } from '@/hooks/useComments';
+import { useCommentMutations } from '@/hooks/useCommentMutations';
 import { PostCommentsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Label } from '@workspace/ui/components/label';
@@ -18,7 +18,7 @@ interface Props {
 
 export const UpdateCommentModal: React.FC<Props> = ({ isOpen, onClose, comment }) => {
   const [newComment, setNewComment] = useState<string>(comment.comment);
-  const { updateComment } = useComments();
+  const { updateComment } = useCommentMutations();
 
   const handleClose = () => {
     setNewComment(newComment);

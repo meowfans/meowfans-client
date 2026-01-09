@@ -1,6 +1,10 @@
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": { "source.organizeImports": "explicit" },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
   "editor.insertSpaces": false,

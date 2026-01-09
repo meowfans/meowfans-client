@@ -5,7 +5,6 @@ import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { CreatorSignupInput } from '@workspace/ui/lib/types';
-import { isValidEmail, isValidPassword } from '@workspace/ui/lib/validators';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { Header } from './Header';
@@ -22,10 +21,10 @@ const emptyInput: CreatorSignupInput = {
   username: ''
 };
 
-const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
-  const [input, setInput] = useState<CreatorSignupInput>(emptyInput);
+const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp }) => {
+  const [isDisabled] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>('account');
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [input, setInput] = useState<CreatorSignupInput>(emptyInput);
   const [initialInput, setInitialInput] = useState<CreatorSignupInput>(emptyInput);
   const [errors, setErrors] = useState<Partial<Record<keyof CreatorSignupInput, string>>>({});
 
@@ -33,15 +32,6 @@ const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
     setInitialInput((prev) => ({ ...prev, [key]: value }));
     setInput((prev) => ({ ...prev, [key]: value.trim() }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
-  };
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof CreatorSignupInput, string>> = {};
-    if (!input.fullName) newErrors.fullName = 'Full name is required';
-    if (!isValidEmail(input.email)) newErrors.email = 'Invalid email format';
-    if (!isValidPassword(input.password)) newErrors.password = 'Password must be at least 6 characters';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   return (
@@ -54,7 +44,6 @@ const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
     >
       <div className="flex flex-col gap-6">
         <Header />
-
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v)}>
           <TabsList>
             <TabsTrigger value="account">Account</TabsTrigger>

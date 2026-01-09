@@ -26,14 +26,13 @@ interface LightHouseProps {
 export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) => {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const { getSearchedTags } = useTags();
+  const { getSearchedTags } = useTags({});
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const { clickedSearch, setClickedSearch } = useUtilsStore();
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleSearch = useDebouncedCallback(async () => {
