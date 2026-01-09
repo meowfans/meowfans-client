@@ -43,7 +43,7 @@ const AppHeader: React.FC = () => {
               {Icons.appIcon()}
             </div>
 
-            {/* {!legalAndAppPaths.includes(pathname) && <LightHouse variant={isMobile ? 'mobile' : 'desktop'} />} */}
+            {!legalAndAppPaths.includes(pathname) && <LightHouse variant={isMobile ? 'mobile' : 'desktop'} />}
             <div className="hidden md:flex w-5">
               <ExoAdProvider
                 zoneId="5769736"

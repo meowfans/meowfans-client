@@ -1,6 +1,6 @@
 import { graphql } from '../generated';
 
-export const GET_TAGS_QUERY = graphql(`
+export const GET_PUBLIC_TAGS_QUERY = graphql(`
   query GetPublicTags($input: PaginationInput!) {
     getPublicTags(input: $input) {
       id

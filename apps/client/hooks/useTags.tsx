@@ -9,7 +9,7 @@ interface UseTagsProps {
 }
 
 export const useTags = ({ limit = 300 }: UseTagsProps) => {
-  const { getTagsQuery, getSearchedTagsQuery } = useTagsActions();
+  const { getPublicTagsQuery, getSearchedTagsQuery } = useTagsActions();
   const { tags, setTags } = useTagsStore();
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,7 +20,7 @@ export const useTags = ({ limit = 300 }: UseTagsProps) => {
     setLoading(tags.length === 0);
 
     try {
-      const { data } = await getTagsQuery({
+      const { data } = await getPublicTagsQuery({
         limit,
         orderBy: SortOrder.Asc,
         offset
@@ -51,7 +51,15 @@ export const useTags = ({ limit = 300 }: UseTagsProps) => {
     loadTags(true);
   }, [limit]);
 
-  const getSearchedTags = async (searchTerm: string, take = 5) => {
+  return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh };
+};
+
+export const useSearchTags = () => {
+  const { getSearchedTagsQuery } = useTagsActions();
+  const { errorHandler } = useErrorHandler();
+
+  const getSearchedTags = async (searchTerm: string, take = 5, clickedSearch: boolean) => {
+    if (!clickedSearch) return [];
     try {
       const { data } = await getSearchedTagsQuery({ searchTerm, take });
       return data?.searchTags.map((tag) => tag.label) || [];
@@ -61,5 +69,5 @@ export const useTags = ({ limit = 300 }: UseTagsProps) => {
     }
   };
 
-  return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh, getSearchedTags };
+  return { getSearchedTags };
 };
