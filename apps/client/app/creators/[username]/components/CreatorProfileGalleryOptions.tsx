@@ -44,7 +44,7 @@ export const CreatorProfileGalleryOptions: React.FC<CreatorProfileGalleryOptions
         <FullScreenButton currentIdx={idx} currentUrl={creatorAsset.asset.rawUrl} urls={creatorAssetItems.map((c) => c.asset.rawUrl)} />
       </div>
       <div className="flex flex-col justify-end h-full">
-        <div className="flex justify-end place-content-end w-full p-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+        <div className="flex justify-end place-content-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
           <LikeButton
             isLiked={!!creatorAsset.asset.vaultObject?.isLiked}
             title="Like"

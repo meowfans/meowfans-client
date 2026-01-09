@@ -16,18 +16,11 @@ interface Props {
 
 export const CreatorProfileVaults: React.FC<Props> = ({ username }) => {
   const { fan } = useFan();
-  const { getVaults } = useVaults();
-  const { vaults, handleLoadMore, hasMore, loading, onRefresh } = getVaults({ username, fanId: fan?.fanId, take: 30 });
+  const { vaults, loadMore, hasMore, loading, refresh } = useVaults({ username, fanId: fan?.fanId, take: 30 });
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={vaults.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={vaults.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <CreatorProfileHeader />
         <TabsList>
           <TabsTrigger value={'posts'}>Posts</TabsTrigger>

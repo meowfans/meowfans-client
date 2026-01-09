@@ -23,7 +23,7 @@ export const Display = () => {
 
         <div className="md:col-span-2">
           <Label>Preview</Label>
-          <div className="mt-2 p-4 rounded-lg border dark:border-slate-700 bg-gradient-to-br from-white/60 dark:from-slate-800/60">
+          <div className="mt-2 p-4 rounded-lg border dark:border-slate-700 bg-linear-to-br from-white/60 dark:from-slate-800/60">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold">Preview your theme</h3>

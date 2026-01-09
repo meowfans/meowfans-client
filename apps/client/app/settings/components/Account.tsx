@@ -4,7 +4,7 @@ import { AuthAwareButton } from '@/components/AuthAwareButton';
 import { UserContext } from '@/hooks/context/UserContextWrapper';
 import { useAPI } from '@/hooks/useAPI';
 import { useMutation } from '@apollo/client/react';
-import { UPDATE_FAN_PROFILE_MUTATION } from '@workspace/gql/api/userAPI';
+import { UPDATE_FAN_PROFILE_MUTATION } from '@workspace/gql/api';
 import { AssetType, FanProfilesEntity } from '@workspace/gql/generated/graphql';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Input } from '@workspace/ui/components/input';
@@ -130,7 +130,7 @@ export const Account = () => {
             <Label>Username</Label>
             <Input
               placeholder="Your username"
-              className="max-w-xl min-w-[160px]"
+              className="max-w-xl min-w-40"
               value={input.username}
               onChange={(e) => handleSetInput({ key: 'username', value: e.target.value })}
             />

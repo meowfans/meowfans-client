@@ -1,55 +1,49 @@
-import { GET_CREATORS_ASSETS_QUERY } from '@workspace/gql/api/adminAPI';
-import { AssetType, CreatorAssetsEntity, SortOrder } from '@workspace/gql/generated/graphql';
 import { useAssetsStore } from '@/zustand/assets.store';
-import { CombinedGraphQLErrors } from '@apollo/client';
-import { useLazyQuery } from '@apollo/client/react';
+import { useAssetsActions } from '@workspace/gql/actions';
+import { AssetType, CreatorAssetsEntity, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
-interface Props {
-  username: string;
-  assetType: AssetType;
-}
-
-export const useAssets = ({ username, assetType = AssetType.Private }: Props) => {
-  const [getCreatorsAssetsQuery] = useLazyQuery(GET_CREATORS_ASSETS_QUERY);
+export const useAssets = ({ username, assetType = AssetType.Private }: PaginationInput) => {
+  const { getCreatorOrCreatorsAssetsQuery } = useAssetsActions();
   const { assets, setAssets } = useAssetsStore();
+  const { errorHandler } = useErrorHandler();
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const handleLoadAssets = async (initialLoad = false) => {
+  const loadAssets = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : assets.length;
     try {
-      const { data } = await getCreatorsAssetsQuery({
-        variables: { input: { take: 50, skip, assetType: assetType, relatedUserId: username, orderBy: SortOrder.Asc } }
+      const { data } = await getCreatorOrCreatorsAssetsQuery({
+        take: 50,
+        skip,
+        assetType,
+        relatedUserId: username,
+        orderBy: SortOrder.Asc
       });
 
-      const fetchedAssets = data?.getCreatorAssetsByAdmin as CreatorAssetsEntity[];
+      const fetchedAssets = (data?.getCreatorAssetsByAdmin ?? []) as CreatorAssetsEntity[];
       setHasMore(fetchedAssets.length === 50);
 
       if (initialLoad) setAssets(fetchedAssets);
       else setAssets([...assets, ...fetchedAssets]);
     } catch (error) {
-      if (error.name === 'AbortError') {
-        return;
-      } else if (error instanceof CombinedGraphQLErrors) {
-        console.log('GraphQL errors:', error.errors);
-      } else {
-        console.error('Other error:', error);
-      }
-      toast.error('Something wrong happened!!');
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLoadMore = () => {
-    if (!loading && hasMore) handleLoadAssets();
+  const handleLoadMore = async () => {
+    if (!loading && hasMore) {
+      setLoading(true);
+      await loadAssets();
+    }
   };
 
   useEffect(() => {
-    handleLoadAssets(true);
-  }, []);
+    loadAssets(true);
+  }, [username, assetType]);
 
   return { hasMore, loading, onLoadMore: handleLoadMore, assets, setAssets };
 };

@@ -1,8 +1,9 @@
 'use client';
 import { useZonesStore } from '@/hooks/store/zones.store';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { legalAndAppPaths } from '@/lib/constants';
 import { Icons } from '@/lib/icons/Icons';
+import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { CircleOff } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -14,7 +15,6 @@ import { ExploreButton } from './ExploreButton';
 import { LightHouse } from './LightHouse';
 import AdFreeModal from './modals/AdFreeModal';
 import { NavActions } from './NavActions';
-import { ReturnToPreviousPage } from './ReturnToPreviousPage';
 import { SearchButton } from './SearchButton';
 import { ZoneBadge } from './ZoneBadge';
 
@@ -27,8 +27,8 @@ const AppHeader: React.FC = () => {
   return (
     <header
       className={`sticky top-0 z-50 border-b
-        bg-gradient-to-bl from-[var(--background)]
-         to-[var(--background)]/80 backdrop-blur-md
+        bg-linear-to-bl from-background
+         to-(--background)/80 backdrop-blur-md
           px-4 py-2 flex flex-col w-full`}
     >
       <div className="flex w-full items-center justify-between gap-2">
@@ -43,13 +43,13 @@ const AppHeader: React.FC = () => {
               {Icons.appIcon()}
             </div>
 
-            {!legalAndAppPaths.includes(pathname) && <LightHouse variant={isMobile ? 'mobile' : 'desktop'} />}
-            <div className="hidden md:flex w-[20px]">
+            {/* {!legalAndAppPaths.includes(pathname) && <LightHouse variant={isMobile ? 'mobile' : 'desktop'} />} */}
+            <div className="hidden md:flex w-5">
               <ExoAdProvider
                 zoneId="5769736"
                 classIdName="eas6a97888e10"
                 zoneType={ExoAdZoneTypes.MobileBanner}
-                className="flex w-[20px] scale-30"
+                className="flex w-5 scale-30"
               />
             </div>
           </div>

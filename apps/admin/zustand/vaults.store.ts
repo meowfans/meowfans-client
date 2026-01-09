@@ -1,4 +1,4 @@
-import { ExtendedUsersEntity, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { UsersEntity, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type VaultsStore = {
@@ -8,8 +8,8 @@ type VaultsStore = {
   setEventSource: (eventSource: EventSource) => void;
   terminateDownloadModal: boolean;
   setTerminateDownloadModal: (terminateDownloadModal: boolean) => void;
-  creator: ExtendedUsersEntity;
-  setCreator: (creator: ExtendedUsersEntity) => void;
+  creator: UsersEntity;
+  setCreator: (creator: UsersEntity) => void;
   terminatingImportsModal: boolean;
   setTerminatingImportsModal: (open: boolean) => void;
   openImportSheet: boolean;
@@ -23,8 +23,8 @@ export const useVaultsStore = create<VaultsStore>()((set) => ({
   setEventSource: (eventSource: EventSource) => set(() => ({ eventSource })),
   terminateDownloadModal: false,
   setTerminateDownloadModal: (terminateDownloadModal: boolean) => set(() => ({ terminateDownloadModal })),
-  creator: {} as ExtendedUsersEntity,
-  setCreator: (creator: ExtendedUsersEntity) => set(() => ({ creator })),
+  creator: {} as UsersEntity,
+  setCreator: (creator: UsersEntity) => set(() => ({ creator })),
   terminatingImportsModal: false,
   setTerminatingImportsModal: (terminatingImportsModal: boolean) => set(() => ({ terminatingImportsModal })),
   openImportSheet: false,

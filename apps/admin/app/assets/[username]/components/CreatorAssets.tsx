@@ -1,11 +1,11 @@
 'use client';
 
-import { Separator } from '@workspace/ui/components/separator';
 import { useAssets } from '@/hooks/useAssets';
-import { GET_ALL_CREATORS_QUERY } from '@workspace/gql/api/adminAPI';
+import { useMutation } from '@apollo/client/react';
+import { GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api';
 import { UPDATE_CREATOR_PROFILE_BY_ADMIN_MUTATION } from '@workspace/gql/api/creatorAPI';
 import { AssetType, ExtendedUpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
-import { useMutation } from '@apollo/client/react';
+import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -27,7 +27,7 @@ export const CreatorAssets: React.FC<Props> = ({ username }) => {
 
   const [updateCreatorProfile] = useMutation(UPDATE_CREATOR_PROFILE_BY_ADMIN_MUTATION, {
     refetchQueries() {
-      return [{ query: GET_ALL_CREATORS_QUERY, variables: { input: { take: 100, pageNumber: Number(searchParams.get('p') || 1) } } }];
+      return [{ query: GET_CREATORS_BY_ADMIN_QUERY, variables: { input: { take: 100, pageNumber: Number(searchParams.get('p') || 1) } } }];
     }
   });
 

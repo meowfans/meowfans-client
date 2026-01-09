@@ -1,64 +1,67 @@
 import { useCreatorsStore } from '@/hooks/store/users.store';
-import { CreatorType, DataFetchType, ExtendedUsersEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useCreatorsActions } from '@workspace/gql/actions/creators.actions';
+import { CreatorType, DataFetchType, SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { useCreatorsActions } from './api/creators.actions';
-import { useErrorHandler } from './useErrorHandler';
 
-interface Props {
+interface UseCreatorsProps {
   sortBy?: SortBy;
   take?: number;
   fanId?: string;
   orderBy?: SortOrder;
 }
 
-export const useCreators = () => {
-  const { publicGetAllCreatorsQuery } = useCreatorsActions();
+export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, orderBy = SortOrder.Desc }: UseCreatorsProps) => {
+  const { publicGetDefaultCreatorsQuery } = useCreatorsActions();
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  console.log('Started');
 
-  const getCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, orderBy = SortOrder.Desc }: Props) => {
-    const [hasMore, setHasMore] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
+  const loadCreators = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : creators.length;
+    setLoading(creators.length === 0);
+    console.log('Loading creators...');
+    try {
+      const { data } = await publicGetDefaultCreatorsQuery({
+        take,
+        skip,
+        sortBy,
+        orderBy,
+        relatedUserId: fanId,
+        creatorType: Object.values(CreatorType),
+        dataFetchType: DataFetchType.InfiniteScroll
+      });
 
-    const loadCreators = async (initialLoad = false) => {
-      const skip = initialLoad ? 0 : creators.length;
-      try {
-        const { data } = await publicGetAllCreatorsQuery({
-          take,
-          skip,
-          dataFetchType: DataFetchType.InfiniteScroll,
-          sortBy,
-          relatedUserId: fanId,
-          orderBy,
-          creatorType: Object.values(CreatorType)
-        });
-        const fetchedCreators = (data?.getDefaultCreators.creators ?? []) as ExtendedUsersEntity[];
-        setHasMore(fetchedCreators.length === take);
+      const fetchedCreators = (data?.getDefaultCreators.creators ?? []) as UsersEntity[];
 
-        if (initialLoad) setCreators(fetchedCreators);
-        else setCreators([...creators, ...fetchedCreators]);
-        setLoading(false);
-      } catch (error) {
-        errorHandler({ error });
-      } finally {
-        setLoading(false);
-      }
-    };
+      setHasMore(fetchedCreators.length === take);
 
-    const handleLoadMore = () => {
-      if (!loading && hasMore) loadCreators();
-    };
+      console.log('Fetched Creators: ', fetchedCreators);
+      console.log('Total Creators: ', creators);
 
-    const handleRefresh = async () => {
-      setCreators([]);
-      loadCreators(true);
-    };
-
-    useEffect(() => {
-      loadCreators(true);
-    }, []);
-
-    return { creators, loading, hasMore, handleLoadMore, onRefresh: handleRefresh };
+      if (initialLoad) setCreators(fetchedCreators);
+      else setCreators([...creators, ...fetchedCreators]);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
   };
-  return { getCreators };
+
+  const loadMore = () => {
+    if (!loading && hasMore) loadCreators();
+  };
+
+  const refresh = () => {
+    setCreators([]);
+    loadCreators(true);
+  };
+
+  useEffect(() => {
+    loadCreators(true);
+  }, [sortBy, orderBy, fanId]);
+
+  return { creators, loading, hasMore, loadMore, refresh };
 };

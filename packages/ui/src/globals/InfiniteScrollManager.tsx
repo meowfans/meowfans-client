@@ -27,21 +27,20 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
 }) => {
   return (
     <div id="scrollableDiv" className={cn('overflow-y-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
-      {loading ? (
+      {/* {loading ? (
         LoadingComponent || <ProgressBar isLoading={loading} />
-      ) : (
-        // <div>Loading...</div>
-        <InfiniteScroll
-          loader={loading}
-          hasMore={hasMore}
-          scrollThreshold={0.7}
-          next={onLoadMore}
-          dataLength={dataLength}
-          scrollableTarget="scrollableDiv"
-        >
-          {children}
-        </InfiniteScroll>
-      )}
+      ) : ( */}
+      <InfiniteScroll
+        loader={null}
+        hasMore={hasMore}
+        scrollThreshold={0.7}
+        next={onLoadMore}
+        dataLength={dataLength}
+        scrollableTarget="scrollableDiv"
+      >
+        {children}
+      </InfiniteScroll>
+       {/* )} */}
     </div>
   );
 };

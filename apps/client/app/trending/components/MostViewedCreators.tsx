@@ -6,8 +6,7 @@ import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import Link from 'next/link';
 
 const MostViewedCreators = () => {
-  const { getCreators } = useCreators();
-  const { creators } = getCreators({ sortBy: SortBy.CreatorFollowingCount, take: 20, orderBy: SortOrder.Desc });
+  const { creators } = useCreators({ sortBy: SortBy.CreatorFollowingCount, take: 20, orderBy: SortOrder.Desc });
 
   return (
     <div className="mb-6 p-1">

@@ -3,7 +3,7 @@
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useVaults } from '@/hooks/useVaults';
+import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -21,18 +21,11 @@ export const SingleVault = () => {
   const router = useRouter();
   const { fan } = useFan();
   const searchParams = useSearchParams();
-  const { getVaultObjects } = useVaults();
   const [expanded, setExpanded] = useState<boolean>(false);
   const defaultCurrentTab = (searchParams.get('tab') as TabProps) || 'gallery';
   const [currentTab, setCurrentTab] = useState<TabProps>(defaultCurrentTab);
 
-  const {
-    vaultObjects,
-    handleLoadMore: handleLoadMoreVaultObjects,
-    hasMore,
-    loading,
-    vault
-  } = getVaultObjects({
+  const { vaultObjects, loadMore, hasMore, loading, vault } = useVaultObjects({
     vaultId: id as string,
     fanId: fan?.fanId,
     sortBy: SortBy.VaultObjectSuffix,
@@ -48,7 +41,7 @@ export const SingleVault = () => {
 
   return (
     <PageManager className="p-1">
-      <InfiniteScrollManager hasMore={hasMore} dataLength={vaultObjects.length} loading={loading} onLoadMore={handleLoadMoreVaultObjects}>
+      <InfiniteScrollManager hasMore={hasMore} dataLength={vaultObjects.length} loading={loading} onLoadMore={loadMore}>
         <SingleVaultHeader expanded={expanded} onExpanded={(ex) => setExpanded(ex)} />
 
         <Tabs defaultValue={currentTab} onValueChange={(val) => handleTabChange(val as TabProps)}>

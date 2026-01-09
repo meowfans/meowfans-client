@@ -1,5 +1,5 @@
 'use client';
-import { CreatorContext } from '@/hooks/context/CreatorContextWrapper';
+import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useMutation } from '@apollo/client/react';
 import { INITIATE_CREATORS_IMPORT_QUERY_MUTATION } from '@workspace/gql/api/importAPI';
 import { DocumentQualityType, FileType, ImportTypes, ServiceType } from '@workspace/gql/generated/graphql';
@@ -20,11 +20,11 @@ import { Switch } from '@workspace/ui/components/switch';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { HostNames } from '@workspace/ui/lib';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export const ImportCreatorsSheet = () => {
-  const [user] = useContext(CreatorContext);
+  const { admin } = useAdmin();
   const [url, setUrl] = useState<string>('');
   const [start, setStart] = useState<number>(0);
   const [exclude, setExclude] = useState<number>(0);
@@ -49,7 +49,7 @@ export const ImportCreatorsSheet = () => {
         variables: {
           input: {
             serviceType,
-            creatorId: user.getCreatorProfile.creatorId,
+            creatorId: admin.creatorId,
             url: url.trim(),
             fileType,
             qualityType,
@@ -130,7 +130,7 @@ export const ImportCreatorsSheet = () => {
       </SheetTrigger>
       <SheetContent className="p-1">
         <SheetHeader>
-          <SheetTitle>Add new contents {user && ' ✅🚀'}</SheetTitle>
+          <SheetTitle>Add new contents {admin && ' ✅🚀'}</SheetTitle>
           <SheetDescription>Be descriptive about site information</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-3 space-y-1">

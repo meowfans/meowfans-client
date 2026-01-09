@@ -2,7 +2,7 @@
 
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
-import { ExtendedUsersEntity, SortBy } from '@workspace/gql/generated/graphql';
+import { SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Paginate } from '@workspace/ui/globals/Paginate';
@@ -19,8 +19,7 @@ export const Assets = () => {
   const [filterText, setFilterText] = useState<string>('');
   const endRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
-
-  const { count, creators, hasNext, hasPrev, totalPages, handleRefetch } = useCreators({
+  const { creators, hasMore, hasNext, loading, count, hasPrev, totalPages } = useCreators({
     pageNumber,
     sortBy: SortBy.AssetCount
   });
@@ -36,7 +35,7 @@ export const Assets = () => {
 
   return (
     <PageManager className="w-full">
-      <AssetsHeader count={count} filterText={filterText} onChangeFilterText={setFilterText} onRefetch={handleRefetch} />
+      <AssetsHeader count={count ?? 0} filterText={filterText} onChangeFilterText={setFilterText} onRefetch={() => null} />
       {filteredCreators && filteredCreators.length ? (
         <div className="relative h-full">
           <ScrollArea className="h-[calc(100vh-150px)] w-full p-4">
@@ -46,7 +45,7 @@ export const Assets = () => {
                 .slice()
                 .sort((a, b) => (b.creatorProfile.assetCount ?? 0) - (a.creatorProfile.assetCount ?? 0))
                 .map((creator, idx) => (
-                  <AssetCards key={creator.id ?? idx} creator={creator as ExtendedUsersEntity} pageNumber={pageNumber} />
+                  <AssetCards key={creator.id ?? idx} creator={creator as UsersEntity} pageNumber={pageNumber} />
                 ))}
             </div>
             <div ref={endRef} />
@@ -54,7 +53,13 @@ export const Assets = () => {
 
           <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
           <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-          <Paginate hasNext={hasNext} hasPrev={hasPrev} pageNumber={pageNumber} totalPages={totalPages} setPageNumber={setPageNumber} />
+          <Paginate
+            hasNext={!!hasNext}
+            hasPrev={!!hasPrev}
+            pageNumber={pageNumber}
+            totalPages={totalPages ?? 0}
+            setPageNumber={setPageNumber}
+          />
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">

@@ -1,4 +1,4 @@
-import { ExtendedUsersEntity, UserRoles } from '@workspace/gql/generated/graphql';
+import { UserRoles, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
-  creator: ExtendedUsersEntity;
+  creator: UsersEntity;
 }
 
 export const CreatorProfilesArea: React.FC<Props> = ({ creator }) => {

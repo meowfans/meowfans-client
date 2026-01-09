@@ -12,9 +12,8 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const MostLikedVaults = () => {
   const { fan } = useFan();
-  const { getVaults } = useVaults();
   const { likeVault } = useLikes();
-  const { vaults } = getVaults({ fanId: fan?.fanId, take: 20, sortBy: SortBy.VaultLikeCount, orderBy: SortOrder.Desc });
+  const { vaults } = useVaults({ fanId: fan?.fanId, take: 20, sortBy: SortBy.VaultLikeCount, orderBy: SortOrder.Desc });
 
   const handleDebounceLikeVault = useDebouncedCallback(likeVault, 350);
 
@@ -29,7 +28,7 @@ const MostLikedVaults = () => {
         pathname="/vaults"
         renderOverlay={(vault) => (
           <div className="flex flex-col justify-end h-full">
-            <div className="flex justify-between items-end w-full p-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+            <div className="flex justify-between items-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
               <p className="truncate text-xs sm:text-sm md:text-base text-white max-w-[75%]">{vault.description}</p>
               <LikeButton isLiked={vault.isLiked} onLikeDisLike={() => handleDebounceLikeVault(vault.id)} title="Like" />
             </div>

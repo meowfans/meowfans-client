@@ -1,7 +1,6 @@
 'use client';
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTags } from '@/hooks/useTags';
 import {
   Command,
@@ -13,6 +12,7 @@ import {
   CommandList,
   CommandSeparator
 } from '@workspace/ui/components/command';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { cn } from '@workspace/ui/lib/utils';
 import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';

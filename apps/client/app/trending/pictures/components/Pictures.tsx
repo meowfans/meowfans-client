@@ -3,16 +3,15 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useVaults } from '@/hooks/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { PicturesGalleryOptions } from './PicturesGalleryOptions';
+import { useVaultObjects } from '@/hooks/useVaultObjects';
 
 const TrendingPictures = () => {
   const { fan } = useFan();
-  const { getVaultObjects } = useVaults();
-  const { vaultObjects, handleLoadMore, hasMore, loading, onRefresh } = getVaultObjects({
+  const { vaultObjects, loadMore, hasMore, loading, refresh } = useVaultObjects({
     take: 30,
     sortBy: SortBy.VaultObjectLikeCount,
     orderBy: SortOrder.Desc,
@@ -21,13 +20,7 @@ const TrendingPictures = () => {
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={vaultObjects.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={vaultObjects.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Top liked pictures" />
         <GalleryManager
           loading={loading}

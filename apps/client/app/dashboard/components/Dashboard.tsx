@@ -11,8 +11,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Dashboard = () => {
   const { fan } = useFan();
-  const { getCreators } = useCreators();
-  const { creators, loading, handleLoadMore, hasMore, onRefresh } = getCreators({
+  const { creators, loading, loadMore, hasMore, refresh } = useCreators({
     sortBy: SortBy.CreatorViewCount,
     fanId: fan?.fanId,
     orderBy: SortOrder.Desc
@@ -20,13 +19,7 @@ export const Dashboard = () => {
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={creators.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={creators.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Explore premium creators" />
         <GalleryManager
           loading={loading}

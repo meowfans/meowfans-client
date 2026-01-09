@@ -1,11 +1,11 @@
+import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
-import { ExtendedUsersEntity } from '@workspace/gql/generated/graphql';
 import { Eye, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
-  creator: ExtendedUsersEntity;
+  creator: UsersEntity;
   pageNumber: number;
 }
 

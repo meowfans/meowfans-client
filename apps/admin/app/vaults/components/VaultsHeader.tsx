@@ -4,12 +4,13 @@ import { statusLabels } from '@/lib/constants';
 import { useLazyQuery, useQuery } from '@apollo/client/react';
 import { GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE, GET_TOTAL_VAULT_OBJECTS_COUNT_BY_TYPE_QUERY } from '@workspace/gql/api/vaultsAPI';
 import { DownloadStates, SortBy } from '@workspace/gql/generated/graphql';
+import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import { Ban, CheckCheck, Download, ExternalLink, ListTodo, LoaderIcon, RefreshCcw, TrainFrontTunnelIcon } from 'lucide-react';
+import { ArrowUpWideNarrow, Ban, CheckCheck, Download, ExternalLink, ListFilterPlus, ListTodo, LoaderIcon, RefreshCcw } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -97,7 +98,7 @@ export const VaultsHeader: React.FC<Props> = ({
   return (
     <div className="flex flex-col space-y-2 sticky z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md p-2 rounded-md">
       <div className="flex flex-wrap items-center justify-between space-x-1 space-y-1">
-        <Button>{count}</Button>
+        <Badge>{count}</Badge>
 
         <div className="flex space-x-2 items-center">
           <Input type="number" min={1} value={numToSelect} onChange={(e) => setNumToSelect(Number(e.target.value))} className="w-20" />
@@ -128,14 +129,14 @@ export const VaultsHeader: React.FC<Props> = ({
             filterBy={filterBy}
             enumValue={DownloadStates}
             onFilterBy={(val) => onFilterBy(val as DownloadStates)}
-            trigger={{ icon: TrainFrontTunnelIcon }}
+            trigger={{ icon: ListFilterPlus }}
             label="State"
           />
           <Dropdown
             filterBy={sortBy}
             enumValue={SortBy}
             onFilterBy={(val) => onSortBy(val as SortBy)}
-            trigger={{ icon: TrainFrontTunnelIcon }}
+            trigger={{ icon: ArrowUpWideNarrow }}
             label="Sort by"
           />
         </div>

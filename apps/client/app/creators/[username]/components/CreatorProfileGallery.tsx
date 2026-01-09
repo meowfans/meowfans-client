@@ -1,9 +1,8 @@
 'use client';
 
 import { GalleryManager } from '@/components/GalleryManager';
-
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useAssets } from '@/hooks/useAssets';
+import { useVaultAssets } from '@/hooks/useVaultAssets';
 import { SortBy } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -15,14 +14,13 @@ interface Props {
 
 export const CreatorProfileGallery: React.FC<Props> = ({ username }) => {
   const { fan } = useFan();
-  const { getVaultAssets } = useAssets();
   const {
     assets: creatorAssets,
     handleLoadMore,
     hasMore,
     loading,
-    onRefresh
-  } = getVaultAssets({ username, fanId: fan?.fanId, sortBy: SortBy.VaultObjectSuffix });
+    handleRefresh
+  } = useVaultAssets({ username, fanId: fan?.fanId, sortBy: SortBy.VaultObjectSuffix });
 
   return (
     <PageManager>
@@ -31,7 +29,7 @@ export const CreatorProfileGallery: React.FC<Props> = ({ username }) => {
         hasMore={hasMore}
         loading={loading}
         onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
+        onRefresh={handleRefresh}
       >
         <GalleryManager
           loading={loading}

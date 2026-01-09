@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatorContext } from '@/hooks/context/CreatorContextWrapper';
+import { CreatorContext } from '@/hooks/context/AdminContextWrapper';
 import { useMutation } from '@apollo/client/react';
 import { UPDATE_ALL_CREATOR_PROFILES_MUTATION } from '@workspace/gql/api/userAPI';
 import { Button } from '@workspace/ui/components/button';

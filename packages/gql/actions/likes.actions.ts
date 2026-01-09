@@ -1,14 +1,15 @@
 'use client';
 
-import { GET_LIKED_POSTS_QUERY, LIKE_POST_MUTATION } from '@workspace/gql/api/postsAPI';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
+  GET_LIKED_POSTS_QUERY,
   GET_LIKED_VAULT_OBJECTS_QUERY,
   GET_LIKED_VAULTS_QUERY,
+  LIKE_POST_MUTATION,
   LIKE_VAULT_MUTATION,
   LIKE_VAULT_OBJECT_MUTATION
-} from '@workspace/gql/api/vaultsAPI';
+} from '@workspace/gql/api';
 import { LikePostInput, PaginationInput } from '@workspace/gql/generated/graphql';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
 
 export const useLikesActions = () => {
   const [likeAPost] = useMutation(LIKE_POST_MUTATION);

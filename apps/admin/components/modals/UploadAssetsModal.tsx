@@ -1,6 +1,6 @@
 'use client';
 
-import useAPI from '@/hooks/api/useAPI';
+import useAPI from '@/hooks/useAPI';
 import { useAssetsStore } from '@/zustand/assets.store';
 import { AssetType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';

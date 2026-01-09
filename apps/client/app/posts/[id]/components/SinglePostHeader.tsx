@@ -87,12 +87,12 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
         ) : (
           post.unlockPrice && (
             <div
-              className={`mt-4 flex flex-col gap-2 bg-gradient-to-r
+              className={`mt-4 flex flex-col gap-2 bg-linear-to-r
              from-purple-50 to-pink-50 dark:from-zinc-800 dark:to-zinc-900
              p-4 rounded-xl border border-pink-200 dark:border-zinc-700 shadow-sm`}
             >
               <PurchaseSheet entityId={post.id} amount={post.unlockPrice} purchaseType={PurchaseType.Post} creatorId={post.creatorId} />
-              <p className="text-xl text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-medium">
+              <p className="text-xl text-center text-transparent bg-clip-text bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 font-medium">
                 Unlock this post for just ${post.unlockPrice} — support the creator and explore exclusive content.
               </p>
             </div>

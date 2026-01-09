@@ -11,8 +11,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 const TrendingVaults = () => {
   const { fan } = useFan();
-  const { getVaults } = useVaults();
-  const { vaults, handleLoadMore, hasMore, loading, onRefresh } = getVaults({
+  const { vaults, loadMore, hasMore, loading, refresh } = useVaults({
     fanId: fan?.fanId,
     take: 30,
     sortBy: SortBy.VaultLikeCount,
@@ -25,8 +24,8 @@ const TrendingVaults = () => {
         dataLength={vaults.length}
         hasMore={hasMore}
         loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
+        onLoadMore={loadMore}
+        onRefresh={refresh}
       >
         <PageHeader title="Top liked vaults" />
         <GalleryManager

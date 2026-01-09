@@ -14,21 +14,14 @@ interface Props {
 
 export const SearchTerm: React.FC<Props> = ({ label }) => {
   const { fan } = useFan();
-  const { getVaults } = useVaults();
-  const { vaults, loading, handleLoadMore, hasMore, onRefresh } = getVaults({
+  const { vaults, hasMore, loadMore, loading, refresh } = useVaults({
     fanId: fan?.fanId,
     searchTerm: label
   });
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={vaults.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={vaults.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title={`Explore contents of ${label && label}`} />
         <GalleryManager
           loading={loading}

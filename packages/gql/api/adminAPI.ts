@@ -38,7 +38,7 @@ export const GET_ALL_ASSETS_QUERY = graphql(`
   }
 `);
 
-export const GET_ALL_CREATORS_QUERY = graphql(`
+export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
   query GetCreatorsByAdmin($input: PaginationInput!) {
     getCreatorsByAdmin(input: $input) {
       count
@@ -57,10 +57,6 @@ export const GET_ALL_CREATORS_QUERY = graphql(`
         roles
         updatedAt
         username
-        fulfilledObjectCount
-        pendingObjectCount
-        processingObjectCount
-        rejectedObjectCount
         creatorProfile {
           vaultCount
           vaultObjectCount
@@ -68,6 +64,10 @@ export const GET_ALL_CREATORS_QUERY = graphql(`
           creatorId
           assetCount
           vaultCount
+          fulfilledObjectCount
+          pendingObjectCount
+          processingObjectCount
+          rejectedObjectCount
         }
       }
     }

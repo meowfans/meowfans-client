@@ -1,13 +1,12 @@
 'use client';
 
-import { useAssets } from '@/hooks/useAssets';
+import { usePublicShorts } from '@/hooks/usePublicShorts';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useEffect, useRef, useState } from 'react';
 import { ShortVideoCard } from './ShortVideoCard';
 
 export default function ShortsFeed() {
-  const { getPublicShorts } = useAssets();
-  const { handleLoadMore, hasMore, loading, onRefresh, publicShorts } = getPublicShorts({ take: 10 });
+  const { handleLoadMore, hasMore, publicShorts } = usePublicShorts({ take: 10 });
   const [globalMute, setGlobalMute] = useState(true);
   const lastItemRef = useRef<HTMLDivElement | null>(null);
 

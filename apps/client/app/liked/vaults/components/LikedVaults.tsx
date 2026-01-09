@@ -3,6 +3,7 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { LikeButton } from '@/components/LikeButton';
 import { PageHeader } from '@/components/PageHeader';
+import { useLikedVaults } from '@/hooks/useLikedVaults';
 import { useLikes } from '@/hooks/useLikes';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -11,14 +12,14 @@ import Link from 'next/link';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const LikedVaults = () => {
-  const { getLikedVaults, likeVault } = useLikes();
-  const { onLoadMore, hasMore, loading, vaultLikes } = getLikedVaults();
+  const { likeVault } = useLikes();
+  const { loadMore, hasMore, loading, vaultLikes } = useLikedVaults();
 
   const handleDebounceLikeVault = useDebouncedCallback(likeVault, 350);
 
   return (
     <PageManager>
-      <InfiniteScrollManager hasMore={hasMore} dataLength={vaultLikes.length} loading={loading} onLoadMore={onLoadMore}>
+      <InfiniteScrollManager hasMore={hasMore} dataLength={vaultLikes.length} loading={loading} onLoadMore={loadMore}>
         <PageHeader title="Liked vaults" />
         <GalleryManager
           items={vaultLikes}
@@ -43,7 +44,7 @@ export const LikedVaults = () => {
         <Link href={'/vaults'}>
           <motion.div
             whileHover={{ scale: 1.03 }}
-            className="aspect-square rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center border border-white/10"
+            className="aspect-square rounded-xl bg-linear-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center border border-white/10"
             style={{
               backgroundImage: `url('/meowfans_banner.png')`,
               backgroundSize: 'cover',

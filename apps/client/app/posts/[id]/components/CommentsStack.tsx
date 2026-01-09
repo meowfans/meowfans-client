@@ -3,7 +3,8 @@
 import { UpdateCommentModal } from '@/components/modals/UpdateCommentModal';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { useComments } from '@/hooks/useComments';
+import { useCommentMutations } from '@/hooks/useCommentMutations';
+import { usePostComments } from '@/hooks/usePostComments';
 import { PostCommentsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
@@ -21,10 +22,10 @@ export const CommentsStack = () => {
   const { id } = useParams();
   const { fan } = useFan();
   const { post } = usePostsStore();
-  const { getPostComments, deleteComment } = useComments();
   const [updateModalOpen, setUpdateModalOpen] = useState<PostCommentsEntity | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState<PostCommentsEntity | null>(null);
-  const { loading, onLoadMore, postComments, hasMore, onRefresh } = getPostComments({
+  const { deleteComment } = useCommentMutations();
+  const { loading, handleLoadMore, postComments, hasMore, handleRefresh } = usePostComments({
     take: 30,
     relatedEntityId: id as string
   });
@@ -34,8 +35,8 @@ export const CommentsStack = () => {
       dataLength={postComments.length}
       hasMore={fan ? hasMore : false}
       loading={loading}
-      onLoadMore={onLoadMore}
-      onRefresh={onRefresh}
+      onLoadMore={handleLoadMore}
+      onRefresh={handleRefresh}
     >
       <ScrollArea className="w-full">
         {postComments.length ? (

@@ -10,8 +10,7 @@ import { useRef } from 'react';
 import { Bricks } from './Bricks';
 
 export const Categories = () => {
-  const { getTags } = useTags();
-  const { handleLoadMore, hasMore, loading, tags } = getTags();
+  const { handleLoadMore, hasMore, loading, tags } = useTags();
   const topRef = useRef<HTMLDivElement>(null);
 
   return (

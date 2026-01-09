@@ -1,7 +1,7 @@
-import { AssetType } from '@workspace/gql/generated/graphql';
 import { configService } from '@/util/config';
-import { getCookie, setCookie } from 'cookies-next';
+import { AssetType } from '@workspace/gql/generated/graphql';
 import { authCookieKey, authRefreshCookieKey, FetchMethods, LoginInput, MediaType, SignupInput } from '@workspace/ui/lib';
+import { getCookie, setCookie } from 'cookies-next';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
