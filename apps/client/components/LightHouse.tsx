@@ -1,7 +1,7 @@
 'use client';
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useTags } from '@/hooks/useTags';
+import { useSearchTags, useTags } from '@/hooks/useTags';
 import {
   Command,
   CommandDialog,
@@ -26,7 +26,7 @@ interface LightHouseProps {
 export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) => {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const { getSearchedTags } = useTags({});
+  const { getSearchedTags } = useSearchTags();
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
@@ -42,7 +42,7 @@ export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) =>
     }
     setLoading(true);
     try {
-      const results = await getSearchedTags(searchText.trim());
+      const results = await getSearchedTags(searchText.trim(), 5, clickedSearch);
       setLabels(results);
     } finally {
       setLoading(false);
@@ -96,7 +96,7 @@ export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) =>
       {loading && <div className="p-4 text-sm text-muted-foreground">Loading...</div>}
       {!loading && !labels.length && searchText && <CommandEmpty>No results found.</CommandEmpty>}
       {labels.length > 0 && (
-        <CommandGroup heading="Suggestions" className="h-[300px]">
+        <CommandGroup heading="Suggestions" className="h-75">
           {labels.map((label, idx) => (
             <CommandItem
               key={idx}
@@ -173,7 +173,7 @@ export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) =>
       {/* MOBILE VERSION INPUT */}
       {isMobile && clickedSearch && variant === 'mobile' && (
         <Command
-          className={`absolute left-0 right-0 top-[57px] z-50
+          className={`absolute left-0 right-0 top-14.25 z-50
             bg-background border rounded-md shadow-md md:hidden h-72`}
           ref={dropdownRef}
         >
