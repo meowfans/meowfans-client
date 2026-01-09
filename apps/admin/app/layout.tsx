@@ -1,12 +1,12 @@
 import { AppSidebar } from '@/components/AppSideBar';
-import { fetchRequest } from '@/hooks/api/useAPI';
-import { CreatorContextWrapper } from '@/hooks/context/CreatorContextWrapper';
+import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
+import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
-import { GetCreatorProfileQuery } from '@workspace/gql/generated/graphql';
+import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
@@ -79,7 +79,7 @@ const getUser = async () => {
   const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
   const client = await getClient();
   const { data } = await client.query({ query: GET_CREATOR_PROFILE_QUERY });
-  return data;
+  return data?.getCreatorProfile;
 };
 
 const handleValidateAuth = async () => {
@@ -102,7 +102,7 @@ const handleValidateAuth = async () => {
 };
 
 export default async function RootLayout({ children }: Props) {
-  const user = await handleValidateAuth();
+  const admin = await handleValidateAuth();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -116,7 +116,7 @@ export default async function RootLayout({ children }: Props) {
       </head>
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
-          <CreatorContextWrapper creator={user as GetCreatorProfileQuery}>
+          <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <SidebarProvider defaultOpen={true}>
                 <div className="flex w-full min-h-screen overflow-hidden">
@@ -128,7 +128,7 @@ export default async function RootLayout({ children }: Props) {
                 </div>
               </SidebarProvider>
             </ThemeProvider>
-          </CreatorContextWrapper>
+          </AdminContextWrapper>
         </ApolloWrapper>
       </body>
     </html>

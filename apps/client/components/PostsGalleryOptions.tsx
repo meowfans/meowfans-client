@@ -27,7 +27,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, 
       className={`
         relative flex flex-col justify-between h-full w-full
         rounded-xl overflow-hidden
-        bg-gradient-to-b from-black/10 via-black/20 to-black/40
+        bg-linear-to-b from-black/10 via-black/20 to-black/40
       `}
     >
       <div className="absolute top-2 right-2 z-10">
@@ -49,7 +49,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, 
         >
           <AuthAwareButton
             size="default"
-            className="h-fit w-fit px-4 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold"
+            className="h-fit w-fit px-4 py-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold"
             onClick={() => router.push(`/posts/${post.id}`)}
           >
             Unlock for ${post.unlockPrice}
@@ -57,7 +57,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, 
           <p
             className={`
               text-xs sm:text-sm mt-2 text-transparent bg-clip-text
-              bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400
+              bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400
               font-medium leading-snug
             `}
           >
@@ -69,7 +69,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, 
       <div
         className={`
           absolute bottom-0 inset-x-0 z-10
-          bg-gradient-to-t from-black/80 via-black/30 to-transparent
+          bg-linear-to-t from-black/80 via-black/30 to-transparent
           p-3 flex justify-between items-end
         `}
       >

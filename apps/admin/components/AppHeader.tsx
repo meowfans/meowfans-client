@@ -25,7 +25,7 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
 
   return (
     <div
-      className={cn('flex flex-row w-full justify-between border-b bg-gradient-to-bl px-2 h-16 bg-[var(--background)] z-50 sticky top-0')}
+      className={cn('flex flex-row w-full justify-between border-b bg-linear-to-bl px-2 h-16 bg-background z-50 sticky top-0')}
     >
       <div className="flex flex-row items-center gap-2">
         {!open && !isMobile && (

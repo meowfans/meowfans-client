@@ -1,7 +1,6 @@
 'use client';
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTags } from '@/hooks/useTags';
 import {
   Command,
@@ -13,6 +12,7 @@ import {
   CommandList,
   CommandSeparator
 } from '@workspace/ui/components/command';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { cn } from '@workspace/ui/lib/utils';
 import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -26,14 +26,13 @@ interface LightHouseProps {
 export const LightHouse: React.FC<LightHouseProps> = ({ variant = 'mobile' }) => {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const { getSearchedTags } = useTags();
+  const { getSearchedTags } = useTags({});
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const { clickedSearch, setClickedSearch } = useUtilsStore();
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleSearch = useDebouncedCallback(async () => {

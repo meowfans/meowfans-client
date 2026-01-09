@@ -9,8 +9,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 import { CreatorsGalleryOptions } from './CreatorsGalleryOptions';
 
 const TrendingCreators = () => {
-  const { getCreators } = useCreators();
-  const { creators, handleLoadMore, hasMore, loading, onRefresh } = getCreators({
+  const { creators, loadMore, hasMore, loading, refresh } = useCreators({
     sortBy: SortBy.CreatorFollowingCount,
     take: 30,
     orderBy: SortOrder.Desc
@@ -18,13 +17,7 @@ const TrendingCreators = () => {
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={creators.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={creators.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Top followed creators" />
         <GalleryManager
           loading={loading}

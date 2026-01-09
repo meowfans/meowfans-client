@@ -1,8 +1,8 @@
 'use client';
 
-import { GET_TAGS_QUERY, SEARCH_TAGS_QUERY } from '@workspace/gql/api/tagsAPI';
-import { PaginationInput } from '@workspace/gql/generated/graphql';
 import { useLazyQuery } from '@apollo/client/react';
+import { GET_TAGS_QUERY, SEARCH_TAGS_QUERY } from '@workspace/gql/api';
+import { PaginationInput } from '@workspace/gql/generated/graphql';
 
 export const useTagsActions = () => {
   const [getTags] = useLazyQuery(GET_TAGS_QUERY);

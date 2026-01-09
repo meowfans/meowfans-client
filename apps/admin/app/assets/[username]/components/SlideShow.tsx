@@ -16,7 +16,11 @@ export const SlideShow: React.FC<Props> = ({ slideUrls, onLoadMore }) => {
     <div className="flex w-full">
       <div className="w-full">
         <Slide>
-          <div className="flex flex-col md:flex-row overflow-y-auto md:overflow-x-auto w-full space-y-1 md:space-y-0 space-x-0 md:space-x-1 snap-y md:snap-x snap-mandatory scrollbar-hide scroll-smooth m-1 p-1">
+          <div
+            className={`flex flex-col md:flex-row overflow-y-auto md:overflow-x-auto
+              w-full space-y-1 md:space-y-0 space-x-0 md:space-x-1 snap-y md:snap-x
+              snap-mandatory scrollbar-hide scroll-smooth m-1 p-1`}
+          >
             {slideUrls &&
               slideUrls.map((url, index) => (
                 <Image

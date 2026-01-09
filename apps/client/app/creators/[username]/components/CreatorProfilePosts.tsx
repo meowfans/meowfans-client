@@ -18,9 +18,8 @@ interface Props {
 
 export const CreatorProfilePosts: React.FC<Props> = ({ username }) => {
   const { fan } = useFan();
-  const { getPosts } = usePosts();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
-  const { posts, handleLoadMore, hasMore, loading, onRefresh } = getPosts({
+  const { posts, handleLoadMore, hasMore, loading, handleRefresh } = usePosts({
     username,
     fanId: fan?.fanId,
     sortBy: SortBy.PostCreatedAt,
@@ -34,7 +33,7 @@ export const CreatorProfilePosts: React.FC<Props> = ({ username }) => {
         hasMore={hasMore}
         loading={loading}
         onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
+        onRefresh={handleRefresh}
       >
         <CreatorProfileHeader />
         <TabsList>

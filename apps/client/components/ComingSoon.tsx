@@ -12,7 +12,7 @@ const ComingSoonWrapper: React.FC<Props> = ({ children, label = 'COMING SOON' })
 
       <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
         <div className="rotate-[-25deg]">
-          <span className="text-5xl md:text-7xl font-extrabold text-white/30 tracking-[0.1em] select-none">{label}</span>
+          <span className="text-5xl md:text-7xl font-extrabold text-black/30 dark:text-white/30 tracking-[0.1em] select-none">{label}</span>
         </div>
       </div>
 

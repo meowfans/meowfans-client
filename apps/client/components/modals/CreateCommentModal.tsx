@@ -1,6 +1,5 @@
 'use client';
 
-import { useComments } from '@/hooks/useComments';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@workspace/ui/components/button';
@@ -8,6 +7,7 @@ import { Label } from '@workspace/ui/components/label';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
+import { useCommentMutations } from '@/hooks/useCommentMutations';
 
 interface Props {
   postId: string;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const CreateCommentModal: React.FC<Props> = ({ isOpen, onClose, postId }) => {
-  const { createComment } = useComments();
+  const { createComment } = useCommentMutations();
   const [comment, setComment] = useState<string>('');
 
   const handleClose = () => {

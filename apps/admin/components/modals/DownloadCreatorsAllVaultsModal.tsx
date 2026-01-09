@@ -1,7 +1,7 @@
 'use client';
 
-import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION, GET_ALL_CREATORS_QUERY } from '@workspace/gql/api/adminAPI';
-import { AssetType, ExtendedUsersEntity } from '@workspace/gql/generated/graphql';
+import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION, GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api/adminAPI';
+import { AssetType, UsersEntity } from '@workspace/gql/generated/graphql';
 
 import { useMutation } from '@apollo/client/react';
 import { Button } from '@workspace/ui/components/button';
@@ -22,7 +22,7 @@ import { toast } from 'sonner';
 interface Props {
   onJobAdded: () => unknown;
   onCancel: () => unknown;
-  creator: ExtendedUsersEntity;
+  creator: UsersEntity;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -32,7 +32,7 @@ export const DownloadCreatorsAllVaultsModal: React.FC<Props> = ({ isOpen, setOpe
   const [destination, setDestination] = useState<AssetType>(AssetType.Private);
   const [uploadVaults] = useMutation(DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION, {
     refetchQueries: () => {
-      return [{ query: GET_ALL_CREATORS_QUERY, variables: { input: { limit: 30 } } }];
+      return [{ query: GET_CREATORS_BY_ADMIN_QUERY, variables: { input: { limit: 30 } } }];
     }
   });
 

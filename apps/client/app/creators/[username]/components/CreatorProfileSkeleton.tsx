@@ -40,7 +40,7 @@ export const CreatorProfileSkeleton: React.FC = () => {
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="min-w-[140px] flex-shrink-0 rounded-2xl bg-white/60 dark:bg-zinc-800/60 backdrop-blur-sm border border-zinc-100 dark:border-zinc-700 py-4 px-3 shadow animate-pulse"
+              className="min-w-[140px] shrink-0 rounded-2xl bg-white/60 dark:bg-zinc-800/60 backdrop-blur-sm border border-zinc-100 dark:border-zinc-700 py-4 px-3 shadow animate-pulse"
             >
               <Skeleton className="h-4 w-6 bg-zinc-200 dark:bg-zinc-700 rounded-md mb-2" />
               <Skeleton className="h-6 w-16 bg-zinc-200 dark:bg-zinc-700 rounded-md mb-2" />
@@ -56,7 +56,7 @@ export const CreatorProfileSkeleton: React.FC = () => {
         <CardContent className="p-4 sm:p-6">
           <Tabs defaultValue="gallery">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <TabsList className="!bg-transparent p-0">
+              <TabsList className="bg-transparent! p-0">
                 <TabsTrigger value="gallery" className="px-3 py-2 rounded-md">
                   <Skeleton className="h-4 w-20 bg-zinc-100 dark:bg-zinc-800 rounded-md animate-pulse" />
                 </TabsTrigger>

@@ -1,27 +1,63 @@
-import { GET_ALL_CREATORS_QUERY } from '@workspace/gql/api/adminAPI';
-import { ExtendedUsersEntity, GetAllCreatorsOutput, SortBy } from '@workspace/gql/generated/graphql';
 import { useCreatorsStore } from '@/zustand/creators.store';
-import { useQuery } from '@apollo/client/react';
-import { useEffect } from 'react';
+import { useCreatorsActions } from '@workspace/gql/actions';
+import { GetAllCreatorsOutput, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { useEffect, useState } from 'react';
 
-interface Props {
+interface CreatorsProps {
   pageNumber: number;
   sortBy: SortBy;
 }
 
-export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: Props) => {
-  const { data, refetch } = useQuery(GET_ALL_CREATORS_QUERY, { variables: { input: { pageNumber, take: 100, sortBy } } });
+export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: CreatorsProps) => {
+  const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
-  const { count = 0, hasNext = false, hasPrev = false, totalPages = 0 } = (data?.getCreatorsByAdmin ?? {}) as GetAllCreatorsOutput;
-  const fetchedCreators = data?.getCreatorsByAdmin.creators as ExtendedUsersEntity[];
+  const { getCreatorsByAdminQuery } = useCreatorsActions();
 
-  const handleRefetch = async () => {
-    await refetch({ input: { pageNumber, take: 100, sortBy } });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [meta, setMeta] = useState<Partial<GetAllCreatorsOutput>>({
+    count: 0,
+    hasNext: false,
+    hasPrev: false,
+    totalPages: 0
+  });
+
+  const loadAllCreators = async () => {
+    setLoading(true);
+    try {
+      const { data } = await getCreatorsByAdminQuery({ pageNumber, sortBy });
+      const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
+
+      setHasMore(!!fetchedCreators.length);
+      setCreators(fetchedCreators);
+
+      setMeta({
+        count: data?.getCreatorsByAdmin.count ?? 0,
+        hasNext: data?.getCreatorsByAdmin.hasNext ?? false,
+        hasPrev: data?.getCreatorsByAdmin.hasPrev ?? false,
+        totalPages: data?.getCreatorsByAdmin.totalPages ?? 0
+      });
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefetch = () => {
+    loadAllCreators();
   };
 
   useEffect(() => {
-    if (fetchedCreators) setCreators(fetchedCreators);
-  }, [data]);
+    loadAllCreators();
+  }, [pageNumber, sortBy]);
 
-  return { count, hasNext, hasPrev, totalPages, creators, setCreators, handleRefetch };
+  return {
+    creators,
+    loading,
+    hasMore,
+    ...meta,
+    handleRefetch
+  };
 };

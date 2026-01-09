@@ -32,7 +32,7 @@ export const AssetsHeader: React.FC<Props> = ({ onSlideShowOff, setAssetType, as
   const [dateRange, setDateRange] = useState<DateRange | undefined>(emptyDateRange);
 
   return (
-    <div className="flex flex-row items-center justify-between bg-[var(--background)]">
+    <div className="flex flex-row items-center justify-between bg-background">
       <div className="flex items-center gap-4">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -40,7 +40,7 @@ export const AssetsHeader: React.FC<Props> = ({ onSlideShowOff, setAssetType, as
           transition={{ duration: 0.35 }}
           className="flex items-center gap-3"
         >
-          <div className="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-3 text-white shadow-lg">
+          <div className="rounded-xl bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 p-3 text-white shadow-lg">
             <GalleryVerticalEnd size={20} />
           </div>
           <div>

@@ -27,7 +27,7 @@ export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({
       </div>
       {vaultObject.isPurchased ? (
         <div className="flex flex-col justify-end h-full">
-          <div className="flex justify-end place-content-end w-full p-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+          <div className="flex justify-end place-content-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
             <LikeButton
               className="absolute bottom-1 right-1 hover:text-red-500 rounded-xl transition"
               onLikeDisLike={() => handleDebounceLikeVaultObject(vaultObject.id)}

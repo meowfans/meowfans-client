@@ -13,7 +13,7 @@ import {
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Download, LucideLassoSelect, MoreHorizontal, RefreshCcw, TrainFrontTunnelIcon } from 'lucide-react';
+import { ArrowUpWideNarrow, Download, ListFilterPlus, LucideLassoSelect, MoreHorizontal, RefreshCcw } from 'lucide-react';
 
 interface Props {
   vaultObjectsCount: number;
@@ -55,14 +55,14 @@ export const CreatorVaultsHeader: React.FC<Props> = ({
             enumValue={DownloadStates}
             filterBy={status}
             onFilterBy={(val) => onSetStatus(val as DownloadStates)}
-            trigger={{ icon: TrainFrontTunnelIcon }}
+            trigger={{ icon: ListFilterPlus }}
             label="Status"
           />
           <Dropdown
             enumValue={FileType}
             filterBy={fileType}
             onFilterBy={(val) => onSetFileType(val as FileType)}
-            trigger={{ icon: TrainFrontTunnelIcon }}
+            trigger={{ icon: ArrowUpWideNarrow }}
             label="File Type"
           />
           <Badge className="text-xs">{creatorData?.getUser.username}</Badge>

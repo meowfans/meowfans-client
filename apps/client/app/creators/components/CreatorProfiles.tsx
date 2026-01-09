@@ -11,12 +11,13 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const CreatorProfiles = () => {
   const { fan } = useFan();
-  const { getCreators } = useCreators();
-  const { creators, handleLoadMore, hasMore, loading, onRefresh } = getCreators({
+  const { creators, loadMore, hasMore, loading, refresh } = useCreators({
     sortBy: SortBy.CreatorViewCount,
     fanId: fan?.fanId,
     orderBy: SortOrder.Desc
   });
+
+  console.log('Rendering Creator Profiles: ', creators);
 
   return (
     <PageManager className="mb-6 p-1">
@@ -24,8 +25,8 @@ export const CreatorProfiles = () => {
         dataLength={creators.length}
         hasMore={hasMore}
         loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
+        onLoadMore={loadMore}
+        onRefresh={refresh}
       >
         <PageHeader title="Explore creators" />
         <GalleryManager

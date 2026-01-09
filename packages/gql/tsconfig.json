@@ -14,7 +14,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@workspace/ui/lib": ["../ui/src/lib"]
+      "@workspace/ui/*": ["../ui/src/*"],
+      "@workspace/ui/lib": ["../ui/src/lib"],
+      "@workspace/gql/*": ["./*"]
     },
     "plugins": [
       {
@@ -22,6 +24,6 @@
       }
     ]
   },
-  "include": ["."],
-  "exclude": ["node_modules"]
+  "include": [".", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

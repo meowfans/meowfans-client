@@ -2,13 +2,13 @@
 
 import { AuthAwareButton } from '@/components/AuthAwareButton';
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
-import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { UnFollowModal } from '@/components/modals/UnFollowModal';
 import { NextImage } from '@/components/NextImage';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { useCreator } from '@/hooks/context/CreatorContextWrapper';
 import { UserContext } from '@/hooks/context/UserContextWrapper';
-import { useFollows } from '@/hooks/useFollow';
+import { useFollowings } from '@/hooks/useFollow';
+import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { motion } from 'framer-motion';
 import { BlocksIcon, EyeIcon, FolderIcon, ImageIcon } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -17,10 +17,10 @@ export const CreatorProfileHeader = () => {
   const { creator, setCreator } = useCreator();
   const [fan] = useContext(UserContext);
   const [unfollowModal, setUnfollowModal] = useState(false);
-  const { creatorFollowHandler } = useFollows();
+  const { followCreator } = useFollowings();
 
   const handleFollowCreator = async () => {
-    await creatorFollowHandler(creator.creatorId);
+    await followCreator(creator.creatorId);
     setCreator((prev) => (prev ? { ...prev, isFollowing: true } : prev));
   };
 
@@ -35,14 +35,14 @@ export const CreatorProfileHeader = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative w-full overflow-hidden rounded-3xl border border-zinc-100 dark:border-zinc-800 bg-gradient-to-b from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 shadow-xl"
+      className="relative w-full overflow-hidden rounded-3xl border border-zinc-100 dark:border-zinc-800 bg-linear-to-b from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 shadow-xl"
     >
       <div className="relative h-48 sm:h-60 md:h-72 w-full overflow-hidden">
         <NextImage
           imageUrl={creator.user.bannerUrl}
           className="absolute inset-0 h-full w-full object-cover scale-105 transition-transform duration-700 hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent" />
       </div>
 
       <div className="relative px-6 sm:px-10 -mt-16 flex flex-col sm:flex-row sm:items-end sm:justify-between">
@@ -52,7 +52,7 @@ export const CreatorProfileHeader = () => {
               url={creator?.user.avatarUrl}
               className="h-32 w-32 rounded-full border-[5px] border-white dark:border-zinc-900 shadow-lg object-cover"
             />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400 to-yellow-400 opacity-25 blur-2xl -z-10" />
+            <div className="absolute inset-0 rounded-full bg-linear-to-r from-pink-400 to-yellow-400 opacity-25 blur-2xl -z-10" />
           </motion.div>
 
           <div className="flex flex-col">
@@ -69,14 +69,14 @@ export const CreatorProfileHeader = () => {
                   onChangeModalState={() => setUnfollowModal(true)}
                   modalText="Unfollow"
                   modalIcon={{ icon: BlocksIcon }}
-                  className="rounded-full px-6 py-2 text-sm bg-gradient-to-r from-red-600 to-rose-500 hover:opacity-90 text-white font-semibold shadow-md"
+                  className="rounded-full px-6 py-2 text-sm bg-linear-to-r from-red-600 to-rose-500 hover:opacity-90 text-white font-semibold shadow-md"
                 />
               ) : (
                 <AuthAwareButton
                   onClick={handleFollowCreator}
                   title="Follow"
                   variant="secondary"
-                  className="rounded-full px-6 py-2 text-sm bg-gradient-to-r from-pink-500 via-fuchsia-500 to-yellow-400 hover:opacity-90 text-white font-semibold shadow-md transition-transform hover:scale-[1.03]"
+                  className="rounded-full px-6 py-2 text-sm bg-linear-to-r from-pink-500 via-fuchsia-500 to-yellow-400 hover:opacity-90 text-white font-semibold shadow-md transition-transform hover:scale-[1.03]"
                 >
                   Follow
                 </AuthAwareButton>

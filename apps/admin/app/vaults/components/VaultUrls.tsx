@@ -1,7 +1,7 @@
 import { DownloadCreatorsAllVaultsModal } from '@/components/modals/DownloadCreatorsAllVaultsModal';
 import { useMutation } from '@apollo/client/react';
 import { CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION } from '@workspace/gql/api/vaultsAPI';
-import { DownloadStates, ExtendedUsersEntity } from '@workspace/gql/generated/graphql';
+import { DownloadStates, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
@@ -14,9 +14,9 @@ import { toast } from 'sonner';
 
 interface Props {
   idx: number;
-  creator: ExtendedUsersEntity;
+  creator: UsersEntity;
   onJobAdded: () => unknown;
-  onUpdateCreator: (creator: ExtendedUsersEntity) => unknown;
+  onUpdateCreator: (creator: UsersEntity) => unknown;
 }
 
 export const VaultUrls: React.FC<Props> = ({ idx, creator, onJobAdded, onUpdateCreator }) => {
@@ -30,8 +30,11 @@ export const VaultUrls: React.FC<Props> = ({ idx, creator, onJobAdded, onUpdateC
       });
       onUpdateCreator({
         ...creator,
-        rejectedObjectCount: creator.rejectedObjectCount + creator.processingObjectCount,
-        processingObjectCount: 0
+        creatorProfile: {
+          ...creator.creatorProfile,
+          rejectedObjectCount: creator.creatorProfile.rejectedObjectCount + creator.creatorProfile.processingObjectCount,
+          processingObjectCount: 0
+        }
       });
     } catch {
       toast.error('Something wrong happened!');
@@ -60,10 +63,12 @@ export const VaultUrls: React.FC<Props> = ({ idx, creator, onJobAdded, onUpdateC
           />
         </div>
         <div className="flex flex-row gap-1">
-          <Badge className="text-xs font-medium bg-red-600 text-white">{creator.rejectedObjectCount}</Badge>
-          <Badge className="text-xs font-medium bg-blue-500 text-white">{creator.fulfilledObjectCount}</Badge>
-          <Badge className="text-xs font-medium animate-pulse">{creator.pendingObjectCount}</Badge>
-          <Badge className="text-xs font-medium bg-orange-500 text-white dark:bg-emerald-400">{creator.processingObjectCount}</Badge>
+          <Badge className="text-xs font-medium bg-red-600 text-white">{creator.creatorProfile.rejectedObjectCount}</Badge>
+          <Badge className="text-xs font-medium bg-blue-500 text-white">{creator.creatorProfile.fulfilledObjectCount}</Badge>
+          <Badge className="text-xs font-medium animate-pulse">{creator.creatorProfile.pendingObjectCount}</Badge>
+          <Badge className="text-xs font-medium bg-orange-500 text-white dark:bg-emerald-400">
+            {creator.creatorProfile.processingObjectCount}
+          </Badge>
         </div>
       </div>
       <div className="flex flex-row justify-between w-full content-center items-center">
@@ -80,9 +85,9 @@ export const VaultUrls: React.FC<Props> = ({ idx, creator, onJobAdded, onUpdateC
         <div className="flex flex-row space-x-1.5">
           <LoadingButton
             Icon={Download}
-            title={`Download all(${creator.pendingObjectCount})`}
+            title={`Download all(${creator.creatorProfile.pendingObjectCount})`}
             variant={'outline'}
-            disabled={!creator.pendingObjectCount}
+            disabled={!creator.creatorProfile.pendingObjectCount}
             onClick={() => setDownloadAllCreatorVaultsModal(true)}
           />
         </div>

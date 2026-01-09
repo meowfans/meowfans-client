@@ -3,6 +3,7 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { LikeButton } from '@/components/LikeButton';
 import { PageHeader } from '@/components/PageHeader';
+import { useLikedPosts } from '@/hooks/useLikedPosts';
 import { useLikes } from '@/hooks/useLikes';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -11,13 +12,13 @@ import Link from 'next/link';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const LikedPosts = () => {
-  const { getLikedPosts, likePost } = useLikes();
-  const { onLoadMore, hasMore, loading, postLikes } = getLikedPosts();
+  const { likePost } = useLikes();
+  const { loadMore, hasMore, loading, postLikes } = useLikedPosts();
   const handleDebounceLikePost = useDebouncedCallback(likePost, 250);
 
   return (
     <PageManager>
-      <InfiniteScrollManager hasMore={hasMore} dataLength={postLikes.length} loading={loading} onLoadMore={onLoadMore}>
+      <InfiniteScrollManager hasMore={hasMore} dataLength={postLikes.length} loading={loading} onLoadMore={loadMore}>
         <PageHeader title="Liked posts" />
         <GalleryManager
           items={postLikes}
@@ -42,7 +43,7 @@ export const LikedPosts = () => {
         <Link href={'/posts'}>
           <motion.div
             whileHover={{ scale: 1.03 }}
-            className="aspect-square rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center border border-white/10"
+            className="aspect-square rounded-xl bg-linear-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center border border-white/10"
             style={{
               backgroundImage: `url('/meowfans_banner.png')`,
               backgroundSize: 'cover',

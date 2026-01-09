@@ -1,15 +1,14 @@
 'use client';
 
 import { GalleryManager } from '@/components/GalleryManager';
-import { useAssets } from '@/hooks/useAssets';
+import { useFanAssets } from '@/hooks/useFanAssets';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { FanAssetsGalleryOptions } from './PurchasedGalleryOptions';
 
 export const Purchased = () => {
-  const { getFanAssets } = useAssets();
-  const { fanAssets, handleLoadMore, handleRefresh, hasMore, loading } = getFanAssets({
+  const { fanAssets, handleLoadMore, handleRefresh, hasMore, loading } = useFanAssets({
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc
   });

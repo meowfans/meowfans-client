@@ -1,7 +1,7 @@
 import { usePurchasesStore } from '@/hooks/store/purchases.store';
+import { useMutation } from '@apollo/client/react';
 import { PURCHASE_POST_MUTATION } from '@workspace/gql/api/paymentsAPI';
 import { CreatePurchasePostInput, PostPurchasesEntity } from '@workspace/gql/generated/graphql';
-import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 

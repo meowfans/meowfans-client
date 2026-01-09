@@ -1,9 +1,13 @@
 'use client';
 
-import { GET_PUBLIC_POST_COMMENTS_BY_POST_ID_QUERY } from '@workspace/gql/api/commentsAPI';
-import { CREATE_COMMENT_MUTATION, DELETE_COMMENT_MUTATION, UPDATE_COMMENT_INPUT_MUTATION } from '@workspace/gql/api/postsAPI';
-import { CreateCommentInput, DeleteCommentInput, PaginationInput, UpdateCommentInput } from '@workspace/gql/generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
+import {
+  CREATE_COMMENT_MUTATION,
+  DELETE_COMMENT_MUTATION,
+  GET_PUBLIC_POST_COMMENTS_BY_POST_ID_QUERY,
+  UPDATE_COMMENT_INPUT_MUTATION
+} from '@workspace/gql/api';
+import { CreateCommentInput, DeleteCommentInput, PaginationInput, UpdateCommentInput } from '@workspace/gql/generated/graphql';
 
 export const useCommentsActions = () => {
   const [createPostComment] = useMutation(CREATE_COMMENT_MUTATION);

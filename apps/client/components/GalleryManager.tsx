@@ -46,7 +46,7 @@ export const GalleryManager = <T,>({
 
   const getOutStreamZone = (id: number, children: React.ReactElement | null) => {
     return (
-      <div id={`ad_${id}`} style={{ width: '100%' }} className="!w-full absolute">
+      <div id={`ad_${id}`} style={{ width: '100%' }} className="w-full! absolute">
         {children}
       </div>
     );
@@ -129,7 +129,7 @@ export const GalleryManager = <T,>({
                     >
                       <Badge
                         className="absolute shadow-2xl shadow-accent-foreground
-                      top-0 left-0 w-fit m-1 bg-gradient-to-r from-indigo-500
+                      top-0 left-0 w-fit m-1 bg-linear-to-r from-indigo-500
                       via-purple-500 to-pink-500 text-white z-20"
                       >
                         Click to view

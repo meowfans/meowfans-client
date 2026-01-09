@@ -10,7 +10,9 @@
     "./ApolloClient": "./ApolloClient.tsx",
     "./ApolloWrapper": "./ApolloWrapper.tsx",
     "./api/*": "./api/*.ts",
-    "./generated/*": "./generated/*.ts"
+    "./generated/*": "./generated/*.ts",
+    "./hooks/*": "./hooks/*.ts",
+    "./actions/*": "./actions/*.ts"
   },
   "peerDependencies": {
     "react": "19.2.0",

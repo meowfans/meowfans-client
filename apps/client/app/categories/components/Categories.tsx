@@ -2,16 +2,15 @@
 
 import Loading from '@/app/loading';
 import { PageHeader } from '@/components/PageHeader';
-import { useTags } from '@/hooks/useTags';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { ScrollUpButton } from '@workspace/ui/globals/ScrollUpButton';
 import { useRef } from 'react';
 import { Bricks } from './Bricks';
+import { useTags } from '@/hooks/useTags';
 
 export const Categories = () => {
-  const { getTags } = useTags();
-  const { handleLoadMore, hasMore, loading, tags } = getTags();
+  const { handleLoadMore, hasMore, loading, tags } = useTags({});
   const topRef = useRef<HTMLDivElement>(null);
 
   return (

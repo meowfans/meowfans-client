@@ -4,7 +4,8 @@ import { TerminateDownloadingModal } from '@/components/modals/TerminateDownload
 import { TerminateImportingJobsModal } from '@/components/modals/TerminateImportingJobsModal';
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
-import { DownloadStates, ExtendedUsersEntity, SortBy } from '@workspace/gql/generated/graphql';
+import { useCreatorsStore } from '@/zustand/creators.store';
+import { DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -25,7 +26,8 @@ export const Vaults = () => {
   const [filterBy, setFilterBy] = useState<DownloadStates>(DownloadStates.Pending);
   const [selectedCreatorIds, setSelectedCreatorIds] = useState<string[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
-  const { creators, count, handleRefetch, hasNext, hasPrev, setCreators, totalPages } = useCreators({ pageNumber, sortBy });
+  const { setCreators } = useCreatorsStore();
+  const { creators, count, handleRefetch, hasNext, hasPrev, totalPages } = useCreators({ pageNumber, sortBy });
 
   const toggleCreatorSelection = (creatorId: string) => {
     setSelectedCreatorIds((prev) => (prev.includes(creatorId) ? prev.filter((id) => id !== creatorId) : [...prev, creatorId]));
@@ -33,7 +35,7 @@ export const Vaults = () => {
 
   const handleSelectN = (n: number) => {
     const ids = creators
-      .filter((v) => v.pendingObjectCount !== 0)
+      .filter((v) => v.creatorProfile.pendingObjectCount !== 0)
       .slice(0, n)
       .map((v) => v.id);
     setSelectedCreatorIds(ids);
@@ -43,18 +45,20 @@ export const Vaults = () => {
     ? creators.filter((c) => c.id.toLowerCase().includes(filterText.toLowerCase()) || (c.username ?? '').includes(filterText.toLowerCase()))
     : creators;
 
-  const handleSortVaults = (a: ExtendedUsersEntity, b: ExtendedUsersEntity) => {
+  const handleSortVaults = (a: UsersEntity, b: UsersEntity) => {
+    const final = b.creatorProfile;
+    const initial = a.creatorProfile;
     switch (filterBy) {
       case DownloadStates.Rejected:
-        return b.rejectedObjectCount - a.rejectedObjectCount;
+        return final.rejectedObjectCount - initial.rejectedObjectCount;
       case DownloadStates.Pending:
-        return b.pendingObjectCount - a.pendingObjectCount;
+        return final.pendingObjectCount - initial.pendingObjectCount;
       case DownloadStates.Processing:
-        return b.processingObjectCount - a.processingObjectCount;
+        return final.processingObjectCount - initial.processingObjectCount;
       case DownloadStates.Fulfilled:
-        return b.fulfilledObjectCount - a.fulfilledObjectCount;
+        return final.fulfilledObjectCount - initial.fulfilledObjectCount;
       default:
-        return b.pendingObjectCount - a.pendingObjectCount;
+        return final.pendingObjectCount - initial.pendingObjectCount;
     }
   };
 
@@ -67,7 +71,7 @@ export const Vaults = () => {
         onRefetch={handleRefetch}
         onSelectN={handleSelectN}
         filterBy={filterBy}
-        count={count}
+        count={count ?? 0}
         onFilter={setFilterText}
         selectedCreatorIds={selectedCreatorIds}
         onFilterBy={(stats) => setFilterBy(stats)}
@@ -106,7 +110,13 @@ export const Vaults = () => {
           </ScrollArea>
           <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
           <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-          <Paginate hasNext={hasNext} hasPrev={hasPrev} pageNumber={pageNumber} totalPages={totalPages} setPageNumber={setPageNumber} />
+          <Paginate
+            hasNext={!!hasNext}
+            hasPrev={!!hasPrev}
+            pageNumber={pageNumber}
+            totalPages={totalPages ?? 0}
+            setPageNumber={setPageNumber}
+          />
         </div>
       ) : (
         <div className="text-center">

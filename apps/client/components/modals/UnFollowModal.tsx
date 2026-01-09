@@ -1,11 +1,11 @@
 'use client';
 
-import { useFollows } from '@/hooks/useFollow';
-import { motion } from 'framer-motion';
-import { AlertTriangle } from 'lucide-react';
+import { useFollowings } from '@/hooks/useFollow';
 import { Button } from '@workspace/ui/components/button';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
+import { motion } from 'framer-motion';
+import { AlertTriangle } from 'lucide-react';
 
 interface Props {
   creatorId: string;
@@ -15,12 +15,12 @@ interface Props {
 }
 
 export const UnFollowModal: React.FC<Props> = ({ isOpen, setOpen, creatorId, onUnFollowed }) => {
-  const { creatorUnfollowHandler } = useFollows();
+  const { unfollowCreator } = useFollowings();
 
   const handleClose = () => setOpen(false);
 
   const handleUnFollowCreator = async () => {
-    await creatorUnfollowHandler(creatorId);
+    await unfollowCreator(creatorId);
     onUnFollowed?.();
     handleClose();
   };

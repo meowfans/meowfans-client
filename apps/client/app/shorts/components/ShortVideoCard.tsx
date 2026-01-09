@@ -82,7 +82,7 @@ export const ShortVideoCard: React.FC<Props> = ({ globalMute, onSetGlobalMute, s
       <div
         className={`
           absolute bottom-0 left-0 z-10 w-full
-          bg-gradient-to-t from-black/80 via-black/30 to-transparent
+          bg-linear-to-t from-black/80 via-black/30 to-transparent
           p-3 flex justify-between items-end
         `}
       >

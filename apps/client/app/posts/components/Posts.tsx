@@ -13,9 +13,8 @@ import { useState } from 'react';
 
 export const Posts = () => {
   const { fan } = useFan();
-  const { getPosts } = usePosts();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
-  const { posts, loading, handleLoadMore, hasMore, onRefresh } = getPosts({
+  const { posts, loading, handleLoadMore, hasMore, handleRefresh } = usePosts({
     fanId: fan?.fanId,
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc
@@ -28,7 +27,7 @@ export const Posts = () => {
         hasMore={hasMore}
         loading={loading}
         onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
+        onRefresh={handleRefresh}
       >
         <PageHeader title="Explore posts" />
         <GalleryManager

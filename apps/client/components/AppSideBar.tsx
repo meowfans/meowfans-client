@@ -19,7 +19,7 @@ import * as React from 'react';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="border-r-0" {...props}>
+    <Sidebar className="border-r-0" {...props} variant='sidebar' collapsible='icon'>
       <SidebarHeader>
         <div className="flex flex-row">
           {/* <TeamSwitcher teams={appSideBarButtonOptions.teams} /> */}

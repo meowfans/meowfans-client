@@ -13,9 +13,8 @@ import { useState } from 'react';
 
 const TrendingPosts = () => {
   const { fan } = useFan();
-  const { getPosts } = usePosts();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
-  const { posts, handleLoadMore, hasMore, loading, onRefresh } = getPosts({
+  const { posts, loadPosts, hasMore, loading, handleRefresh } = usePosts({
     take: 30,
     sortBy: SortBy.PostLikeCount,
     orderBy: SortOrder.Desc,
@@ -24,13 +23,7 @@ const TrendingPosts = () => {
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={posts.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={posts.length} hasMore={hasMore} loading={loading} onLoadMore={loadPosts} onRefresh={handleRefresh}>
         <PageHeader title="Top liked posts" />
         <GalleryManager
           loading={loading}

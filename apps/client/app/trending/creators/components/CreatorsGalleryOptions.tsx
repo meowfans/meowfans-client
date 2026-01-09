@@ -1,8 +1,8 @@
+import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
-import { ExtendedUsersEntity } from '@workspace/gql/generated/graphql';
 
 interface CreatorsGalleryOptions {
-  creator: ExtendedUsersEntity;
+  creator: UsersEntity;
 }
 
 export const CreatorsGalleryOptions: React.FC<CreatorsGalleryOptions> = ({ creator }) => {

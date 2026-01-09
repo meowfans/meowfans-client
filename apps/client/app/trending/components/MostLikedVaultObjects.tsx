@@ -5,13 +5,12 @@ import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useVaults } from '@/hooks/useVaults';
+import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 
 const MostLikedVaultObjects = () => {
   const { fan } = useFan();
-  const { getVaultObjects } = useVaults();
-  const { vaultObjects, loading } = getVaultObjects({
+  const { vaultObjects, loading } = useVaultObjects({
     take: 20,
     sortBy: SortBy.VaultObjectLikeCount,
     orderBy: SortOrder.Desc,

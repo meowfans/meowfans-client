@@ -2,7 +2,7 @@
 
 import { UnFollowModal } from '@/components/modals/UnFollowModal';
 import { NextImage } from '@/components/NextImage';
-import { useFollows } from '@/hooks/useFollow';
+import { useFollowings } from '@/hooks/useFollow';
 import { Button } from '@workspace/ui/components/button';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -14,16 +14,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export const Following = () => {
-  const { getFollowing } = useFollows();
   const [unfollowModal, setUnfollowModal] = useState<boolean>(false);
-  const { followings, hasMore, loading, onLoadMore } = getFollowing();
+  const { followings, hasMore, loading, loadMore } = useFollowings();
   const [selectedCreatorId, setSelectedCreatorId] = useState<string>('');
 
   return (
     <PageManager className="pb-10">
       <h2 className="text-2xl font-semibold mb-6 text-center text-white/90 tracking-tight">Following Creators</h2>
 
-      <InfiniteScrollManager hasMore={hasMore} dataLength={followings.length} loading={loading} onLoadMore={onLoadMore}>
+      <InfiniteScrollManager hasMore={hasMore} dataLength={followings.length} loading={loading} onLoadMore={loadMore}>
         <ScrollArea className="w-full p-2">
           <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 w-full mt-4">
             {followings.map((following, idx) => (
@@ -32,7 +31,7 @@ export const Following = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: idx * 0.05 }}
-                className="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-[1.015] transition-all duration-500 ease-out bg-gradient-to-br from-purple-500/10 to-pink-600/10 border border-white/10 backdrop-blur-md"
+                className="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-[1.015] transition-all duration-500 ease-out bg-linear-to-br from-purple-500/10 to-pink-600/10 border border-white/10 backdrop-blur-md"
               >
                 <NextImage className="h-56 w-full rounded-t-2xl" imageUrl={following.creatorProfile.user.avatarUrl} />
                 {/* <div className="absolute inset-0 bg-black/30 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 flex items-end justify-end p-3"> */}
@@ -53,7 +52,7 @@ export const Following = () => {
                       }}
                       modalText="Unfollow"
                       modalIcon={{ icon: BlocksIcon }}
-                      className="w-32 !bg-red-600 hover:!bg-red-700 text-white font-semibold transition-all duration-300 rounded-full"
+                      className="w-32 bg-red-600! hover:bg-red-700! text-white font-semibold transition-all duration-300 rounded-full"
                     />
                   </div>
                 </div>
@@ -83,7 +82,7 @@ export const Following = () => {
             <Link href={'/creators'}>
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="aspect-[2/3] rounded-2xl bg-gradient-to-br from-pink-600/20 to-purple-700/20 backdrop-blur-md border border-white/10 flex flex-col items-center justify-center text-white text-lg font-semibold shadow-md hover:shadow-xl transition-all duration-300"
+                className="aspect-2/3 rounded-2xl bg-linear-to-br from-pink-600/20 to-purple-700/20 backdrop-blur-md border border-white/10 flex flex-col items-center justify-center text-white text-lg font-semibold shadow-md hover:shadow-xl transition-all duration-300"
               >
                 <span className="bg-black/40 px-5 py-3 rounded-full backdrop-blur-sm text-white/90 text-sm font-semibold">
                   Discover More Creators

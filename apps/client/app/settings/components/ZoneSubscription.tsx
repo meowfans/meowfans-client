@@ -28,7 +28,7 @@ export const ZoneSubscription = () => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-      <Card className="rounded-2xl border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/30 backdrop-blur-md hover:shadow-2xl transition">
+      <Card className="rounded-2xl border border-border/40 shadow-xl bg-linear-to-br from-background to-muted/30 backdrop-blur-md hover:shadow-2xl transition">
         <CardHeader className="flex flex-row justify-between items-center">
           <div>
             <CardTitle className="text-xl font-semibold flex items-center gap-2">

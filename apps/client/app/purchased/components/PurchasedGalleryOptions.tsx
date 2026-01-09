@@ -9,7 +9,7 @@ export const FanAssetsGalleryOptions = () => {
         </Badge>
       </div>
       <div className="flex flex-col justify-end h-full">
-        <div className="flex justify-between items-end w-full p-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+        <div className="flex justify-between items-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
           <div className="flex gap-2 items-center"></div>
         </div>
       </div>

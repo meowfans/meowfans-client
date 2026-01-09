@@ -1,10 +1,10 @@
 'use client';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { appBottomNavButtonOptions } from '@/lib/constants';
+import { Button } from '@workspace/ui/components/button';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@workspace/ui/components/button';
 
 export const AppBottomNav = () => {
   const isMobile = useIsMobile();

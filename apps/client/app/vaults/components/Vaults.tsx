@@ -11,22 +11,15 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Vaults = () => {
   const { fan } = useFan();
-  const { getVaults } = useVaults();
-  const { vaults, loading, handleLoadMore, hasMore, onRefresh } = getVaults({
+  const { vaults, loading, loadMore, hasMore, refresh } = useVaults({
     fanId: fan?.fanId,
     sortBy: SortBy.VaultViewCount,
     orderBy: SortOrder.Desc
   });
-
+  console.log('Vaults page');
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={vaults.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={onRefresh}
-      >
+      <InfiniteScrollManager dataLength={vaults.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Explore vaults" />
         <GalleryManager
           loading={loading}

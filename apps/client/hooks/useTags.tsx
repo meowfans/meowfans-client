@@ -1,55 +1,55 @@
 import { useTagsStore } from '@/hooks/store/tags.store';
+import { useTagsActions } from '@workspace/gql/actions/tags.actions';
 import { SortOrder } from '@workspace/gql/generated/graphql';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { useTagsActions } from './api/tags.actions';
-import { useErrorHandler } from './useErrorHandler';
 
-export const useTags = () => {
+interface UseTagsProps {
+  limit?: number;
+}
+
+export const useTags = ({ limit = 300 }: UseTagsProps) => {
   const { getTagsQuery, getSearchedTagsQuery } = useTagsActions();
   const { tags, setTags } = useTagsStore();
   const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
-  const getTags = () => {
-    const LIMIT = 300;
-    const [loading, setLoading] = useState<boolean>(true);
-    const [hasMore, setHasMore] = useState<boolean>(false);
+  const loadTags = async (initialLoad = false) => {
+    const offset = initialLoad ? 0 : tags.length;
+    setLoading(tags.length === 0);
 
-    const loadTags = async (initialLoad = false) => {
-      const offset = initialLoad ? 0 : tags.length;
-      try {
-        const { data } = await getTagsQuery({
-          limit: LIMIT,
-          orderBy: SortOrder.Asc,
-          offset
-        });
+    try {
+      const { data } = await getTagsQuery({
+        limit,
+        orderBy: SortOrder.Asc,
+        offset
+      });
 
-        const fetchedTags = data?.getPublicTags ?? [];
-        setHasMore(fetchedTags.length === LIMIT);
+      const fetchedTags = data?.getPublicTags ?? [];
+      setHasMore(fetchedTags.length === limit);
 
-        if (initialLoad) setTags(fetchedTags);
-        else setTags([...tags, ...fetchedTags]);
-      } catch (error) {
-        errorHandler({ error });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleLoadMore = () => {
-      if (hasMore && !loading) loadTags();
-    };
-
-    const handleRefresh = async () => {
-      setTags([]);
-      loadTags(true);
-    };
-
-    useEffect(() => {
-      loadTags(true);
-    }, []);
-
-    return { tags, handleLoadMore, hasMore, loading, onRefresh: handleRefresh };
+      if (initialLoad) setTags(fetchedTags);
+      else setTags([...tags, ...fetchedTags]);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) loadTags();
+  };
+
+  const handleRefresh = async () => {
+    setTags([]);
+    loadTags(true);
+  };
+
+  useEffect(() => {
+    loadTags(true);
+  }, [limit]);
 
   const getSearchedTags = async (searchTerm: string, take = 5) => {
     try {
@@ -61,5 +61,5 @@ export const useTags = () => {
     }
   };
 
-  return { getTags, getSearchedTags };
+  return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh, getSearchedTags };
 };

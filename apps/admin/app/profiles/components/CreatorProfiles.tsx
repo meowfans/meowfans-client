@@ -1,17 +1,17 @@
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
-import { ExtendedUsersEntity, SortBy } from '@workspace/gql/generated/graphql';
+import { SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { PageManager } from '@workspace/ui/globals/PageManager';
+import { Paginate } from '@workspace/ui/globals/Paginate';
+import { ScrollToTheBottom } from '@workspace/ui/globals/ScrollToTheBottom';
+import { ScrollToTheTop } from '@workspace/ui/globals/ScrollToTheTop';
 import { RefreshCcw, Search, Shield } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { CreatorProfilesArea } from './CreatorProfilesArea';
-import { ScrollToTheTop } from '@workspace/ui/globals/ScrollToTheTop';
-import { ScrollToTheBottom } from '@workspace/ui/globals/ScrollToTheBottom';
-import { Paginate } from '@workspace/ui/globals/Paginate';
 
 export const CreatorProfiles = () => {
   const searchParams = useSearchParams();
@@ -33,7 +33,7 @@ export const CreatorProfiles = () => {
     : creators;
 
   return (
-    <PageManager className="w-full bg-gradient-to-b from-slate-50 to-white dark:from-zinc-900 dark:to-black">
+    <PageManager className="w-full bg-linear-to-b from-slate-50 to-white dark:from-zinc-900 dark:to-black">
       <div className="flex flex-col justify-between sticky bg-background z-10 py-3 space-y-1 px-4 border-b shadow-sm">
         <div className="flex flex-row items-center gap-3">
           <Button variant="secondary" className="rounded-full">
@@ -64,7 +64,7 @@ export const CreatorProfiles = () => {
               .sort((a, b) => (b.creatorProfile.assetCount ?? 0) - (a.creatorProfile.assetCount ?? 0))
               .map((creator) => (
                 <div key={creator.id} className="hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-                  <CreatorProfilesArea creator={creator as ExtendedUsersEntity} />
+                  <CreatorProfilesArea creator={creator as UsersEntity} />
                 </div>
               ))}
           </div>
@@ -72,7 +72,13 @@ export const CreatorProfiles = () => {
         </ScrollArea>
         <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
         <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-        <Paginate hasNext={hasNext} hasPrev={hasPrev} pageNumber={pageNumber} totalPages={totalPages} setPageNumber={setPageNumber} />
+        <Paginate
+          hasNext={!!hasNext}
+          hasPrev={!!hasPrev}
+          pageNumber={pageNumber}
+          totalPages={totalPages ?? 0}
+          setPageNumber={setPageNumber}
+        />
       </div>
     </PageManager>
   );

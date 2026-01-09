@@ -8,6 +8,6 @@
     "module": "ESNext",
     "moduleResolution": "bundler"
   },
-  "include": ["."],
+  "include": [".", "../../apps/admin/hooks/useAPI.ts"],
   "exclude": ["node_modules", "dist"]
 }

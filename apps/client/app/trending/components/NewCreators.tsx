@@ -1,18 +1,17 @@
 'use client';
 
 import { PageHeader } from '@/components/PageHeader';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { useCreators } from '@/hooks/useCreators';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import Link from 'next/link';
 
 const NewCreators = () => {
-  const { getCreators } = useCreators();
-  const { creators } = getCreators({ sortBy: SortBy.UserCreatedAt, take: 20, orderBy: SortOrder.Desc });
+  const { creators } = useCreators({ sortBy: SortBy.UserCreatedAt, take: 20, orderBy: SortOrder.Desc });
 
   return (
     <div className="w-full">
-      <PageHeader title="New Creators" zoneId="5772070" outstreamZoneId='5771264' />
+      <PageHeader title="New Creators" zoneId="5772070" outstreamZoneId="5771264" />
       <div className="flex gap-2 pb-2 overflow-x-scroll snap-x snap-mandatory scroll-smooth">
         {creators.map((creator) => (
           <Link

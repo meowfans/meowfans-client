@@ -1,8 +1,8 @@
 'use client';
 
-import { FOLLOW_CREATOR_MUTATION, GET_FOLLOWING_QUERY, UNFOLLOW_CREATOR_MUTATION } from '@workspace/gql/api/creatorAPI';
-import { FollowCreatorInput, PaginationInput, UnFollowCreatorInput } from '@workspace/gql/generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { FOLLOW_CREATOR_MUTATION, GET_FOLLOWING_QUERY, UNFOLLOW_CREATOR_MUTATION } from '@workspace/gql/api';
+import { FollowCreatorInput, PaginationInput, UnFollowCreatorInput } from '@workspace/gql/generated/graphql';
 
 export const useFollowsActions = () => {
   const [getFollowing] = useLazyQuery(GET_FOLLOWING_QUERY);

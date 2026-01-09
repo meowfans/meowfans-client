@@ -44,7 +44,8 @@
     ".next/types/**/*.ts",
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx",
-    "../../packages/gql/codegen.ts"
+    "../../packages/gql/**/*.ts",
+    "../../packages/gql/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }
