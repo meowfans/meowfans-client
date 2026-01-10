@@ -8,11 +8,8 @@ import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { useState } from 'react';
 import { toast } from 'sonner';
-interface Props {
-  onDelete: () => unknown;
-}
 
-export const DeleteAssetsModal: React.FC<Props> = ({ onDelete }) => {
+export const DeleteAssetsModal = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [deleteCreatorAssets] = useMutation(DELETE_CREATOR_ASSETS_MUTATION);
   const { assets, setAssets } = useAssetsStore();
@@ -23,7 +20,6 @@ export const DeleteAssetsModal: React.FC<Props> = ({ onDelete }) => {
     try {
       await deleteCreatorAssets({ variables: { input: { assetIds: selectedAssetIds } } });
       setAssets(assets.filter((a) => !selectedAssetIds.includes(a.assetId)));
-      onDelete();
       toast.success('Deleted assets permanently');
     } catch {
       toast.error('Something wrong happened!');

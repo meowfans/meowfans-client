@@ -2,7 +2,6 @@
 
 import { cn } from '@workspace/ui/lib/utils';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProgressBar from './ProgressBar';
 
 interface InfiniteScrollManagerProps {
   dataLength: number;
@@ -19,17 +18,13 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   dataLength,
   onLoadMore,
   hasMore,
-  loading,
-  onRefresh = () => {},
   children,
+  loading,
   customHeight = 'h-[100vh]',
   LoadingComponent
 }) => {
   return (
     <div id="scrollableDiv" className={cn('overflow-y-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
-      {/* {loading ? (
-        LoadingComponent || <ProgressBar isLoading={loading} />
-      ) : ( */}
       <InfiniteScroll
         loader={null}
         hasMore={hasMore}
@@ -40,7 +35,6 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
       >
         {children}
       </InfiniteScroll>
-       {/* )} */}
     </div>
   );
 };

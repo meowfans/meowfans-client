@@ -126,12 +126,7 @@ export const UploadPostsModal: React.FC<UploadPostsModalProps> = ({ onUpload, se
 
         <div className="space-y-1.5">
           <Label>Caption</Label>
-          <Textarea
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            placeholder="Describe your post..."
-            className="min-h-[80px]"
-          />
+          <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Describe your post..." className="min-h-20" />
         </div>
 
         <div className="space-y-1.5">
