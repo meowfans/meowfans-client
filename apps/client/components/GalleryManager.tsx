@@ -104,7 +104,7 @@ export const GalleryManager = <T,>({
 
   return (
     <div className="relative w-full overflow-hidden">
-      <ScrollArea className="w-full mb-[100px] overflow-x-hidden">
+      <ScrollArea className="w-full mb-25 overflow-x-hidden">
         <ExoAdProvider zoneId={zoneId} zoneType={ExoAdZoneTypes.Gallery} />
         <Masonry
           breakpointCols={breakpointCols}

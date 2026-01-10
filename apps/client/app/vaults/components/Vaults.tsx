@@ -16,7 +16,7 @@ export const Vaults = () => {
     sortBy: SortBy.VaultViewCount,
     orderBy: SortOrder.Desc
   });
-  console.log('Vaults page');
+
   return (
     <PageManager>
       <InfiniteScrollManager dataLength={vaults.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
