@@ -27,7 +27,7 @@ export const usePublicShorts = ({ sortBy = SortBy.AssetViewCount, orderBy = Sort
 
     try {
       const { data } = await publicGetShortsQuery({ sortBy, orderBy, take, skip, relatedUserId: fan?.fanId });
-      const fetchedShorts = data?.getPublicShorts as AssetsEntity[];
+      const fetchedShorts = data?.getPublicShortsAssets as AssetsEntity[];
       setHasMore(fetchedShorts.length === take);
       if (initialLoad) setPublicShorts(fetchedShorts);
       else setPublicShorts([...publicShorts, ...fetchedShorts]);
