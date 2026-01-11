@@ -97,10 +97,18 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
   className
 }: ExoClickAdProviderProps<TZone>) => {
   const { fan } = useFan();
-  const hasSubscribed = configService.NEXT_PUBLIC_NODE_ENV === 'development' ? true : !!fan?.hasZoneMembership;
+  const hasSubscribed = () => {
+    switch (configService.NEXT_PUBLIC_NODE_ENV) {
+      case 'dev_production':
+      case 'development':
+        return true;
+      default:
+        return !!fan?.hasZoneMembership;
+    }
+  };
 
   useEffect(() => {
-    if (hasSubscribed) return;
+    if (hasSubscribed()) return;
     const existing = document.querySelector('script[src="https://a.magsrv.com/ad-provider.js"]');
     if (!existing) {
       const script = document.createElement('script');
@@ -126,7 +134,7 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
     };
   }, [zoneId, classIdName, hasSubscribed]);
 
-  return hasSubscribed
+  return hasSubscribed()
     ? null
     : (() => {
         switch (zoneType) {
