@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
             case UserRoles.FAN:
               return NextResponse.redirect(fanAppUrl);
             default:
-              return NextResponse.redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL }));
+              return NextResponse.redirect(fanAppUrl);
           }
         }
       } catch {
@@ -54,3 +54,8 @@ export async function middleware(request: NextRequest) {
     }
   });
 }
+
+//Apply middleware to specific routes
+export const config = {
+  matcher: Object.values(AuthPaths)
+};
