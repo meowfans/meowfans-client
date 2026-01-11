@@ -9,7 +9,7 @@ const Logout = () => {
   const router = useRouter();
   const handleLogout = () => {
     deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
-    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL }));
+    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   };
   return (
     <Card>

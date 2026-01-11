@@ -17,17 +17,9 @@ export const CreatorProfiles = () => {
     orderBy: SortOrder.Desc
   });
 
-  console.log('Rendering Creator Profiles: ', creators);
-
   return (
     <PageManager className="mb-6 p-1">
-      <InfiniteScrollManager
-        dataLength={creators.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={loadMore}
-        onRefresh={refresh}
-      >
+      <InfiniteScrollManager dataLength={creators.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Explore creators" />
         <GalleryManager
           loading={loading}

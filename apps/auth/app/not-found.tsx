@@ -8,7 +8,7 @@ export default function NotFound() {
   const router = useRouter();
   return (
     <>
-      <div className="fixed z-50 top-0 left-0  right-0 flex flex-row bg-white dark:bg-black items-center justify-between border-b bg-gradient-to-bl px-2  h-16">
+      <div className="fixed z-50 top-0 left-0  right-0 flex flex-row bg-white dark:bg-black items-center justify-between border-b bg-linear-to-bl px-2  h-16">
         <div className="flex flex-row items-center gap-2">
           <ReturnToPreviousPage />
           <div className="cursor-pointer">{Icons.appIcon()}</div>

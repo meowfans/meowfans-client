@@ -20,12 +20,9 @@ export const useVaults = (params: VaultProps) => {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
-  console.log('Started');
-
   const loadVaults = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : vaults.length;
     setLoading(vaults.length === 0);
-    console.log('Load vaults called');
     try {
       const { data } = await getVaultsQuery({
         take: params.take ?? 40,
@@ -39,7 +36,6 @@ export const useVaults = (params: VaultProps) => {
         creatorType: [CreatorType.ImportedOnlyFansUser, CreatorType.ImportedPornStar]
       });
 
-      console.log('Data fetched');
 
       const fetched = (data?.getPublicVaults.vaults ?? []) as VaultsEntity[];
       setHasMore(fetched.length === (params.take ?? 40));
