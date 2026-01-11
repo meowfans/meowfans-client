@@ -17,12 +17,10 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, o
   const { creators, setCreators } = useCreatorsStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
-  console.log('Started');
 
   const loadCreators = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : creators.length;
     setLoading(creators.length === 0);
-    console.log('Loading creators...');
     try {
       const { data } = await publicGetDefaultCreatorsQuery({
         take,
@@ -37,9 +35,6 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, o
       const fetchedCreators = (data?.getDefaultCreators.creators ?? []) as UsersEntity[];
 
       setHasMore(fetchedCreators.length === take);
-
-      console.log('Fetched Creators: ', fetchedCreators);
-      console.log('Total Creators: ', creators);
 
       if (initialLoad) setCreators(fetchedCreators);
       else setCreators([...creators, ...fetchedCreators]);
