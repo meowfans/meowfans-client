@@ -40,7 +40,7 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
   switch (chartType) {
     case ShadCnChartTypes.RADAR_CHART:
       return (
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-62.5">
           <RadarChart data={dataTable}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey={xDataKey} />
@@ -141,7 +141,7 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
 
     default:
       return (
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-62.5">
           <RadarChart data={dataTable}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey={xDataKey} />

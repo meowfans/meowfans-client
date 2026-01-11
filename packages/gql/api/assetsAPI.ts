@@ -24,9 +24,9 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
   }
 `);
 
-export const GET_PUBLIC_SHORTS_QUERY = graphql(`
-  query GetPublicShorts($input: PaginationInput!) {
-    getPublicShorts(input: $input) {
+export const GET_PUBLIC_SHORTS_ASSETS_QUERY = graphql(`
+  query GetPublicShortsAssets($input: PaginationInput!) {
+    getPublicShortsAssets(input: $input) {
       blurredUrl
       createdAt
       creatorId
