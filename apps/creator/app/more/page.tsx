@@ -2,8 +2,6 @@
 
 import { More } from './components/More';
 
-const MorePage = () => {
+export default function MorePage() {
   return <More />;
-};
-
-export default MorePage;
+}
