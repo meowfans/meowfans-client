@@ -9,6 +9,7 @@ import { Account } from './Account';
 import { Display } from './Display';
 import { Header } from './Header';
 import TerminateAccount from './TerminateAccount';
+import { LogoutModal } from '@/components/modals/LogoutModal';
 
 export const More = () => {
   const { setOpenLogoutModal } = useUtilsStore();
@@ -38,6 +39,7 @@ export const More = () => {
           />
         </div>
       </div>
+      <LogoutModal />
       <DeleteAllAssetsModal isOpen={deleteAllAssetsModal} setOpen={setDeleteAllAssetsModal} />
       <TerminateAccountModal setOpen={setTerminateAccountModal} isOpen={terminateAccountModal} />
     </PageManager>
