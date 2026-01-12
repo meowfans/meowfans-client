@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@workspace/ui/components/textarea';
 import { Modal } from '@workspace/ui/modals/Modal';
 
-import { useAssetsStore } from '@/zustand/assets.store';
-import { usePostsStore } from '@/zustand/posts.store';
+import { useAssetsStore } from '@/hooks/store/assets.store';
+import { usePostsStore } from '@/hooks/store/posts.store';
 import { motion } from 'framer-motion';
 import { Star, X } from 'lucide-react';
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-import { useAssetsStore } from '@/zustand/assets.store';
+import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useMutation } from '@apollo/client/react';
 import { GET_CREATOR_ASSETS_QUERY, UPDATE_ASSETS_MUTATION } from '@workspace/gql/api/assetsAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
@@ -133,7 +133,6 @@ export const AssetOptionsMenu = () => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent className="shadow-xl">
-                    
                     <DropdownMenuItem
                       onClick={() => handleUpdateAssets(AssetType.Archive)}
                       className="cursor-pointer hover:bg-blue-500/10"

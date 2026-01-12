@@ -1,67 +1,79 @@
 'use client';
 
-import { Button } from '@workspace/ui/components/button';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
-import {
-  growthRateData,
-  GrowthRateType,
-  newCustomersData,
-  NewCustomerType,
-  performancesData,
-  PerformanceType,
-  ProfileCharts,
-  totalRevenueData,
-  TotalRevenueType
-} from '@/lib/constants';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useState } from 'react';
-import { Performances } from './ActiveAccounts';
+
+import {
+  GrowthRateType,
+  NewCustomerType,
+  PerformanceType,
+  ProfileCharts,
+  TotalRevenueType,
+  growthRateData,
+  newCustomersData,
+  performancesData,
+  totalRevenueData
+} from '@/lib/constants';
+
 import { AppliedChart } from './AppliedChart';
 import { GrowthRate } from './GrowthRate';
 import { NewCustomers } from './NewCustomers';
+import { Performances } from './Performances';
 import { ProfileDescription } from './ProfileDescription';
 import { Stats } from './Stats';
-import { Preferences } from './Tabs';
 import { TotalRevenue } from './TotalRevenue';
-
-const chartConfig: Record<ProfileCharts, ChartDataTypes> = {
-  NEW_CUSTOMERS: newCustomersData,
-  GROWTH_RATE: growthRateData,
-  PERFORMANCES: performancesData,
-  TOTAL_REVENUE: totalRevenueData
-};
 
 export type ChartDataTypes = NewCustomerType | TotalRevenueType | GrowthRateType | PerformanceType;
 
-const CreatorProfile = () => {
+const chartConfig: Record<ProfileCharts, ChartDataTypes> = {
+  NEW_CUSTOMERS: newCustomersData,
+  TOTAL_REVENUE: totalRevenueData,
+  GROWTH_RATE: growthRateData,
+  PERFORMANCES: performancesData
+};
+
+export const CreatorProfile = () => {
   const [chart, setChart] = useState<ProfileCharts>(ProfileCharts.NEW_CUSTOMERS);
 
   return (
     <PageManager>
-      <ScrollArea className="flex w-full">
-        <div className="md:flex hidden flex-col md:flex-row gap-1 justify-between">
-          <NewCustomers setChart={setChart} />
-          <TotalRevenue setChart={setChart} />
-          <GrowthRate setChart={setChart} />
-          <Performances setChart={setChart} />
-        </div>
-        <div className="flex flex-col gap-6 p-4 max-w-5xl mx-auto">
-          <div className="flex flex-row justify-between">
-            <AppliedChart data={chartConfig[chart]} />
+      <ScrollArea className="h-full">
+        <div className="mx-auto max-w-7xl px-4 py-6 space-y-6 pb-24 md:pb-8">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-semibold">Profile</h1>
+            <p className="text-sm text-muted-foreground">Manage your creator profile, assets, and insights.</p>
+          </div>
+          <div className="md:hidden">
             <ProfileDescription />
           </div>
-          <Stats />
-          <Preferences />
-          <div className="flex gap-3 justify-center">
-            <Button className="flex-1">Follow</Button>
-            <Button variant="outline" className="flex-1">
-              Message
-            </Button>
+
+          <div className="hidden md:flex gap-2 justify-between sticky top-20 z-10 bg-background/80 backdrop-blur-md p-2 rounded-xl border border-border/50">
+            <NewCustomers setChart={setChart} />
+            <TotalRevenue setChart={setChart} />
+            <GrowthRate setChart={setChart} />
+            <Performances setChart={setChart} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-6">
+            <div className="space-y-6">
+              <div className="flex md:hidden overflow-x-auto gap-2 pb-2 -mx-4 px-4">
+                <NewCustomers setChart={setChart} />
+                <TotalRevenue setChart={setChart} />
+                <GrowthRate setChart={setChart} />
+                <Performances setChart={setChart} />
+              </div>
+
+              <AppliedChart data={chartConfig[chart]} />
+              <Stats />
+            </div>
+
+            <div className="hidden md:block sticky top-28 h-fit">
+              <ProfileDescription />
+            </div>
           </div>
         </div>
       </ScrollArea>
     </PageManager>
   );
 };
-
-export default CreatorProfile;

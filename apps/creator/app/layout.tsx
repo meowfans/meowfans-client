@@ -1,7 +1,7 @@
 import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
-import { fetchRequest } from '@/hooks/api/useAPI';
-import { CreatorContextWrapper } from '@/hooks/useCreator';
+import { CreatorContextWrapper } from '@/hooks/context/useCreator';
+import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
@@ -10,8 +10,7 @@ import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
 import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import '@workspace/ui/globals.css';
-import { authCookieKey, FetchMethods, UserRoles } from '@workspace/ui/lib';
-import { buildSafeUrl, decodeJwtToken } from '@workspace/ui/lib/helpers';
+import { authCookieKey, FetchMethods, UserRoles, buildSafeUrl, decodeJwtToken } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
@@ -19,6 +18,7 @@ import { Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Toaster } from 'sonner';
+import { cache } from 'react';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,53 +60,50 @@ export const viewport: Viewport = {
   themeColor: '#FFFFFF'
 };
 
-interface Props {
-  children: React.ReactNode;
-}
-
 const verifyAccessToken = async (token: string) => {
-  const data = await fetchRequest({
+  return fetchRequest({
     fetchMethod: FetchMethods.POST,
     pathName: '/auth/verify',
     init: {
       body: JSON.stringify({ token }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     }
   });
-  return data;
 };
 
-const getCreator = async () => {
+const getCreatorProfile = async (): Promise<CreatorProfilesEntity> => {
   const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
   const client = await getClient();
   const { data } = await client.query({ query: GET_CREATOR_PROFILE_QUERY });
-  const creatorProfile = data?.getCreatorProfile as CreatorProfilesEntity;
-  return creatorProfile;
+  return data?.getCreatorProfile as CreatorProfilesEntity;
 };
 
-const handleValidate = async () => {
-  const cookiesList = await cookies();
-  const accessToken = cookiesList.get(authCookieKey)?.value;
+const validateCreatorSession = cache(async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(authCookieKey)?.value;
+  const authAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL });
 
-  const decodedToken = decodeJwtToken(accessToken);
+  if (!accessToken) redirect(authAppUrl);
 
-  if (decodedToken && !decodedToken.roles.includes(UserRoles.CREATOR)) {
-    return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
-  }
+  const decoded = decodeJwtToken(accessToken);
 
-  if (!accessToken) return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
+  if (!decoded || !decoded.roles.includes(UserRoles.CREATOR)) redirect(authAppUrl);
   try {
     await verifyAccessToken(accessToken);
-  } catch {
-    return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
+  } catch (error) {
+    console.error(error.message);
+    redirect(authAppUrl);
   }
-  return await getCreator();
-};
+
+  return getCreatorProfile();
+});
+
+interface Props {
+  children: React.ReactNode;
+}
 
 export default async function RootLayout({ children }: Props) {
-  const creator = await handleValidate();
+  const creator = await validateCreatorSession();
 
   return (
     <html lang="en" suppressHydrationWarning>

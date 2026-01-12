@@ -7,9 +7,9 @@ import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { Button } from '@workspace/ui/components/button';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { useCreator } from '@/hooks/useCreator';
-import { useUtilsStore } from '@/zustand/utils.store';
 import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
+import { useCreator } from '@/hooks/context/useCreator';
+import { useUtilsStore } from '@/hooks/store/utils.store';
 
 export const LogoutModal = () => {
   const { openLogoutModal, setOpenLogoutModal } = useUtilsStore();

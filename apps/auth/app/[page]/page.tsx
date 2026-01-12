@@ -27,14 +27,13 @@ export default function Auth() {
   const { login, signup, creatorSignup } = useAPI();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/analytics' });
-  const fanAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/trending' });
+  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/profile' });
+  const fanAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/dashboard' });
   const adminAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL, pathname: '/vaults' });
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>, input: LoginInput) => {
     e.preventDefault();
     setLoading(true);
-    console.log(navigator);
 
     try {
       const { roles } = await login(input);

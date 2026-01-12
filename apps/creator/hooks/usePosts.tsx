@@ -1,8 +1,8 @@
+import { usePostsStore } from '@/hooks/store/posts.store';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { CREATE_POST_MUTATION, GET_POSTS_QUERY } from '@workspace/gql/api/postsAPI';
 import { CreatePostInput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
-import { usePostsStore } from '@/zustand/posts.store';
-import { CombinedGraphQLErrors } from '@apollo/client';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -16,6 +16,7 @@ interface UsePostsProps {
 }
 
 export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Asc, take = 30 }: UsePostsProps) => {
+  const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const [getCreatorAssets] = useLazyQuery(GET_POSTS_QUERY);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,9 +36,7 @@ export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, order
       if (initialLoad) setPosts(fetchedPosts);
       else setPosts([...posts, ...fetchedPosts]);
     } catch (error) {
-      if (error.name === 'AbortError' || error instanceof CombinedGraphQLErrors) return;
-
-      toast.error('Something wrong happened!!');
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }

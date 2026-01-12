@@ -62,7 +62,7 @@ interface Props {
 }
 
 const verifyAccessToken = async (token: string) => {
-  const data = await fetchRequest({
+  return await fetchRequest({
     fetchMethod: FetchMethods.POST,
     pathName: '/auth/verify',
     init: {
@@ -72,14 +72,13 @@ const verifyAccessToken = async (token: string) => {
       }
     }
   });
-  return data;
 };
 
 const getUser = async () => {
   const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
   const client = await getClient();
   const { data } = await client.query({ query: GET_CREATOR_PROFILE_QUERY });
-  return data?.getCreatorProfile;
+  return data?.getCreatorProfile as CreatorProfilesEntity;
 };
 
 const handleValidateAuth = async () => {

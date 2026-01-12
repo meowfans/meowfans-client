@@ -1,6 +1,6 @@
 import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
 import { TerminateAccountModal } from '@/components/modals/TerminateAccountModal';
-import { useUtilsStore } from '@/zustand/utils.store';
+import { useUtilsStore } from '@/hooks/store/utils.store';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { LogOut } from 'lucide-react';

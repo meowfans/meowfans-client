@@ -1,10 +1,11 @@
+import { useAssetsStore } from '@/hooks/store/assets.store';
+import { usePostsStore } from '@/hooks/store/posts.store';
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import { GET_CREATOR_ASSETS_QUERY } from '@workspace/gql/api/assetsAPI';
 import { GET_POST_ASSETS_QUERY } from '@workspace/gql/api/postsAPI';
 import { AssetType, CreatorAssetsEntity, PostAssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
-import { useAssetsStore } from '@/zustand/assets.store';
-import { usePostsStore } from '@/zustand/posts.store';
-import { CombinedGraphQLErrors } from '@apollo/client';
-import { useLazyQuery } from '@apollo/client/react';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 interface Props {
@@ -70,6 +71,7 @@ export const usePostAssets = ({
   orderBy = SortOrder.Desc,
   assetType = AssetType.Private
 }: UseAssetsProps) => {
+  const { errorHandler } = useErrorHandler();
   const { postAssets, setPostAssets } = usePostsStore();
   const [getCreatorAssets] = useLazyQuery(GET_POST_ASSETS_QUERY);
   const [loading, setLoading] = useState<boolean>(true);
@@ -89,9 +91,7 @@ export const usePostAssets = ({
       if (initialLoad) setPostAssets(fetchedPostsAssets);
       else setPostAssets([...postAssets, ...fetchedPostsAssets]);
     } catch (error) {
-      if (error.name === 'AbortError' || error instanceof CombinedGraphQLErrors) return;
-
-      toast.error('Something wrong happened!!');
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
