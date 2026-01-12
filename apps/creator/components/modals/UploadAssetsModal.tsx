@@ -1,16 +1,16 @@
 'use client';
 
-import useAPI from '@/hooks/api/useAPI';
+import useAPI from '@/hooks/useAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
 
-import { useAssetsStore } from '@/zustand/assets.store';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useAssetsStore } from '@/hooks/store/assets.store';
+import { Dropdown } from '@workspace/ui/globals/Dropdown';
+import { DropZone } from '@workspace/ui/globals/DropZone';
+import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { MediaType } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { Dropdown } from '@workspace/ui/globals/Dropdown';
-import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
-import { DropZone } from '@workspace/ui/globals/DropZone';
+import { useState } from 'react';
+import { toast } from 'sonner';
 interface Props {
   onUpload: (length: number) => unknown;
 }

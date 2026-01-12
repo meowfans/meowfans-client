@@ -1,8 +1,8 @@
 'use client';
 
 import { AssetOptionsMenu } from '@/app/assets/components/AssetOptionsMenu';
-import { useAssetsStore } from '@/zustand/assets.store';
-import { usePostsStore } from '@/zustand/posts.store';
+import { useAssetsStore } from '@/hooks/store/assets.store';
+import { usePostsStore } from '@/hooks/store/posts.store';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';

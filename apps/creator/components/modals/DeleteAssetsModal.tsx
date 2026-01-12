@@ -1,6 +1,6 @@
 'use client';
 
-import { useAssetsStore } from '@/zustand/assets.store';
+import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useMutation } from '@apollo/client/react';
 import { DELETE_CREATOR_ASSETS_MUTATION } from '@workspace/gql/api/assetsAPI';
 import { Button } from '@workspace/ui/components/button';

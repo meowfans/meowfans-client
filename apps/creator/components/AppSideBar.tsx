@@ -1,6 +1,7 @@
 'use client';
 
-import { appSideBarButtonOptions, authenticatedPaths } from '@/lib/constants';
+import { appSideBarButtonOptions } from '@/lib/constants';
+import { getAuthenticatedPath } from '@/util/helpers';
 import { Button } from '@workspace/ui/components/button';
 import {
   Sidebar,
@@ -14,7 +15,6 @@ import {
   useSidebar
 } from '@workspace/ui/components/sidebar';
 import { useMotionLoader } from '@workspace/ui/hooks/useMotionLoader';
-import { usePeriodicRotation } from '@workspace/ui/hooks/usePeriodicRotation';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
@@ -25,14 +25,6 @@ export const AppSidebar = () => {
   const { channelId, id } = useParams();
   const { setOpen } = useSidebar();
   const controls = useMotionLoader(5000);
-
-  const isNotAuthenticated =
-    !authenticatedPaths.includes(pathname) &&
-    !pathname.startsWith('/channels') &&
-    !pathname.startsWith('/posts') &&
-    !pathname.startsWith('/assets');
-
-  if (isNotAuthenticated) return null;
 
   const handlePathName = () => {
     switch (pathname) {
@@ -45,13 +37,13 @@ export const AppSidebar = () => {
     }
   };
 
-  return (
+  return getAuthenticatedPath(pathname) ? null : (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="flex flex-row justify-between">
-            MEOW
-            {isNotAuthenticated && (
+            MEOWFANS
+            {getAuthenticatedPath(pathname) && (
               <Button variant={'outline'} onClick={() => setOpen(false)}>
                 <X />
               </Button>
@@ -63,7 +55,7 @@ export const AppSidebar = () => {
               {appSideBarButtonOptions.map((item) => {
                 const isActive = handlePathName() === item.path;
                 return (
-                  <SidebarMenuItem key={item.title} className="rounded-2xl  ">
+                  <SidebarMenuItem key={item.title} className="rounded-2xl">
                     <SidebarMenuButton
                       className={`${handlePathName() === item.path && 'bg-blue-200'} `}
                       asChild
@@ -77,7 +69,6 @@ export const AppSidebar = () => {
                         ) : (
                           <item.icon />
                         )}
-
                         <span>{item.title}</span>
                       </div>
                     </SidebarMenuButton>

@@ -12,9 +12,9 @@ export const useErrorHandler = () => {
   const errorHandler = ({ showError = true, error, msg }: ErrorHandlerProps) => {
     let message = '';
     if (error.name === 'AbortError') return;
-    if (error instanceof CombinedGraphQLErrors) {
-      message = error.message;
-    } else message = 'Something wrong happened!';
+    if (error instanceof CombinedGraphQLErrors) message = error.message;
+    else if (error.message) message = error.message;
+    else message = 'Something wrong happened!';
 
     message = msg || message;
 

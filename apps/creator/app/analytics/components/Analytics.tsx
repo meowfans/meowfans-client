@@ -1,8 +1,8 @@
 'use client';
 
-import { Performances } from '@/app/profile/components/ActiveAccounts';
 import { GrowthRate } from '@/app/profile/components/GrowthRate';
 import { NewCustomers } from '@/app/profile/components/NewCustomers';
+import { Performances } from '@/app/profile/components/Performances';
 import { TotalRevenue } from '@/app/profile/components/TotalRevenue';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { Separator } from '@workspace/ui/components/separator';

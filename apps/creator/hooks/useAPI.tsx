@@ -1,6 +1,8 @@
 import { configService } from '@/util/config';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { authCookieKey, authRefreshCookieKey, FetchMethods, LoginInput, MediaType, SignupInput } from '@workspace/ui/lib';
 import { getCookie, setCookie } from 'cookies-next';
+import { toast } from 'sonner';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
@@ -16,8 +18,8 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
     if (!res.ok) throw new Error(data.message);
 
     return data;
-  } catch {
-    throw new Error('!!!Something wrong happened!!!');
+  } catch (error) {
+    toast.error(error.message);
   }
 };
 

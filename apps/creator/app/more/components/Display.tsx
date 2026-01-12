@@ -1,7 +1,6 @@
 'use client';
 
-import { useShadCnBackgroundStore } from '@/zustand/background.store';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
+import { useShadCnBackgroundStore } from '@/hooks/store/background.store';
 import { Label } from '@workspace/ui/components/label';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { GenericCard } from '@workspace/ui/globals/GenericCard';
