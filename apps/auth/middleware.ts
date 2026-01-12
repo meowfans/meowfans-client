@@ -36,10 +36,8 @@ export async function middleware(request: NextRequest) {
               return NextResponse.redirect(adminAppUrl);
             case UserRoles.CREATOR:
               return NextResponse.redirect(creatorAppUrl);
-            case UserRoles.FAN:
-              return NextResponse.redirect(fanAppUrl);
             default:
-              return NextResponse.redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL }));
+              return NextResponse.redirect(fanAppUrl);
           }
         }
       } catch {

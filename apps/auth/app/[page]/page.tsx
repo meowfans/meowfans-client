@@ -6,6 +6,7 @@ import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { RetroGrid } from '@workspace/ui/components/shadcn-io/retro-grid';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { AppSizes, AuthPaths, LoginInput, SignupInput, UserRoles } from '@workspace/ui/lib/enums';
 import { CreatorSignupInput } from '@workspace/ui/lib/types';
 import dynamic from 'next/dynamic';
@@ -20,35 +21,24 @@ const ForgotPassword = dynamic(() => import('@/components/ForgotPassword'), { ss
 const CreatorSignup = dynamic(() => import('@/components/CreatorSignup'), { ssr: false });
 
 export default function Auth() {
-  const pathname = usePathname();
-  const { login, signup, creatorSignup } = useAPI();
   const router = useRouter();
+  const pathname = usePathname();
+  const { errorHandler } = useErrorHandler();
+  const { login, signup, creatorSignup } = useAPI();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/analytics' });
+  const fanAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/trending' });
+  const adminAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL, pathname: '/vaults' });
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>, input: LoginInput) => {
     e.preventDefault();
     setLoading(true);
-    if (!navigator.onLine) return toast.error('You are currently offline!');
+    console.log(navigator);
 
     try {
       const { roles } = await login(input);
-
       const role = roles?.at(0) as UserRoles;
-
-      const creatorAppUrl = buildSafeUrl({
-        host: configService.NEXT_PUBLIC_CREATOR_URL,
-        pathname: '/analytics'
-      });
-
-      const fanAppUrl = buildSafeUrl({
-        host: configService.NEXT_PUBLIC_FAN_URL,
-        pathname: '/trending'
-      });
-
-      const adminAppUrl = buildSafeUrl({
-        host: configService.NEXT_PUBLIC_ADMIN_URL,
-        pathname: '/vaults'
-      });
 
       switch (role) {
         case UserRoles.ADMIN:
@@ -61,7 +51,7 @@ export default function Auth() {
 
       toast.success('Logged in');
     } catch (error) {
-      toast.error((error as Error).message);
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
@@ -70,19 +60,13 @@ export default function Auth() {
   const handleSignup = async (e: FormEvent<HTMLFormElement>, input: SignupInput) => {
     e.preventDefault();
     setLoading(true);
-    if (!navigator.onLine) return toast.error('You are currently offline!');
 
     try {
       await signup(input);
 
-      const fanAppUrl = buildSafeUrl({
-        host: configService.NEXT_PUBLIC_FAN_URL,
-        pathname: '/dashboard'
-      });
-
       return router.push(fanAppUrl);
     } catch (error) {
-      toast.error((error as Error).message);
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
@@ -91,19 +75,14 @@ export default function Auth() {
   const handleCreatorSignup = async (e: FormEvent<HTMLFormElement>, input: CreatorSignupInput) => {
     e.preventDefault();
     setLoading(true);
-    if (!navigator.onLine) return toast.error('You are currently offline!');
+
     try {
       await creatorSignup(input);
-
-      const creatorAppUrl = buildSafeUrl({
-        host: configService.NEXT_PUBLIC_CREATOR_URL,
-        pathname: '/profile'
-      });
 
       toast.success('Logged in');
       return router.push(creatorAppUrl);
     } catch (error) {
-      toast.error((error as Error).message);
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
