@@ -3,12 +3,14 @@
 import { Icons } from '@/lib/icons/Icons';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { ApplyHeaderOptions } from './ApplyHeaderOptions';
+import { usePathname } from 'next/navigation';
 
 interface Props {
   header?: string;
 }
 export const AppHeader: React.FC<Props> = ({ header }) => {
-  return (
+  const pathname = usePathname();
+  return !pathname.startsWith('/channels') ? (
     <header
       className={`sticky top-0 z-50 border-b
         bg-linear-to-bl from-background
@@ -26,5 +28,5 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
         </div>
       </div>
     </header>
-  );
+  ) : null;
 };
