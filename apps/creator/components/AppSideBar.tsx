@@ -13,7 +13,9 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@workspace/ui/components/sidebar';
-import { MotionPresets } from '@workspace/ui/globals/MotionPresets';
+import { useMotionLoader } from '@workspace/ui/hooks/useMotionLoader';
+import { usePeriodicRotation } from '@workspace/ui/hooks/usePeriodicRotation';
+import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
@@ -22,6 +24,8 @@ export const AppSidebar = () => {
   const router = useRouter();
   const { channelId, id } = useParams();
   const { setOpen } = useSidebar();
+  const controls = useMotionLoader(5000);
+
   const isNotAuthenticated =
     !authenticatedPaths.includes(pathname) &&
     !pathname.startsWith('/channels') &&
@@ -53,24 +57,33 @@ export const AppSidebar = () => {
               </Button>
             )}
           </SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
-              {appSideBarButtonOptions.map((item) => (
-                <SidebarMenuItem key={item.title} className="rounded-2xl  ">
-                  <MotionPresets motionType="SlideRightToLeft">
+              {appSideBarButtonOptions.map((item) => {
+                const isActive = handlePathName() === item.path;
+                return (
+                  <SidebarMenuItem key={item.title} className="rounded-2xl  ">
                     <SidebarMenuButton
                       className={`${handlePathName() === item.path && 'bg-blue-200'} `}
                       asChild
                       onClick={() => router.push(item.path)}
                     >
                       <div className="flex flex-row">
-                        <item.icon />
+                        {isActive ? (
+                          <motion.div animate={controls}>
+                            <item.icon />
+                          </motion.div>
+                        ) : (
+                          <item.icon />
+                        )}
+
                         <span>{item.title}</span>
                       </div>
                     </SidebarMenuButton>
-                  </MotionPresets>
-                </SidebarMenuItem>
-              ))}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
