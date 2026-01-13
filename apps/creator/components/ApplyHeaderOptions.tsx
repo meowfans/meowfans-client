@@ -51,6 +51,26 @@ export const ApplyHeaderOptions = () => {
 
   const canCancel = canSelect || rangeSelection;
 
+  if (pathname.startsWith('/posts')) {
+    return (
+      <div className="flex flex-row items-center space-x-2">
+        <ApplyButtonTooltip tootTipTitle="Post studio" buttonProps={{ icon: BarChart3 }} onClick={() => router.push('/post')} />
+        <ApplyButtonTooltip tootTipTitle="Create post" buttonProps={{ icon: Upload }} onClick={() => router.push('/assets')} />
+        <ApplyButtonTooltip tootTipTitle="Settings" buttonProps={{ icon: Settings }} onClick={() => router.push('/more')} />
+      </div>
+    );
+  }
+
+  if (pathname.startsWith('/post')) {
+    return (
+      <div className="flex flex-row items-center space-x-2">
+        <ApplyButtonTooltip tootTipTitle="View posts" buttonProps={{ icon: FileDown }} onClick={() => router.push('/posts')} />
+        <ApplyButtonTooltip tootTipTitle="Create post" buttonProps={{ icon: UploadCloud }} onClick={() => router.push('/assets')} />
+        <ApplyButtonTooltip tootTipTitle="Insights" buttonProps={{ icon: BarChart3 }} onClick={() => router.push('/analytics')} />
+      </div>
+    );
+  }
+
   switch (pathname) {
     case '/home':
       return (
@@ -91,7 +111,7 @@ export const ApplyHeaderOptions = () => {
                 applyTooltip={{ title: 'Delete assets' }}
                 onChangeModalState={() => setDeleteModal(true)}
                 modalIcon={{ icon: Trash, size: 'icon' }}
-                className={selectedAssets.length ? 'bg-red-600' : ''}
+                className={selectedAssets.length ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : ''}
                 disabled={!selectedAssets.length}
               />
               <ApplyButtonTooltip

@@ -13,30 +13,29 @@ import {
   PolarGrid,
   Radar,
   RadarChart,
-  XAxis
+  XAxis,
+  YAxis
 } from 'recharts';
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from '../components/chart';
 import { ShadCnChartTypes } from '../lib';
 
 interface Props {
   chartType?: ShadCnChartTypes;
-  yDataKey: string;
   xDataKey: string;
+  yDataKey: string;
+  XDataLabel: string;
+  yDataLabel: string;
   dataTable: any[];
 }
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'var(--chart-1)'
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'var(--chart-2)'
-  }
-} satisfies ChartConfig;
+const cssVar = (key: string) => `var(--color-${key})`;
 
-export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataKey, yDataKey }) => {
+export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataKey, yDataKey, XDataLabel, yDataLabel }) => {
+  const chartConfig = {
+    [xDataKey]: { label: XDataLabel, color: 'var(--chart-1)' },
+    [yDataKey]: { label: yDataLabel, color: 'var(--chart-2)' }
+  } satisfies ChartConfig;
+
   switch (chartType) {
     case ShadCnChartTypes.RADAR_CHART:
       return (
@@ -45,15 +44,7 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey={xDataKey} />
             <PolarGrid />
-            <Radar
-              dataKey={yDataKey}
-              fill="var(--color-desktop)"
-              fillOpacity={0.6}
-              dot={{
-                r: 4,
-                fillOpacity: 1
-              }}
-            />
+            <Radar dataKey={yDataKey} fill={cssVar(yDataKey)} fillOpacity={0.6} dot={{ r: 4, fillOpacity: 1 }} />
           </RadarChart>
         </ChartContainer>
       );
@@ -61,27 +52,15 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
     case ShadCnChartTypes.AREA_CHART:
       return (
         <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={dataTable}
-            margin={{
-              left: 12,
-              right: 12
-            }}
-          >
+          <AreaChart data={dataTable} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey={xDataKey} tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+            <XAxis dataKey={xDataKey} tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => String(v).slice(0, 3)} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-            <Area dataKey={xDataKey} type="natural" fill="var(--color-mobile)" fillOpacity={0.4} stroke="var(--color-mobile)" stackId="a" />
-            <Area
-              dataKey={yDataKey}
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent payload={[]} />} />
+
+            <Area dataKey={xDataKey} type="natural" fill={cssVar(xDataKey)} stroke={cssVar(xDataKey)} fillOpacity={0.4} stackId="a" />
+            <Area dataKey={yDataKey} type="natural" fill={cssVar(yDataKey)} stroke={cssVar(yDataKey)} fillOpacity={0.4} stackId="a" />
+
+            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       );
@@ -89,17 +68,13 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
     case ShadCnChartTypes.BAR_CHART:
       return (
         <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={dataTable}
-            margin={{
-              top: 20
-            }}
-          >
+          <BarChart data={dataTable} margin={{ top: 20 }}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey={xDataKey} tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => value.slice(0, 3)} />
+            <XAxis dataKey={xDataKey} tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(v) => String(v).slice(0, 3)} />
+            <YAxis tickLine={false} axisLine={false} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Bar dataKey={yDataKey} fill="var(--color-desktop)" radius={8}>
+
+            <Bar dataKey={yDataKey} fill={cssVar(yDataKey)} radius={8}>
               <LabelList position="top" offset={12} className="fill-foreground" fontSize={12} />
             </Bar>
           </BarChart>
@@ -109,29 +84,18 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
     case ShadCnChartTypes.LINE_CHART:
       return (
         <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={dataTable}
-            margin={{
-              top: 20,
-              left: 12,
-              right: 12
-            }}
-          >
+          <LineChart data={dataTable} margin={{ top: 20, left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey={xDataKey} tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+            <XAxis dataKey={xDataKey} tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => String(v).slice(0, 3)} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+
             <Line
               dataKey={yDataKey}
               type="natural"
-              stroke="var(--color-desktop)"
+              stroke={cssVar(yDataKey)}
               strokeWidth={2}
-              dot={{
-                fill: 'var(--color-desktop)'
-              }}
-              activeDot={{
-                r: 6
-              }}
+              dot={{ fill: cssVar(yDataKey) }}
+              activeDot={{ r: 6 }}
             >
               <LabelList position="top" offset={12} className="fill-foreground" fontSize={12} />
             </Line>
@@ -140,23 +104,6 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
       );
 
     default:
-      return (
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-62.5">
-          <RadarChart data={dataTable}>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <PolarAngleAxis dataKey={xDataKey} />
-            <PolarGrid />
-            <Radar
-              dataKey={yDataKey}
-              fill="var(--color-desktop)"
-              fillOpacity={0.6}
-              dot={{
-                r: 4,
-                fillOpacity: 1
-              }}
-            />
-          </RadarChart>
-        </ChartContainer>
-      );
+      return null;
   }
 };

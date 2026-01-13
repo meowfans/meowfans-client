@@ -26,10 +26,10 @@ export const PlanPreview: React.FC<Props> = ({
   return (
     <div className="w-full">
       <h2 className="text-xl font-semibold mb-4">Live Preview</h2>
-      <Card className={`relative overflow-hidden ${featured ? 'ring-2 ring-indigo-400' : ''}`}>
+      <Card className={`relative overflow-hidden ${featured ? 'ring-2 ring-primary/40' : ''}`}>
         {featured && (
           <div className="absolute top-1 right-1">
-            <div className="flex items-center gap-2 bg-indigo-600 text-white text-xs px-3 py-1 rounded-full shadow">
+            <div className="flex items-center gap-2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full shadow">
               <Crown className="w-4 h-4" />
               <span>Popular</span>
             </div>

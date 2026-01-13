@@ -1,17 +1,20 @@
 'use client';
-import { Icons } from '@/lib/icons/Icons';
 import { Button } from '@workspace/ui/components/button';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
   const router = useRouter();
   return (
     <>
-      <div className="fixed z-50 top-0 left-0  right-0 flex flex-row bg-white dark:bg-black items-center justify-between border-b bg-gradient-to-bl px-2  h-16">
+      <div className="fixed z-50 top-0 left-0 right-0 flex flex-row items-center justify-between border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2 h-16">
         <div className="flex flex-row items-center gap-2">
           <ReturnToPreviousPage />
-          <div className="cursor-pointer">{Icons.appIcon()}</div>
+          <Link href="/posts" className="shrink-0">
+            <Image src="/icons/app_icon.svg" alt="Creator app logo" width={28} height={28} />
+          </Link>
           <p className="font-semibold text-xl animate-pulse">{'Meow'}</p>
         </div>
       </div>

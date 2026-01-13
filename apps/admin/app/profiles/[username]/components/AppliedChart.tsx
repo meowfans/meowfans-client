@@ -2,7 +2,6 @@
 
 import { ApplyChartModal } from '@/components/modals/ApplyChartModal';
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
-import { ChartConfig } from '@workspace/ui/components/chart';
 import { ApplyShadCnChart } from '@workspace/ui/globals/ApplyShadCnChart';
 import { ShadCnChartTypes } from '@workspace/ui/lib';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
@@ -10,22 +9,11 @@ import { ChartArea, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import { ChartDataTypes } from './CreatorProfile';
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'var(--chart-1)'
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'var(--chart-2)'
-  }
-} satisfies ChartConfig;
-
-interface Props {
+interface AppliedChartProps {
   data: ChartDataTypes;
 }
 
-export const AppliedChart: React.FC<Props> = ({ data }) => {
+export const AppliedChart: React.FC<AppliedChartProps> = ({ data }) => {
   const [chartOpen, setChartOpen] = useState<boolean>(false);
   const [chartType, setChartType] = useState<ShadCnChartTypes>(ShadCnChartTypes.RADAR_CHART);
   return (
@@ -38,7 +26,14 @@ export const AppliedChart: React.FC<Props> = ({ data }) => {
         </CardAction>
       </CardHeader>
       <CardContent className="pb-0">
-        <ApplyShadCnChart dataTable={data.chartData} xDataKey={data.XDataKey} yDataKey={data.YDataKey} chartType={chartType} />
+        <ApplyShadCnChart
+          dataTable={data.chartData}
+          xDataKey={data.XDataKey}
+          yDataKey={data.YDataKey}
+          chartType={chartType}
+          XDataLabel={data.XDataKey}
+          yDataLabel={data.YDataKey}
+        />
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">

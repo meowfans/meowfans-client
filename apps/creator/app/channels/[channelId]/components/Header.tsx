@@ -1,14 +1,23 @@
 import { Button } from '@workspace/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@workspace/ui/components/dropdown-menu';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { ArrowBigLeftDash, GalleryVerticalEnd, Menu, VolumeOff } from 'lucide-react';
+import { ArrowBigLeftDash, EllipsisVertical, GalleryVerticalEnd, Menu, ShieldBan, Trash2, VolumeOff, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export const MessageHeader = () => {
   const router = useRouter();
   return (
-    <div className="fixed top-0 left-0 md:left-[var(--sidebar-width)] md:right-[var(--sidebar-width)]  right-0 flex flex-row bg-white dark:bg-black items-center justify-between border-b bg-gradient-to-bl px-2 z-40 h-16">
+    <div className="fixed top-0 left-0 md:left-(--sidebar-width) md:right-(--sidebar-width) right-0 flex flex-row items-center justify-between border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 px-2 z-40 h-16">
       <div className="flex flex-row justify-between space-x-3 items-center">
         <Button variant={'outline'} size={'lg'} onClick={() => router.back()}>
           <ArrowBigLeftDash />
@@ -26,13 +35,39 @@ export const MessageHeader = () => {
           <ApplyTheme />
         </div>
         <div className="flex items-center gap-2">
-          <Button className="hidden md:inline-flex">
+          <Button className="hidden md:inline-flex" variant="outline" size="icon" aria-label="Gallery">
             <GalleryVerticalEnd />
           </Button>
-          <Button className="hidden md:inline-flex">
+          <Button className="hidden md:inline-flex" variant="outline" size="icon" aria-label="Mute">
             <VolumeOff />
           </Button>
-          <Button className="md:hidden inline-flex">
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Chat actions">
+                <EllipsisVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Chat actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => toast.message('Muted chat')}>
+                <VolumeX className="h-4 w-4" />
+                Mute
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => toast.message('Restricted user')}>
+                <ShieldBan className="h-4 w-4" />
+                Restrict
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onClick={() => toast.message('Deleted chat')}>
+                <Trash2 className="h-4 w-4" />
+                Delete chat
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button className="md:hidden inline-flex" variant="outline" size="icon" aria-label="Menu">
             <Menu />
           </Button>
         </div>

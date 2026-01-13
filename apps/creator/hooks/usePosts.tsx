@@ -1,10 +1,21 @@
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { CREATE_POST_MUTATION, GET_POSTS_QUERY } from '@workspace/gql/api/postsAPI';
-import { CreatePostInput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useLazyQuery } from '@apollo/client/react';
+import { usePostsActions } from '@workspace/gql/actions';
+import { GET_POSTS_QUERY } from '@workspace/gql/api/postsAPI';
+import {
+  CreatePostInput,
+  DeletePostInput,
+  DeletePostsInput,
+  GetPostsInfoOutput,
+  PaginationInput,
+  PostsEntity,
+  SortBy,
+  SortOrder,
+  UpdatePostInput
+} from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 interface UsePostsProps {
   pageNumber?: number;
@@ -15,18 +26,33 @@ interface UsePostsProps {
   take?: number;
 }
 
-export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Asc, take = 30 }: UsePostsProps) => {
+/**
+ * This hook is designed to fetch paginated posts belonging to a creator.
+ * No visibility or purchase logic is applied.
+ */
+export const usePosts = ({
+  username,
+  fanId: relatedUserId,
+  sortBy = SortBy.PostCreatedAt,
+  orderBy = SortOrder.Asc,
+  take = 30
+}: UsePostsProps) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
-  const [getCreatorAssets] = useLazyQuery(GET_POSTS_QUERY);
+  const { getPostsQuery } = usePostsActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadPosts = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : posts.length;
     try {
-      const { data } = await getCreatorAssets({
-        variables: { input: { take, skip, username, orderBy, relatedUserId: fanId, sortBy } }
+      const { data } = await getPostsQuery({
+        take,
+        skip,
+        username,
+        orderBy,
+        relatedUserId,
+        sortBy
       });
 
       const fetchedPosts = (data?.getPosts ?? []) as PostsEntity[];
@@ -53,22 +79,167 @@ export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, order
   return { posts, handleLoadMore, loading, hasMore };
 };
 
-export const useOnPostsUploadMutation = (input: CreatePostInput) => {
-  const [createPost] = useMutation(CREATE_POST_MUTATION);
+/**
+ * This hook is designed to create a new post with attached assets.
+ *
+ * Business rules:
+ * - Preview asset defaults to the first asset if not specified
+ * - Post price is derived from post type
+ *
+ */
+export const useOnPostsUploadMutation = () => {
+  const { errorHandler } = useErrorHandler();
+  const { posts, setPosts } = usePostsStore();
+  const { createPostQuery } = usePostsActions();
+  const { successHandler } = useSuccessHandler();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleUploadPosts = async () => {
+  const handleUploadPosts = async (input: CreatePostInput) => {
     if (!input.assetIds.length) return;
     setLoading(true);
     try {
-      await createPost({ variables: { input } });
-      toast.success('Successfully uploaded posts!');
+      const { data } = await createPostQuery(input);
+      const newPost = data?.createPost as PostsEntity;
+      if (newPost) {
+        setPosts([newPost, ...posts]);
+        successHandler({ message: 'Successfully uploaded posts!', isEnabledConfetti: true });
+      }
     } catch (error) {
-      toast.error(error.message);
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
   };
 
   return { handleUploadPosts, loading, setLoading };
+};
+
+/**
+ * This hook is designed to update editable post fields.
+ * Only fields provided in input are updated.
+ */
+export const useUpdatePost = () => {
+  const { successHandler } = useSuccessHandler();
+  const { errorHandler } = useErrorHandler();
+  const { posts, setPosts } = usePostsStore();
+  const { updatePostMutation } = usePostsActions();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleUpdatePost = async (input: UpdatePostInput) => {
+    setLoading(true);
+
+    try {
+      const { data } = await updatePostMutation(input);
+      const updatedPost = data?.updatePost as PostsEntity;
+      setPosts(posts.map((post) => (post.id === updatedPost.id ? { ...post, ...updatedPost } : post)));
+      successHandler({ message: 'Successfully updated the post' });
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, handleUpdatePost };
+};
+
+/**
+ * This hook is designed deletes a single post.
+ */
+export const useDeletePost = () => {
+  const { deletePostMutation } = usePostsActions();
+  const { errorHandler } = useErrorHandler();
+  const { posts, setPosts } = usePostsStore();
+  const { successHandler } = useSuccessHandler();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleDeletePost = async (input: DeletePostInput) => {
+    setLoading(true);
+
+    try {
+      const { data } = await deletePostMutation(input);
+      if (data?.deletePost) {
+        setPosts(posts.filter((post) => post.id !== input.postId));
+        successHandler({ message: 'Deleted post successfully' });
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+  return { handleDeletePost, loading };
+};
+
+/**
+ * This hook is designed to delete posts in bulk
+ *
+ * Business logic:
+ * - If the post is found and belongs to the creator then the post can be deleted
+ */
+export const useBulkDeletePosts = () => {
+  const { errorHandler } = useErrorHandler();
+  const { posts, setPosts } = usePostsStore();
+  const { successHandler } = useSuccessHandler();
+  const { deletePostsMutation } = usePostsActions();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleBulkDeletePosts = async (input: DeletePostsInput) => {
+    setLoading(true);
+
+    try {
+      const { data } = await deletePostsMutation(input);
+      if (data?.deletePosts) {
+        setPosts(posts.filter((post) => !input.postIds.includes(post.id)));
+        successHandler({ message: 'Deleted posts successfully' });
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { handleBulkDeletePosts, loading };
+};
+
+/**
+ * This hook is designed to fetch detailed posts information
+ * It returns posts entity along with latest comment and total earning field
+ */
+export const usePostsInfo = (input: PaginationInput) => {
+  const { errorHandler } = useErrorHandler();
+  const { getPostsInfoQuery } = usePostsActions();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const { setPostsInfo, postsInfo } = usePostsStore();
+
+  const loadPostsInfo = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : postsInfo.length;
+    setLoading(postsInfo.length === 0);
+
+    try {
+      const { data } = await getPostsInfoQuery({ ...input, skip });
+      const fetched = data?.getPostsInfo as GetPostsInfoOutput[];
+
+      setHasMore(fetched.length === input.take);
+
+      if (initialLoad) setPostsInfo(fetched);
+      else setPostsInfo([...postsInfo, ...fetched]);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) loadPostsInfo();
+  };
+
+  useEffect(() => {
+    loadPostsInfo(true);
+  }, [input.take, input.skip, input.postTypes]);
+
+  return { loading, handleLoadMore, hasMore, loadPostsInfo, postsInfo };
 };

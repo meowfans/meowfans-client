@@ -1,5 +1,11 @@
 import { graphql } from '../generated';
 
+/**
+ * Fetches public posts.
+ *
+ * If a username is provided, posts are filtered to that creator.
+ * Used for public profile and discovery pages.
+ */
 export const GET_PUBLIC_POSTS_QUERY = graphql(`
   query GetPublicPosts($input: PaginationInput!) {
     getPublicPosts(input: $input) {
@@ -24,6 +30,14 @@ export const GET_PUBLIC_POSTS_QUERY = graphql(`
   }
 `);
 
+/**
+ * Fetches a public post and enriches it with fan-specific state.
+ *
+ * Business rules:
+ * - Determines whether the fan has liked the post
+ * - Determines whether the fan has purchased the post
+ * - @returns blurred preview if the post is not accessible
+ */
 export const GET_PUBLIC_POST_BY_ID_QUERY = graphql(`
   query GetPublicPostById($input: GetPostInput!) {
     getPublicPostById(input: $input) {
@@ -57,6 +71,14 @@ export const GET_PUBLIC_POST_BY_ID_QUERY = graphql(`
   }
 `);
 
+/**
+ * Fetches a public post and enriches it with fan-specific state.
+ *
+ * Business rules:
+ * - Determines whether the fan has liked the post
+ * - Determines whether the fan has purchased the post
+ * - @returns blurred preview if the post is not accessible
+ */
 export const GET_PUBLIC_POST_BY_ID_FOR_ANON_QUERY = graphql(`
   query GetPublicPostByIdForAnon($input: GetPostInput!) {
     getPublicPostByIdForAnon(input: $input) {
@@ -89,6 +111,15 @@ export const GET_PUBLIC_POST_BY_ID_FOR_ANON_QUERY = graphql(`
   }
 `);
 
+/**
+ * Fetches post assets with access control.
+ *
+ * Side effects:
+ * - Increments post view count
+ *
+ * Business rules:
+ * - @returns blurred asset URLs if post is not purchased
+ */
 export const GET_PUBLIC_POST_ASSETS_QUERY = graphql(`
   query GetPublicPostAssets($input: PaginationInput!) {
     getPublicPostAssets(input: $input) {
@@ -136,6 +167,12 @@ export const GET_PUBLIC_POST_ASSETS_QUERY = graphql(`
   }
 `);
 
+/**
+ * Creates a comment on a post.
+ *
+ * Side effects:
+ * - Increments comment count
+ */
 export const CREATE_COMMENT_MUTATION = graphql(`
   mutation CreateComment($input: CreateCommentInput!) {
     createComment(input: $input) {
@@ -150,6 +187,9 @@ export const CREATE_COMMENT_MUTATION = graphql(`
   }
 `);
 
+/**
+ * Updates a comment owned by the fan.
+ */
 export const UPDATE_COMMENT_INPUT_MUTATION = graphql(`
   mutation UpdateComment($input: UpdateCommentInput!) {
     updateComment(input: $input) {
@@ -164,12 +204,28 @@ export const UPDATE_COMMENT_INPUT_MUTATION = graphql(`
   }
 `);
 
+/**
+ * Deletes a comment.
+ *
+ * Side effects:
+ * - Decrements comment count
+ */
 export const DELETE_COMMENT_MUTATION = graphql(`
   mutation DeleteComment($input: DeleteCommentInput!) {
     deleteComment(input: $input)
   }
 `);
 
+/**
+ * Toggles like status for a post.
+ *
+ * Business rules:
+ * - Only purchased (or free) posts can be liked
+ *
+ * @returns:
+ * - PostLikesEntity when liked
+ * - null when unliked or access denied
+ */
 export const LIKE_POST_MUTATION = graphql(`
   mutation LikePost($input: LikePostInput!) {
     likePost(input: $input) {
@@ -200,6 +256,13 @@ export const LIKE_POST_MUTATION = graphql(`
   }
 `);
 
+/**
+ * Toggles save status for a post
+ *
+ * Business rules:
+ *  - Only fan can save a post
+ * @returns the updated post
+ */
 export const SAVE_POST_MUTATION = graphql(`
   mutation SavePost($input: SavePostInput!) {
     savePost(input: $input) {
@@ -220,6 +283,10 @@ export const SAVE_POST_MUTATION = graphql(`
   }
 `);
 
+/**
+ * @returns posts liked by a fan.
+ * Used for liked posts sections.
+ */
 export const GET_LIKED_POSTS_QUERY = graphql(`
   query GetLikedPosts($input: PaginationInput!) {
     getLikedPosts(input: $input) {
@@ -250,6 +317,10 @@ export const GET_LIKED_POSTS_QUERY = graphql(`
   }
 `);
 
+/**
+ *  @returns paginated posts belonging to a creator.
+ * No visibility or purchase logic is applied.
+ */
 export const GET_POSTS_QUERY = graphql(`
   query GetPosts($input: PaginationInput!) {
     getPosts(input: $input) {
@@ -291,11 +362,18 @@ export const GET_POSTS_QUERY = graphql(`
   }
 `);
 
+/**
+ * This api is used for detailed posts information
+ * Along with posts entity also returns latest comment and total earning of each post
+ * @returns
+ */
 export const GET_POSTS_INFO_QUERY = graphql(`
   query GetPostsInfo($input: PaginationInput!) {
     getPostsInfo(input: $input) {
       caption
       commentCount
+      viewCount
+      preview
       createdAt
       creatorId
       deletedAt
@@ -313,6 +391,16 @@ export const GET_POSTS_INFO_QUERY = graphql(`
   }
 `);
 
+/**
+ * Creates a new post with attached assets.
+ *
+ * Business rules:
+ * - Preview asset defaults to the first asset if not specified
+ * - Post price is derived from post type
+ *
+ * Side effects:
+ * - Updates creator post counters
+ */
 export const CREATE_POST_MUTATION = graphql(`
   mutation CreatePost($input: CreatePostInput!) {
     createPost(input: $input) {
@@ -334,6 +422,10 @@ export const CREATE_POST_MUTATION = graphql(`
   }
 `);
 
+/**
+ * Updates editable post fields.
+ * Only fields provided in input are updated.
+ */
 export const UPDATE_POST_MUTATION = graphql(`
   mutation UpdatePost($input: UpdatePostInput!) {
     updatePost(input: $input) {
@@ -354,18 +446,35 @@ export const UPDATE_POST_MUTATION = graphql(`
   }
 `);
 
+/**
+ * Deletes a single post.
+ *
+ * Side effects:
+ * - Updates creator post counters
+ */
 export const DELETE_POST_MUTATION = graphql(`
   mutation DeletePost($input: DeletePostInput!) {
     deletePost(input: $input)
   }
 `);
 
+/**
+ * Deletes post in bulk
+ *
+ * Business logic:
+ * - If the post is found and belongs to the creator then the post can be deleted
+ * @returns Boolean value
+ */
 export const DELETE_POSTS_MUTATION = graphql(`
   mutation DeletePosts($input: DeletePostsInput!) {
     deletePosts(input: $input)
   }
 `);
 
+/**
+ * @returns assets associated with a creator's posts.
+ * Creator-only access.
+ */
 export const GET_POST_ASSETS_QUERY = graphql(`
   query GetPostAssets($input: PaginationInput!) {
     getPostAssets(input: $input) {

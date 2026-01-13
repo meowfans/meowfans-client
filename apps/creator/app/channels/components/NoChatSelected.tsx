@@ -1,15 +1,21 @@
-import { ShadCnBackgrounds } from '@workspace/ui/lib';
+import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
+import { MessageSquareText } from 'lucide-react';
 
-interface Props {
-  onClick?: () => unknown;
-  background?: ShadCnBackgrounds | null;
-}
-
-export const NoChatSelected: React.FC<Props> = ({ background }) => {
+export const NoChatSelected = () => {
   return (
-    <div className="flex justify-center flex-col h-[calc(100vh-68px)]">
-      <h1 className="text-4xl text-center justify-center tracking-tight font-bold">Select a channel to start messaging</h1>
-      <p className="text-xl justify-center text-center opacity-80">Where meows come alive</p>
-    </div>
+    <Card className="mx-auto w-full max-w-2xl bg-background/70 backdrop-blur">
+      <CardHeader className="space-y-2">
+        <div className="flex items-center gap-2">
+          <div className="rounded-lg border bg-background/70 p-2 backdrop-blur">
+            <MessageSquareText className="h-4 w-4" />
+          </div>
+          <CardTitle className="text-xl">Select a channel</CardTitle>
+        </div>
+        <p className="text-sm text-muted-foreground">Pick a conversation from the list to start messaging.</p>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">
+        <div className="rounded-lg border bg-muted/20 p-3">Where meows come alive.</div>
+      </CardContent>
+    </Card>
   );
 };

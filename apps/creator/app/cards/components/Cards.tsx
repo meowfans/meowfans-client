@@ -33,7 +33,7 @@ export const Cards = () => {
         {Array(3)
           .fill(0)
           .map((_, idx) => (
-            <Card key={idx} className={`w-full ${idx % 3 === 0 && 'border-indigo-400'}`}>
+            <Card key={idx} className={`w-full ${idx % 3 === 0 ? 'border-primary/40' : ''}`}>
               <CardHeader>
                 <CardTitle className="text-lg">{idx % 3 === 0 ? 'Currently using' : 'Add new Card'}</CardTitle>
                 <CardDescription className="text-balance">
@@ -66,7 +66,7 @@ export const Cards = () => {
                     <RadioGroup defaultValue="starter" className="grid gap-3 md:grid-cols-2">
                       {plans.map((plan) => (
                         <Label
-                          className="has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-input/20 flex items-start gap-3 rounded-lg border p-3"
+                          className="has-data-[state=checked]:border-ring has-data-[state=checked]:bg-input/20 flex items-start gap-3 rounded-lg border p-3"
                           key={plan.id}
                         >
                           <RadioGroupItem value={plan.id} id={plan.name} className="data-[state=checked]:border-primary" />
