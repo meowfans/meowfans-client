@@ -15,7 +15,7 @@ interface UsePostsProps {
 export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30 }: UsePostsProps = {}) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
-  const { getPostsQuery } = usePostsActions();
+  const { getPublicPostsQuery } = usePostsActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, order
     setLoading(posts.length === 0);
 
     try {
-      const { data } = await getPostsQuery({
+      const { data } = await getPublicPostsQuery({
         take,
         skip,
         username,

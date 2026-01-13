@@ -11,7 +11,6 @@ const formatNumber = (value: number | null | undefined) => {
 
 export const Stats = () => {
   const { creator } = useCreator();
-  console.log({ creator });
   return (
     <GenericCard
       title="Overview"

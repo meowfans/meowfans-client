@@ -46,7 +46,7 @@ export const SlideShow: React.FC<Props> = ({ slideUrls, onLoadMore }) => {
                   </div>
                 </motion.div>
               ))}
-            <div className="flex items-center justify-center w-full md:w-auto h-full md:min-w-50 bg-linear-to-br from-purple-500/10 to-pink-500/10 rounded-xl backdrop-blur-sm">
+            <div className="flex items-center justify-center w-full md:w-auto h-full md:min-w-50 rounded-xl border bg-background/70 backdrop-blur">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -56,7 +56,8 @@ export const SlideShow: React.FC<Props> = ({ slideUrls, onLoadMore }) => {
                 <Button
                   onClick={handleLoadMore}
                   disabled={isLoading}
-                  className="bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-6 text-lg"
+                  variant="default"
+                  className="font-semibold shadow-sm transition-shadow hover:shadow-md px-6 py-6 text-lg"
                   size="lg"
                 >
                   {isLoading ? (

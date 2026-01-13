@@ -1,4 +1,5 @@
 import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
+import { LogoutModal } from '@/components/modals/LogoutModal';
 import { TerminateAccountModal } from '@/components/modals/TerminateAccountModal';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -9,7 +10,6 @@ import { Account } from './Account';
 import { Display } from './Display';
 import { Header } from './Header';
 import TerminateAccount from './TerminateAccount';
-import { LogoutModal } from '@/components/modals/LogoutModal';
 
 export const More = () => {
   const { setOpenLogoutModal } = useUtilsStore();
@@ -35,7 +35,7 @@ export const More = () => {
             onChangeModalState={() => setOpenLogoutModal(true)}
             modalIcon={{ icon: LogOut, size: 'default' }}
             modalText="Sign Out"
-            className="min-w-50 bg-linear-to-r from-red-700 to-yellow-800 hover:from-red-800 hover:to-yellow-900 shadow-lg"
+            className="min-w-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
           />
         </div>
       </div>

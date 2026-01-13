@@ -98,12 +98,12 @@ export const Subscriptions = () => {
                 <Card
                   key={plan.id}
                   className={`relative overflow-hidden transition-shadow duration-200 ${
-                    plan.featured ? 'ring-2 ring-indigo-400 scale-105' : ''
-                  } ${active ? 'border-2 border-indigo-500' : ''}`}
+                    plan.featured ? 'ring-2 ring-primary/40 scale-105' : ''
+                  } ${active ? 'border-2 border-primary/50' : ''}`}
                 >
                   {plan.featured && (
                     <div className="absolute top-0 right-0">
-                      <div className="flex items-center bg-indigo-600 text-white text-xs px-3 py-1 rounded-full shadow">
+                      <div className="flex items-center bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full shadow">
                         <Crown className="w-4 h-4" />
                         <span>Popular</span>
                       </div>

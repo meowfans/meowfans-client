@@ -30,12 +30,16 @@ export const AppSidebar = () => {
     switch (pathname) {
       case `/channels/${channelId}`:
         return '/channels';
-      case `/posts/${id}`:
-        return '/posts';
+      case `/studio/posts/${id}`:
+        return '/studio';
+      case `/studio/posts`:
+        return '/studio';
       default:
         return pathname;
     }
   };
+
+  console.log({ pathname });
 
   return getAuthenticatedPath(pathname) ? null : (
     <Sidebar>
@@ -57,7 +61,7 @@ export const AppSidebar = () => {
                 return (
                   <SidebarMenuItem key={item.title} className="rounded-2xl">
                     <SidebarMenuButton
-                      className={`${handlePathName() === item.path && 'bg-blue-200'} `}
+                      className={handlePathName() === item.path ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''}
                       asChild
                       onClick={() => router.push(item.path)}
                     >

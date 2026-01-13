@@ -42,7 +42,14 @@ export const AppliedChart: React.FC<Props> = ({ data }) => {
       footerClassName="pt-0"
       contentClassName="pb-2"
     >
-      <ApplyShadCnChart dataTable={data.chartData} xDataKey={data.XDataKey} yDataKey={data.YDataKey} chartType={chartType} />
+      <ApplyShadCnChart
+        dataTable={data.chartData}
+        xDataKey={data.XDataKey}
+        yDataKey={data.YDataKey}
+        chartType={chartType}
+        XDataLabel={data.XDataKey}
+        yDataLabel={data.YDataKey}
+      />
     </GenericCard>
   );
 };

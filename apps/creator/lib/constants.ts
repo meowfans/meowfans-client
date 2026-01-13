@@ -7,11 +7,13 @@ import {
   GalleryVerticalEnd,
   Inbox,
   Mails,
-  Settings
+  Settings,
+  Sparkles
 } from 'lucide-react';
 
 export const authenticatedPaths = [
   '/posts',
+  '/post',
   '/notifications',
   '/assets',
   '/channels',
@@ -35,6 +37,7 @@ export enum ProfileCharts {
 
 export const appBottomNavButtonOptions = [
   { icon: GalleryHorizontal, title: 'Posts', path: '/posts' },
+  { icon: Sparkles, title: 'Studio', path: '/post' },
   { icon: Mails, title: 'Channels', path: '/channels' },
   { icon: ChartLine, title: 'Analytics', path: '/analytics' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
@@ -43,7 +46,7 @@ export const appBottomNavButtonOptions = [
 ];
 
 export const appSideBarButtonOptions = [
-  { icon: GalleryHorizontal, title: 'Posts', path: '/posts' },
+  { icon: Sparkles, title: 'Post Studio', path: '/studio' },
   { icon: Inbox, title: 'Notifications', path: '/notifications' },
   { icon: Mails, title: 'Messages', path: '/channels' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },

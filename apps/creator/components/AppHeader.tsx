@@ -1,9 +1,10 @@
 'use client';
 
-import { Icons } from '@/lib/icons/Icons';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
-import { ApplyHeaderOptions } from './ApplyHeaderOptions';
+import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ApplyHeaderOptions } from './ApplyHeaderOptions';
 
 interface Props {
   header?: string;
@@ -19,8 +20,10 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
     >
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex flex-row items-center gap-2">
-          <ReturnToPreviousPage />
-          <div className="cursor-pointer ">{Icons.appIcon()}</div>
+          <ReturnToPreviousPage applyReturn />
+          <Link href="/posts" className="shrink-0">
+            <Image src="/icons/app_icon.svg" alt="Creator app logo" width={32} height={32} priority />
+          </Link>
           <p className="font-semibold text-xl animate-pulse">{header}</p>
         </div>
         <div className="flex flex-row items-center space-x-3">

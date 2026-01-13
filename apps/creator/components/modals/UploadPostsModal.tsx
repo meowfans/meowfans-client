@@ -16,6 +16,7 @@ import { motion } from 'framer-motion';
 import { Star, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 
 interface UploadPostsModalProps {
   assets: CreatorAssetsEntity[];
@@ -25,6 +26,7 @@ interface UploadPostsModalProps {
 }
 
 export const UploadPostsModal: React.FC<UploadPostsModalProps> = ({ onUpload, selectedAssetsRecord, setSelectedAssetsRecord, assets }) => {
+  const { errorHandler } = useErrorHandler();
   const { openPostCreateModal, setOpenPostCreateModal } = usePostsStore();
   const [postTypes, setPostTypes] = useState<PostTypes>(PostTypes.Exclusive);
   const [unlockPrice, setUnlockPrice] = useState<number>(300);
@@ -32,28 +34,26 @@ export const UploadPostsModal: React.FC<UploadPostsModalProps> = ({ onUpload, se
   const [caption, setCaption] = useState<string>('Describe post details');
   const [previewId, setPreviewId] = useState<string>('');
 
-  const { handleUploadPosts, loading, setLoading } = useOnPostsUploadMutation({
-    assetIds: selectedAssetsRecord.map((a) => a.id),
-    types: [postTypes],
-    caption,
-    previewId,
-    unlockPrice
-  });
+  const { handleUploadPosts, loading, setLoading } = useOnPostsUploadMutation();
 
   const handleUpload = async () => {
     if (!selectedAssetsRecord.length) return;
     try {
-      await handleUploadPosts();
+      await handleUploadPosts({
+        assetIds: selectedAssetsRecord.map((a) => a.id),
+        types: [postTypes],
+        caption,
+        previewId,
+        unlockPrice
+      });
       onUpload();
       setAssets(
         creatorAssets.map((c) =>
           selectedAssetsRecord.some((a) => a.id === c.assetId) ? { ...c, asset: { ...c.asset, isPosted: true } } : c
         )
       );
-    } catch (error: any) {
-      toast.error('Failed to upload post', {
-        description: error.message
-      });
+    } catch (error) {
+      errorHandler({ error, msg: 'Failed to upload post' });
     } finally {
       handleClose();
     }
