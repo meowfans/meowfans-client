@@ -13,13 +13,13 @@ interface UsePublicShortsProps {
   take?: number;
 }
 
-export const usePublicShorts = ({ sortBy = SortBy.AssetViewCount, orderBy = SortOrder.Desc, take = 5 }: UsePublicShortsProps) => {
+export const usePublicShorts = ({ sortBy = SortBy.AssetCreatedAt, orderBy = SortOrder.Desc, take = 5 }: UsePublicShortsProps) => {
+  const { fan } = useFan();
   const { publicShorts, setPublicShorts } = useAssetsStore();
   const { publicGetShortsQuery } = useAssetsActions();
   const { errorHandler } = useErrorHandler();
-  const { fan } = useFan();
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   const loadShorts = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : publicShorts.length;
@@ -28,7 +28,9 @@ export const usePublicShorts = ({ sortBy = SortBy.AssetViewCount, orderBy = Sort
     try {
       const { data } = await publicGetShortsQuery({ sortBy, orderBy, take, skip, relatedUserId: fan?.fanId });
       const fetchedShorts = data?.getPublicShortsAssets as AssetsEntity[];
+
       setHasMore(fetchedShorts.length === take);
+
       if (initialLoad) setPublicShorts(fetchedShorts);
       else setPublicShorts([...publicShorts, ...fetchedShorts]);
     } catch (error) {

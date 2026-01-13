@@ -1558,6 +1558,7 @@ export type SocialAccountsEntity = {
 
 export enum SortBy {
   AssetCount = 'ASSET_COUNT',
+  AssetCreatedAt = 'ASSET_CREATED_AT',
   AssetDisplayOrder = 'ASSET_DISPLAY_ORDER',
   AssetViewCount = 'ASSET_VIEW_COUNT',
   CreatorFollowingCount = 'CREATOR_FOLLOWING_COUNT',
