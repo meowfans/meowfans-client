@@ -21,7 +21,7 @@ import { GrowthRate } from './GrowthRate';
 import { NewCustomers } from './NewCustomers';
 import { Performances } from './Performances';
 import { ProfileDescription } from './ProfileDescription';
-import { Stats } from './Stats';
+import { Overview } from './Overview';
 import { TotalRevenue } from './TotalRevenue';
 
 export type ChartDataTypes = NewCustomerType | TotalRevenueType | GrowthRateType | PerformanceType;
@@ -65,7 +65,7 @@ export const CreatorProfile = () => {
               </div>
 
               <AppliedChart data={chartConfig[chart]} />
-              <Stats />
+              <Overview />
             </div>
 
             <div className="hidden md:block sticky top-28 h-fit">

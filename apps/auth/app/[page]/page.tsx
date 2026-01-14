@@ -27,7 +27,7 @@ export default function Auth() {
   const { login, signup, creatorSignup } = useAPI();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/profile' });
+  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/studio' });
   const fanAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/dashboard' });
   const adminAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL, pathname: '/vaults' });
 

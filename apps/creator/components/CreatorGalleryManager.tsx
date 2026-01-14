@@ -47,9 +47,7 @@ export const CreatorGalleryManager = <T,>({
       <ScrollArea className="w-full mb-25 overflow-x-hidden">
         <Masonry breakpointCols={breakpointCols} className={`flex w-full gap-2 ${className ?? ''}`} columnClassName="flex flex-col gap-2">
           {loading ? (
-            <div className="w-full flex justify-center items-center min-h-100">
-              <Loading />
-            </div>
+            <div className="w-full flex justify-center items-center min-h-100">Loading</div>
           ) : items.length ? (
             items.map((item, idx) => {
               if (React.isValidElement(item)) return item;
