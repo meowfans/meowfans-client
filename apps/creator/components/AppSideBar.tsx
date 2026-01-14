@@ -39,8 +39,6 @@ export const AppSidebar = () => {
     }
   };
 
-  console.log({ pathname });
-
   return getAuthenticatedPath(pathname) ? null : (
     <Sidebar>
       <SidebarContent>

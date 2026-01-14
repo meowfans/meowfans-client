@@ -57,7 +57,7 @@ export default function Plan() {
           </TabsContent>
 
           <TabsContent value="preview" className="space-y-1">
-            <PreviewEditor image={banner} setImage={setBanner} isEditing={isEditing} setIsEditing={setIsEditing} />
+            <PreviewEditor image={banner} setImage={setBanner} isEditing={isEditing} setIsEditing={setIsEditing} onSave={() => null} />
           </TabsContent>
         </Tabs>
 

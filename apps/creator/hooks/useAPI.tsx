@@ -1,26 +1,29 @@
 import { configService } from '@/util/config';
-import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { authCookieKey, authRefreshCookieKey, FetchMethods, LoginInput, MediaType, SignupInput } from '@workspace/ui/lib';
+import {
+  authCookieKey,
+  authRefreshCookieKey,
+  FetchMethods,
+  FileType,
+  LoginInput,
+  MediaType,
+  SignupInput,
+  UploadMediaOutput
+} from '@workspace/ui/lib';
 import { getCookie, setCookie } from 'cookies-next';
-import { toast } from 'sonner';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
   const url = new URL(configService.NEXT_PUBLIC_API_URL);
   url.pathname = pathName;
-  try {
-    const res = await fetch(url, {
-      ...init,
-      method: fetchMethod
-    });
-    const data = await res.json();
+  const res = await fetch(url, {
+    ...init,
+    method: fetchMethod
+  });
+  const data = await res.json();
 
-    if (!res.ok) throw new Error(data.message);
+  if (!res.ok) throw new Error(data.message);
 
-    return data;
-  } catch (error) {
-    toast.error(error.message);
-  }
+  return data;
 };
 
 const useAPI = () => {
@@ -71,10 +74,11 @@ const useAPI = () => {
     return data;
   };
 
-  const upload = async (params: { mediaType: MediaType; formData: FormData }) => {
+  const upload = async (params: { mediaType: MediaType; formData: FormData; fileType: FileType }) => {
     const accessToken = getCookie(authCookieKey);
     params.formData.append('mediaType', params.mediaType);
     params.formData.append('assetType', 'private');
+    params.formData.append('fileType', params.fileType);
 
     const data = await fetchRequest({
       fetchMethod: FetchMethods.POST,
@@ -86,7 +90,7 @@ const useAPI = () => {
         }
       }
     });
-    return data;
+    return data as UploadMediaOutput;
   };
 
   return {
