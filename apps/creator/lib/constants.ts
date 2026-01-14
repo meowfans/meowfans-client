@@ -12,15 +12,14 @@ import {
 } from 'lucide-react';
 
 export const authenticatedPaths = [
-  '/posts',
-  '/post',
+  '/studio',
+  '/studio/post',
   '/notifications',
   '/assets',
   '/channels',
   '/analytics',
   '/profile',
-  '/profile/creator',
-  '/profile/fan',
+  '/profile/edit',
   '/subscriptions',
   '/subscriptions/plan',
   '/cards',
@@ -36,8 +35,8 @@ export enum ProfileCharts {
 }
 
 export const appBottomNavButtonOptions = [
-  { icon: GalleryHorizontal, title: 'Posts', path: '/posts' },
-  { icon: Sparkles, title: 'Studio', path: '/post' },
+  { icon: Sparkles, title: 'Notifications', path: '/notifications' },
+  { icon: Sparkles, title: 'Studio', path: '/studio' },
   { icon: Mails, title: 'Channels', path: '/channels' },
   { icon: ChartLine, title: 'Analytics', path: '/analytics' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
