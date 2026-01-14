@@ -1,7 +1,7 @@
 'use client';
 
 import { useAssets } from '@/hooks/useAssets';
-import { AssetType } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
 import { Skeleton } from '@workspace/ui/components/skeleton';
@@ -13,7 +13,7 @@ import { CreatorNextImage } from '../CreatorNextImage';
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSelectUrl: (url: string) => void;
+  onSelectUrl: (creatorAsset: CreatorAssetsEntity) => void;
 }
 
 export const AssetPickerModal: React.FC<Props> = ({ open, onClose, onSelectUrl }) => {
@@ -28,7 +28,7 @@ export const AssetPickerModal: React.FC<Props> = ({ open, onClose, onSelectUrl }
               <Skeleton key={i} className="aspect-square w-full rounded-lg" />
             ))}
           </div>
-        ) : !assets.length ? (
+        ) : assets.length ? (
           <InfiniteScrollManager dataLength={assets.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {assets.map((a) => {
@@ -37,7 +37,7 @@ export const AssetPickerModal: React.FC<Props> = ({ open, onClose, onSelectUrl }
                   <div
                     key={a.id}
                     className="group relative aspect-square overflow-hidden rounded-lg border bg-muted/10"
-                    onClick={() => onSelectUrl(url)}
+                    onClick={() => onSelectUrl(a)}
                   >
                     <CreatorNextImage
                       fill

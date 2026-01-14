@@ -15,6 +15,7 @@ interface Props {
   setImage: React.Dispatch<React.SetStateAction<string | null>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   onSave: (file: File, previewUrl: string) => void;
+  onCancel?: () => unknown;
 }
 
 type OutputType = 'url' | 'file';
@@ -26,7 +27,7 @@ interface CropOptions {
   fileName?: string;
 }
 
-export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave }: Props) => {
+export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave, onCancel }: Props) => {
   const [originalImage, setOriginalImage] = useState(image);
   const [croppedPixels, setCroppedPixels] = useState<any>(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
@@ -96,6 +97,8 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave
     setIsEditing(false);
     setPreview(null);
     resetControls();
+    setImage(null);
+    onCancel?.();
   };
 
   const handleSave = async () => {
