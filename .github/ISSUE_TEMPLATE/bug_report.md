@@ -1,38 +1,75 @@
----
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+description: Create a report to help us improve
+title: "[BUG]: "
+labels: ["bug"]
+assignees: []
 
----
+body:
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+- type: textarea
+  id: description
+  attributes:
+  label: Describe the bug
+  description: A clear and concise description of what the bug is.
+  placeholder: What went wrong?
+  validations:
+  required: true
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+- type: textarea
+  id: steps
+  attributes:
+  label: To Reproduce
+  description: Steps to reproduce the behavior
+  placeholder: | 1. Go to '...' 2. Click on '...' 3. Scroll down to '...' 4. See error
+  validations:
+  required: true
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+- type: textarea
+  id: expected
+  attributes:
+  label: Expected behavior
+  description: What you expected to happen.
+  validations:
+  required: true
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+- type: textarea
+  id: screenshots
+  attributes:
+  label: Screenshots
+  description: If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+- type: dropdown
+  id: desktop_os
+  attributes:
+  label: Desktop OS
+  options: - macOS - Windows - Linux - Other
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+- type: input
+  id: desktop_browser
+  attributes:
+  label: Desktop Browser
+  placeholder: Chrome, Safari, Firefox
 
-**Additional context**
-Add any other context about the problem here.
+- type: input
+  id: desktop_version
+  attributes:
+  label: Browser Version
+  placeholder: e.g. 120.0
+
+- type: dropdown
+  id: mobile_device
+  attributes:
+  label: Smartphone Device
+  options: - iPhone - Android - Other
+
+- type: input
+  id: mobile_os
+  attributes:
+  label: Mobile OS
+  placeholder: e.g. iOS 17, Android 14
+
+- type: textarea
+  id: context
+  attributes:
+  label: Additional context
+  description: Add any other context about the problem here.
