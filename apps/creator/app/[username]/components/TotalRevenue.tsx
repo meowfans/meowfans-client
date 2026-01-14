@@ -25,7 +25,7 @@ export const TotalRevenue: React.FC<Props> = ({ setChart }) => {
         </div>
       }
       tabIndex={0}
-      onClick={() => setChart(ProfileCharts.TOTAL_REVENUE)}
+      onClick={() => setChart(ProfileCharts.TotalRevenue)}
     />
   );
 };

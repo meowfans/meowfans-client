@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(
           buildSafeUrl({
             host: configService.NEXT_PUBLIC_CREATOR_URL,
-            pathname: '/profile'
+            pathname: '/studio'
           })
         );
 

@@ -116,7 +116,7 @@ export default async function RootLayout({ children }: Props) {
         <link rel="icon" href="/icons/32.png" />
         <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
-      <body className={cn(inter.variable, 'overscroll-none')}>
+      <body className={cn(inter.variable, 'overscroll-none ')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
           <CreatorContextWrapper creator={creator}>
             <ThemeProvider
@@ -132,7 +132,7 @@ export default async function RootLayout({ children }: Props) {
                   <AppSidebar />
                   <SidebarInset className="flex flex-1 flex-col min-h-screen">
                     <Toaster position="top-center" closeButton richColors theme="system" />
-                    <main className="flex-1 w-full overflow-x-hidden">{children}</main>
+                    <main className={`flex-1 w-full overflow-x-hidden`}>{children}</main>
                   </SidebarInset>
                 </div>
               </SidebarProvider>

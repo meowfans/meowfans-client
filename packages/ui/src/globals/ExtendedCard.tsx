@@ -4,6 +4,7 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { cn } from '@workspace/ui/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import React from 'react';
+import { useBackground } from '../hooks/useBackground';
 
 interface ExtendedCardProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   title: string;
@@ -41,8 +42,9 @@ export const ExtendedCard: React.FC<ExtendedCardProps> = ({
   actionClassName,
   ...props
 }) => {
+  const { bgColor } = useBackground();
   return (
-    <Card className={className} {...props}>
+    <Card className={cn(className, bgColor)} {...props}>
       <CardHeader className={headerClassName}>
         {Icon && (
           <div className={cn('p-2 rounded-lg', iconClassName)}>

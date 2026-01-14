@@ -1,12 +1,6 @@
 import { Footer } from '@/components/Footer';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { NotificationsHeader } from './Header';
 import { NotificationThreads, NotificationType } from './Thread';
-
-const buttonProps = [
-  { variant: 'outline' as const, title: 'Read All' },
-  { variant: 'outline' as const, title: 'Delete All' }
-];
 
 export interface Notifications {
   id: number;
@@ -32,7 +26,6 @@ export const Notifications = () => {
     }));
   return (
     <PageManager>
-      <NotificationsHeader />
       <NotificationThreads notifications={notifications} />
       <Footer />
     </PageManager>

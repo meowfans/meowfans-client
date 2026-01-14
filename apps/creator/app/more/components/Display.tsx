@@ -1,20 +1,28 @@
 'use client';
 
+import { BackgroundDropdown } from '@/components/modals/BackgroundDropdown';
 import { useShadCnBackgroundStore } from '@/hooks/store/background.store';
 import { Label } from '@workspace/ui/components/label';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { GenericCard } from '@workspace/ui/globals/GenericCard';
 import { cn } from '@workspace/ui/lib/utils';
-import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { motion } from 'framer-motion';
 import { Moon, Palette, Sparkles, Sun, Wallpaper } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Display = () => {
   const { theme, setTheme } = useTheme();
   const { shadCnBackground } = useShadCnBackgroundStore();
-  const [backgroundModalOpen, setBackgroundModalOpen] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   const themeOptions = [
     { value: 'light', label: 'Light', icon: Sun, gradient: 'from-amber-400 to-orange-400' },
@@ -36,6 +44,7 @@ export const Display = () => {
             {themeOptions.map((option) => {
               const Icon = option.icon;
               const isActive = theme === option.value;
+
               return (
                 <motion.button
                   key={option.value}
@@ -47,16 +56,16 @@ export const Display = () => {
                     isActive ? 'border-primary bg-primary/5 shadow-md' : 'border-border/50 hover:border-border hover:bg-muted/50'
                   )}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTheme"
-                      className="absolute inset-0 rounded-lg bg-linear-to-br from-primary/10 to-primary/5"
-                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
+                  <motion.div
+                    layoutId="activeTheme"
+                    className={cn('absolute inset-0 rounded-lg bg-linear-to-br from-primary/10 to-primary/5', !isActive && 'opacity-0')}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                  />
+
                   <div className={cn('relative p-2 rounded-full bg-linear-to-r', option.gradient)}>
                     <Icon className="h-4 w-4 text-white" />
                   </div>
+
                   <span className={cn('relative text-sm font-medium', isActive && 'text-primary')}>{option.label}</span>
                 </motion.button>
               );
@@ -75,12 +84,13 @@ export const Display = () => {
                 {shadCnBackground ? shadCnBackground.replace('-', ' ') : 'Default background'}
               </p>
             </div>
-            <TriggerModal
+            <BackgroundDropdown />
+            {/* <TriggerModal
               onChangeModalState={setBackgroundModalOpen}
               modalIcon={{ icon: Wallpaper, size: 'default' }}
               modalText="Change"
               className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            />
+            /> */}
           </div>
         </div>
       </div>

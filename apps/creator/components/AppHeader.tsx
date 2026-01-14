@@ -5,15 +5,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ApplyHeaderOptions } from './ApplyHeaderOptions';
+import { useBackground } from '@workspace/ui/hooks/useBackground';
 
 interface Props {
   header?: string;
 }
 export const AppHeader: React.FC<Props> = ({ header }) => {
   const pathname = usePathname();
+  const { bgColor } = useBackground();
+
   return !pathname.startsWith('/channels') ? (
     <header
-      className={`sticky top-0 z-50 border-b
+      className={`${bgColor} sticky top-0 z-50 border-b
         bg-linear-to-bl from-background
          to-(--background)/80 backdrop-blur-md
           px-4 py-2 flex flex-col w-full`}

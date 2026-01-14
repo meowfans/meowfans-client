@@ -87,6 +87,7 @@ export const UPDATE_CREATOR_PROFILE_MUTATION = graphql(`
       totalPost
       totalPublicPost
       totalSubscriber
+      themeColor
     }
   }
 `);
