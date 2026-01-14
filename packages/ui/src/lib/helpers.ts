@@ -3,6 +3,7 @@ import { getCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
 import { JwtUser } from './types';
 import { authCookieKey } from './constants';
+import { FileType } from './enums';
 
 export const handlePathName = (pathname: string) => {
   if (pathname.startsWith('/vaults')) return '/vaults';
@@ -54,6 +55,15 @@ export const decodeJwtToken = (token?: string): JwtUser | null => {
   } catch {
     return null;
   }
+};
+
+export const resolveFileType = (url: string) => {
+  if (url.endsWith('.png')) return FileType.IMAGE;
+  if (url.endsWith('.jpg') || url.endsWith('.jpeg')) return FileType.IMAGE;
+  if (url.endsWith('.gif')) return FileType.IMAGE;
+  if (url.endsWith('.webp')) return FileType.IMAGE;
+  if (url.endsWith('.mp4')) return FileType.VIDEO;
+  return FileType.IMAGE;
 };
 
 export const handleFullScreen = (url: string, startIndex: number, imageUrls: string[]) => {

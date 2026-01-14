@@ -14,9 +14,19 @@ interface Props {
   isEditing: boolean;
   setImage: React.Dispatch<React.SetStateAction<string | null>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onSave: (file: File, previewUrl: string) => void;
 }
 
-export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Props) => {
+type OutputType = 'url' | 'file';
+type ImageFormat = 'image/jpeg' | 'image/png' | 'image/webp';
+
+interface CropOptions {
+  format?: ImageFormat;
+  output?: OutputType;
+  fileName?: string;
+}
+
+export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave }: Props) => {
   const [originalImage, setOriginalImage] = useState(image);
   const [croppedPixels, setCroppedPixels] = useState<any>(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
@@ -30,17 +40,24 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
     setCroppedPixels(croppedArea);
   }, []);
 
-  const getCroppedImage = async (format: 'jpg' | 'png' | 'webp' = 'jpg') => {
-    if (!croppedPixels) return;
+  const getCroppedImageFile = async (options: CropOptions): Promise<string | File | null> => {
+    const { format = 'image/jpeg', output = 'url', fileName = `edited-${Date.now()}` } = options;
+    console.log('started');
+
+    if (!croppedPixels || !originalImage) return null;
 
     const img = new Image();
-    if (originalImage) img.src = originalImage;
-    await new Promise((res) => (img.onload = res));
+    img.src = originalImage;
+    await new Promise<void>((res) => (img.onload = () => res()));
 
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
     canvas.width = croppedPixels.width;
     canvas.height = croppedPixels.height;
+
+    ctx.save();
 
     if (rotation !== 0) {
       ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -60,32 +77,43 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
       croppedPixels.height
     );
 
-    return new Promise<string>((resolve) => {
+    ctx.restore();
+
+    return new Promise((resolve) => {
       canvas.toBlob((blob) => {
-        if (blob) {
+        if (!blob) return resolve(null);
+
+        if (output === 'file') {
+          resolve(new File([blob], `${fileName}.${format.split('/')[1]}`, { type: format }));
+        } else {
           resolve(URL.createObjectURL(blob));
         }
-      }, `image/${format}`);
+      }, format);
     });
-  };
-
-  const handleSave = async () => {
-    const croppedImage = await getCroppedImage('jpg');
-    if (croppedImage) {
-      setImage(croppedImage);
-      setPreview(null);
-      setIsEditing(false);
-    }
-  };
-
-  const handleRevert = () => {
-    setImage(originalImage);
-    setPreview(null);
-    resetControls();
   };
 
   const handleCancel = () => {
     setIsEditing(false);
+    setPreview(null);
+    resetControls();
+  };
+
+  const handleSave = async () => {
+    const file = (await getCroppedImageFile({ output: 'file' })) as File;
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    console.log('created object url');
+    // Emit to parent
+    onSave(file, previewUrl);
+
+    // Update local preview
+    setImage(previewUrl);
+    handleCancel();
+  };
+
+  const handleRevert = () => {
+    setImage(originalImage);
     setPreview(null);
     resetControls();
   };
@@ -107,7 +135,7 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
   };
 
   const updatePreview = async () => {
-    const croppedImage = await getCroppedImage('jpg');
+    const croppedImage = (await getCroppedImageFile({ output: 'url' })) as string;
     if (croppedImage) {
       setImage(croppedImage);
       setPreview(croppedImage);
@@ -117,15 +145,6 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
     updatePreview();
   }, [croppedPixels, zoom, rotation, aspectRatio, isEditing]); //eslint-disable-line
 
-  const getAspectLabel = () => {
-    if (aspectRatio === 1 / 1) return '1:1';
-    if (aspectRatio === 4 / 3) return '4:3';
-    if (aspectRatio === 3 / 4) return '3:4';
-    if (aspectRatio === 9 / 16) return '9:16';
-    if (aspectRatio === 16 / 9) return '16:9';
-    return '3:1';
-  };
-
   const handleDrop = (file?: File) => {
     if (!file) return;
     const url = URL.createObjectURL(file);
@@ -134,6 +153,19 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
     setIsEditing(true);
     resetControls();
   };
+
+  const aspectLabel =
+    aspectRatio === 1 / 1
+      ? '1:1'
+      : aspectRatio === 3 / 1
+        ? '3:1'
+        : aspectRatio === 4 / 3
+          ? '4:3'
+          : aspectRatio === 3 / 4
+            ? '3:4'
+            : aspectRatio === 9 / 16
+              ? '9:16'
+              : '16:9';
 
   return (
     <Card className="w-full">
@@ -189,16 +221,15 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing }: Prop
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">
-                {'Aspect: '.concat(getAspectLabel())}
+                Aspect: {aspectLabel}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setAspectRatio(1 / 1)}>1:1</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAspectRatio(3 / 1)}>3:1</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAspectRatio(4 / 3)}>4:3</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAspectRatio(3 / 4)}>3:4</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAspectRatio(9 / 16)}>9:16</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAspectRatio(16 / 9)}>16:9</DropdownMenuItem>
+              {[1 / 1, 3 / 1, 4 / 3, 3 / 4, 9 / 16, 16 / 9].map((a) => (
+                <DropdownMenuItem key={a} onClick={() => setAspectRatio(a)}>
+                  {a === 1 / 1 ? '1:1' : a === 3 / 1 ? '3:1' : a === 4 / 3 ? '4:3' : a === 3 / 4 ? '3:4' : a === 9 / 16 ? '9:16' : '16:9'}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>

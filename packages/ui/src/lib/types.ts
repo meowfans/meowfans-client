@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { ButtonHTMLAttributes, ClassAttributes } from 'react';
-import { MediaType, TokenType, UserRoles } from './enums';
+import { FileType, MediaType, TokenType, UserRoles } from './enums';
 
 export interface JwtUser {
   sub: string; // holds userId
@@ -23,6 +23,15 @@ export interface ButtonProps extends ClassAttributes<HTMLButtonElement>, ButtonH
   size?: ButtonSize;
   className?: string;
   title?: string;
+}
+
+export interface UploadMediaOutput {
+  rawUrl: string;
+  blurredUrl: string | null;
+  mimeType: string;
+  mediaType: MediaType;
+  fileType: FileType;
+  assetId?: string;
 }
 
 export interface UploadMediaInput {

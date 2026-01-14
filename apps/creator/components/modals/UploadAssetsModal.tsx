@@ -7,7 +7,7 @@ import { useAssetsStore } from '@/hooks/store/assets.store';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { DropZone } from '@workspace/ui/globals/DropZone';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
-import { MediaType } from '@workspace/ui/lib';
+import { MediaType, resolveFileType } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -32,7 +32,11 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
         files.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
-          await upload({ mediaType: MediaType.PROFILE_MEDIA, formData: formData });
+          await upload({
+            mediaType: MediaType.PROFILE_MEDIA,
+            formData: formData,
+            fileType: resolveFileType(file.name)
+          });
         })
       );
 
