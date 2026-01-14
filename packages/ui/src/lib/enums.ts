@@ -21,6 +21,20 @@ export enum EventTypes {
   ZonePurchased = 'zonePurchased'
 }
 
+export enum BackGroundColors {
+  INDIGO_PURPLE_PINK = 'bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500',
+  BLUE_CYAN_EMERALD = 'bg-linear-to-r from-blue-500 via-cyan-400 to-emerald-500',
+  TEAL_GREEN_LIME = 'bg-linear-to-r from-teal-500 via-green-500 to-lime-400',
+  VIOLET_FUCHSIA_ROSE = 'bg-linear-to-r from-violet-500 via-fuchsia-500 to-rose-500',
+  AMBER_ORANGE_RED = 'bg-linear-to-r from-amber-400 via-orange-500 to-red-500',
+  SKY_BLUE_INDIGO = 'bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600',
+  PURPLE_ROSE_RED = 'bg-linear-to-r from-purple-500 via-rose-500 to-red-500',
+  SLATE_GRAY_BLACK = 'bg-linear-to-r from-slate-700 via-gray-800 to-black',
+  RED_DARK_RED_BLACK = 'bg-linear-to-r from-red-600 via-red-800 to-black',
+  CRIMSON_MAROON_BLACK = 'bg-linear-to-r from-rose-700 via-red-900 to-black',
+  DEFAULT = ''
+}
+
 export enum AppSizes {
   ICON_1024 = '1024',
   ICON_512 = '512',

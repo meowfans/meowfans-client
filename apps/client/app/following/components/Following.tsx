@@ -34,7 +34,6 @@ export const Following = () => {
                 className="relative group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-[1.015] transition-all duration-500 ease-out bg-linear-to-br from-purple-500/10 to-pink-600/10 border border-white/10 backdrop-blur-md"
               >
                 <NextImage className="h-56 w-full rounded-t-2xl" imageUrl={following.creatorProfile.user.avatarUrl} />
-                {/* <div className="absolute inset-0 bg-black/30 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 flex items-end justify-end p-3"> */}
 
                 <div className="absolute inset-0 bg-black/40 opacity-100 sm:group-hover:opacity-100 sm:opacity-0 transition-all duration-500 flex items-center justify-center">
                   <div className="flex flex-col gap-3">
@@ -57,7 +56,7 @@ export const Following = () => {
                   </div>
                 </div>
 
-                <div className="p-4 flex flex-col justify-between h-[190px]">
+                <div className="p-4 flex flex-col justify-between h-47.5">
                   <div>
                     <h3 className="font-semibold text-lg text-white/90 truncate">
                       {following.creatorProfile.user.username || 'Unknown Creator'}

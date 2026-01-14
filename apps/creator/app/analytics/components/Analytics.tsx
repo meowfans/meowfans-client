@@ -1,9 +1,5 @@
 'use client';
 
-import { GrowthRate } from '@/app/[username]/components/GrowthRate';
-import { NewCustomers } from '@/app/[username]/components/NewCustomers';
-import { Performances } from '@/app/[username]/components/Performances';
-import { TotalRevenue } from '@/app/[username]/components/TotalRevenue';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -20,12 +16,6 @@ export const Analytics = () => {
       <AnalyticsHeader />
       <Separator />
       <ScrollArea className="flex w-full">
-        <div className="flex md:hidden flex-col md:flex-row p-1 justify-between w-full space-x-3 space-y-1">
-          <NewCustomers setChart={() => null} />
-          <TotalRevenue setChart={() => null} />
-          <GrowthRate setChart={() => null} />
-          <Performances setChart={() => null} />
-        </div>
         <div className="w-full flex flex-col space-x-1 p-1">
           <AnalyticsEarnings />
           <AnalyticsVisitor />

@@ -23,10 +23,10 @@ export const authenticatedPaths = [
 ];
 
 export enum ProfileCharts {
-  NEW_CUSTOMERS = 'NEW_CUSTOMERS',
-  TOTAL_REVENUE = 'TOTAL_REVENUE',
-  GROWTH_RATE = 'GROWTH_RATE',
-  PERFORMANCES = 'PERFORMANCES'
+  NewFollowers = 'NewFollowers',
+  TotalRevenue = 'TotalRevenue',
+  ViewRate = 'ViewRate',
+  Interaction = 'Interaction'
 }
 
 export const appBottomNavButtonOptions = [
@@ -51,13 +51,13 @@ export const appSideBarButtonOptions = [
   { icon: ChartLine, title: 'Analytics', path: '/analytics' }
 ];
 
-export interface NewCustomerType {
+export interface NewFollowersType {
   chartData: {
     month: string;
     desktop: number;
     mobile: number;
   }[];
-  type: ProfileCharts.NEW_CUSTOMERS;
+  type: ProfileCharts.NewFollowers;
   title: string;
   description: string;
   XDataKey: string;
@@ -65,7 +65,7 @@ export interface NewCustomerType {
 }
 
 export interface TotalRevenueType {
-  type: ProfileCharts.TOTAL_REVENUE;
+  type: ProfileCharts.TotalRevenue;
   title: string;
   description: string;
   XDataKey: string;
@@ -76,8 +76,8 @@ export interface TotalRevenueType {
   }[];
 }
 
-export interface GrowthRateType {
-  type: ProfileCharts.GROWTH_RATE;
+export interface ViewRateType {
+  type: ProfileCharts.ViewRate;
   title: string;
   description: string;
   XDataKey: string;
@@ -88,8 +88,8 @@ export interface GrowthRateType {
   }[];
 }
 
-export interface PerformanceType {
-  type: ProfileCharts.PERFORMANCES;
+export interface InteractionType {
+  type: ProfileCharts.Interaction;
   title: string;
   description: string;
   XDataKey: string;
@@ -100,7 +100,7 @@ export interface PerformanceType {
   }[];
 }
 
-export const newCustomersData: NewCustomerType = {
+export const newCustomersData: NewFollowersType = {
   chartData: [
     { month: 'January', desktop: 120, mobile: 80 },
     { month: 'February', desktop: 160, mobile: 95 },
@@ -110,9 +110,9 @@ export const newCustomersData: NewCustomerType = {
     { month: 'June', desktop: 300, mobile: 200 }
   ],
   description: 'Acquisition needs attention',
-  title: 'New Customers',
+  title: 'New Followers',
   XDataKey: 'month',
-  type: ProfileCharts.NEW_CUSTOMERS,
+  type: ProfileCharts.NewFollowers,
   YDataKey: 'desktop'
 };
 
@@ -127,12 +127,12 @@ export const totalRevenueData: TotalRevenueType = {
   ],
   title: 'Total revenue',
   description: 'Visitors for the last 6 months',
-  type: ProfileCharts.TOTAL_REVENUE,
+  type: ProfileCharts.TotalRevenue,
   XDataKey: 'month',
   YDataKey: 'revenue'
 };
 
-export const growthRateData: GrowthRateType = {
+export const viewRateData: ViewRateType = {
   chartData: [
     { month: 'January', rate: 5.2 },
     { month: 'February', rate: 6.8 },
@@ -142,12 +142,12 @@ export const growthRateData: GrowthRateType = {
     { month: 'June', rate: 10.1 }
   ],
   description: 'Meets growth projections',
-  title: 'Growth rate',
-  type: ProfileCharts.GROWTH_RATE,
+  title: 'View rate',
+  type: ProfileCharts.ViewRate,
   XDataKey: 'month',
   YDataKey: 'rate'
 };
-export const performancesData: PerformanceType = {
+export const interactionData: InteractionType = {
   chartData: [
     { metric: 'Response Time', value: 85 },
     { metric: 'Customer Satisfaction', value: 92 },
@@ -155,8 +155,8 @@ export const performancesData: PerformanceType = {
     { metric: 'Conversion Rate', value: 65 }
   ],
   description: 'Meets growth projections',
-  title: 'Growth rate',
-  type: ProfileCharts.PERFORMANCES,
+  title: 'Interaction rate',
+  type: ProfileCharts.Interaction,
   XDataKey: 'metric',
   YDataKey: 'value'
 };

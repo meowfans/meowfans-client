@@ -24,7 +24,7 @@ export const AgeConfirmation = () => {
   if (!showConfirmation) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm text-white p-4">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/90 backdrop-blur-sm text-white p-4">
       <div className="bg-neutral-900 border border-neutral-700 p-8 rounded-2xl max-w-2xl w-full text-center shadow-2xl space-y-6 animate-in fade-in duration-300">
         <div className="flex flex-col items-center gap-3">
           <ShieldAlert className="w-12 h-12 text-red-500" />
@@ -52,14 +52,14 @@ export const AgeConfirmation = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
           <Button
             onClick={handleExit}
-            className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-700 hover:to-rose-600 px-6 py-3 rounded-md font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-linear-to-r from-red-600 to-rose-500 hover:from-red-700 hover:to-rose-600 px-6 py-3 rounded-md font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
           >
             <XCircle className="w-5 h-5" />
             No, Exit
           </Button>
           <Button
             onClick={handleConfirm}
-            className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 px-6 py-3 rounded-md font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-linear-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 px-6 py-3 rounded-md font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Lock className="w-5 h-5" />
             I&apos;m 18 or older – Enter MeowFans

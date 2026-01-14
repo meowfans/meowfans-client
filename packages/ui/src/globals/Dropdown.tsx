@@ -1,6 +1,5 @@
 'use client';
 
-import { LucideIcon } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -11,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
+import { LucideIcon } from 'lucide-react';
 
 interface Props<T extends Record<string, string>> {
   label?: string;
@@ -19,10 +19,24 @@ interface Props<T extends Record<string, string>> {
   filterBy: T[keyof T];
   title?: string;
   onFilterBy: (val: T[keyof T]) => unknown;
+  modifyTo?: (key: keyof T, value: T[keyof T]) => string;
 }
 
-export function Dropdown<T extends Record<string, string>>({ label = 'Label', title, filterBy, enumValue, onFilterBy, trigger }: Props<T>) {
+export function Dropdown<T extends Record<string, string>>({
+  label = 'Label',
+  title,
+  filterBy,
+  enumValue,
+  onFilterBy,
+  trigger,
+  modifyTo
+}: Props<T>) {
   const dropdownMenuItems = Object.entries(enumValue).map(([key, value]) => ({ key, value }));
+
+  const menuNormalizer = (key: keyof T, value: T[keyof T]) => {
+    if (modifyTo) return modifyTo(key, value);
+    return String(key);
+  };
 
   return (
     <DropdownMenu>
@@ -37,7 +51,7 @@ export function Dropdown<T extends Record<string, string>>({ label = 'Label', ti
         <DropdownMenuRadioGroup value={filterBy} onValueChange={(val) => onFilterBy(val as T[keyof T])}>
           {dropdownMenuItems.map(({ key, value }, idx) => (
             <DropdownMenuRadioItem key={idx} value={value}>
-              {key}
+              {menuNormalizer(key, value as T[keyof T])}
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>

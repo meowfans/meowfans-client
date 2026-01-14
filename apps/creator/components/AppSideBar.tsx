@@ -15,6 +15,7 @@ import {
   useSidebar
 } from '@workspace/ui/components/sidebar';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { useBackground } from '@workspace/ui/hooks/useBackground';
 import { useMotionLoader } from '@workspace/ui/hooks/useMotionLoader';
 import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,10 +23,10 @@ import { usePathname, useRouter } from 'next/navigation';
 export const AppSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { setOpen } = useSidebar();
   const controls = useMotionLoader(5000);
   const { creator } = useCreator();
   const username = creator.user.username;
+  const { bgColor } = useBackground();
 
   if (!isAuthenticatedPath(pathname) && !pathname.startsWith(`/${username}`)) return null;
 
@@ -50,7 +51,7 @@ export const AppSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className={bgColor}>
         <SidebarGroup>
           <SidebarGroupLabel className="flex flex-row justify-between">MEOWFANS</SidebarGroupLabel>
 

@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { Channel } from './Channels';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { useBackground } from '@workspace/ui/hooks/useBackground';
 
 interface Props extends React.ComponentProps<typeof Sidebar> {
   isActive?: boolean;
@@ -22,9 +23,11 @@ interface Props extends React.ComponentProps<typeof Sidebar> {
 
 export const ChannelListBar: React.FC<Props> = ({ channels, ...props }) => {
   const router = useRouter();
+  const { bgColor } = useBackground();
+
   return (
     <Sidebar {...props}>
-      <SidebarContent>
+      <SidebarContent className={bgColor}>
         <SidebarGroup>
           <SidebarGroupLabel>Members</SidebarGroupLabel>
           <SidebarGroupContent>

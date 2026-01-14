@@ -1,6 +1,7 @@
 'use client';
 
 import { AssetOptionsMenu } from '@/app/assets/components/AssetOptionsMenu';
+import { useCreator } from '@/hooks/context/useCreator';
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
@@ -33,6 +34,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 
 export const ApplyHeaderOptions = () => {
+  const { creator } = useCreator();
   const pathname = usePathname();
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -44,10 +46,9 @@ export const ApplyHeaderOptions = () => {
     selectedAssets,
     setSelectedAssets,
     setRangeSelection,
-    rangeSelection,
-    setOption
+    rangeSelection
   } = useAssetsStore();
-  const { openPostCreateModal, setOpenPostCreateModal } = usePostsStore();
+  const { setOpenPostCreateModal } = usePostsStore();
 
   const canCancel = canSelect || rangeSelection;
 
@@ -81,7 +82,8 @@ export const ApplyHeaderOptions = () => {
         </div>
       );
 
-    case '/profile':
+    case `/${creator.user.username}/edit`:
+    case `/${creator.user.username}`:
       return (
         <div className="flex flex-row items-center space-x-2">
           <ApplyButtonTooltip tootTipTitle="Edit profile" buttonProps={{ icon: Edit }} />
