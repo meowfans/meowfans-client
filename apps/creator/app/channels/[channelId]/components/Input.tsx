@@ -5,15 +5,16 @@ import { Input } from '@workspace/ui/components/input';
 import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { AssetPickerModal } from '../../../../components/modals/AssetPickerModal';
+import { CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
+import { AssetPickerModal } from '@/components/modals/AssetPickerModal';
 
 export const MessageInput = () => {
   const [openAssets, setOpenAssets] = useState(false);
   const [text, setText] = useState('');
   const [attachments, setAttachments] = useState<string[]>([]);
 
-  const handleAttach = (url: string) => {
-    setAttachments((prev) => (prev.includes(url) ? prev : [url, ...prev].slice(0, 3)));
+  const handleAttach = (creatorAsset: CreatorAssetsEntity) => {
+    setAttachments((prev) => (prev.includes(creatorAsset.asset.rawUrl) ? prev : [creatorAsset.asset.rawUrl, ...prev].slice(0, 3)));
     setOpenAssets(false);
   };
 

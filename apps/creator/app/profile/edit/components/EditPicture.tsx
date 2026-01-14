@@ -28,8 +28,6 @@ export const EditPicture = ({ input, setAvatarFile, setBannerFile }: EditHeaderP
     setAvatarFile(file);
   };
 
-  console.log({ isBannerEditing, banner, input });
-
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-10">
       <div className="space-y-1">
@@ -40,10 +38,11 @@ export const EditPicture = ({ input, setAvatarFile, setBannerFile }: EditHeaderP
       <EditBannerPicture banner={banner} setBanner={setBanner} setIsBannerEditing={setIsBannerEditing} />
       {isBannerEditing && banner && (
         <PreviewEditor
-          setImage={setBanner}
           image={banner}
+          setImage={setBanner}
           isEditing={isBannerEditing}
           setIsEditing={setIsBannerEditing}
+          onCancel={() => setBanner(input.bannerUrl as string)}
           onSave={(file, preview) => handleSaveBanner(file, preview)}
         />
       )}
@@ -51,10 +50,11 @@ export const EditPicture = ({ input, setAvatarFile, setBannerFile }: EditHeaderP
       <EditProfilePicture avatar={avatar} setAvatar={setAvatar} setIsAvatarEditing={setIsAvatarEditing} />
       {isAvatarEditing && avatar && (
         <PreviewEditor
-          setImage={setAvatar}
           image={avatar}
+          setImage={setAvatar}
           isEditing={isAvatarEditing}
           setIsEditing={setIsAvatarEditing}
+          onCancel={() => setAvatar(input.avatarUrl as string)}
           onSave={(file, preview) => handleSaveAvatar(file, preview)}
         />
       )}
