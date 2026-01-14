@@ -47,7 +47,7 @@ export const ProfileDescription = () => {
               tootTipTitle="Edit profile information"
               buttonProps={{ icon: Edit, buttonText: 'Edit profile information' }}
               className="w-full"
-              onClick={() => router.push('/profile/edit')}
+              onClick={() => router.push(`/${creator.user.username}/edit`)}
             />
           }
         >

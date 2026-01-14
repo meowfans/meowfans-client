@@ -52,7 +52,7 @@ export const Edit = () => {
       !bannerFile;
 
     setIsDisabled(noChange);
-  }, [input, creator, avatarFile, bannerFile]);
+  }, [input, creator, avatarFile, bannerFile]); //eslint-disable-line
 
   const handleChangeInput = ({ key, value }: { key: keyof UpdateCreatorProfileInput; value: string | boolean }) => {
     setInput((prev) => ({ ...prev, [key]: value }));

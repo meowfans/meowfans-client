@@ -1,7 +1,8 @@
 'use client';
 
 import { AppHeader } from '@/components/AppHeader';
-import { getAuthenticatedPath } from '@/util/helpers';
+import { useCreator } from '@/hooks/context/useCreator';
+import { isAuthenticatedPath } from '@/util/helpers';
 import { usePathname } from 'next/navigation';
 
 interface Props {
@@ -10,10 +11,11 @@ interface Props {
 
 export default function RootTemplate({ children }: Props) {
   const pathname = usePathname();
+  const { creator } = useCreator();
 
   return (
     <div>
-      {getAuthenticatedPath(pathname) ? (
+      {!isAuthenticatedPath(pathname) && !pathname.startsWith(`/${creator.user.username}`) ? (
         <div>{children}</div>
       ) : (
         <div>

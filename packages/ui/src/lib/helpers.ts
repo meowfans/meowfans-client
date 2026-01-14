@@ -17,6 +17,10 @@ export const BearerAccessToken = () => {
   return `Bearer ${getCookie(authCookieKey)}`;
 };
 
+export const formatText = (value: number, text: string) => {
+  return (value ?? 0 > 1) ? text.concat('s') : text;
+};
+
 export const triggerSparkles = () => {
   const duration = 1.8 * 1000;
   const end = Date.now() + duration;

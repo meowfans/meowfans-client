@@ -3,7 +3,6 @@ import {
   CircleDollarSign,
   CircleUserRound,
   CreditCard,
-  GalleryHorizontal,
   GalleryVerticalEnd,
   Inbox,
   Mails,
@@ -13,15 +12,11 @@ import {
 
 export const authenticatedPaths = [
   '/studio',
-  '/studio/post',
   '/notifications',
   '/assets',
   '/channels',
   '/analytics',
-  '/profile',
-  '/profile/edit',
   '/subscriptions',
-  '/subscriptions/plan',
   '/cards',
   '/more',
   '/vaults'
@@ -51,7 +46,7 @@ export const appSideBarButtonOptions = [
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
   { icon: CircleDollarSign, title: 'Subscriptions', path: '/subscriptions' },
   { icon: CreditCard, title: ' Add card', path: '/cards' },
-  { icon: CircleUserRound, title: 'My profile', path: `/profile` },
+  { icon: CircleUserRound, url: '', title: 'My profile', path: '/profile' },
   { icon: Settings, title: 'More', path: '/more' },
   { icon: ChartLine, title: 'Analytics', path: '/analytics' }
 ];
