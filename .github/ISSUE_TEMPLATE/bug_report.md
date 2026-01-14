@@ -1,38 +1,31 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
+title: Invalid paths in AppBottomNav (Creator App)
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Destination:**
+Creator App
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Issue:**
+`AppBottomNav` contains invalid route paths.
+The `/posts` path is no longer available and has been restructured as `/studio`, causing navigation to break when users interact with the bottom navigation.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**To Reproduce:**
+1. Open the Creator App
+2. Use the bottom navigation
+3. Click on the Posts-related tab
+4. Navigation fails or routes incorrectly
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Expected behavior:**
+Bottom navigation should correctly route users to `/studio` instead of the deprecated `/posts` path.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Implementation:**
+- Update `appBottomNavOptions`
+- Replace all `/posts` routes with `/studio`
+- Verify navigation works across all bottom nav items
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+**Additional context:**
+The `/posts` route has been fully deprecated and should no longer be referenced anywhere in the Creator App.

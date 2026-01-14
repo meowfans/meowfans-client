@@ -6,14 +6,14 @@ labels: ''
 assignees: ''
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Destination:**
+Creator App
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Issue:**
+Invalid paths in `AppBottomNav` component.
+The `/posts` route is no longer available and has been restructured as `/studio`, causing broken navigation.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Implementation:**
+- Replace existing `appBottomNavOptions` configuration.
+- Update all `/posts` paths to `/studio`.
+- Ensure bottom navigation reflects the current routing structure.
