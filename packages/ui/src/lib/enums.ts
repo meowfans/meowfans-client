@@ -32,7 +32,7 @@ export enum BackGroundColors {
   SLATE_GRAY_BLACK = 'bg-linear-to-r from-slate-700 via-gray-800 to-black',
   RED_DARK_RED_BLACK = 'bg-linear-to-r from-red-600 via-red-800 to-black',
   CRIMSON_MAROON_BLACK = 'bg-linear-to-r from-rose-700 via-red-900 to-black',
-  DEFAULT = ''
+  DEFAULT = 'bg-black'
 }
 
 export enum AppSizes {

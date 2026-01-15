@@ -1,28 +1,35 @@
 'use client';
 
-import { BackgroundDropdown } from '@/components/modals/BackgroundDropdown';
 import { useShadCnBackgroundStore } from '@/hooks/store/background.store';
 import { Label } from '@workspace/ui/components/label';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { GenericCard } from '@workspace/ui/globals/GenericCard';
+import { useBackground } from '@workspace/ui/hooks/useBackground';
+import { BackGroundColors } from '@workspace/ui/lib/enums';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
 import { Moon, Palette, Sparkles, Sun, Wallpaper } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export const Display = () => {
   const { theme, setTheme } = useTheme();
   const { shadCnBackground } = useShadCnBackgroundStore();
   const [mounted, setMounted] = useState(false);
+  const { setBgColor, bgColor } = useBackground();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  const orderedColors = useMemo(() => {
+    const colors = Object.values(BackGroundColors);
+    const index = colors.indexOf(bgColor);
+
+    if (index === -1) return colors;
+
+    return [colors[index], ...colors.slice(0, index), ...colors.slice(index + 1)];
+  }, [bgColor]);
 
   const themeOptions = [
     { value: 'light', label: 'Light', icon: Sun, gradient: 'from-amber-400 to-orange-400' },
@@ -30,7 +37,7 @@ export const Display = () => {
     { value: 'system', label: 'System', icon: Sparkles, gradient: 'from-blue-500 to-cyan-500' }
   ];
 
-  return (
+  return !mounted ? null : (
     <GenericCard
       title="Display & Theme"
       description="Customize how MeowFans looks for you"
@@ -84,13 +91,6 @@ export const Display = () => {
                 {shadCnBackground ? shadCnBackground.replace('-', ' ') : 'Default background'}
               </p>
             </div>
-            <BackgroundDropdown />
-            {/* <TriggerModal
-              onChangeModalState={setBackgroundModalOpen}
-              modalIcon={{ icon: Wallpaper, size: 'default' }}
-              modalText="Change"
-              className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            /> */}
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@ export const Display = () => {
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg">Theme Preview</h3>
-                <p className="text-sm text-muted-foreground">See how your theme looks in action</p>
+                <p className="text-sm text-muted-foreground">See how your theme looks in action...</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-sm">
@@ -112,10 +112,22 @@ export const Display = () => {
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              <div className="h-12 rounded-lg bg-linear-to-br from-blue-500 to-cyan-500 shadow-lg" />
-              <div className="h-12 rounded-lg bg-linear-to-br from-purple-500 to-pink-500 shadow-lg" />
-              <div className="h-12 rounded-lg bg-linear-to-br from-orange-500 to-red-500 shadow-lg" />
-              <div className="h-12 rounded-lg bg-linear-to-br from-green-500 to-emerald-500 shadow-lg" />
+              {orderedColors.map((bColor, idx) => {
+                const isActive = bgColor === bColor;
+                return (
+                  <div
+                    key={idx}
+                    className={cn(
+                      'h-12 rounded-lg cursor-pointer ',
+                      bColor,
+                      isActive
+                        ? 'dark:border-white border-black border-2 shadow-accent-foreground shadow-2xl'
+                        : 'border-border/50 hover:border-border hover:bg-muted/50'
+                    )}
+                    onClick={() => setBgColor(bColor)}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
