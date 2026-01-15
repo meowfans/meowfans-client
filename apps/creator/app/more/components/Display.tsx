@@ -7,6 +7,7 @@ import { GenericCard } from '@workspace/ui/globals/GenericCard';
 import { useBackground } from '@workspace/ui/hooks/useBackground';
 import { BackGroundColors } from '@workspace/ui/lib/enums';
 import { cn } from '@workspace/ui/lib/utils';
+import { kMaxLength } from 'buffer';
 import { motion } from 'framer-motion';
 import { Moon, Palette, Sparkles, Sun, Wallpaper } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -20,6 +21,10 @@ export const Display = () => {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  const roleKeyByValue = useMemo(() => {
+    return Object.fromEntries(Object.entries(BackGroundColors).map(([k, v]) => [v, k]));
   }, []);
 
   const orderedColors = useMemo(() => {
@@ -114,15 +119,19 @@ export const Display = () => {
             <div className="grid grid-cols-4 gap-2">
               {orderedColors.map((bColor, idx) => {
                 const isActive = bgColor === bColor;
+                const isDefault = bColor === '';
                 return (
                   <div
                     key={idx}
+                    title={roleKeyByValue[bColor].replace(/_/g, ' ')}
                     className={cn(
                       'h-12 rounded-lg cursor-pointer ',
                       bColor,
-                      isActive
-                        ? 'dark:border-white border-black border-2 shadow-accent-foreground shadow-2xl'
-                        : 'border-border/50 hover:border-border hover:bg-muted/50'
+                      isDefault
+                        ? 'dark:border-white border-black border-2 border-dashed'
+                        : isActive
+                          ? 'dark:border-white border-black border-2 shadow-accent-foreground shadow-2xl'
+                          : 'border-border/50 hover:border-border hover:bg-muted/50'
                     )}
                     onClick={() => setBgColor(bColor)}
                   />

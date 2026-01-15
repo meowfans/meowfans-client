@@ -31,7 +31,6 @@ export const ProfileDescription = () => {
           icon={BadgeCheckIcon}
           iconClassName="bg-primary/10 text-primary"
           contentClassName="pt-0"
-          className="-mt-12"
           headerExtra={
             <ExtendedBadge
               variant="secondary"

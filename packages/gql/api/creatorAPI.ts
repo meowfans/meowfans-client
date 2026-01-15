@@ -232,6 +232,28 @@ export const GET_CREATOR_PROFILE_QUERY_BY_ADMIN = graphql(`
   }
 `);
 
+export const GET_FOLLOWERS_QUERY = graphql(`
+  query GetFollowers($input: PaginationInput!) {
+    getFollowers(input: $input) {
+      creatorId
+      fanId
+      followedAt
+      id
+      unFollowedAt
+      fanProfile {
+        user {
+          avatarUrl
+          firstName
+          lastName
+          lastLoginAt
+          username
+          bannerUrl
+        }
+      }
+    }
+  }
+`);
+
 export const GET_CREATOR_PROFILE_QUERY = graphql(`
   query GetCreatorProfile {
     getCreatorProfile {

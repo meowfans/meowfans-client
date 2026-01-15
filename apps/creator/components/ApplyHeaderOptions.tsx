@@ -6,6 +6,7 @@ import { useAssetsStore } from '@/hooks/store/assets.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
+import { normalizePath } from '@workspace/ui/lib/helpers';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import {
   Archive,
@@ -17,17 +18,15 @@ import {
   FileDown,
   FilePlus2,
   Filter,
-  Image as ImageIcon,
   Lasso,
   LassoSelect,
-  Lock,
   MailPlus,
   Search,
   Settings,
-  SunMoon,
   Trash,
   Upload,
   UploadCloud,
+  Users,
   UserX,
   X
 } from 'lucide-react';
@@ -83,12 +82,21 @@ export const ApplyHeaderOptions = () => {
       );
 
     case `/${creator.user.username}/edit`:
+      return <ApplyButtonTooltip tootTipTitle="Settings" buttonProps={{ icon: Settings }} onClick={() => router.push('/more')} />;
+
     case `/${creator.user.username}`:
       return (
         <div className="flex flex-row items-center space-x-2">
-          <ApplyButtonTooltip tootTipTitle="Edit profile" buttonProps={{ icon: Edit }} />
-          <ApplyButtonTooltip tootTipTitle="Images" buttonProps={{ icon: ImageIcon }} />
-          <ApplyButtonTooltip tootTipTitle="Analytics" buttonProps={{ icon: BarChart3 }} />
+          <ApplyButtonTooltip
+            tootTipTitle="Edit profile"
+            buttonProps={{ icon: Edit }}
+            onClick={() => router.push(normalizePath(creator.user.username, 'edit'))}
+          />
+          <ApplyButtonTooltip
+            tootTipTitle="Followers"
+            buttonProps={{ icon: Users }}
+            onClick={() => router.push(normalizePath(creator.user.username, 'followers'))}
+          />
           <ApplyButtonTooltip tootTipTitle="Settings" buttonProps={{ icon: Settings }} onClick={() => router.push('/more')} />
         </div>
       );
@@ -156,10 +164,7 @@ export const ApplyHeaderOptions = () => {
     case '/more':
       return (
         <div className="flex flex-row items-center space-x-2">
-          <ApplyButtonTooltip tootTipTitle="Settings" buttonProps={{ icon: Settings }} />
-          <ApplyButtonTooltip tootTipTitle="Privacy & Security" buttonProps={{ icon: Lock }} />
           <ApplyButtonTooltip tootTipTitle="Payments" buttonProps={{ icon: CreditCard }} />
-          <ApplyButtonTooltip tootTipTitle="Theme" buttonProps={{ icon: SunMoon }} />
         </div>
       );
 

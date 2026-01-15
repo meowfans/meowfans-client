@@ -43,7 +43,6 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave
 
   const getCroppedImageFile = async (options: CropOptions): Promise<string | File | null> => {
     const { format = 'image/jpeg', output = 'url', fileName = `edited-${Date.now()}` } = options;
-    console.log('started');
 
     if (!croppedPixels || !originalImage) return null;
 

@@ -12,6 +12,7 @@ import {
 
 export const authenticatedPaths = [
   '/studio',
+  '/studio/posts',
   '/notifications',
   '/assets',
   '/channels',
@@ -30,13 +31,13 @@ export enum ProfileCharts {
 }
 
 export const appBottomNavButtonOptions = [
-  { icon: Sparkles, title: 'Notifications', path: '/notifications' },
+  { icon: Inbox, title: 'Notifications', path: '/notifications' },
   { icon: Sparkles, title: 'Studio', path: '/studio' },
   { icon: Mails, title: 'Channels', path: '/channels' },
   { icon: ChartLine, title: 'Analytics', path: '/analytics' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
   { icon: CircleDollarSign, title: 'Subscriptions', path: '/subscriptions' },
-  { icon: CircleUserRound, title: 'My profile', path: '/profile' }
+  { icon: CircleUserRound, url: '', title: 'My profile', path: '/profile' }
 ];
 
 export const appSideBarButtonOptions = [
