@@ -21,6 +21,10 @@ export const formatText = (value: number, text: string) => {
   return (value ?? 0 > 1) ? text.concat('s') : text;
 };
 
+export const normalizePath = (...parts: Array<string>) => {
+  return '/'.concat(parts.join('/'));
+};
+
 export const triggerSparkles = () => {
   const duration = 1.8 * 1000;
   const end = Date.now() + duration;

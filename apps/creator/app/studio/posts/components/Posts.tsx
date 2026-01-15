@@ -23,16 +23,15 @@ export const Posts = () => {
 
   return (
     <PageManager>
-      <PostHeader
-        orderBy={orderBy}
-        postType={postType}
-        searchTerm={searchTerm}
-        setOrderBy={setOrderBy}
-        setPostTypes={setPostType}
-        setSearchTerm={setSearchTerm}
-      />
-
       <InfiniteScrollManager dataLength={postsInfo.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
+        <PostHeader
+          orderBy={orderBy}
+          postType={postType}
+          searchTerm={searchTerm}
+          setOrderBy={setOrderBy}
+          setPostTypes={setPostType}
+          setSearchTerm={setSearchTerm}
+        />
         <div className="grid grid-cols-1 gap-4">
           {postsInfo.map((post) => {
             const isDeleted = Boolean(post.deletedAt);

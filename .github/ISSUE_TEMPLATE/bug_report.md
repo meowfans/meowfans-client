@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: Invalid paths in AppBottomNav (Creator App)
+title:
 labels: bug
 assignees: ''
 ---
@@ -10,13 +10,6 @@ assignees: ''
 
 
 **Issue:**
-
-
-
-**To Reproduce:**
-
-
-**Expected behavior:**
 
 
 **Implementation:**
