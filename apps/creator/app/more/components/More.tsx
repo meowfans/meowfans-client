@@ -35,7 +35,7 @@ export const More = () => {
             onChangeModalState={() => setOpenLogoutModal(true)}
             modalIcon={{ icon: LogOut, size: 'default' }}
             modalText="Sign Out"
-            className="min-w-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
+            className="min-w-50 shadow-sm"
           />
         </div>
       </div>
