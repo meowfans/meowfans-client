@@ -1,25 +1,21 @@
 'use client';
 
-import { authCookieKey } from '@workspace/ui/lib';
+import { useUtilsStore } from '@/hooks/store/utils.store';
 import { configService } from '@/util/config';
-import { buildSafeUrl } from '@workspace/ui/lib';
+import { Button } from '@workspace/ui/components/button';
+import { authCookieKey, authRefreshCookieKey, buildSafeUrl } from '@workspace/ui/lib';
+import { Modal } from '@workspace/ui/modals/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { Button } from '@workspace/ui/components/button';
-import { Modal } from '@workspace/ui/modals/Modal';
-import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
-import { useCreator } from '@/hooks/context/useCreator';
-import { useUtilsStore } from '@/hooks/store/utils.store';
 
 export const LogoutModal = () => {
   const { openLogoutModal, setOpenLogoutModal } = useUtilsStore();
   const router = useRouter();
-  const { setCreator } = useCreator();
 
   const handleLogout = () => {
     deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
-    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL }));
-    setCreator({} as CreatorProfilesEntity);
+    deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   };
 
   const handleClose = () => {
