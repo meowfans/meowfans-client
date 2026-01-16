@@ -12,7 +12,6 @@ import {
 
 export const authenticatedPaths = [
   '/studio',
-  '/studio/posts',
   '/notifications',
   '/assets',
   '/channels',

@@ -1,22 +1,20 @@
 'use client';
 
 import { AppHeader } from '@/components/AppHeader';
-import { useCreator } from '@/hooks/context/useCreator';
-import { isAuthenticatedPath } from '@/util/helpers';
+import { useNormalizePath } from '@/hooks/useNormalizePath';
 import { useBackground } from '@workspace/ui/hooks/useBackground';
-import { usePathname } from 'next/navigation';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export default function RootTemplate({ children }: Props) {
-  const pathname = usePathname();
-  const { creator } = useCreator();
   const { bgColor } = useBackground();
+  const { isAuthenticatedPath } = useNormalizePath();
+
   return (
     <div>
-      {!isAuthenticatedPath(pathname) && !pathname.startsWith(`/${creator.user.username}`) ? (
+      {!isAuthenticatedPath ? (
         <div>{children}</div>
       ) : (
         <div className={bgColor}>

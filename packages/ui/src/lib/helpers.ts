@@ -18,7 +18,7 @@ export const BearerAccessToken = () => {
 };
 
 export const formatText = (value: number, text: string) => {
-  return (value ?? 0 > 1) ? text.concat('s') : text;
+  return (value  > 1) ? text.concat('s') : text;
 };
 
 export const normalizePath = (...parts: Array<string>) => {

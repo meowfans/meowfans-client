@@ -1,7 +1,5 @@
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { useLazyQuery } from '@apollo/client/react';
 import { usePostsActions } from '@workspace/gql/actions';
-import { GET_POSTS_QUERY } from '@workspace/gql/api/postsAPI';
 import {
   CreatePostInput,
   DeletePostInput,
@@ -242,4 +240,34 @@ export const usePostsInfo = (input: PaginationInput) => {
   }, [input.take, input.skip, input.postTypes]);
 
   return { loading, handleLoadMore, hasMore, loadPostsInfo, postsInfo };
+};
+
+interface SinglePostHookProps {
+  postId: string;
+}
+
+export const useSinglePost = ({ postId }: SinglePostHookProps) => {
+  const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { post, setPost } = usePostsStore();
+  const { getSinglePostQuery } = usePostsActions();
+
+  const loadSinglePost = async () => {
+    setLoading(true);
+    try {
+      const { data } = await getSinglePostQuery({ relatedEntityId: postId });
+      const fetched = data?.getSinglePost as PostsEntity;
+      setPost(fetched);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSinglePost();
+  }, []);
+
+  return { post, loading };
 };

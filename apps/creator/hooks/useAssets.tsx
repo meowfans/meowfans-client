@@ -63,14 +63,7 @@ export const useAssets = ({ assetType }: Props) => {
   return { handleLoadMore, hasMore, loading, assets, handleRefetch };
 };
 
-export const usePostAssets = ({
-  postId,
-  username,
-  take = 30,
-  sortBy = SortBy.PostCreatedAt,
-  orderBy = SortOrder.Desc,
-  assetType = AssetType.Private
-}: UseAssetsProps) => {
+export const usePostAssets = ({ postId, username, take = 30, orderBy = SortOrder.Desc, assetType = AssetType.Private }: UseAssetsProps) => {
   const { errorHandler } = useErrorHandler();
   const { postAssets, setPostAssets } = usePostsStore();
   const [getCreatorAssets] = useLazyQuery(GET_POST_ASSETS_QUERY);
@@ -81,7 +74,7 @@ export const usePostAssets = ({
     const skip = initialLoad ? 0 : postAssets.length;
     try {
       const { data } = await getCreatorAssets({
-        variables: { input: { take, skip, username, orderBy, sortBy, relatedEntityId: postId, assetType } }
+        variables: { input: { take, skip, username, orderBy, relatedEntityId: postId, assetType } }
       });
 
       const fetchedPostsAssets = (data?.getPostAssets ?? []) as PostAssetsEntity[];
