@@ -16,7 +16,8 @@ import { AssetsHeader } from './AssetsHeader';
 
 export const Assets = () => {
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
-  const { canSelect, selectedAssets, toggleSelect, rangeSelection, setAssets } = useAssetsStore();
+  const { canSelect, selectedAssets, toggleSelect, rangeSelection, setAssets, setSelectedAssets, setRangeSelection, setCanSelect } =
+    useAssetsStore();
   const { assets, handleLoadMore, hasMore, loading, handleRefetch } = useAssets({ assetType });
   const [selectedAssetsRecord, setSelectedAssetsRecord] = useState<{ id: string; url: string }[]>([]);
 
@@ -50,9 +51,16 @@ export const Assets = () => {
     }
   };
 
+  const handleDoneUploading = () => {
+    setCanSelect(false);
+    setRangeSelection(false);
+    setSelectedAssets([]);
+  };
+
   const handleOnUploadAssets = async (newAssetsLength: number) => {
     const newAssets = await handleRefetch(newAssetsLength);
     setAssets([...newAssets, ...assets]);
+    handleDoneUploading();
   };
 
   return (
@@ -62,26 +70,26 @@ export const Assets = () => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
           <InfiniteScrollManager dataLength={assets.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
             <CreatorGalleryManager
-              getImageUrl={({ asset }) => asset.rawUrl}
               items={assets}
-              getKey={({ asset }) => asset.id}
               loading={loading}
+              getKey={({ asset }) => asset.id}
+              getImageUrl={({ asset }) => asset.rawUrl}
               onClick={(item, e) => handleToggle(item.assetId, e)}
               renderOverlay={(creatorAsset, idx, creatorAssets) => (
                 <AssetOptions
-                  creatorAsset={creatorAsset}
                   idx={idx}
-                  isSelectedAsset={selectedAssets.includes(creatorAsset.assetId)}
                   canSelect={canSelect}
+                  creatorAsset={creatorAsset}
                   creatorAssets={creatorAssets}
                   onToggle={(id, e) => handleToggle(id, e)}
+                  isSelectedAsset={selectedAssets.includes(creatorAsset.assetId)}
                 />
               )}
             />
             <UploadPostsModal
-              onUpload={() => handleOnUploadAssets(assets.length)}
-              selectedAssetsRecord={selectedAssetsRecord}
               assets={assets}
+              onUpload={handleDoneUploading}
+              selectedAssetsRecord={selectedAssetsRecord}
               setSelectedAssetsRecord={setSelectedAssetsRecord}
             />
             <UploadAssetsModal onUpload={(assetsLength) => handleOnUploadAssets(assetsLength)} />

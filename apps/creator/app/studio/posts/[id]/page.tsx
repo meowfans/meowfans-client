@@ -1,5 +1,5 @@
-import { Post } from './components/Post';
+import { SinglePost } from './components/SinglePost';
 
 export default function PostPage() {
-  return <Post />;
+  return <SinglePost />;
 }

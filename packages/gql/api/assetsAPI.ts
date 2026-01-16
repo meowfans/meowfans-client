@@ -19,6 +19,7 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
         mimeType
         rawUrl
         updatedAt
+        isPosted
       }
     }
   }

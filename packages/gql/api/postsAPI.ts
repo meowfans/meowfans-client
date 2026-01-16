@@ -224,7 +224,7 @@ export const DELETE_COMMENT_MUTATION = graphql(`
  *
  * @returns:
  * - PostLikesEntity when liked
- * - null when unliked or access denied
+ * - null when unLiked or access denied
  */
 export const LIKE_POST_MUTATION = graphql(`
   mutation LikePost($input: LikePostInput!) {
@@ -496,6 +496,65 @@ export const GET_POST_ASSETS_QUERY = graphql(`
         updatedAt
         vaultObjectId
         viewCount
+      }
+    }
+  }
+`);
+
+export const GET_SINGLE_POST_QUERY = graphql(`
+  query GetSinglePost($input: PaginationInput!) {
+    getSinglePost(input: $input) {
+      blurredPreview
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      isLiked
+      isPurchased
+      lastCommentId
+      likeCount
+      objectCount
+      preview
+      saveCount
+      shareCount
+      totalEarning
+      types
+      unlockPrice
+      updatedAt
+      viewCount
+      postAssets {
+        assetId
+        asset {
+          isPosted
+          mediaType
+          mimeType
+          rawUrl
+          viewCount
+          updatedAt
+          id
+          fileType
+          createdAt
+        }
+      }
+      latestComment {
+        comment
+        createdAt
+        deletedAt
+        fanId
+        id
+        postId
+        updatedAt
+        fanProfile {
+          fanId
+          user {
+            avatarUrl
+            lastName
+            firstName
+            username
+          }
+        }
       }
     }
   }

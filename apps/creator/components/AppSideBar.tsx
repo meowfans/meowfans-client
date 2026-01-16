@@ -1,8 +1,8 @@
 'use client';
 
 import { useCreator } from '@/hooks/context/useCreator';
+import { useNormalizePath } from '@/hooks/useNormalizePath';
 import { appSideBarButtonOptions } from '@/lib/constants';
-import { isAuthenticatedPath } from '@/util/helpers';
 import {
   Sidebar,
   SidebarContent,
@@ -11,24 +11,20 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+  SidebarMenuItem
 } from '@workspace/ui/components/sidebar';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { useBackground } from '@workspace/ui/hooks/useBackground';
 import { useMotionLoader } from '@workspace/ui/hooks/useMotionLoader';
 import { motion } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export const AppSidebar = () => {
-  const pathname = usePathname();
   const router = useRouter();
   const controls = useMotionLoader(5000);
-  const { creator } = useCreator();
-  const username = creator.user.username;
   const { bgColor } = useBackground();
-
-  if (!isAuthenticatedPath(pathname) && !pathname.startsWith(`/${username}`)) return null;
+  const { creator } = useCreator();
+  const { isAuthenticatedPath, normalizedPath, username } = useNormalizePath();
 
   const sidebarItems = appSideBarButtonOptions.map((item) => {
     if (item.path === '/profile') {
@@ -42,14 +38,7 @@ export const AppSidebar = () => {
     return item;
   });
 
-  const normalizedPath = () => {
-    if (username && pathname === `/${username}`) return `/${username}`;
-    if (pathname.startsWith('/channels')) return '/channels';
-    if (pathname.startsWith('/studio')) return '/studio';
-    return pathname;
-  };
-
-  return (
+  return !isAuthenticatedPath ? null : (
     <Sidebar>
       <SidebarContent className={bgColor}>
         <SidebarGroup>
@@ -58,7 +47,7 @@ export const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.map((item) => {
-                const isActive = normalizedPath() === item.path;
+                const isActive = normalizedPath === item.path;
 
                 return (
                   <SidebarMenuItem key={item.title} className="rounded-2xl">

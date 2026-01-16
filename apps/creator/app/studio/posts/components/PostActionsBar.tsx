@@ -4,8 +4,9 @@ import { useUtilsStore } from '@/hooks/store/utils.store';
 import { GetPostsInfoOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
-
-import { Eye, Pencil, Trash2, MessageSquare, Heart, Share2, MoreVertical } from 'lucide-react';
+import { normalizePath } from '@workspace/ui/lib/helpers';
+import { Eye, Heart, MessageSquare, MoreVertical, Pencil, Share2, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface PostActionsBarProps {
   disabled?: boolean;
@@ -13,10 +14,18 @@ interface PostActionsBarProps {
 }
 
 export const PostActionsBar = ({ disabled, post }: PostActionsBarProps) => {
+  const router = useRouter();
   const { setShareModal } = useUtilsStore();
 
   const buttons = [
-    { label: 'View', icon: <Eye className="h-4 w-4" />, disabled: disabled, onClick: () => null },
+    {
+      label: 'View',
+      icon: <Eye className="h-4 w-4" />,
+      disabled: disabled,
+      onClick: () => {
+        router.push(normalizePath('studio', 'posts', post.id));
+      }
+    },
     { label: 'Edit', icon: <Pencil className="h-4 w-4" />, disabled: disabled, onClick: () => null },
     { label: 'Delete', icon: <Trash2 className="h-4 w-4" />, disabled: disabled, onClick: () => null },
     { label: 'Comments', icon: <MessageSquare className="h-4 w-4" />, disabled: false, onClick: () => null },

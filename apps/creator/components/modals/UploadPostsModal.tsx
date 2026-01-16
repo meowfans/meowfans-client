@@ -9,19 +9,17 @@ import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@workspace/ui/components/select';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { Modal } from '@workspace/ui/modals/Modal';
-
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { motion } from 'framer-motion';
 import { Star, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 
 interface UploadPostsModalProps {
   assets: CreatorAssetsEntity[];
   selectedAssetsRecord: { id: string; url: string }[];
-  onUpload: () => unknown;
+  onUpload?: () => unknown;
   setSelectedAssetsRecord: React.Dispatch<React.SetStateAction<{ id: string; url: string }[]>>;
 }
 
@@ -46,7 +44,7 @@ export const UploadPostsModal: React.FC<UploadPostsModalProps> = ({ onUpload, se
         previewId,
         unlockPrice
       });
-      onUpload();
+      onUpload?.();
       setAssets(
         creatorAssets.map((c) =>
           selectedAssetsRecord.some((a) => a.id === c.assetId) ? { ...c, asset: { ...c.asset, isPosted: true } } : c
