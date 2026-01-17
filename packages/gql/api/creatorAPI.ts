@@ -129,43 +129,6 @@ export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
   }
 `);
 
-export const GET_PUBLIC_CREATOR_PROFILE_FOR_ANON_QUERY = graphql(`
-  query GetPublicCreatorProfileForAnon($input: PaginationInput!) {
-    getPublicCreatorProfileForAnon(input: $input) {
-      allowsComment
-      allowsMessaging
-      bio
-      creatorId
-      displayOnlineStatus
-      displayTotalPost
-      displayTotalSubscriber
-      themeColor
-      totalExclusivePost
-      totalPost
-      creatorType
-      totalPublicPost
-      totalSubscriber
-      assetCount
-      vaultCount
-      viewCount
-      isFollowing
-      user {
-        avatarUrl
-        bannerUrl
-        createdAt
-        deletedAt
-        firstName
-        id
-        lastLoginAt
-        lastName
-        roles
-        updatedAt
-        username
-      }
-    }
-  }
-`);
-
 export const GET_DEFAULT_CREATORS_QUERY = graphql(`
   query GetDefaultCreators($input: PaginationInput!) {
     getDefaultCreators(input: $input) {

@@ -22,7 +22,7 @@ export const CreatorProfile = () => {
   const [currentTab, setCurrentTab] = useState<TabProps>(() => {
     const paramTab = searchParams.get('tab') as TabProps | null;
     if (paramTab) return paramTab;
-    return creator.creatorType.includes(CreatorType.NewUser) ? 'posts' : 'vaults';
+    return creator?.creatorType.includes(CreatorType.NewUser) ? 'posts' : 'vaults';
   });
 
   const handleTabChange = (tab: TabProps) => {
