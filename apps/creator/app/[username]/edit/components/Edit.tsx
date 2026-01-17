@@ -52,7 +52,7 @@ export const Edit = () => {
       !bannerFile;
 
     setIsDisabled(noChange);
-  }, [input, creator, avatarFile, bannerFile]); //eslint-disable-line
+  }, [input, creator, avatarFile, bannerFile]);
 
   const handleChangeInput = ({ key, value }: { key: keyof UpdateCreatorProfileInput; value: string | boolean }) => {
     setInput((prev) => ({ ...prev, [key]: value }));
@@ -108,7 +108,7 @@ export const Edit = () => {
 
   useEffect(() => {
     setInput({ ...original });
-  }, [creator]);
+  }, [creator]); //eslint-disable-line
 
   return (
     <PageManager className="mx-auto max-w-3xl px-4 py-6 space-y-6">

@@ -17,7 +17,7 @@ const NewCreators = () => {
           <Link
             href={`/creators/${creator.username}`}
             key={creator.id}
-            className="min-w-[150px] flex flex-col items-center bg-gray-50 dark:bg-neutral-900 snap-center p-3 rounded-md shadow-sm hover:shadow-md transition"
+            className="min-w-37.5 flex flex-col items-center bg-gray-50 dark:bg-neutral-900 snap-center p-3 rounded-md shadow-sm hover:shadow-md transition"
           >
             <SAvatar className="w-16 h-16 object-center rounded-full mb-2" url={creator.avatarUrl as string} />
             <p className="text-sm font-medium">{creator.username}</p>

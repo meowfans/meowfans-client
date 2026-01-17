@@ -1,35 +1,29 @@
 import { graphql } from '../generated';
 
-export const GET_PUBLIC_VAULT_OBJECTS_BY_VAULT_ID_QUERY = graphql(`
-  query GetPublicVaultObjectsByVaultId($input: PaginationInput!) {
-    getPublicVaultObjectsByVaultId(input: $input) {
-      count
-      hasNext
-      hasPrev
-      totalPages
-      vault {
-        createdAt
+export const GET_PUBLIC_SINGLE_VAULT_QUERY = graphql(`
+  query GetPublicSingleVault($input: PaginationInput!) {
+    getPublicSingleVault(input: $input) {
+      createdAt
+      creatorId
+      deletedAt
+      description
+      id
+      keywords
+      preview
+      updatedAt
+      isLiked
+      likeCount
+      isPurchased
+      unlockPrice
+      objectCount
+      creatorProfile {
+        assetCount
         creatorId
-        deletedAt
-        description
-        id
-        keywords
-        preview
-        updatedAt
-        isLiked
-        likeCount
-        isPurchased
-        unlockPrice
-        objectCount
-        creatorProfile {
-          assetCount
-          creatorId
-          user {
-            avatarUrl
-            bannerUrl
-            id
-            username
-          }
+        user {
+          avatarUrl
+          bannerUrl
+          id
+          username
         }
       }
       vaultObjects {
@@ -185,30 +179,24 @@ export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
 export const GET_PUBLIC_VAULTS_QUERY = graphql(`
   query GetPublicVaults($input: PaginationInput!) {
     getPublicVaults(input: $input) {
-      count
-      hasNext
-      hasPrev
-      totalPages
-      vaults {
+      creatorId
+      description
+      id
+      keywords
+      isLiked
+      likeCount
+      createdAt
+      preview
+      objectCount
+      isPurchased
+      unlockPrice
+      creatorProfile {
         creatorId
-        description
-        id
-        keywords
-        isLiked
-        likeCount
-        createdAt
-        preview
-        objectCount
-        isPurchased
-        unlockPrice
-        creatorProfile {
-          creatorId
-          user {
-            avatarUrl
-            bannerUrl
-            id
-            username
-          }
+        user {
+          avatarUrl
+          bannerUrl
+          id
+          username
         }
       }
     }
@@ -241,12 +229,6 @@ export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
         rawUrl
         updatedAt
         vaultObjectId
-        viewCount
-      }
-      vault {
-        description
-        id
-        preview
         viewCount
       }
     }

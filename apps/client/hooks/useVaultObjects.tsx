@@ -11,33 +11,34 @@ interface VaultObjectProps {
   orderBy?: SortOrder;
 }
 
-export const useVaultObjects = (params: VaultObjectProps) => {
+export const useSingleVault = (params: VaultObjectProps) => {
   const { errorHandler } = useErrorHandler();
-  const { getVaultObjectsQueryByVaultId } = useVaultsActions();
-  const { vaultObjects, setVaultObjects, appendVaultObjects, vault, setVault } = useVaultsStore();
+  const { getSingleVaultQuery } = useVaultsActions();
+  const { vault, setVault, setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
   const loadVaultObjects = async (initialLoad = false) => {
-    const skip = initialLoad ? 0 : vaultObjects.length;
-    setLoading(vaultObjects.length === 0);
+    const skip = initialLoad ? 0 : vault.vaultObjects.length;
+    setLoading(vault?.vaultObjects.length === 0);
 
     try {
-      const { data } = await getVaultObjectsQueryByVaultId({
-        take: params.take ?? 30,
+      const { data } = await getSingleVaultQuery({
         skip,
-        sortBy: params.sortBy ?? SortBy.VaultObjectSuffix,
-        orderBy: params.orderBy ?? SortOrder.Asc,
+        take: params.take ?? 30,
         relatedEntityId: params.vaultId,
-        dataFetchType: DataFetchType.InfiniteScroll
+        orderBy: params.orderBy ?? SortOrder.Asc,
+        dataFetchType: DataFetchType.InfiniteScroll,
+        sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
       });
 
-      const fetched = (data?.getPublicVaultObjectsByVaultId.vaultObjects ?? []) as VaultObjectsEntity[];
-      setHasMore(fetched.length === (params.take ?? 30));
+      const fetched = data?.getPublicSingleVault as VaultsEntity;
+      setHasMore(fetched.vaultObjects.length === (params.take ?? 30));
 
-      setVault(data?.getPublicVaultObjectsByVaultId.vault as VaultsEntity);
-
-      initialLoad ? setVaultObjects(fetched) : appendVaultObjects(fetched);
+      if (initialLoad) {
+        setVault(data?.getPublicSingleVault as VaultsEntity);
+        setVaultObjects(fetched.vaultObjects);
+      } else appendVaultObjects(fetched.vaultObjects);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -65,5 +66,61 @@ export const useVaultObjects = (params: VaultObjectProps) => {
     loadMore,
     refresh,
     vault
+  };
+};
+
+export const useVaultObjects = (params: VaultObjectProps) => {
+  const { errorHandler } = useErrorHandler();
+  const { getPublicVaultObjectsQuery } = useVaultsActions();
+  const { setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+
+  const loadVaultObjects = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : vaultObjects.length;
+    setLoading(vaultObjects.length === 0);
+
+    try {
+      const { data } = await getPublicVaultObjectsQuery({
+        skip,
+        take: params.take ?? 30,
+        relatedEntityId: params.vaultId,
+        orderBy: params.orderBy ?? SortOrder.Asc,
+        dataFetchType: DataFetchType.InfiniteScroll,
+        sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
+      });
+
+      const fetched = data?.getPublicVaultObjects as VaultObjectsEntity[];
+      setHasMore(fetched.length === (params.take ?? 30));
+
+      if (initialLoad) {
+        setVaultObjects(fetched);
+      } else appendVaultObjects(fetched);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMore = () => {
+    if (!loading && hasMore) loadVaultObjects();
+  };
+
+  const refresh = () => {
+    setVaultObjects([]);
+    loadVaultObjects(true);
+  };
+
+  useEffect(() => {
+    loadVaultObjects(true);
+  }, [params.vaultId, params.sortBy, params.orderBy]);
+
+  return {
+    vaultObjects,
+    loading,
+    hasMore,
+    loadMore,
+    refresh
   };
 };

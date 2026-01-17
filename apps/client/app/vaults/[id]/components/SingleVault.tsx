@@ -2,7 +2,6 @@
 
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
-import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -12,6 +11,7 @@ import { useState } from 'react';
 import { SingleVaultHeader } from './SingleVaultHeader';
 import { SingleVaultInfo } from './SingleVaultInfo';
 import { VaultObjectsGalleryOptions } from './VaultObjectsGalleryOptions';
+import { useSingleVault } from '@/hooks/useVaultObjects';
 
 type TabProps = 'gallery' | 'about';
 
@@ -23,7 +23,7 @@ export const SingleVault = () => {
   const defaultCurrentTab = (searchParams.get('tab') as TabProps) || 'gallery';
   const [currentTab, setCurrentTab] = useState<TabProps>(defaultCurrentTab);
 
-  const { vaultObjects, loadMore, hasMore, loading, vault } = useVaultObjects({
+  const { vaultObjects, loadMore, hasMore, loading, vault } = useSingleVault({
     vaultId: id as string,
     sortBy: SortBy.VaultObjectSuffix,
     orderBy: SortOrder.Asc

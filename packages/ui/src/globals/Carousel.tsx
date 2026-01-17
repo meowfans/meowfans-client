@@ -75,7 +75,7 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselPro
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`hidden md:absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             onClick={() => emblaApi?.scrollPrev()}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -84,7 +84,7 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselPro
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`hidden md:absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             onClick={() => emblaApi?.scrollNext()}
           >
             <ChevronRight className="w-6 h-6" />

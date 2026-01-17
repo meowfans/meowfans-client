@@ -1,6 +1,6 @@
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { usePostsActions } from '@workspace/gql/actions/posts.actions';
-import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetPostInput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -57,4 +57,30 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
   }, [username, sortBy, orderBy, take]);
 
   return { posts, loading, hasMore, loadPosts, handleLoadMore, handleRefresh };
+};
+
+export const useSinglePost = (input: GetPostInput) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const { errorHandler } = useErrorHandler();
+  const { getPublicSinglePostQuery } = usePostsActions();
+  const { post, setPost } = usePostsStore();
+
+  const loadSinglePost = async () => {
+    setLoading(true);
+    try {
+      const { data } = await getPublicSinglePostQuery(input);
+      const fetched = data?.getPublicSinglePost as PostsEntity;
+      setPost(fetched);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSinglePost();
+  }, []);
+
+  return { post, loading };
 };

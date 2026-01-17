@@ -2,6 +2,7 @@ import { useCreator } from '@/hooks/context/useCreator';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { formatText } from '@workspace/ui/lib/helpers';
+import Image from 'next/image';
 
 export const FollowerProfileCard = () => {
   const { creator } = useCreator();
@@ -9,7 +10,13 @@ export const FollowerProfileCard = () => {
     <Card className="overflow-hidden py-0 gap-0">
       <div className="relative h-36 sm:h-52 w-full bg-muted">
         {creator.user?.bannerUrl ? (
-          <img src={creator.user.bannerUrl} alt="Profile banner" className="h-full w-full object-cover" loading="lazy" />
+          <Image
+            src={creator.user.bannerUrl}
+            alt="Profile banner"
+            className="h-full w-full object-cover"
+            loading="lazy"
+            unoptimized={true}
+          />
         ) : (
           <div className="h-full w-full bg-linear-to-br from-primary/10 via-muted to-primary/5" />
         )}
