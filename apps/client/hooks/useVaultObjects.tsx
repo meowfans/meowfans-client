@@ -9,12 +9,11 @@ interface VaultObjectProps {
   take?: number;
   sortBy?: SortBy;
   orderBy?: SortOrder;
-  fanId?: string;
 }
 
 export const useVaultObjects = (params: VaultObjectProps) => {
   const { errorHandler } = useErrorHandler();
-  const { getVaultObjectsQuery } = useVaultsActions();
+  const { getVaultObjectsQueryByVaultId } = useVaultsActions();
   const { vaultObjects, setVaultObjects, appendVaultObjects, vault, setVault } = useVaultsStore();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
@@ -24,14 +23,13 @@ export const useVaultObjects = (params: VaultObjectProps) => {
     setLoading(vaultObjects.length === 0);
 
     try {
-      const { data } = await getVaultObjectsQuery({
+      const { data } = await getVaultObjectsQueryByVaultId({
         take: params.take ?? 30,
         skip,
         sortBy: params.sortBy ?? SortBy.VaultObjectSuffix,
         orderBy: params.orderBy ?? SortOrder.Asc,
         relatedEntityId: params.vaultId,
-        dataFetchType: DataFetchType.InfiniteScroll,
-        relatedUserId: params.fanId
+        dataFetchType: DataFetchType.InfiniteScroll
       });
 
       const fetched = (data?.getPublicVaultObjectsByVaultId.vaultObjects ?? []) as VaultObjectsEntity[];
@@ -58,7 +56,7 @@ export const useVaultObjects = (params: VaultObjectProps) => {
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.vaultId, params.sortBy, params.orderBy, params.fanId]);
+  }, [params.vaultId, params.sortBy, params.orderBy]);
 
   return {
     vaultObjects,

@@ -5,16 +5,16 @@ import { GET_PUBLIC_VAULT_OBJECTS_BY_VAULT_ID_QUERY, GET_PUBLIC_VAULTS_QUERY } f
 import { PaginationInput } from '@workspace/gql/generated/graphql';
 
 export const useVaultsActions = () => {
-  const [getVaults] = useLazyQuery(GET_PUBLIC_VAULTS_QUERY);
-  const [getVaultObjects] = useLazyQuery(GET_PUBLIC_VAULT_OBJECTS_BY_VAULT_ID_QUERY);
+  const [getPublicVaults] = useLazyQuery(GET_PUBLIC_VAULTS_QUERY);
+  const [getVaultObjectsByVaultId] = useLazyQuery(GET_PUBLIC_VAULT_OBJECTS_BY_VAULT_ID_QUERY);
 
-  const getVaultsQuery = (input: PaginationInput) => {
-    return getVaults({ variables: { input } });
+  const getPublicVaultsQuery = (input: PaginationInput) => {
+    return getPublicVaults({ variables: { input } });
   };
 
-  const getVaultObjectsQuery = (input: PaginationInput) => {
-    return getVaultObjects({ variables: { input } });
+  const getVaultObjectsQueryByVaultId = (input: PaginationInput) => {
+    return getVaultObjectsByVaultId({ variables: { input } });
   };
 
-  return { getVaultsQuery, getVaultObjectsQuery };
+  return { getPublicVaultsQuery, getVaultObjectsQueryByVaultId };
 };

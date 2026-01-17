@@ -6,13 +6,12 @@ import { useEffect, useState } from 'react';
 
 interface UsePostsProps {
   username?: string;
-  fanId?: string;
   sortBy?: SortBy;
   orderBy?: SortOrder;
   take?: number;
 }
 
-export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30 }: UsePostsProps = {}) => {
+export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30 }: UsePostsProps = {}) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { getPublicPostsQuery } = usePostsActions();
@@ -29,7 +28,6 @@ export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, order
         skip,
         username,
         orderBy,
-        relatedUserId: fanId,
         sortBy
       });
 
@@ -56,7 +54,7 @@ export const usePosts = ({ username, fanId, sortBy = SortBy.PostCreatedAt, order
 
   useEffect(() => {
     loadPosts(true);
-  }, [username, fanId, sortBy, orderBy, take]);
+  }, [username, sortBy, orderBy, take]);
 
   return { posts, loading, hasMore, loadPosts, handleLoadMore, handleRefresh };
 };

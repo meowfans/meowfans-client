@@ -3,7 +3,6 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
 import { VaultsGalleryOptions } from '@/components/VaultsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaults } from '@/hooks/useVaults';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -13,11 +12,7 @@ interface Props {
 }
 
 export const SearchTerm: React.FC<Props> = ({ label }) => {
-  const { fan } = useFan();
-  const { vaults, hasMore, loadMore, loading, refresh } = useVaults({
-    fanId: fan?.fanId,
-    searchTerm: label
-  });
+  const { vaults, hasMore, loadMore, loading, refresh } = useVaults({ searchTerm: label });
 
   return (
     <PageManager>

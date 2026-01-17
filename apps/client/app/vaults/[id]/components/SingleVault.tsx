@@ -2,7 +2,6 @@
 
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
@@ -19,7 +18,6 @@ type TabProps = 'gallery' | 'about';
 export const SingleVault = () => {
   const { id } = useParams();
   const router = useRouter();
-  const { fan } = useFan();
   const searchParams = useSearchParams();
   const [expanded, setExpanded] = useState<boolean>(false);
   const defaultCurrentTab = (searchParams.get('tab') as TabProps) || 'gallery';
@@ -27,7 +25,6 @@ export const SingleVault = () => {
 
   const { vaultObjects, loadMore, hasMore, loading, vault } = useVaultObjects({
     vaultId: id as string,
-    fanId: fan?.fanId,
     sortBy: SortBy.VaultObjectSuffix,
     orderBy: SortOrder.Asc
   });

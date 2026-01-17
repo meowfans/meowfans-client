@@ -9,13 +9,12 @@ interface VaultProps {
   take?: number;
   sortBy?: SortBy;
   orderBy?: SortOrder;
-  fanId?: string;
   username?: string;
 }
 
 export const useVaults = (params: VaultProps) => {
   const { errorHandler } = useErrorHandler();
-  const { getVaultsQuery } = useVaultsActions();
+  const { getPublicVaultsQuery } = useVaultsActions();
   const { vaults, setVaults, appendVaults } = useVaultsStore();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
@@ -24,18 +23,16 @@ export const useVaults = (params: VaultProps) => {
     const skip = initialLoad ? 0 : vaults.length;
     setLoading(vaults.length === 0);
     try {
-      const { data } = await getVaultsQuery({
+      const { data } = await getPublicVaultsQuery({
         take: params.take ?? 40,
         skip,
         searchTerm: params.searchTerm,
         dataFetchType: DataFetchType.InfiniteScroll,
         sortBy: params.sortBy ?? SortBy.VaultViewCount,
         orderBy: params.orderBy ?? SortOrder.Desc,
-        relatedUserId: params.fanId,
         username: params.username,
         creatorType: [CreatorType.ImportedOnlyFansUser, CreatorType.ImportedPornStar]
       });
-
 
       const fetched = (data?.getPublicVaults.vaults ?? []) as VaultsEntity[];
       setHasMore(fetched.length === (params.take ?? 40));
@@ -59,7 +56,7 @@ export const useVaults = (params: VaultProps) => {
 
   useEffect(() => {
     loadVaults(true);
-  }, [params.searchTerm, params.sortBy, params.orderBy, params.fanId, params.username]);
+  }, [params.searchTerm, params.sortBy, params.orderBy, params.username]);
 
   return {
     vaults,

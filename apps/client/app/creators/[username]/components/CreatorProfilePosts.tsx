@@ -3,7 +3,6 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
 import { PostsGalleryOptions } from '@/components/PostsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
@@ -17,11 +16,9 @@ interface Props {
 }
 
 export const CreatorProfilePosts: React.FC<Props> = ({ username }) => {
-  const { fan } = useFan();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
   const { posts, handleLoadMore, hasMore, loading, handleRefresh } = usePosts({
     username,
-    fanId: fan?.fanId,
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc
   });

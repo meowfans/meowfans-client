@@ -4,16 +4,14 @@ import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
 import { LikeButton } from '@/components/LikeButton';
 import { PageHeader } from '@/components/PageHeader';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikes } from '@/hooks/useLikes';
 import { useVaults } from '@/hooks/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useDebouncedCallback } from 'use-debounce';
 
 const MostLikedVaults = () => {
-  const { fan } = useFan();
   const { likeVault } = useLikes();
-  const { vaults } = useVaults({ fanId: fan?.fanId, take: 20, sortBy: SortBy.VaultLikeCount, orderBy: SortOrder.Desc });
+  const { vaults } = useVaults({ take: 20, sortBy: SortBy.VaultLikeCount, orderBy: SortOrder.Desc });
 
   const handleDebounceLikeVault = useDebouncedCallback(likeVault, 350);
 

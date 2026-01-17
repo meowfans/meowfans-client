@@ -7,11 +7,10 @@ import { useEffect, useState } from 'react';
 interface UseCreatorsProps {
   sortBy?: SortBy;
   take?: number;
-  fanId?: string;
   orderBy?: SortOrder;
 }
 
-export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, orderBy = SortOrder.Desc }: UseCreatorsProps) => {
+export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy = SortOrder.Desc }: UseCreatorsProps) => {
   const { publicGetDefaultCreatorsQuery } = useCreatorsActions();
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
@@ -27,7 +26,6 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, o
         skip,
         sortBy,
         orderBy,
-        relatedUserId: fanId,
         creatorType: Object.values(CreatorType),
         dataFetchType: DataFetchType.InfiniteScroll
       });
@@ -56,7 +54,7 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, fanId, o
 
   useEffect(() => {
     loadCreators(true);
-  }, [sortBy, orderBy, fanId]);
+  }, [sortBy, orderBy]);
 
   return { creators, loading, hasMore, loadMore, refresh };
 };

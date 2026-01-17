@@ -3,7 +3,6 @@
 import { GalleryManager } from '@/components/GalleryManager';
 
 import { VaultsGalleryOptions } from '@/components/VaultsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaults } from '@/hooks/useVaults';
 import { TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -15,8 +14,7 @@ interface Props {
 }
 
 export const CreatorProfileVaults: React.FC<Props> = ({ username }) => {
-  const { fan } = useFan();
-  const { vaults, loadMore, hasMore, loading, refresh } = useVaults({ username, fanId: fan?.fanId, take: 30 });
+  const { vaults, loadMore, hasMore, loading, refresh } = useVaults({ username, take: 30 });
 
   return (
     <PageManager>

@@ -72,46 +72,6 @@ export const GET_PUBLIC_POST_BY_ID_QUERY = graphql(`
 `);
 
 /**
- * Fetches a public post and enriches it with fan-specific state.
- *
- * Business rules:
- * - Determines whether the fan has liked the post
- * - Determines whether the fan has purchased the post
- * - @returns blurred preview if the post is not accessible
- */
-export const GET_PUBLIC_POST_BY_ID_FOR_ANON_QUERY = graphql(`
-  query GetPublicPostByIdForAnon($input: GetPostInput!) {
-    getPublicPostByIdForAnon(input: $input) {
-      caption
-      commentCount
-      createdAt
-      creatorId
-      deletedAt
-      id
-      lastCommentId
-      likeCount
-      saveCount
-      shareCount
-      preview
-      updatedAt
-      isLiked
-      isPurchased
-      unlockPrice
-      creatorProfile {
-        assetCount
-        creatorId
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          username
-        }
-      }
-    }
-  }
-`);
-
-/**
  * Fetches post assets with access control.
  *
  * Side effects:

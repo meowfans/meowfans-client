@@ -2,7 +2,6 @@
 
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { usePostAssets } from '@/hooks/usePostAssets';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -10,11 +9,9 @@ import { useParams } from 'next/navigation';
 import { PostGalleryOptions } from './PostGalleryOptions';
 
 export const PostGallery = () => {
-  const { fan } = useFan();
   const { id } = useParams();
   const { postAssets, handleLoadMore, hasMore, loading, handleRefresh } = usePostAssets({
     postId: id as string,
-    fanId: fan?.fanId,
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Asc
   });

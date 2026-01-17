@@ -4,7 +4,6 @@ import { GalleryManager } from '@/components/GalleryManager';
 import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
 import { PageHeader } from '@/components/PageHeader';
 import { PostsGalleryOptions } from '@/components/PostsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -12,13 +11,11 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useState } from 'react';
 
 const TrendingPosts = () => {
-  const { fan } = useFan();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
   const { posts, loadPosts, hasMore, loading, handleRefresh } = usePosts({
     take: 30,
     sortBy: SortBy.PostLikeCount,
-    orderBy: SortOrder.Desc,
-    fanId: fan?.fanId
+    orderBy: SortOrder.Desc
   });
 
   return (
