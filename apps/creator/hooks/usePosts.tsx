@@ -7,6 +7,8 @@ import {
   GetPostsInfoOutput,
   PaginationInput,
   PostsEntity,
+  PostStatAnalyticsOutput,
+  PostStatsInput,
   SortBy,
   SortOrder,
   UpdatePostInput
@@ -270,4 +272,30 @@ export const useSinglePost = ({ postId }: SinglePostHookProps) => {
   }, []);
 
   return { post, loading };
+};
+
+export const usePostsAnalytics = (input: PostStatsInput) => {
+  const { postsAnalytics, setPostsAnalytics } = usePostsStore();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { getPostAnalyticsQuery } = usePostsActions();
+  const { errorHandler } = useErrorHandler();
+
+  const loadAnalytics = async () => {
+    setLoading(true);
+    try {
+      const { data } = await getPostAnalyticsQuery(input);
+      const fetched = data?.getPostAnalytics as PostStatAnalyticsOutput[];
+      setPostsAnalytics(fetched);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAnalytics();
+  }, []);
+
+  return { postsAnalytics, loading };
 };

@@ -5,13 +5,21 @@ import {
   CREATE_POST_MUTATION,
   DELETE_POST_MUTATION,
   DELETE_POSTS_MUTATION,
+  GET_POSTS_ANALYTICS_QUERY,
   GET_POSTS_INFO_QUERY,
   GET_POSTS_QUERY,
   GET_PUBLIC_POSTS_QUERY,
   GET_SINGLE_POST_QUERY,
   UPDATE_POST_MUTATION
 } from '@workspace/gql/api';
-import { CreatePostInput, DeletePostInput, DeletePostsInput, PaginationInput, UpdatePostInput } from '@workspace/gql/generated/graphql';
+import {
+  CreatePostInput,
+  DeletePostInput,
+  DeletePostsInput,
+  PaginationInput,
+  PostStatsInput,
+  UpdatePostInput
+} from '@workspace/gql/generated/graphql';
 
 export const usePostsActions = () => {
   const [getPublicPosts] = useLazyQuery(GET_PUBLIC_POSTS_QUERY);
@@ -22,6 +30,11 @@ export const usePostsActions = () => {
   const [deletePosts] = useMutation(DELETE_POSTS_MUTATION);
   const [getPostsInfo] = useLazyQuery(GET_POSTS_INFO_QUERY);
   const [getSinglePost] = useLazyQuery(GET_SINGLE_POST_QUERY);
+  const [getPostsAnalytics] = useLazyQuery(GET_POSTS_ANALYTICS_QUERY);
+
+  const getPostAnalyticsQuery = (input: PostStatsInput) => {
+    return getPostsAnalytics({ variables: { input } });
+  };
 
   const updatePostMutation = (input: UpdatePostInput) => {
     return updatePost({ variables: { input } });
@@ -63,6 +76,7 @@ export const usePostsActions = () => {
     deletePostsMutation,
     getPostsInfoQuery,
     getPostsQuery,
-    getSinglePostQuery
+    getSinglePostQuery,
+    getPostAnalyticsQuery
   };
 };

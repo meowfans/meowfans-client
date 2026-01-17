@@ -1,4 +1,4 @@
-import { GetPostsInfoOutput, PostAssetsEntity, PostsEntity } from '@workspace/gql/generated/graphql';
+import { GetPostsInfoOutput, PostAssetsEntity, PostsEntity, PostStatAnalyticsOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -11,10 +11,12 @@ type PostsStore = {
   postsInfo: GetPostsInfoOutput[];
   setPost: (post: PostsEntity) => void;
   setPosts: (posts: PostsEntity[]) => void;
+  postsAnalytics: PostStatAnalyticsOutput[];
   setPostInfo: (post: GetPostsInfoOutput) => void;
   setOpenPostCreateModal: (open: boolean) => void;
   setPostAssets: (postAssets: PostAssetsEntity[]) => void;
   setPostsInfo: (postsInfo: GetPostsInfoOutput[]) => void;
+  setPostsAnalytics: (postsAnalytics: PostStatAnalyticsOutput[]) => void;
 };
 
 export const usePostsStore = create<PostsStore>()(
@@ -26,13 +28,15 @@ export const usePostsStore = create<PostsStore>()(
       post: {} as PostsEntity,
       openPostCreateModal: false,
       postInfo: {} as GetPostsInfoOutput,
+      postsAnalytics: [],
 
       setPost: (post) => set({ post }),
       setPosts: (posts) => set({ posts }),
       setPostInfo: (postInfo) => set({ postInfo }),
-      setPostAssets: (postAssets) => set({ postAssets }),
       setPostsInfo: (postsInfo) => set({ postsInfo }),
-      setOpenPostCreateModal: (open) => set({ openPostCreateModal: open })
+      setPostAssets: (postAssets) => set({ postAssets }),
+      setOpenPostCreateModal: (open) => set({ openPostCreateModal: open }),
+      setPostsAnalytics: (postsAnalytics) => set({ postsAnalytics })
     }),
     {
       name: 'posts-store',

@@ -20,7 +20,7 @@ export const PostAnalytics = ({ chartType, loading, postsInfo, setChartType }: P
     return [...postsInfo]
       .filter((p) => !p.deletedAt)
       .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
-      .slice(0, 7)
+      .slice(0, 30)
       .map((p, idx) => ({
         name: p.caption ? p.caption.slice(0, 16) : `Post ${idx + 1}`,
         views: p.viewCount ?? 0,
@@ -39,7 +39,7 @@ export const PostAnalytics = ({ chartType, loading, postsInfo, setChartType }: P
             </CardTitle>
             <CardDescription>Highest views (and earnings) in your recent set</CardDescription>
           </div>
-          <Badge variant="outline">Top {Math.min(7, topPostsData.length)}</Badge>
+          <Badge variant="outline">Latest {topPostsData.length}</Badge>
           <Dropdown
             enumValue={ShadCnChartTypes}
             onFilterBy={(val) => setChartType(val)}

@@ -559,3 +559,18 @@ export const GET_SINGLE_POST_QUERY = graphql(`
     }
   }
 `);
+export const GET_POSTS_ANALYTICS_QUERY = graphql(`
+  query GetPostAnalytics($input: PostStatsInput!) {
+    getPostAnalytics(input: $input) {
+      commentCount
+      timestamp
+      id
+      likeCount
+      saveCount
+      shareCount
+      totalEarning
+      unlockPrice
+      viewCount
+    }
+  }
+`);
