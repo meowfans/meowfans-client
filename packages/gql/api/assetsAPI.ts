@@ -153,7 +153,6 @@ export const GET_PUBLIC_CREATOR_ASSETS_QUERY = graphql(`
           vaultObject {
             isLiked
             likeCount
-            viewCount
             contentType
             id
             isPurchased

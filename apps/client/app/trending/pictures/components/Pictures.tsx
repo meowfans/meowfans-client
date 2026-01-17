@@ -2,20 +2,17 @@
 
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
-import { useFan } from '@/hooks/context/UserContextWrapper';
+import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { PicturesGalleryOptions } from './PicturesGalleryOptions';
-import { useVaultObjects } from '@/hooks/useVaultObjects';
 
 const TrendingPictures = () => {
-  const { fan } = useFan();
   const { vaultObjects, loadMore, hasMore, loading, refresh } = useVaultObjects({
     take: 30,
     sortBy: SortBy.VaultObjectLikeCount,
-    orderBy: SortOrder.Desc,
-    fanId: fan?.fanId
+    orderBy: SortOrder.Desc
   });
 
   return (

@@ -104,7 +104,6 @@ export const LIKE_VAULT_OBJECT_MUTATION = graphql(`
           suffix
           updatedAt
           vaultId
-          viewCount
           asset {
             blurredUrl
             createdAt
@@ -231,7 +230,6 @@ export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
       suffix
       updatedAt
       vaultId
-      viewCount
       asset {
         blurredUrl
         createdAt

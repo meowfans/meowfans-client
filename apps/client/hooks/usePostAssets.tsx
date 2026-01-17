@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 interface UsePostAssetsProps {
   postId: string;
   username?: string;
-  fanId?: string;
   sortBy?: SortBy;
   orderBy?: SortOrder;
   take?: number;
@@ -18,7 +17,6 @@ interface UsePostAssetsProps {
 export const usePostAssets = ({
   postId,
   username,
-  fanId,
   sortBy = SortBy.VaultObjectSuffix,
   orderBy = SortOrder.Asc,
   take = 30
@@ -39,7 +37,6 @@ export const usePostAssets = ({
         skip,
         username,
         orderBy,
-        relatedUserId: fanId,
         sortBy,
         relatedEntityId: postId
       });

@@ -4,17 +4,14 @@ import { VaultObjectsGalleryOptions } from '@/app/vaults/[id]/components/VaultOb
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaultObjects } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 
 const MostLikedVaultObjects = () => {
-  const { fan } = useFan();
   const { vaultObjects, loading } = useVaultObjects({
     take: 20,
     sortBy: SortBy.VaultObjectLikeCount,
-    orderBy: SortOrder.Desc,
-    fanId: fan?.fanId
+    orderBy: SortOrder.Desc
   });
 
   return (

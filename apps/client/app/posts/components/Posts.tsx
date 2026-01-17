@@ -4,7 +4,6 @@ import { GalleryManager } from '@/components/GalleryManager';
 import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
 import { PageHeader } from '@/components/PageHeader';
 import { PostsGalleryOptions } from '@/components/PostsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -12,10 +11,8 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useState } from 'react';
 
 export const Posts = () => {
-  const { fan } = useFan();
   const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
   const { posts, loading, handleLoadMore, hasMore, handleRefresh } = usePosts({
-    fanId: fan?.fanId,
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc
   });

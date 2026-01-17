@@ -3,16 +3,13 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
 import { VaultsGalleryOptions } from '@/components/VaultsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaults } from '@/hooks/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Vaults = () => {
-  const { fan } = useFan();
   const { vaults, loading, loadMore, hasMore, refresh } = useVaults({
-    fanId: fan?.fanId,
     sortBy: SortBy.VaultViewCount,
     orderBy: SortOrder.Desc
   });

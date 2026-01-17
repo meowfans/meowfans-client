@@ -3,16 +3,13 @@
 import { GalleryManager } from '@/components/GalleryManager';
 import { PageHeader } from '@/components/PageHeader';
 import { VaultsGalleryOptions } from '@/components/VaultsGalleryOptions';
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaults } from '@/hooks/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 
 const TrendingVaults = () => {
-  const { fan } = useFan();
   const { vaults, loadMore, hasMore, loading, refresh } = useVaults({
-    fanId: fan?.fanId,
     take: 30,
     sortBy: SortBy.VaultLikeCount,
     orderBy: SortOrder.Desc
@@ -20,13 +17,7 @@ const TrendingVaults = () => {
 
   return (
     <PageManager>
-      <InfiniteScrollManager
-        dataLength={vaults.length}
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={loadMore}
-        onRefresh={refresh}
-      >
+      <InfiniteScrollManager dataLength={vaults.length} hasMore={hasMore} loading={loading} onLoadMore={loadMore} onRefresh={refresh}>
         <PageHeader title="Top liked vaults" />
         <GalleryManager
           loading={loading}
