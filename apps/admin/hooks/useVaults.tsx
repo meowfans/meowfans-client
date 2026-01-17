@@ -28,7 +28,7 @@ export const useVaultObjects = ({ creatorId, status = DownloadStates.Pending, fi
       setVaultObjects(fetched);
       setHasNext(fetched.length === limit);
     }
-  }, [data, status, fileType, limit]);
+  }, [data, status, fileType, limit]); //eslint-disable-line
 
   const handleFetchMore = async (_limit = 50) => {
     if (!hasNext) return [];

@@ -1,17 +1,10 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
-import { DataFetchType, SortBy, SortOrder, VaultObjectsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { DataFetchType, PaginationInput, SortBy, SortOrder, VaultObjectsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface VaultObjectProps {
-  vaultId?: string;
-  take?: number;
-  sortBy?: SortBy;
-  orderBy?: SortOrder;
-}
-
-export const useSingleVault = (params: VaultObjectProps) => {
+export const useSingleVault = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getSingleVaultQuery } = useVaultsActions();
   const { vault, setVault, setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
@@ -24,9 +17,10 @@ export const useSingleVault = (params: VaultObjectProps) => {
 
     try {
       const { data } = await getSingleVaultQuery({
+        ...params,
         skip,
         take: params.take ?? 30,
-        relatedEntityId: params.vaultId,
+        relatedEntityId: params.relatedEntityId,
         orderBy: params.orderBy ?? SortOrder.Asc,
         dataFetchType: DataFetchType.InfiniteScroll,
         sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
@@ -57,7 +51,7 @@ export const useSingleVault = (params: VaultObjectProps) => {
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.vaultId, params.sortBy, params.orderBy]);
+  }, [params.relatedEntityId, params.sortBy, params.orderBy]); //eslint-disable-line
 
   return {
     vaultObjects,
@@ -69,7 +63,7 @@ export const useSingleVault = (params: VaultObjectProps) => {
   };
 };
 
-export const useVaultObjects = (params: VaultObjectProps) => {
+export const useVaultObjects = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getPublicVaultObjectsQuery } = useVaultsActions();
   const { setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
@@ -82,11 +76,11 @@ export const useVaultObjects = (params: VaultObjectProps) => {
 
     try {
       const { data } = await getPublicVaultObjectsQuery({
+        ...params,
         skip,
         take: params.take ?? 30,
-        relatedEntityId: params.vaultId,
+        relatedEntityId: params.relatedEntityId,
         orderBy: params.orderBy ?? SortOrder.Asc,
-        dataFetchType: DataFetchType.InfiniteScroll,
         sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
       });
 
@@ -114,7 +108,7 @@ export const useVaultObjects = (params: VaultObjectProps) => {
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.vaultId, params.sortBy, params.orderBy]);
+  }, [params.relatedEntityId, params.sortBy, params.orderBy]); //eslint-disable-line
 
   return {
     vaultObjects,
