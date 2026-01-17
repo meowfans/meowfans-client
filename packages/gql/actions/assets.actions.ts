@@ -5,14 +5,12 @@ import {
   GET_CREATORS_ASSETS_QUERY,
   GET_FAN_ASSETS_QUERY,
   GET_PUBLIC_CREATOR_ASSETS_QUERY,
-  GET_PUBLIC_POST_ASSETS_QUERY,
   GET_PUBLIC_SHORTS_ASSETS_QUERY
 } from '@workspace/gql/api';
 import { PaginationInput } from '@workspace/gql/generated/graphql';
 
 export const useAssetsActions = () => {
   const [getFanAssets] = useLazyQuery(GET_FAN_ASSETS_QUERY);
-  const [getPostAssets] = useLazyQuery(GET_PUBLIC_POST_ASSETS_QUERY);
   const [getVaultAssets] = useLazyQuery(GET_PUBLIC_CREATOR_ASSETS_QUERY);
   const [getPublicShortsAssets] = useLazyQuery(GET_PUBLIC_SHORTS_ASSETS_QUERY);
   const [getCreatorOrCreatorsAssets] = useLazyQuery(GET_CREATORS_ASSETS_QUERY);
@@ -25,10 +23,6 @@ export const useAssetsActions = () => {
     return getVaultAssets({ variables: { input } });
   };
 
-  const publicGetPostAssetsQuery = (input: PaginationInput) => {
-    return getPostAssets({ variables: { input } });
-  };
-
   const privateGetFanAssetsQuery = (input: PaginationInput) => {
     return getFanAssets({ variables: { input } });
   };
@@ -38,7 +32,6 @@ export const useAssetsActions = () => {
   };
 
   return {
-    publicGetPostAssetsQuery,
     privateGetFanAssetsQuery,
     publicGetVaultAssetsQuery,
     publicGetShortsQuery,

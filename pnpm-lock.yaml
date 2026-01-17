@@ -8,12 +8,18 @@ importers:
 
   .:
     devDependencies:
+      '@next/eslint-plugin-next':
+        specifier: ^15.4.5
+        version: 15.5.9
       '@workspace/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
+      eslint-plugin-react-hooks:
+        specifier: ^5.2.0
+        version: 5.2.0(eslint@9.39.2(jiti@2.6.1))
       prettier:
         specifier: ^3.6.2
         version: 3.7.4

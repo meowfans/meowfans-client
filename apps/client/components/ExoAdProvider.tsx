@@ -132,7 +132,7 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
     return () => {
       if (adContainer) adContainer.innerHTML = '';
     };
-  }, [zoneId, classIdName, hasSubscribed]);
+  }, [zoneId, classIdName, fan]); //eslint-disable-line
 
   return hasSubscribed()
     ? null

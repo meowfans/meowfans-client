@@ -34,7 +34,7 @@ export const useVaults = (params: VaultProps) => {
         creatorType: [CreatorType.ImportedOnlyFansUser, CreatorType.ImportedPornStar]
       });
 
-      const fetched = (data?.getPublicVaults.vaults ?? []) as VaultsEntity[];
+      const fetched = (data?.getPublicVaults ?? []) as VaultsEntity[];
       setHasMore(fetched.length === (params.take ?? 40));
       if (initialLoad) setVaults(fetched);
       else appendVaults(fetched);

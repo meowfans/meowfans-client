@@ -72,62 +72,6 @@ export const GET_PUBLIC_POST_BY_ID_QUERY = graphql(`
 `);
 
 /**
- * Fetches post assets with access control.
- *
- * Side effects:
- * - Increments post view count
- *
- * Business rules:
- * - @returns blurred asset URLs if post is not purchased
- */
-export const GET_PUBLIC_POST_ASSETS_QUERY = graphql(`
-  query GetPublicPostAssets($input: PaginationInput!) {
-    getPublicPostAssets(input: $input) {
-      post {
-        caption
-        commentCount
-        createdAt
-        creatorId
-        deletedAt
-        id
-        lastCommentId
-        likeCount
-        preview
-        saveCount
-        shareCount
-        totalEarning
-        types
-        unlockPrice
-        updatedAt
-        isLiked
-        creatorProfile {
-          assetCount
-          creatorId
-          user {
-            avatarUrl
-            bannerUrl
-            id
-            username
-          }
-        }
-      }
-      postAssets {
-        asset {
-          createdAt
-          creatorId
-          fileType
-          id
-          mediaType
-          rawUrl
-          vaultObjectId
-          viewCount
-        }
-      }
-    }
-  }
-`);
-
-/**
  * Creates a comment on a post.
  *
  * Side effects:
@@ -519,6 +463,66 @@ export const GET_SINGLE_POST_QUERY = graphql(`
     }
   }
 `);
+
+export const GET_PUBLIC_SINGLE_POST_QUERY = graphql(`
+  query GetPublicSinglePost($input: GetPostInput!) {
+    getPublicSinglePost(input: $input) {
+      blurredPreview
+      caption
+      commentCount
+      createdAt
+      creatorId
+      deletedAt
+      id
+      isLiked
+      isPurchased
+      lastCommentId
+      likeCount
+      objectCount
+      preview
+      saveCount
+      shareCount
+      totalEarning
+      types
+      unlockPrice
+      updatedAt
+      viewCount
+      postAssets {
+        assetId
+        asset {
+          isPosted
+          mediaType
+          mimeType
+          rawUrl
+          viewCount
+          updatedAt
+          id
+          fileType
+          createdAt
+        }
+      }
+      latestComment {
+        comment
+        createdAt
+        deletedAt
+        fanId
+        id
+        postId
+        updatedAt
+        fanProfile {
+          fanId
+          user {
+            avatarUrl
+            lastName
+            firstName
+            username
+          }
+        }
+      }
+    }
+  }
+`);
+
 export const GET_POSTS_ANALYTICS_QUERY = graphql(`
   query GetPostAnalytics($input: PostStatsInput!) {
     getPostAnalytics(input: $input) {

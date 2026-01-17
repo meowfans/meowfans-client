@@ -47,7 +47,7 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
     <div className="flex flex-col items-start gap-6 mb-10">
       <SAvatar url={post.preview} className="h-28 w-28 shrink-0 rounded-full border-4 shadow-md object-cover" />
 
-      <div className="flex-1 min-w-[250px]">
+      <div className="flex-1 min-w-62.5">
         <EllipsisDescription
           description={post.caption}
           expanded={expanded}
