@@ -24,7 +24,7 @@ export const SingleVault = () => {
   const [currentTab, setCurrentTab] = useState<TabProps>(defaultCurrentTab);
 
   const { vaultObjects, loadMore, hasMore, loading, vault } = useSingleVault({
-    vaultId: id as string,
+    relatedEntityId: id as string,
     sortBy: SortBy.VaultObjectSuffix,
     orderBy: SortOrder.Asc
   });

@@ -12,7 +12,8 @@ const TrendingPictures = () => {
   const { vaultObjects, loadMore, hasMore, loading, refresh } = useVaultObjects({
     take: 30,
     sortBy: SortBy.VaultObjectLikeCount,
-    orderBy: SortOrder.Desc
+    orderBy: SortOrder.Desc,
+    searchTerm: 'Free posts only'
   });
 
   return (
