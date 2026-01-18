@@ -37,16 +37,3 @@ export const SinglePost = () => {
     </PageManager>
   );
 };
-
-//  <PageManager>
-//       <div className="mx-auto max-w-6xl px-3 md:px-6 py-6">
-//         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-//           <Skeleton className="w-full aspect-square rounded-xl bg-muted/50" />
-//           <div className="space-y-4">
-//             <Skeleton className="h-32 w-full rounded-xl bg-muted/50" />
-//             <Skeleton className="h-20 w-full rounded-xl bg-muted/50" />
-//             <Skeleton className="h-40 w-full rounded-xl bg-muted/50" />
-//           </div>
-//         </div>
-//       </div>
-//     </PageManager>

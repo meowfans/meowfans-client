@@ -1,16 +1,10 @@
 import { useCreatorsStore } from '@/hooks/store/users.store';
 import { useCreatorsActions } from '@workspace/gql/actions/creators.actions';
-import { CreatorType, DataFetchType, SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
+import { CreatorType, DataFetchType, PaginationInput, SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface UseCreatorsProps {
-  sortBy?: SortBy;
-  take?: number;
-  orderBy?: SortOrder;
-}
-
-export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy = SortOrder.Desc }: UseCreatorsProps) => {
+export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy = SortOrder.Desc }: PaginationInput) => {
   const { publicGetDefaultCreatorsQuery } = useCreatorsActions();
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
@@ -54,7 +48,7 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy 
 
   useEffect(() => {
     loadCreators(true);
-  }, [sortBy, orderBy]);
+  }, [sortBy, orderBy]); //eslint-disable-line
 
   return { creators, loading, hasMore, loadMore, refresh };
 };

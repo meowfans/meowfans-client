@@ -11,6 +11,7 @@ import {
   Heart,
   HeartHandshake,
   Home,
+  Image as LucideImage,
   ImageDown,
   Lightbulb,
   Mars,
@@ -22,13 +23,14 @@ import {
   Venus,
   Verified,
   VerifiedIcon,
-  Video
+  Video,
+  icons
 } from 'lucide-react';
 
 // Client-specific constants
 export const appBottomNavButtonOptions = [
   { icon: Video, title: 'Shorts', path: '/shorts' },
-  { icon: Flame, title: 'Trending', path: '/trending' },
+  { icon: LucideImage, title: 'Pictures', path: '/pictures' },
   { icon: GalleryVerticalEnd, title: 'Vaults', path: '/vaults' },
   { icon: GalleryHorizontal, title: 'Posts', path: '/posts' },
   { icon: CircleUserRound, title: 'Creators', path: '/creators' },
@@ -48,7 +50,6 @@ export const navActions = [
     { label: 'Following', url: '/following', icon: Verified },
     { label: 'Trending Creators', url: '/trending/creators', icon: VerifiedIcon },
     { label: 'Trending Posts', url: '/trending/posts', icon: ImageDown },
-    { label: 'Trending Pictures', url: '/trending/pictures', icon: ImageDown },
     { label: 'Trending Vaults', url: '/trending/vaults', icon: Album }
   ],
   [
@@ -77,7 +78,8 @@ export const appSideBarButtonOptions = {
         { label: 'Creators', url: '/creators', emoji: '', icon: BadgeCheck },
         { label: 'Categories', url: '/categories', emoji: '', icon: ArrowDownAZ },
         { label: 'Vaults', url: '/vaults', emoji: '', icon: GalleryVerticalEnd },
-        { label: 'Dashboard', url: '/dashboard', emoji: '', icon: Home, isActive: true }
+        { label: 'Dashboard', url: '/dashboard', emoji: '', icon: Home, isActive: true },
+        { label: 'Pictures', url: '/pictures', emoji: '', icon: LucideImage }
       ]
     },
     {

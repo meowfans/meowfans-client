@@ -15,6 +15,8 @@ export const FollowerProfileCard = () => {
             alt="Profile banner"
             className="h-full w-full object-cover"
             loading="lazy"
+            width={300}
+            height={100}
             unoptimized={true}
           />
         ) : (

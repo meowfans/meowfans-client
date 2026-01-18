@@ -7,7 +7,6 @@ import { usePosts } from '@/hooks/usePosts';
 import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useState } from 'react';
 import { CreatorProfileHeader } from './CreatorProfileHeader';
 
@@ -24,31 +23,29 @@ export const CreatorProfilePosts: React.FC<Props> = ({ username }) => {
   });
 
   return (
-    <PageManager>
-      <InfiniteScrollManager
-        dataLength={posts.length}
-        hasMore={hasMore}
+    <InfiniteScrollManager
+      dataLength={posts.length}
+      hasMore={hasMore}
+      loading={loading}
+      onLoadMore={handleLoadMore}
+      onRefresh={handleRefresh}
+    >
+      <CreatorProfileHeader />
+      <TabsList>
+        <TabsTrigger value={'posts'}>Posts</TabsTrigger>
+        <TabsTrigger value={'vaults'}>Vaults</TabsTrigger>
+      </TabsList>
+      <GalleryManager
+        layout="grid"
         loading={loading}
-        onLoadMore={handleLoadMore}
-        onRefresh={handleRefresh}
-      >
-        <CreatorProfileHeader />
-        <TabsList>
-          <TabsTrigger value={'posts'}>Posts</TabsTrigger>
-          <TabsTrigger value={'vaults'}>Vaults</TabsTrigger>
-          <TabsTrigger value={'about'}>About</TabsTrigger>
-        </TabsList>
-        <GalleryManager
-          loading={loading}
-          items={posts}
-          getKey={(post) => post.id}
-          getImageUrl={(post) => post.preview}
-          applyLink
-          pathname="/posts"
-          renderOverlay={(post) => <PostsGalleryOptions post={post} setCommentPost={setCommentPost} />}
-        />
-      </InfiniteScrollManager>
+        items={posts}
+        getKey={(post) => post.id}
+        getImageUrl={(post) => post.preview}
+        applyLink
+        pathname="/posts"
+        renderOverlay={(post) => <PostsGalleryOptions post={post} setCommentPost={setCommentPost} />}
+      />
       {commentPost && <CreateCommentModal isOpen={!!commentPost} postId={commentPost.id} onClose={() => setCommentPost(null)} />}
-    </PageManager>
+    </InfiniteScrollManager>
   );
 };

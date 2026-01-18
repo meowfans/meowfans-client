@@ -107,6 +107,7 @@ export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
       totalPost
       totalPublicPost
       totalSubscriber
+      followersCount
       assetCount
       vaultCount
       viewCount
