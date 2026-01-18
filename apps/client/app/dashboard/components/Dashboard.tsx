@@ -10,7 +10,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Dashboard = () => {
   const { creators, loading, loadMore, hasMore, refresh } = useCreators({
-    sortBy: SortBy.CreatorViewCount,
+    sortBy: SortBy.UserCreatedAt,
     orderBy: SortOrder.Desc
   });
 

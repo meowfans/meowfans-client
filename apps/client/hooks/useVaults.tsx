@@ -1,18 +1,10 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
-import { CreatorType, DataFetchType, SortBy, SortOrder, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { CreatorType, DataFetchType, PaginationInput, SortBy, SortOrder, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface VaultProps {
-  searchTerm?: string;
-  take?: number;
-  sortBy?: SortBy;
-  orderBy?: SortOrder;
-  username?: string;
-}
-
-export const useVaults = (params: VaultProps) => {
+export const useVaults = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getPublicVaultsQuery } = useVaultsActions();
   const { vaults, setVaults, appendVaults } = useVaultsStore();
@@ -24,6 +16,7 @@ export const useVaults = (params: VaultProps) => {
     setLoading(vaults.length === 0);
     try {
       const { data } = await getPublicVaultsQuery({
+        ...params,
         take: params.take ?? 40,
         skip,
         searchTerm: params.searchTerm,

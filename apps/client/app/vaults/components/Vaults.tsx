@@ -10,7 +10,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Vaults = () => {
   const { vaults, loading, loadMore, hasMore, refresh } = useVaults({
-    sortBy: SortBy.VaultViewCount,
+    sortBy: SortBy.VaultCreatedAt,
     orderBy: SortOrder.Desc
   });
 

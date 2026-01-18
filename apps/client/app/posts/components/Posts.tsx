@@ -28,11 +28,11 @@ export const Posts = () => {
       >
         <PageHeader title="Explore posts" />
         <GalleryManager
-          loading={loading}
+          applyLink
           items={posts}
+          loading={loading}
           getKey={(post) => post.id}
           getImageUrl={(post) => post.preview}
-          applyLink
           renderOverlay={(post) => <PostsGalleryOptions post={post} setCommentPost={setCommentPost} />}
         />
       </InfiniteScrollManager>
