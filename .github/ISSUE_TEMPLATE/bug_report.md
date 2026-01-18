@@ -1,19 +1,19 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title:
+title: 'BUG:'
 labels: bug
 assignees: ''
 ---
 
-**Destination:**
+**DESTINATION:**
 
 
-**Issue:**
+**ISSUE:**
 
 
-**Implementation:**
+**IMPLEMENTATION:**
 
 
-**Additional context:**
+**ADDITIONAL CONTEXT:**
 
