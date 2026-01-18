@@ -26,11 +26,7 @@ export const SingleVault = () => {
   }
   return (
     <PageManager>
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr] items-start">
-        <div className="hidden md:flex space-y-6">
-          <SingleVaultInfo />
-        </div>
-
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr] items-start">
         <InfiniteScrollManager hasMore={hasMore} dataLength={vaultObjects.length} loading={loading} onLoadMore={loadMore}>
           <div className="flex md:hidden">
             <SingleVaultInfo />
@@ -46,6 +42,9 @@ export const SingleVault = () => {
             )}
           />
         </InfiniteScrollManager>
+        <div className="hidden md:flex space-y-6">
+          <SingleVaultInfo />
+        </div>
       </div>
     </PageManager>
   );
