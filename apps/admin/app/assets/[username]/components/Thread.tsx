@@ -1,3 +1,5 @@
+'use client';
+
 import { CreatorAssetsEntity, ExtendedUpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
@@ -5,7 +7,7 @@ import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { handleFullScreen } from '@workspace/ui/lib';
+import { handleFullScreen, MEOW_FANS_BANNER } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import { Aperture, FileSliders, Fullscreen, GalleryThumbnails } from 'lucide-react';
 import Image from 'next/image';
@@ -41,7 +43,7 @@ export const AssetsThread: React.FC<Props> = ({ assets, onLoadMore, onSlideShow,
                     <Fullscreen />
                   </Button>
                 </div>
-                <SAvatar url={creatorAsset.creatorProfile.user.avatarUrl} fallback="creator" className="absolute bottom-0 left-0" />
+                <SAvatar url={MEOW_FANS_BANNER} fallback="creator" className="absolute bottom-0 left-0" />
                 <ApplyButtonTooltip
                   className="absolute bottom-0 right-0"
                   tootTipTitle="Set as profile"
@@ -66,7 +68,7 @@ export const AssetsThread: React.FC<Props> = ({ assets, onLoadMore, onSlideShow,
                 />
                 <Image
                   unoptimized
-                  src={creatorAsset.asset.rawUrl}
+                  src={MEOW_FANS_BANNER}
                   className={cn('cursor-pointer rounded-lg object-cover object-center h-70 w-70')}
                   alt="gallery-image"
                   width={300}

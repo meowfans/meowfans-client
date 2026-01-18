@@ -4,13 +4,9 @@ import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Bell, Settings, Star, Sun } from 'lucide-react';
 import { useState } from 'react';
-import { Account } from './Account';
 import { Display } from './Display';
-import { Featured } from './Featured';
-import { Footer } from './Footer';
 import { Header } from './Header';
 import Logout from './Logout';
-import { Notifications } from './Notifications';
 import { QuickActions } from './QuickActions';
 import TerminateAccount from './TerminateAccount';
 
@@ -39,15 +35,10 @@ export const More = () => {
         <div className="max-w-7xl mx-auto space-y-1">
           <Header />
           <Separator />
-          <Account />
           <QuickActions setDeleteAllAssetsModal={setDeleteAllAssetsModal} />
           <Display />
-          <Featured features={features} />
-          <Notifications />
           <TerminateAccount setTerminateAccountModal={setTerminateAccountModal} />
           <Logout />
-          <Separator />
-          <Footer />
         </div>
       </div>
       <DeleteAllAssetsModal isOpen={deleteAllAssetsModal} setOpen={setDeleteAllAssetsModal} />

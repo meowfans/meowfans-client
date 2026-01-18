@@ -1,34 +1,17 @@
 import { DownloadStates } from '@workspace/gql/generated/graphql';
 import {
   AudioWaveform,
-  Blocks,
-  Calendar,
   ChartLine,
   CircleDollarSign,
   CircleUserRound,
   Command,
   GalleryVerticalEnd,
   Home,
-  Inbox,
   Mails,
-  MessageCircleOff,
-  Settings,
-  Settings2
+  Settings
 } from 'lucide-react';
 
-export const authenticatedPaths = [
-  '/home',
-  '/notifications',
-  '/assets',
-  '/channels',
-  '/analytics',
-  '/profiles',
-  '/subscriptions',
-  '/subscriptions/plan',
-  '/cards',
-  '/more',
-  '/vaults'
-];
+export const authenticatedPaths = ['/assets', '/profiles', '/more', '/vaults'];
 
 export const statusLabels: Record<DownloadStates, string> = {
   [DownloadStates.Fulfilled]: 'Total downloaded objects',
@@ -63,17 +46,7 @@ export const appSideBarButtonOptions = {
     { title: 'Vaults', url: '/vaults', icon: Home },
     { title: 'Profiles', url: '/profiles', icon: CircleUserRound },
     { title: 'Assets', url: '/assets', icon: GalleryVerticalEnd },
-    { title: 'Analytics', url: '/analytics', icon: ChartLine, badge: '10' },
-    { title: 'Messages', url: '/channels', icon: Mails, badge: '10' }
-  ],
-  navSecondary: [
-    { title: 'Top creators', url: '/top-creators', icon: Calendar },
-    { title: 'Top posts', url: '/top-posts', icon: Settings2 },
-    { title: 'Trending', url: '/trending', icon: Blocks },
-    { title: 'Reports', url: '/reports', icon: MessageCircleOff },
-    { title: 'More', url: '/more', icon: Settings },
-    { title: 'Subscriptions', url: '/subscriptions', icon: CircleDollarSign },
-    { title: 'Notifications', url: '/notifications', icon: Inbox }
+    { title: 'More', url: '/more', icon: Settings, badge: '10' }
   ]
 };
 

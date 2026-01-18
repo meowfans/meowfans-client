@@ -1,13 +1,17 @@
-import { authenticatedPaths } from './constants';
-
 export interface PathContext {
   pathname: string;
   username?: string;
 }
 
 export class PathNormalizer {
+  private static authenticatedPaths: Array<string> = [];
+
+  static setAuthenticatedPaths(paths: Array<string>) {
+    this.authenticatedPaths = paths;
+  }
+
   private static normalizeUsername(username?: string): string {
-    return `/${username}` || '/';
+    return username ? `/${username}` : '/';
   }
 
   private static resolveUsername(ctx: PathContext): string | undefined {
@@ -15,12 +19,12 @@ export class PathNormalizer {
   }
 
   private static resolveAuthenticated(pathname: string): string | undefined {
-    return authenticatedPaths.find((path) => pathname.startsWith(path));
+    return this.authenticatedPaths.find((path) => pathname.startsWith(path));
   }
 
   static isAuthenticated(ctx: PathContext): boolean {
     return (
-      authenticatedPaths.some((path) => ctx.pathname.startsWith(path)) || ctx.pathname.startsWith(this.normalizeUsername(ctx.username))
+      this.authenticatedPaths.some((path) => ctx.pathname.startsWith(path)) || ctx.pathname.startsWith(this.normalizeUsername(ctx.username))
     );
   }
 

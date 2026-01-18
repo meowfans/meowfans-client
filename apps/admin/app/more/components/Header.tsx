@@ -11,7 +11,7 @@ export const Header = () => {
           transition={{ duration: 0.35 }}
           className="flex items-center gap-3"
         >
-          <div className="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-3 text-white shadow-lg">
+          <div className="rounded-xl bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 p-3 text-white shadow-lg">
             <Settings size={20} />
           </div>
           <div>

@@ -1,20 +1,19 @@
 'use client';
 
 import { useCreator } from '@/hooks/context/useCreator';
+import { useNormalizePath } from '@/hooks/useNormalizePath';
 import { appBottomNavButtonOptions } from '@/lib/constants';
-import { PathNormalizer } from '@/lib/PathNormalizer';
 import { Button } from '@workspace/ui/components/button';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
+import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
 import { usePathname, useRouter } from 'next/navigation';
 
 export const AppBottomNav = () => {
-  const isMobile = useIsMobile();
   const router = useRouter();
   const pathname = usePathname();
   const { creator } = useCreator();
   const username = creator.user.username;
-  const canShowBottomNav = PathNormalizer.isAuthenticated({ pathname, username }) && isMobile;
+  const { isMobilePath } = useNormalizePath();
 
   const navigationItems = appBottomNavButtonOptions.map((item) => {
     if (item.path === '/profile') {
@@ -28,7 +27,7 @@ export const AppBottomNav = () => {
     return item;
   });
 
-  return canShowBottomNav ? (
+  return isMobilePath ? (
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-2">
         {navigationItems.map((item, idx) => (

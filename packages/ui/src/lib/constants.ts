@@ -1,5 +1,5 @@
-export const MEOW_FANS_BANNER = '/meowfans_banner.png';
-export const MEOW_FANS_AVATAR = '/meowfans_avatar.png';
+export const MEOW_FANS_BANNER = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_banner.png';
+export const MEOW_FANS_AVATAR = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_avatar.png';
 
 export const authRefreshCookieKey = '_refreshToken';
 export const authCookieKey = '_accessToken';

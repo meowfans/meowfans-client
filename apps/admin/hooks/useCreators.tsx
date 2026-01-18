@@ -30,7 +30,7 @@ export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: Creat
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
       setHasMore(!!fetchedCreators.length);
-      setCreators(fetchedCreators);
+      setCreators([...creators, ...fetchedCreators]);
 
       setMeta({
         count: data?.getCreatorsByAdmin.count ?? 0,
@@ -51,7 +51,7 @@ export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: Creat
 
   useEffect(() => {
     loadAllCreators();
-  }, [pageNumber, sortBy]);
+  }, [pageNumber, sortBy]); //eslint-disable-line
 
   return {
     creators,
