@@ -18,12 +18,6 @@ export const SingleVault = () => {
     orderBy: SortOrder.Asc
   });
 
-  {
-    /* <ExoAdProvider zoneId="5771480" />
-<ExoAdProvider zoneId="5771444" zoneType={ExoAdZoneTypes.MobileBanner} />
-<ExoAdProvider zoneId="5771274" classIdName="eas6a97888e37" zoneType={ExoAdZoneTypes.OutStream} />
-*/
-  }
   return (
     <PageManager>
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr] items-start">

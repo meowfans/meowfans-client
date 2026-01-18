@@ -1,9 +1,10 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
+import { useQuery } from '@apollo/client/react';
 import { GET_CREATOR_ASSETS_QUERY } from '@workspace/gql/api/assetsAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
-import { useQuery } from '@apollo/client/react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
+import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
 import { Heart, ImageDown, ImageIcon, Star } from 'lucide-react';
 import Image from 'next/image';
 
@@ -45,7 +46,7 @@ export const Preferences = () => {
               <Image
                 unoptimized
                 key={creatorAsset.id}
-                src={creatorAsset.asset.rawUrl}
+                src={MEOW_FANS_BANNER}
                 alt="post"
                 className="w-full h-60 object-cover"
                 width={240}

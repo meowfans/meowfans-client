@@ -1,5 +1,6 @@
 import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
+import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
 import { Eye, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +17,7 @@ export const AssetCards: React.FC<Props> = ({ creator, pageNumber }) => {
         <Image
           unoptimized
           fill
-          src={creator.bannerUrl || '/assets/1.jpg'}
+          src={MEOW_FANS_BANNER}
           alt={`${creator.username} banner`}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -30,7 +31,7 @@ export const AssetCards: React.FC<Props> = ({ creator, pageNumber }) => {
       <div className="flex flex-col items-center -mt-10 z-10 relative">
         <Image
           unoptimized
-          src={creator.avatarUrl || '/assets/1.jpg'}
+          src={MEOW_FANS_BANNER}
           alt={creator.username}
           width={80}
           height={80}

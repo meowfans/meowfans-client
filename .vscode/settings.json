@@ -1,10 +1,13 @@
 {
-  "tailwindCSS.experimental.configFile": "packages/ui/src/styles/globals.css",
   "editor.formatOnSave": true,
-	"editor.codeActionsOnSave": { "source.organizeImports": "explicit" },
+  "editor.codeActionsOnSave": { "source.organizeImports": "explicit" },
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
-  "editor.insertSpaces": false,
+  "editor.insertSpaces": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "jest.runMode": "on-demand"
+  "jest.runMode": "on-demand",
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.insertFinalNewline": false,
+  "files.trimTrailingWhitespace": true
 }

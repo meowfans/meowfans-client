@@ -1,39 +1,17 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { Button } from '@workspace/ui/components/button';
-import { ScrollArea } from '@workspace/ui/components/scroll-area';
-import {
-  growthRateData,
-  GrowthRateType,
-  newCustomersData,
-  NewCustomerType,
-  performancesData,
-  PerformanceType,
-  ProfileCharts,
-  totalRevenueData,
-  TotalRevenueType
-} from '@/lib/constants';
+import { GrowthRateType, NewCustomerType, PerformanceType, ProfileCharts, TotalRevenueType } from '@/lib/constants';
+import { useQuery } from '@apollo/client/react';
 import { GET_CREATOR_PROFILE_QUERY_BY_ADMIN } from '@workspace/gql/api/creatorAPI';
 import { GetCreatorProfileByAdminQuery, GetUserQuery } from '@workspace/gql/generated/graphql';
-import { useQuery } from '@apollo/client/react';
+import { Button } from '@workspace/ui/components/button';
+import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useState } from 'react';
-import { Performances } from './ActiveAccounts';
-import { AppliedChart } from './AppliedChart';
-import { GrowthRate } from './GrowthRate';
-import { NewCustomers } from './NewCustomers';
 import { ProfileDescription } from './ProfileDescription';
 import { Stats } from './Stats';
 import { Preferences } from './Tabs';
-import { TotalRevenue } from './TotalRevenue';
-
-const chartConfig: Record<ProfileCharts, ChartDataTypes> = {
-  NEW_CUSTOMERS: newCustomersData,
-  GROWTH_RATE: growthRateData,
-  PERFORMANCES: performancesData,
-  TOTAL_REVENUE: totalRevenueData
-};
 
 export type ChartDataTypes = NewCustomerType | TotalRevenueType | GrowthRateType | PerformanceType;
 
@@ -49,15 +27,8 @@ const CreatorProfile: React.FC<Props> = ({ creator }) => {
   return (
     <PageManager>
       <ScrollArea className="flex w-full">
-        <div className="md:flex hidden flex-col md:flex-row gap-1 justify-between">
-          <NewCustomers setChart={setChart} />
-          <TotalRevenue setChart={setChart} />
-          <GrowthRate setChart={setChart} />
-          <Performances setChart={setChart} />
-        </div>
         <div className="flex flex-col gap-6 p-4 max-w-5xl mx-auto">
           <div className="flex flex-row justify-between">
-            <AppliedChart data={chartConfig[chart]} />
             <ProfileDescription creatorInfo={creatorInfo} />
           </div>
           <Stats creatorInfo={creatorInfo as GetCreatorProfileByAdminQuery} />

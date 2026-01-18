@@ -43,7 +43,7 @@ export const useAssets = ({ username, assetType = AssetType.Private }: Paginatio
 
   useEffect(() => {
     loadAssets(true);
-  }, [username, assetType]);
+  }, [username, assetType]); //eslint-disable-line
 
   return { hasMore, loading, onLoadMore: handleLoadMore, assets, setAssets };
 };

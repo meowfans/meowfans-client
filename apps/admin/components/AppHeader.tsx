@@ -7,25 +7,24 @@ import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { cn } from '@workspace/ui/lib/utils';
 import { Menu } from 'lucide-react';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { ApplyHeaderOptions } from './ApplyHeaderOptions';
 
-interface Props {
-  header?: string;
-}
-export const AppHeader: React.FC<Props> = ({ header }) => {
+export const AppHeader = () => {
   const isMobile = useIsMobile();
-  const { open, setOpen } = useSidebar();
+  const { open, setOpen, state } = useSidebar();
   const pathname = usePathname();
-  const { id: channelId } = useParams();
 
-  const _pathname = pathname === `/channels/${channelId}` ? '/channels' : pathname;
-
-  if (_pathname === '/channels') return null;
+  if (pathname.startsWith('/channels')) return null;
 
   return (
     <div
-      className={cn('flex flex-row w-full justify-between border-b bg-linear-to-bl px-2 h-16 bg-background z-50 sticky top-0')}
+      className={cn(
+        'flex flex-row justify-between border-b bg-linear-to-bl px-2 h-16 bg-background z-40 fixed top-0 right-0 transition-[left] duration-200 ease-linear'
+      )}
+      style={{
+        left: isMobile ? '0' : state === 'expanded' ? 'var(--sidebar-width)' : 'var(--sidebar-width-icon)'
+      }}
     >
       <div className="flex flex-row items-center gap-2">
         {!open && !isMobile && (
@@ -35,7 +34,6 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
         )}
         <ReturnToPreviousPage applyReturn />
         <div className="cursor-pointer ">{Icons.appIcon()}</div>
-        <p className="font-semibold text-xl animate-pulse">{header}</p>
       </div>
       <div className="flex flex-row items-center space-x-3">
         <ApplyHeaderOptions />

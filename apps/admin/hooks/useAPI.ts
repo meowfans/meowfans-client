@@ -1,6 +1,7 @@
 import { configService } from '@/util/config';
 import { AssetType } from '@workspace/gql/generated/graphql';
 import { authCookieKey, authRefreshCookieKey, FetchMethods, LoginInput, MediaType, SignupInput } from '@workspace/ui/lib';
+import { error } from 'console';
 import { getCookie, setCookie } from 'cookies-next';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
@@ -18,7 +19,7 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
 
     return data;
   } catch {
-    throw new Error('!!!Something wrong happened!!!');
+    console.log(error);
   }
 };
 

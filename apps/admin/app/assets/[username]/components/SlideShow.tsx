@@ -1,6 +1,5 @@
-'use client';
-
 import { Button } from '@workspace/ui/components/button';
+import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
 import Image from 'next/image';
 import React from 'react';
 import { Slide } from 'react-slideshow-image';
@@ -25,7 +24,7 @@ export const SlideShow: React.FC<Props> = ({ slideUrls, onLoadMore }) => {
               slideUrls.map((url, index) => (
                 <Image
                   unoptimized
-                  src={url}
+                  src={MEOW_FANS_BANNER}
                   key={index}
                   alt="preview"
                   width={'1000'}

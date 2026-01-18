@@ -1,85 +1,134 @@
+'use client';
+
 import { useCreators } from '@/hooks/useCreators';
-import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
 import { SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
-import { Input } from '@workspace/ui/components/input';
-import { ScrollArea } from '@workspace/ui/components/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
+import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { Paginate } from '@workspace/ui/globals/Paginate';
-import { ScrollToTheBottom } from '@workspace/ui/globals/ScrollToTheBottom';
-import { ScrollToTheTop } from '@workspace/ui/globals/ScrollToTheTop';
-import { RefreshCcw, Search, Shield } from 'lucide-react';
+import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
+import { Edit, GalleryThumbnailsIcon, GalleryVertical } from 'lucide-react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { CreatorProfilesArea } from './CreatorProfilesArea';
+import { useEffect, useRef, useState } from 'react';
 
 export const CreatorProfiles = () => {
   const searchParams = useSearchParams();
-  const endRef = useRef<HTMLDivElement>(null);
-  const topRef = useRef<HTMLDivElement>(null);
-  const [filterText, setFilterText] = useState<string>('');
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
-  const { count, creators, handleRefetch, hasNext, hasPrev, totalPages } = useCreators({
+  const topRef = useRef<HTMLDivElement>(null);
+  const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
+
+  const { creators, hasNext, loading } = useCreators({
     pageNumber,
     sortBy: SortBy.AssetCount
   });
 
-  const filteredCreators = filterText
-    ? creators.filter(
-        (c) =>
-          (c.id.toLowerCase() ?? '').includes(filterText.toLowerCase()) ||
-          (c.username?.toLowerCase() ?? '').includes(filterText.toLowerCase())
-      )
-    : creators;
+  useEffect(() => {
+    if (!loading && creators.length > 0) {
+      if (pageNumber === 1) {
+        setAllCreators(creators);
+      } else {
+        setAllCreators((prev) => {
+          const newIds = new Set(creators.map((c) => c.id));
+          const existing = prev.filter((c) => !newIds.has(c.id));
+          return [...existing, ...creators];
+        });
+      }
+    }
+  }, [creators, loading, pageNumber]);
 
   return (
-    <PageManager className="w-full bg-linear-to-b from-slate-50 to-white dark:from-zinc-900 dark:to-black">
-      <div className="flex flex-col justify-between sticky bg-background z-10 py-3 space-y-1 px-4 border-b shadow-sm">
-        <div className="flex flex-row items-center gap-3">
-          <Button variant="secondary" className="rounded-full">
-            <Shield className="h-4 w-4 mr-1" /> {count} Creators
-          </Button>
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search creators..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="pl-8 max-w-sm"
-            />
-          </div>
-        </div>
-        <div className="w-full flex">
-          <Button variant="outline" className="hover:scale-105 transition-transform rounded-full" onClick={handleRefetch}>
-            <RefreshCcw className="h-4 w-4 mr-1" /> Refresh
-          </Button>
-        </div>
-      </div>
-      <div className="relative h-full">
-        <ScrollArea className="h-[calc(100vh-150px)] w-full p-4">
+    <PageManager>
+      {creators.length ? (
+        <InfiniteScrollManager
+          dataLength={allCreators.length}
+          hasMore={!!hasNext}
+          onLoadMore={() => setPageNumber((prev) => prev + 1)}
+          loading={loading}
+        >
           <div ref={topRef} />
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredCreators
-              .slice()
-              .sort((a, b) => (b.creatorProfile.assetCount ?? 0) - (a.creatorProfile.assetCount ?? 0))
-              .map((creator) => (
-                <div key={creator.id} className="hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-                  <CreatorProfilesArea creator={creator as UsersEntity} />
-                </div>
+          <Table className="min-w-200 mt-16">
+            <TableHeader className="bg-muted/50 sticky top-0 z-30 backdrop-blur-sm">
+              <TableRow className="border-b border-border hover:bg-transparent">
+                <TableHead className="min-w-35 sm:min-w-62.5">User</TableHead>
+                <TableHead className="whitespace-nowrap min-w-37.5">Total Assets</TableHead>
+                <TableHead className="text-right right-0 z-30 bg-card/95 backdrop-blur hidden md:table-cell">Actions</TableHead>
+                <TableHead className="text-right md:hidden">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {creators.map((creator) => (
+                <TableRow key={creator.id} className="group hover:bg-muted/30 transition-colors">
+                  <TableCell className="p-2 sm:p-4 sticky left-0">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border-2 border-background ring-2 ring-muted/20">
+                        <AvatarImage src={MEOW_FANS_BANNER} className="object-cover" />
+                        <AvatarFallback className="bg-primary/10 text-primary uppercase font-bold text-xs sm:text-sm">
+                          {creator.username?.[0] || '?'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold truncate text-foreground text-sm sm:text-base">{creator.username}</span>
+                        <span className="text-xs text-muted-foreground truncate hidden sm:inline">
+                          {creator.firstName || ''} {creator.lastName || ''}
+                        </span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium text-muted-foreground">{creator.creatorProfile.assetCount ?? 0} Assets</TableCell>
+                  <TableCell className="text-right p-2 sm:p-4">
+                    <div className="flex justify-end gap-2">
+                      <Link href={`/assets/${creator.username}?p=${pageNumber}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          <GalleryThumbnailsIcon className="w-3.5 h-3.5 sm:mr-1.5" />
+                          <span className="hidden sm:inline">Assets</span>
+                        </Button>
+                      </Link>
+                      <Link href={`/vaults/${creator.username}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          <GalleryThumbnailsIcon className="w-3.5 h-3.5 sm:mr-1.5" />
+                          <span className="hidden sm:inline">Vaults</span>
+                        </Button>
+                      </Link>
+                      <Link href={`/posts/${creator.username}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          <GalleryVertical className="w-3.5 h-3.5 sm:mr-1.5" />
+                          <span className="hidden sm:inline">Posts</span>
+                        </Button>
+                      </Link>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
+                      >
+                        <Edit className="w-3.5 h-3.5 sm:mr-1.5" />
+                        <span className="hidden sm:inline">Edit</span>
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))}
-          </div>
-          <div ref={endRef} />
-        </ScrollArea>
-        <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
-        <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-        <Paginate
-          hasNext={!!hasNext}
-          hasPrev={!!hasPrev}
-          pageNumber={pageNumber}
-          totalPages={totalPages ?? 0}
-          setPageNumber={setPageNumber}
-        />
-      </div>
+            </TableBody>
+          </Table>
+        </InfiniteScrollManager>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-[50vh] text-muted-foreground">
+          <p className="text-lg">No creators found</p>
+        </div>
+      )}
     </PageManager>
   );
 };

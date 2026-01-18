@@ -19,14 +19,14 @@ import { VaultUrls } from './VaultUrls';
 
 export const Vaults = () => {
   const searchParams = useSearchParams();
+  const { setCreators } = useCreatorsStore();
   const endRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const [filterText, setFilterText] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.VaultCount);
-  const [filterBy, setFilterBy] = useState<DownloadStates>(DownloadStates.Pending);
   const [selectedCreatorIds, setSelectedCreatorIds] = useState<string[]>([]);
+  const [filterBy, setFilterBy] = useState<DownloadStates>(DownloadStates.Pending);
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
-  const { setCreators } = useCreatorsStore();
   const { creators, count, handleRefetch, hasNext, hasPrev, totalPages } = useCreators({ pageNumber, sortBy });
 
   const toggleCreatorSelection = (creatorId: string) => {

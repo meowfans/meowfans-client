@@ -1,3 +1,4 @@
+import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
@@ -126,6 +127,7 @@ export default async function RootLayout({ children }: Props) {
                   </SidebarInset>
                 </div>
               </SidebarProvider>
+              <AppBottomNav />
             </ThemeProvider>
           </AdminContextWrapper>
         </ApolloWrapper>

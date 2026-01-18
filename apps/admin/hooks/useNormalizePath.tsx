@@ -4,16 +4,16 @@ import { authenticatedPaths } from '@/lib/constants';
 import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { usePathname } from 'next/navigation';
-import { useCreator } from './context/useCreator';
+import { useAdmin } from './context/AdminContextWrapper';
 
 export const useNormalizePath = () => {
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const {
-    creator: {
+    admin: {
       user: { username }
     }
-  } = useCreator();
+  } = useAdmin();
 
   PathNormalizer.setAuthenticatedPaths(authenticatedPaths);
   const isAuthenticatedPath = PathNormalizer.isAuthenticated({ pathname, username });
