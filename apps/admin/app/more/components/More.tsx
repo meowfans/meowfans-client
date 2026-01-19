@@ -1,8 +1,9 @@
+'use client';
+
 import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
 import { TerminateAccountModal } from '@/components/modals/TerminateAccountModal';
 import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { Bell, Settings, Star, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { Display } from './Display';
 import { Header } from './Header';
@@ -17,13 +18,6 @@ export type Feature = {
   featured?: boolean;
   icon?: React.ReactNode;
 };
-
-const features: Feature[] = [
-  { id: 'privacy', title: 'Privacy Hub', desc: 'Manage who sees your profile and assets.', featured: true, icon: <Settings size={18} /> },
-  { id: 'theme', title: 'Appearance', desc: 'Light, dark or system theme controls.', featured: true, icon: <Sun size={18} /> },
-  { id: 'notifications', title: 'Notifications', desc: 'Control push and email notifications.', icon: <Bell size={18} /> },
-  { id: 'rewards', title: 'Rewards', desc: 'View badges, achievements and perks.', icon: <Star size={18} /> }
-];
 
 export const More = () => {
   const [terminateAccountModal, setTerminateAccountModal] = useState<boolean>(false);

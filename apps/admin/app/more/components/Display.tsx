@@ -1,4 +1,4 @@
-import { useShadCnBackgroundStore } from '@/zustand/background.store';
+import { useShadCnBackgroundStore } from '@/hooks/store/background.store';
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Label } from '@workspace/ui/components/label';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';

@@ -7,7 +7,7 @@ import { Button } from '@workspace/ui/components/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
+import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { Edit, GalleryThumbnailsIcon, GalleryVertical } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -63,7 +63,7 @@ export const Assets = () => {
                   <TableCell className="p-2 sm:p-4 sticky left-0">
                     <div className="flex items-center gap-3 sm:gap-4">
                       <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border-2 border-background ring-2 ring-muted/20">
-                        <AvatarImage src={MEOW_FANS_BANNER} className="object-cover" />
+                        <AvatarImage src={creator.avatarUrl ?? MEOW_FANS_AVATAR} className="object-cover" />
                         <AvatarFallback className="bg-primary/10 text-primary uppercase font-bold text-xs sm:text-sm">
                           {creator.username?.[0] || '?'}
                         </AvatarFallback>

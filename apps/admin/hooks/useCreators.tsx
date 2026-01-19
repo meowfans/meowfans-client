@@ -1,6 +1,6 @@
-import { useCreatorsStore } from '@/zustand/creators.store';
+import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreatorsActions } from '@workspace/gql/actions';
-import { GetAllCreatorsOutput, PaginationInput, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { GetAllCreatorsOutput, PaginationInput, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +20,7 @@ export const useCreators = (params: PaginationInput) => {
   const loadAllCreators = async () => {
     setLoading(creators.length === 0);
     try {
-      const { data } = await getCreatorsByAdminQuery({ ...params, sortBy: SortBy.UserCreatedAt });
+      const { data } = await getCreatorsByAdminQuery({ ...params });
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
       setHasMore(!!fetchedCreators.length);

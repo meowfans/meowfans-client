@@ -1,13 +1,16 @@
 'use client';
 
+import { Impersonate } from '@/components/Impersonate';
 import { useCreators } from '@/hooks/useCreators';
-import { SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { ImpersonatedCreatorID } from '@/util/helpers';
+import { SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
+import { cn } from '@workspace/ui/lib/utils';
 import { Edit, GalleryVertical, GalleryVerticalEnd, Vault } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -18,11 +21,7 @@ export const CreatorProfiles = () => {
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
   const topRef = useRef<HTMLDivElement>(null);
   const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
-
-  const { creators, hasNext, loading } = useCreators({
-    pageNumber,
-    sortBy: SortBy.AssetCount
-  });
+  const { creators, hasNext, loading } = useCreators({ pageNumber, sortBy: SortBy.AssetCount, orderBy: SortOrder.Desc });
 
   useEffect(() => {
     if (!loading && creators.length > 0) {
@@ -67,7 +66,10 @@ export const CreatorProfiles = () => {
 
             <TableBody>
               {allCreators.map((creator) => (
-                <TableRow key={creator.id} className="hover:bg-muted/30 transition-colors">
+                <TableRow
+                  key={creator.id}
+                  className={cn('hover:bg-muted/30 transition-colors', ImpersonatedCreatorID(creator.id) ? 'bg-red-400' : '')}
+                >
                   <TableCell className="sticky left-0 z-10 bg-card" id="name-cell">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-4 w-4 sm:h-10 sm:w-10">
@@ -121,6 +123,7 @@ export const CreatorProfiles = () => {
                         <Edit className="w-2 h-2 sm:mr-1" />
                         <span className="hidden text-xs sm:inline">Edit</span>
                       </Button>
+                      <Impersonate creator={creator} />
                     </div>
                   </TableCell>
                 </TableRow>

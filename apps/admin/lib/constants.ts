@@ -7,11 +7,12 @@ import {
   Command,
   GalleryVerticalEnd,
   Home,
+  LayoutDashboard,
   Mails,
   Settings
 } from 'lucide-react';
 
-export const authenticatedPaths = ['/assets', '/profiles', '/more', '/vaults'];
+export const authenticatedPaths = ['/home', '/assets', '/profiles', '/more', '/vaults'];
 
 export const statusLabels: Record<DownloadStates, string> = {
   [DownloadStates.Fulfilled]: 'Total downloaded objects',
@@ -43,6 +44,7 @@ export const appSideBarButtonOptions = {
     { name: 'Fan', logo: Command, plan: 'Free' }
   ],
   navMain: [
+    { title: 'Home', url: '/home', icon: LayoutDashboard },
     { title: 'Vaults', url: '/vaults', icon: Home },
     { title: 'Profiles', url: '/profiles', icon: CircleUserRound },
     { title: 'Assets', url: '/assets', icon: GalleryVerticalEnd },

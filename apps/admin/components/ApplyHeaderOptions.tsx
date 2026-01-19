@@ -2,7 +2,7 @@
 
 import { ImportSingleCreatorSheet } from '@/app/vaults/[username]/ImportSingleCreatorSheet';
 import { ImportCreatorsSheet } from '@/app/vaults/components/ImportCreatorsSheet';
-import { useVaultsStore } from '@/zustand/vaults.store';
+import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import {

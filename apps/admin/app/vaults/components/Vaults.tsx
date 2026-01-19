@@ -2,9 +2,9 @@
 
 import { TerminateDownloadingModal } from '@/components/modals/TerminateDownloadingModal';
 import { TerminateImportingJobsModal } from '@/components/modals/TerminateImportingJobsModal';
+import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
-import { useCreatorsStore } from '@/zustand/creators.store';
 import { DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';

@@ -1,4 +1,4 @@
-import { useVaultsStore } from '@/zustand/vaults.store';
+import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions';
 import { FileType, GetAllObjectsCountOutput, PaginationInput, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
