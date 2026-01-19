@@ -1,4 +1,5 @@
 export * from './assetsAPI';
+export * from './authAPI';
 export * from './channelsAPI';
 export * from './commentsAPI';
 export * from './creatorAPI';

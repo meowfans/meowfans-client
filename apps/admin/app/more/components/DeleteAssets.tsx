@@ -14,12 +14,7 @@ const DeleteAllAssets: React.FC<Props> = ({ setDeleteAllAssetsModal }) => {
         <CardDescription>Be aware of this as this is irreversible!</CardDescription>
       </CardHeader>
       <CardContent className="">
-        <TriggerModal
-          onChangeModalState={() => setDeleteAllAssetsModal(true)}
-          className="bg-red-600"
-          modalIcon={{ icon: Trash }}
-          modalText="Delete your assets"
-        />
+    
       </CardContent>
     </Card>
   );

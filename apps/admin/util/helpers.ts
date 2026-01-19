@@ -1,12 +1,16 @@
+import { authRefreshCookieKey, impersonatedCreatorId } from '@workspace/ui/lib';
+import { JwtUser } from '@workspace/ui/lib/types';
 import { getCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
 import { RefObject } from 'react';
 import { configService } from './config';
-import { JwtUser } from '@workspace/ui/lib/types';
-import { authRefreshCookieKey } from '@workspace/ui/lib';
 
 export const BearerRefreshToken = () => {
   return `Bearer ${getCookie(authRefreshCookieKey)}`;
+};
+
+export const ImpersonatedCreatorID = (creatorId: string) => {
+  return creatorId === getCookie(impersonatedCreatorId);
 };
 
 export const buildSafeUrl = (input: { host: string; pathname?: string }) => {

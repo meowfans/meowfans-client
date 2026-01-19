@@ -1,6 +1,6 @@
 'use client';
 
-import { useVaultsStore } from '@/zustand/vaults.store';
+import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
 import { TERMINATE_ALL_JOBS_MUTATION } from '@workspace/gql/api/vaultsAPI';

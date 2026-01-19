@@ -1,5 +1,6 @@
 import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
+import { ImpersonationReturnGuard } from '@/components/modals/ImpersonationGuard';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -85,10 +86,9 @@ const getUser = async () => {
 const handleValidateAuth = async () => {
   const cookiesList = await cookies();
   const accessToken = cookiesList.get(authCookieKey)?.value;
-
   const decodedToken = decodeJwtToken(accessToken);
 
-  if (decodedToken && !decodedToken.roles.includes(UserRoles.ADMIN)) {
+  if (decodedToken && !decodedToken.impersonating && !decodedToken.roles.includes(UserRoles.ADMIN)) {
     return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   }
 
@@ -102,6 +102,9 @@ const handleValidateAuth = async () => {
 };
 
 export default async function RootLayout({ children }: Props) {
+  const accessToken = (await cookies()).get(authCookieKey)?.value;
+  const decodedToken = decodeJwtToken(accessToken);
+
   const admin = await handleValidateAuth();
 
   return (
@@ -118,6 +121,7 @@ export default async function RootLayout({ children }: Props) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
+            {decodedToken?.impersonating && <ImpersonationReturnGuard />}
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <SidebarProvider defaultOpen>
                 <div className="flex h-screen w-full overflow-hidden">

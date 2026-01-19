@@ -1,4 +1,4 @@
-import { useShadCnBackgroundStore } from '@/zustand/background.store';
+import { useShadCnBackgroundStore } from '@/hooks/store/background.store';
 import { Button } from '@workspace/ui/components/button';
 import { ShadCnBackgrounds } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';

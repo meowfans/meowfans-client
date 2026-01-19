@@ -11,6 +11,8 @@ export interface JwtUser {
   type: TokenType;
   roles: UserRoles[];
   ip: string;
+  admin?: JwtUser;
+  impersonating: boolean;
   userAgent: string;
   associated_access_token_jti: string;
 }

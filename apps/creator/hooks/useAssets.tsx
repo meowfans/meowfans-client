@@ -2,7 +2,7 @@ import { useAssetsStore } from '@/hooks/store/assets.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react';
-import { GET_CREATOR_ASSETS_QUERY } from '@workspace/gql/api/assetsAPI';
+import { useAssetsActions } from '@workspace/gql/actions';
 import { GET_POST_ASSETS_QUERY } from '@workspace/gql/api/postsAPI';
 import { AssetType, CreatorAssetsEntity, PostAssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
@@ -24,14 +24,14 @@ interface UseAssetsProps extends Props {
 
 export const useAssets = ({ assetType }: Props) => {
   const { assets, setAssets } = useAssetsStore();
-  const [getCreatorAssets, { refetch }] = useLazyQuery(GET_CREATOR_ASSETS_QUERY);
+  const { refetchCreatorAssets, getCreatorAssetsQuery } = useAssetsActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadCreatorAssets = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : assets.length;
     try {
-      const { data } = await getCreatorAssets({ variables: { input: { take: 30, skip, assetType } } });
+      const { data } = await getCreatorAssetsQuery({ take: 30, skip, assetType });
       const fetchedAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
 
       setHasMore(fetchedAssets.length === 30);
@@ -47,7 +47,7 @@ export const useAssets = ({ assetType }: Props) => {
   };
 
   const handleRefetch = async (take: number) => {
-    const { data } = await refetch({ input: { take, skip: 0, assetType } });
+    const { data } = await refetchCreatorAssets({ input: { take, skip: 0, assetType } });
     const creatorAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
     return creatorAssets;
   };
@@ -58,7 +58,7 @@ export const useAssets = ({ assetType }: Props) => {
 
   useEffect(() => {
     loadCreatorAssets(true);
-  }, [assetType]);
+  }, [assetType]); //eslint-disable-line
 
   return { handleLoadMore, hasMore, loading, assets, handleRefetch };
 };
@@ -96,7 +96,7 @@ export const usePostAssets = ({ postId, username, take = 30, orderBy = SortOrder
 
   useEffect(() => {
     handleLoadMoreAssets(true);
-  }, [assetType]);
+  }, [assetType]); //eslint-disable-line
 
   return { postAssets, handleLoadMore, loading, hasMore };
 };
