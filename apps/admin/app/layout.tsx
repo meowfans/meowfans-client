@@ -114,16 +114,17 @@ export default async function RootLayout({ children }: Props) {
         <link rel="icon" href="/icons/logo_192.png" />
         <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
+
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <SidebarProvider defaultOpen={true}>
-                <div className="flex w-full min-h-screen overflow-hidden">
+              <SidebarProvider defaultOpen>
+                <div className="flex h-screen w-full overflow-hidden">
                   <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-h-screen">
+                  <SidebarInset className="flex flex-1 flex-col min-w-0">
                     <Toaster position="top-center" closeButton richColors theme="system" />
-                    <main className="flex-1 w-full overflow-x-hidden">{children}</main>
+                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
                   </SidebarInset>
                 </div>
               </SidebarProvider>

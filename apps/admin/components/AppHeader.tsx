@@ -20,10 +20,14 @@ export const AppHeader = () => {
   return (
     <div
       className={cn(
-        'flex flex-row justify-between border-b bg-linear-to-bl px-2 h-16 bg-background z-40 fixed top-0 right-0 transition-[left] duration-200 ease-linear'
+        'flex flex-row justify-between',
+        'border-b bg-linear-to-bl px-2',
+        'h-16 bg-background z-40 fixed',
+        'top-0 right-0 transition-[left]',
+        'duration-200 ease-linear'
       )}
       style={{
-        left: isMobile ? '0' : state === 'expanded' ? 'var(--sidebar-width)' : 'var(--sidebar-width-icon)'
+        left: isMobile ? '0' : state === 'expanded' ? 'var(--sidebar-width)' : '0'
       }}
     >
       <div className="flex flex-row items-center gap-2">
