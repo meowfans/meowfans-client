@@ -8,7 +8,7 @@ interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> {
 
 export const PageManager: React.FC<Props> = ({ children, className, ...props }) => {
   return (
-    <main className={cn('w-full min-h-screen overflow-y-auto p-0.5 mb-16 md:mb-0', className)} {...props}>
+    <main className={cn('w-full p-0.5 mb-16 md:mb-0', className)} {...props}>
       {children}
     </main>
   );
