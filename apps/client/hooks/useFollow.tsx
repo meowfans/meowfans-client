@@ -46,7 +46,7 @@ export const useFollowings = () => {
 
   useEffect(() => {
     if (fan) loadFollowings(true);
-  }, [fan]);
+  }, [fan]); //eslint-disable-line
 
   const followCreator = async (creatorId: string) => {
     if (!creatorId) return;
@@ -77,5 +77,13 @@ export const useFollowings = () => {
     }
   };
 
-  return { followings, loading, hasMore, loadMore, refresh, followCreator, unfollowCreator };
+  return {
+    followings,
+    loading,
+    hasMore,
+    loadMore,
+    refresh,
+    followCreator,
+    unfollowCreator
+  };
 };

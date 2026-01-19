@@ -24,6 +24,42 @@ export const GET_FOLLOWING_QUERY = graphql(`
   }
 `);
 
+export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
+  query GetCreatorsByAdmin($input: PaginationInput!) {
+    getCreatorsByAdmin(input: $input) {
+      count
+      totalPages
+      hasNext
+      hasPrev
+      creators {
+        avatarUrl
+        bannerUrl
+        createdAt
+        deletedAt
+        firstName
+        id
+        lastLoginAt
+        lastName
+        roles
+        updatedAt
+        username
+        creatorProfile {
+          vaultCount
+          vaultObjectCount
+          viewCount
+          creatorId
+          assetCount
+          vaultCount
+          fulfilledObjectCount
+          pendingObjectCount
+          processingObjectCount
+          rejectedObjectCount
+        }
+      }
+    }
+  }
+`);
+
 export const FOLLOW_CREATOR_MUTATION = graphql(`
   mutation FollowCreator($input: FollowCreatorInput!) {
     followCreator(input: $input) {
@@ -164,38 +200,6 @@ export const GET_DEFAULT_CREATORS_QUERY = graphql(`
   }
 `);
 
-export const GET_CREATOR_PROFILE_QUERY_BY_ADMIN = graphql(`
-  query GetCreatorProfileByAdmin($creatorId: String!) {
-    getCreatorProfileByAdmin(creatorId: $creatorId) {
-      allowsComment
-      allowsMessaging
-      bio
-      creatorId
-      displayOnlineStatus
-      displayTotalPost
-      displayTotalSubscriber
-      themeColor
-      totalExclusivePost
-      totalPost
-      totalPublicPost
-      totalSubscriber
-      user {
-        avatarUrl
-        bannerUrl
-        createdAt
-        deletedAt
-        firstName
-        id
-        lastLoginAt
-        lastName
-        roles
-        updatedAt
-        username
-      }
-    }
-  }
-`);
-
 export const GET_FOLLOWERS_QUERY = graphql(`
   query GetFollowers($input: PaginationInput!) {
     getFollowers(input: $input) {
@@ -247,30 +251,6 @@ export const GET_CREATOR_PROFILE_QUERY = graphql(`
         lastName
         roles
         updatedAt
-        username
-      }
-    }
-  }
-`);
-
-export const UPDATE_CREATOR_PROFILE_BY_ADMIN_MUTATION = graphql(`
-  mutation UpdateCreatorProfileByAdmin($input: ExtendedUpdateCreatorProfileInput!) {
-    updateCreatorProfileByAdmin(input: $input) {
-      allowsComment
-      allowsMessaging
-      bio
-      creatorId
-      displayOnlineStatus
-      displayTotalPost
-      displayTotalSubscriber
-      themeColor
-      totalExclusivePost
-      totalPost
-      totalPublicPost
-      totalSubscriber
-      user {
-        avatarUrl
-        bannerUrl
         username
       }
     }

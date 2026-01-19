@@ -8,14 +8,16 @@ import { useCreatorsStore } from '@/zustand/creators.store';
 import { DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Paginate } from '@workspace/ui/globals/Paginate';
 import { ScrollToTheBottom } from '@workspace/ui/globals/ScrollToTheBottom';
 import { ScrollToTheTop } from '@workspace/ui/globals/ScrollToTheTop';
 import { useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { VaultsHeader } from './VaultsHeader';
+import { VaultTableRow } from './VaultTableRow';
 import { VaultUrls } from './VaultUrls';
+import { VaultsHeader, statusButtons } from './VaultsHeader';
 
 export const Vaults = () => {
   const searchParams = useSearchParams();
@@ -62,8 +64,18 @@ export const Vaults = () => {
     }
   };
 
+  const sortedVaults = filteredCreatorVaults?.slice().sort((a, b) => handleSortVaults(a, b));
+
+  const handleUpdateCreator = (c: UsersEntity) => {
+    setCreators([
+      ...creators.map((cre) => {
+        return cre.id === c.id ? c : cre;
+      })
+    ]);
+  };
+
   return (
-    <PageManager>
+    <PageManager className="flex flex-col h-screen overflow-hidden">
       <VaultsHeader
         sortBy={sortBy}
         onSortBy={(val) => setSortBy(val)}
@@ -76,53 +88,89 @@ export const Vaults = () => {
         selectedCreatorIds={selectedCreatorIds}
         onFilterBy={(stats) => setFilterBy(stats)}
       />
-      {filteredCreatorVaults && filteredCreatorVaults.length ? (
-        <div className="relative h-full">
-          <ScrollArea className="h-[calc(100vh-140px)] w-full p-1">
-            <div ref={topRef} />
-            {filteredCreatorVaults
-              .slice()
-              .sort((a, b) => handleSortVaults(a, b))
-              .map((creator, idx) => (
-                <div key={creator.id ?? idx} className="flex flex-col rounded-md border my-1 p-2">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Checkbox
-                      checked={selectedCreatorIds.includes(creator.id)}
-                      onCheckedChange={() => toggleCreatorSelection(creator.id)}
-                    />
-                    <span className="text-sm">{creator.id}</span>
+
+      <div className="flex-1 overflow-hidden relative">
+        {sortedVaults && sortedVaults.length ? (
+          <>
+            <div className="block md:hidden h-full">
+              <ScrollArea className="h-full w-full p-1">
+                <div ref={topRef} />
+                {sortedVaults.map((creator, idx) => (
+                  <div key={creator.id ?? idx} className="flex flex-col rounded-md border my-1 p-2">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Checkbox
+                        checked={selectedCreatorIds.includes(creator.id)}
+                        onCheckedChange={() => toggleCreatorSelection(creator.id)}
+                      />
+                      <span className="text-sm">{creator.id}</span>
+                    </div>
+                    <VaultUrls idx={idx} creator={creator} onJobAdded={handleRefetch} onUpdateCreator={handleUpdateCreator} />
                   </div>
-                  <VaultUrls
-                    idx={idx}
-                    creator={creator}
-                    onJobAdded={handleRefetch}
-                    onUpdateCreator={(c) =>
-                      setCreators([
-                        ...creators.map((cre) => {
-                          return cre.id === c.id ? c : cre;
-                        })
-                      ])
-                    }
-                  />
-                </div>
-              ))}
-            <div ref={endRef} />
-          </ScrollArea>
+                ))}
+                <div ref={endRef} />
+              </ScrollArea>
+            </div>
+
+            <div className="hidden md:block h-full">
+              <ScrollArea className="h-full w-full rounded-md border">
+                <div ref={topRef} />
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12.5"></TableHead>
+                      <TableHead className="w-12.5">#</TableHead>
+                      <TableHead>Creator</TableHead>
+                      {statusButtons.map((status) => (
+                        <TableHead key={status.label} className="text-center">
+                          <div className="flex items-center gap-2 justify-center" title={status.label}>
+                            {status.icon}
+                            <span className="capitalize hidden lg:inline-block">{status.label}</span>
+                          </div>
+                        </TableHead>
+                      ))}
+                      <TableHead className="hidden lg:table-cell">Created At</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedVaults.map((creator, idx) => (
+                      <VaultTableRow
+                        key={creator.id ?? idx}
+                        idx={idx}
+                        creator={creator}
+                        onJobAdded={handleRefetch}
+                        onUpdateCreator={handleUpdateCreator}
+                        isSelected={selectedCreatorIds.includes(creator.id)}
+                        onSelect={() => toggleCreatorSelection(creator.id)}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+                <div ref={endRef} />
+              </ScrollArea>
+            </div>
+          </>
+        ) : (
+          <div className="text-center p-4">
+            <p>✨Looks like there is nothing here✨</p>
+          </div>
+        )}
+
+        <div className="absolute bottom-4 right-4 z-10 flex gap-2">
           <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
           <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-          <Paginate
-            hasNext={!!hasNext}
-            hasPrev={!!hasPrev}
-            pageNumber={pageNumber}
-            totalPages={totalPages ?? 0}
-            setPageNumber={setPageNumber}
-          />
         </div>
-      ) : (
-        <div className="text-center">
-          <p>✨Looks like there is nothing here✨</p>
-        </div>
-      )}
+      </div>
+
+      <div className="p-2 border-t bg-background z-10">
+        <Paginate
+          hasNext={!!hasNext}
+          hasPrev={!!hasPrev}
+          pageNumber={pageNumber}
+          totalPages={totalPages ?? 0}
+          setPageNumber={setPageNumber}
+        />
+      </div>
 
       <TerminateImportingJobsModal />
       <TerminateDownloadingModal />

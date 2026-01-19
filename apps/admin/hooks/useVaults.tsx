@@ -1,74 +1,81 @@
 import { useVaultsStore } from '@/zustand/vaults.store';
-import { useQuery } from '@apollo/client/react';
-import { GET_CREATOR_VAULT_OBJECTS_QUERY } from '@workspace/gql/api/adminAPI';
-import { DownloadStates, FileType, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { useVaultsActions } from '@workspace/gql/actions';
+import { FileType, GetAllObjectsCountOutput, PaginationInput, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface Props {
-  creatorId: string;
-  status: DownloadStates;
-  fileType?: FileType;
-  limit?: number;
-}
-
-export const useVaultObjects = ({ creatorId, status = DownloadStates.Pending, fileType = FileType.Image, limit = 50 }: Props) => {
-  const { vaultObjects, setVaultObjects } = useVaultsStore();
+export const useVaultObjects = (params: PaginationInput) => {
+  const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(true);
   const [hasNext, setHasNext] = useState<boolean>(false);
+  const { vaultObjects, setVaultObjects } = useVaultsStore();
+  const { getCreatorVaultObjectsQuery } = useVaultsActions();
 
-  const { data, loading, refetch, fetchMore } = useQuery(GET_CREATOR_VAULT_OBJECTS_QUERY, {
-    variables: {
-      input: { limit, offset: 0, status, relatedUserId: creatorId, fileType }
-    },
-    fetchPolicy: 'cache-and-network'
-  });
+  const loadVaultObjects = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : vaultObjects.length;
+    setLoading(vaultObjects.length === 0);
+
+    try {
+      const { data } = await getCreatorVaultObjectsQuery({
+        ...params,
+        skip,
+        fileType: FileType.Image
+      });
+
+      const fetched = data?.getCreatorVaultObjectsByAdmin.vaultObjects as VaultObjectsEntity[];
+      setHasNext(!!fetched.length);
+
+      if (initialLoad) setVaultObjects(fetched);
+      else setVaultObjects([...vaultObjects, ...fetched]);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && hasNext) loadVaultObjects();
+  };
 
   useEffect(() => {
-    const fetched = data?.getCreatorVaultObjectsByAdmin.vaultObjects as VaultObjectsEntity[];
-    if (fetched) {
-      setVaultObjects(fetched);
-      setHasNext(fetched.length === limit);
-    }
-  }, [data, status, fileType, limit]); //eslint-disable-line
-
-  const handleFetchMore = async (_limit = 50) => {
-    if (!hasNext) return [];
-    const { data: newData } = await fetchMore({
-      variables: {
-        input: {
-          limit: _limit,
-          offset: vaultObjects.length,
-          status,
-          relatedUserId: creatorId,
-          fileType
-        }
-      }
-    });
-    const newFetched = newData?.getCreatorVaultObjectsByAdmin.vaultObjects as VaultObjectsEntity[];
-    if (newFetched.length) {
-      setVaultObjects([...vaultObjects, ...newFetched]);
-      setHasNext(newFetched.length === limit);
-    } else {
-      setHasNext(false);
-    }
-    return newFetched;
-  };
-
-  const handleRefetch = async () => {
-    const { data: newData } = await refetch({
-      input: { limit, offset: 0, status, relatedUserId: creatorId, fileType }
-    });
-    const fetched = newData?.getCreatorVaultObjectsByAdmin.vaultObjects as VaultObjectsEntity[];
-    setVaultObjects(fetched || []);
-    setHasNext(fetched?.length === limit);
-  };
+    loadVaultObjects(true);
+  }, [params.status, params.fileType]); //eslint-disable-line
 
   return {
     vaultObjects,
-    loading,
     hasNext,
-    onFetchMore: handleFetchMore,
-    handleRefetch,
-    setVaultObjects,
-    setHasNext
+    handleLoadMore,
+    loading
   };
+};
+
+export const useGetAllObjectsCount = () => {
+  const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { getAllObjectsCountOfEachTypeQuery } = useVaultsActions();
+
+  const [objectsCount, setObjectsCount] = useState<GetAllObjectsCountOutput>({
+    fulfilled: 0,
+    pending: 0,
+    processing: 0,
+    rejected: 0
+  });
+  console.log('hook');
+
+  const fetchCounts = async () => {
+    setLoading(true);
+    try {
+      const { data } = await getAllObjectsCountOfEachTypeQuery();
+      console.log('called');
+      console.log({ d: data?.getCountOfObjectsOfEachType });
+      setObjectsCount(data?.getCountOfObjectsOfEachType as GetAllObjectsCountOutput);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, fetchCounts, objectsCount };
 };
