@@ -1,11 +1,9 @@
 import { useAssetsStore } from '@/zustand/assets.store';
-import { useAssetsActions } from '@workspace/gql/actions';
-import { AssetType, CreatorAssetsEntity, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatorAssetsEntity, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useAssets = ({ username, assetType = AssetType.Private }: PaginationInput) => {
-  const { getCreatorOrCreatorsAssetsQuery } = useAssetsActions();
   const { assets, setAssets } = useAssetsStore();
   const { errorHandler } = useErrorHandler();
   const [hasMore, setHasMore] = useState<boolean>(false);
@@ -14,15 +12,7 @@ export const useAssets = ({ username, assetType = AssetType.Private }: Paginatio
   const loadAssets = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : assets.length;
     try {
-      const { data } = await getCreatorOrCreatorsAssetsQuery({
-        take: 50,
-        skip,
-        assetType,
-        relatedUserId: username,
-        orderBy: SortOrder.Asc
-      });
-
-      const fetchedAssets = (data?.getCreatorAssetsByAdmin ?? []) as CreatorAssetsEntity[];
+      const fetchedAssets = [] as CreatorAssetsEntity[];
       setHasMore(fetchedAssets.length === 50);
 
       if (initialLoad) setAssets(fetchedAssets);

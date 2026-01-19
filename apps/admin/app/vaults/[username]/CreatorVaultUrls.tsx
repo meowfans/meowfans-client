@@ -102,7 +102,7 @@ export const CreatorVaultUrls: React.FC<Props> = ({ idx, vaultObject, selectedUr
                 <SquarePlay size={18} className="text-gray-500" />
               )}
             </div>
-            <span className="truncate max-w-[200px] text-xs text-blue-600 hover:underline">{vaultObject.objectUrl}</span>
+            <span className="truncate max-w-50 text-xs text-blue-600 hover:underline">{vaultObject.objectUrl}</span>
           </div>
 
           <div className="flex flex-row gap-2">

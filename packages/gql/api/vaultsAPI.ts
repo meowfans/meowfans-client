@@ -176,6 +176,57 @@ export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
   }
 `);
 
+export const GET_ALL_VAULTS_QUERY = graphql(`
+  query GetAllVaultsByAdmin($input: PaginationInput!) {
+    getAllVaultsByAdmin(input: $input) {
+      count
+      vaults {
+        createdAt
+        deletedAt
+        id
+        objectUrl
+        status
+        updatedAt
+        vaultId
+      }
+    }
+  }
+`);
+
+export const GET_CREATOR_VAULT_OBJECTS_QUERY = graphql(`
+  query GetCreatorVaultObjectsByAdmin($input: PaginationInput!) {
+    getCreatorVaultObjectsByAdmin(input: $input) {
+      count
+      vaultObjects {
+        createdAt
+        deletedAt
+        id
+        objectUrl
+        status
+        fileType
+        updatedAt
+        vaultId
+        vault {
+          createdAt
+          creatorId
+          deletedAt
+          id
+          updatedAt
+          url
+          creatorProfile {
+            creatorId
+            user {
+              avatarUrl
+              id
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
 export const GET_PUBLIC_VAULTS_QUERY = graphql(`
   query GetPublicVaults($input: PaginationInput!) {
     getPublicVaults(input: $input) {
@@ -259,7 +310,7 @@ export const CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION = graphql(`
   }
 `);
 
-export const GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE = graphql(`
+export const GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE_QUERY = graphql(`
   query GetCountOfObjectsOfEachType {
     getCountOfObjectsOfEachType {
       fulfilled

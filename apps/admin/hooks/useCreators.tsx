@@ -1,19 +1,13 @@
 import { useCreatorsStore } from '@/zustand/creators.store';
 import { useCreatorsActions } from '@workspace/gql/actions';
-import { GetAllCreatorsOutput, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { GetAllCreatorsOutput, PaginationInput, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface CreatorsProps {
-  pageNumber: number;
-  sortBy: SortBy;
-}
-
-export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: CreatorsProps) => {
+export const useCreators = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
   const { getCreatorsByAdminQuery } = useCreatorsActions();
-
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [meta, setMeta] = useState<Partial<GetAllCreatorsOutput>>({
@@ -24,13 +18,13 @@ export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: Creat
   });
 
   const loadAllCreators = async () => {
-    setLoading(true);
+    setLoading(creators.length === 0);
     try {
-      const { data } = await getCreatorsByAdminQuery({ pageNumber, sortBy });
+      const { data } = await getCreatorsByAdminQuery({ ...params, sortBy: SortBy.UserCreatedAt });
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
       setHasMore(!!fetchedCreators.length);
-      setCreators([...creators, ...fetchedCreators]);
+      setCreators(fetchedCreators);
 
       setMeta({
         count: data?.getCreatorsByAdmin.count ?? 0,
@@ -51,7 +45,7 @@ export const useCreators = ({ pageNumber, sortBy = SortBy.UserCreatedAt }: Creat
 
   useEffect(() => {
     loadAllCreators();
-  }, [pageNumber, sortBy]); //eslint-disable-line
+  }, []); //eslint-disable-line
 
   return {
     creators,

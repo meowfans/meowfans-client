@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from '@apollo/client/react';
-import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION } from '@workspace/gql/api/adminAPI';
+import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION } from '@workspace/gql/api/downloadAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {

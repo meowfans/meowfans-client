@@ -1,5 +1,43 @@
 import { graphql } from '../generated';
 
+export const GET_ALL_ASSETS_QUERY = graphql(`
+  query GetAllAssetsByAdmin($input: PaginationInput!) {
+    getAllAssetsByAdmin(input: $input) {
+      count
+      assets {
+        assetId
+        createdAt
+        creatorId
+        deletedAt
+        id
+        type
+        asset {
+          blurredUrl
+          createdAt
+          fileType
+          id
+          mediaType
+          mimeType
+          rawUrl
+          updatedAt
+        }
+        creatorProfile {
+          createdAt
+          creatorId
+          verified
+          user {
+            avatarUrl
+            id
+            lastLoginAt
+            roles
+            username
+          }
+        }
+      }
+    }
+  }
+`);
+
 export const GET_CREATOR_ASSETS_QUERY = graphql(`
   query GetCreatorAssets($input: PaginationInput!) {
     getCreatorAssets(input: $input) {

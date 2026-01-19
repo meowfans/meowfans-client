@@ -2,8 +2,8 @@
 
 import { useVaultsStore } from '@/zustand/vaults.store';
 import { useMutation, useQuery } from '@apollo/client/react';
-import { TERMINATE_ALL_DOWNLOADING_MUTATION } from '@workspace/gql/api/adminAPI';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
+import { TERMINATE_ALL_DOWNLOADING_MUTATION } from '@workspace/gql/api/downloadAPI';
 import { UserRoles } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';

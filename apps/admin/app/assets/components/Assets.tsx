@@ -48,7 +48,7 @@ export const Assets = () => {
           loading={loading}
         >
           <div ref={topRef} />
-          <Table className="min-w-200 mt-16">
+          <Table>
             <TableHeader className="bg-muted/50 sticky top-0 z-30 backdrop-blur-sm">
               <TableRow className="border-b border-border hover:bg-transparent">
                 <TableHead className="min-w-35 sm:min-w-62.5">User</TableHead>

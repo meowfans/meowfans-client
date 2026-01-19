@@ -1,4 +1,3 @@
-export * from './adminAPI';
 export * from './assetsAPI';
 export * from './channelsAPI';
 export * from './commentsAPI';

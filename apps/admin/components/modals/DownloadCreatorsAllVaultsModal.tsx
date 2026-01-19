@@ -1,6 +1,5 @@
 'use client';
 
-import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION, GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api/adminAPI';
 import { AssetType, UsersEntity } from '@workspace/gql/generated/graphql';
 
 import { useMutation } from '@apollo/client/react';
@@ -18,6 +17,8 @@ import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION } from '@workspace/gql/api/downloadAPI';
+import { GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api';
 
 interface Props {
   onJobAdded: () => unknown;
