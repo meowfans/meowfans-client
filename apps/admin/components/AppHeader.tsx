@@ -1,47 +1,32 @@
 'use client';
 
-import { Icons } from '@/lib/icons/Icons';
-import { Button } from '@workspace/ui/components/button';
-import { useSidebar } from '@workspace/ui/components/sidebar';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
-import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import { cn } from '@workspace/ui/lib/utils';
-import { Menu } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ApplyHeaderOptions } from './ApplyHeaderOptions';
 
 export const AppHeader = () => {
-  const isMobile = useIsMobile();
-  const { open, setOpen, state } = useSidebar();
   const pathname = usePathname();
 
-  if (pathname.startsWith('/channels')) return null;
-
-  return (
-    <div
-      className={cn(
-        'flex flex-row justify-between',
-        'border-b bg-linear-to-bl px-2',
-        'h-16 bg-background z-40 fixed',
-        'top-0 right-0 transition-[left]',
-        'duration-200 ease-linear'
-      )}
-      style={{
-        left: isMobile ? '0' : state === 'expanded' ? 'var(--sidebar-width)' : '0'
-      }}
+  return !pathname.startsWith('/channels') ? (
+    <header
+      className={`sticky top-0 z-50 border-b
+        bg-linear-to-bl from-background
+         to-(--background)/80 backdrop-blur-md
+          px-4 py-2 flex flex-col w-full`}
     >
-      <div className="flex flex-row items-center gap-2">
-        {!open && !isMobile && (
-          <Button onClick={() => setOpen(true)}>
-            <Menu />
-          </Button>
-        )}
-        <ReturnToPreviousPage applyReturn />
-        <div className="cursor-pointer ">{Icons.appIcon()}</div>
+      <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex flex-row items-center gap-2">
+          <ReturnToPreviousPage applyReturn />
+          <Link href="/posts" className="shrink-0">
+            <Image src="/icons/app_icon.svg" alt="Creator app logo" width={32} height={32} priority />
+          </Link>
+        </div>
+        <div className="flex flex-row items-center space-x-3">
+          <ApplyHeaderOptions />
+        </div>
       </div>
-      <div className="flex flex-row items-center space-x-3">
-        <ApplyHeaderOptions />
-      </div>
-    </div>
-  );
+    </header>
+  ) : null;
 };

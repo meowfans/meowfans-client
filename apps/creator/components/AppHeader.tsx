@@ -1,11 +1,11 @@
 'use client';
 
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
+import { useBackground } from '@workspace/ui/hooks/useBackground';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ApplyHeaderOptions } from './ApplyHeaderOptions';
-import { useBackground } from '@workspace/ui/hooks/useBackground';
 
 interface Props {
   header?: string;

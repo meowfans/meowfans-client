@@ -27,11 +27,9 @@ export const usePosts = (params: PaginationInput) => {
 
   const loadPosts = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : posts.length;
+    setLoading(posts.length === 0);
     try {
-      const { data } = await getPostsQuery({
-        ...params,
-        skip
-      });
+      const { data } = await getPostsQuery({ ...params, skip });
 
       const fetchedPosts = (data?.getPosts ?? []) as PostsEntity[];
 
@@ -206,7 +204,7 @@ export const useSinglePost = ({ postId }: SinglePostHookProps) => {
 
   useEffect(() => {
     loadSinglePost();
-  }, []);
+  }, []); //eslint-disable-line
 
   return { post, loading };
 };
@@ -232,7 +230,7 @@ export const usePostsAnalytics = (input: PostStatsInput) => {
 
   useEffect(() => {
     loadAnalytics();
-  }, [input.postStats]); //eslint-disable-line
+  }, []); //eslint-disable-line
 
   return { postsAnalytics, loading };
 };
