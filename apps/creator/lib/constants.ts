@@ -1,4 +1,5 @@
 import {
+  Album,
   ChartLine,
   CircleDollarSign,
   CircleUserRound,
@@ -19,7 +20,8 @@ export const authenticatedPaths = [
   '/subscriptions',
   '/cards',
   '/more',
-  '/vaults'
+  '/vaults',
+  '/album'
 ];
 
 export enum ProfileCharts {
@@ -41,6 +43,7 @@ export const appBottomNavButtonOptions = [
 
 export const appSideBarButtonOptions = [
   { icon: Sparkles, title: 'Post Studio', path: '/studio' },
+  { icon: Album, title: 'Album Studio', path: '/album' },
   { icon: Inbox, title: 'Notifications', path: '/notifications' },
   { icon: Mails, title: 'Messages', path: '/channels' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },

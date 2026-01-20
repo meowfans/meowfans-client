@@ -121,19 +121,22 @@ export default async function RootLayout({ children }: Props) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
-            {decodedToken?.impersonating && <ImpersonationReturnGuard />}
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <SidebarProvider defaultOpen>
-                <div className="flex h-screen w-full overflow-hidden">
-                  <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-w-0">
-                    <Toaster position="top-center" closeButton richColors theme="system" />
-                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
-                  </SidebarInset>
-                </div>
-              </SidebarProvider>
-              <AppBottomNav />
-            </ThemeProvider>
+            {decodedToken?.impersonating ? (
+              <ImpersonationReturnGuard />
+            ) : (
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                <SidebarProvider defaultOpen>
+                  <div className="flex h-screen w-full overflow-hidden">
+                    <AppSidebar />
+                    <SidebarInset className="flex flex-1 flex-col min-w-0">
+                      <Toaster position="top-center" closeButton richColors theme="system" />
+                      <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
+                    </SidebarInset>
+                  </div>
+                </SidebarProvider>
+                <AppBottomNav />
+              </ThemeProvider>
+            )}
           </AdminContextWrapper>
         </ApolloWrapper>
       </body>

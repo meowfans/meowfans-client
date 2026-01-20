@@ -1,6 +1,6 @@
 'use client';
 
-import { GalleryManager } from '@/components/GalleryManager';
+import { VerticalFeedGallery } from '@/components/VerticalFeedGallery';
 import { useSingleVault } from '@/hooks/useVaultObjects';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -12,7 +12,7 @@ import { VaultObjectsGalleryOptions } from './VaultObjectsGalleryOptions';
 export const SingleVault = () => {
   const { id } = useParams();
 
-  const { vaultObjects, loadMore, hasMore, loading } = useSingleVault({
+  const { vault, loadMore, hasMore, loading } = useSingleVault({
     relatedEntityId: id as string,
     sortBy: SortBy.VaultObjectSuffix,
     orderBy: SortOrder.Asc
@@ -20,25 +20,24 @@ export const SingleVault = () => {
 
   return (
     <PageManager>
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr] items-start">
-        <InfiniteScrollManager hasMore={hasMore} dataLength={vaultObjects.length} loading={loading} onLoadMore={loadMore}>
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr] items-start">
+        <div className="hidden md:flex">
+          <SingleVaultInfo vault={vault} />
+        </div>
+
+        <InfiniteScrollManager hasMore={hasMore} dataLength={vault?.vaultObjects?.length ?? 0} loading={loading} onLoadMore={loadMore}>
           <div className="flex md:hidden">
-            <SingleVaultInfo />
+            <SingleVaultInfo vault={vault} />
           </div>
-          <GalleryManager
-            breakpointCols={{ default: 1, 768: 2, 500: 1 }}
+
+          <VerticalFeedGallery
             loading={loading}
-            items={vaultObjects}
-            getKey={(vaultObject) => vaultObject.id}
-            getImageUrl={(vaultObject) => vaultObject.asset?.rawUrl}
-            renderOverlay={(vaultObject, idx, vaultItems) => (
-              <VaultObjectsGalleryOptions idx={idx} vaultObject={vaultObject} vaultObjects={vaultItems} />
-            )}
+            items={vault?.vaultObjects ?? []}
+            getKey={(v) => v.id}
+            getImageUrl={(v) => v.asset?.rawUrl}
+            renderOverlay={(v, idx, all) => <VaultObjectsGalleryOptions idx={idx} vaultObject={v} vaultObjects={all} />}
           />
         </InfiniteScrollManager>
-        <div className="hidden md:flex space-y-6">
-          <SingleVaultInfo />
-        </div>
       </div>
     </PageManager>
   );

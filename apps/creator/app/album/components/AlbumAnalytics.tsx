@@ -1,4 +1,4 @@
-import { PostsEntity } from '@workspace/gql/generated/graphql';
+import { VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Skeleton } from '@workspace/ui/components/skeleton';
@@ -8,25 +8,25 @@ import { ShadCnChartTypes } from '@workspace/ui/lib/enums';
 import { BarChart3 } from 'lucide-react';
 import { useMemo } from 'react';
 
-interface PostAnalyticsProps {
-  posts: PostsEntity[];
+interface AlbumAnalyticsProps {
+  vaults: VaultsEntity[];
   loading: boolean;
   chartType: ShadCnChartTypes;
   setChartType: React.Dispatch<React.SetStateAction<ShadCnChartTypes>>;
 }
 
-export const PostAnalytics = ({ chartType, loading, posts, setChartType }: PostAnalyticsProps) => {
-  const topPostsData = useMemo(() => {
-    return [...posts]
+export const AlbumAnalytics = ({ chartType, loading, vaults, setChartType }: AlbumAnalyticsProps) => {
+  const topVaultsData = useMemo(() => {
+    return [...vaults]
       .filter((p) => !p.deletedAt)
       .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
       .slice(0, 30)
       .map((p, idx) => ({
-        name: p.caption ? p.caption.slice(0, 16) : `Post ${idx + 1}`,
+        name: p.description ? p.description.slice(0, 16) : `Vault ${idx + 1}`,
         views: p.viewCount ?? 0,
         earned: p.totalEarning ?? 0
       }));
-  }, [posts]);
+  }, [vaults]);
 
   return (
     <Card className="bg-background/70 backdrop-blur">
@@ -35,11 +35,11 @@ export const PostAnalytics = ({ chartType, loading, posts, setChartType }: PostA
           <div>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              Top posts
+              Top vaults
             </CardTitle>
             <CardDescription>Highest views (and earnings) in your recent set</CardDescription>
           </div>
-          <Badge variant="outline">Latest {topPostsData.length}</Badge>
+          <Badge variant="outline">Latest {topVaultsData.length}</Badge>
           <Dropdown
             enumValue={ShadCnChartTypes}
             onFilterBy={(val) => setChartType(val)}
@@ -53,17 +53,17 @@ export const PostAnalytics = ({ chartType, loading, posts, setChartType }: PostA
       <CardContent>
         {loading ? (
           <Skeleton className="h-56 w-full" />
-        ) : topPostsData.length ? (
+        ) : topVaultsData.length ? (
           <ApplyShadCnChart
             chartType={chartType}
             XDataLabel="Views"
             yDataLabel="Earned"
-            dataTable={topPostsData}
+            dataTable={topVaultsData}
             xDataKey={'views'}
             yDataKey={'earned'}
           />
         ) : (
-          <div className="text-sm text-muted-foreground">No post analytics to show yet.</div>
+          <div className="text-sm text-muted-foreground">No vault analytics to show yet.</div>
         )}
       </CardContent>
     </Card>

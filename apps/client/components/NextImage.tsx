@@ -26,9 +26,9 @@ export const NextImage: React.FC<NextImageProps> = ({
       {...props}
       className={cn('w-full h-auto', className)}
       style={{
-        ...style,
         objectFit: 'contain',
-        userSelect: 'none'
+        userSelect: 'none',
+        ...style
       }}
       width={0}
       height={0}

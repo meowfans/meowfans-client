@@ -1,6 +1,7 @@
 'use client';
 
 import { Impersonate } from '@/components/Impersonate';
+import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useCreators } from '@/hooks/useCreators';
 import { ImpersonatedCreatorID } from '@/util/helpers';
 import { SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
@@ -11,7 +12,7 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { cn } from '@workspace/ui/lib/utils';
-import { Edit, GalleryVertical, GalleryVerticalEnd, Vault } from 'lucide-react';
+import { Edit, GalleryVertical, GalleryVerticalEnd, Vault, VenetianMask } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -20,6 +21,7 @@ export const CreatorProfiles = () => {
   const searchParams = useSearchParams();
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
   const topRef = useRef<HTMLDivElement>(null);
+  const { setSwitchContext,switchContext } = useUtilsStore();
   const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
   const { creators, hasNext, loading } = useCreators({ pageNumber, sortBy: SortBy.AssetCount, orderBy: SortOrder.Desc });
 
@@ -123,12 +125,16 @@ export const CreatorProfiles = () => {
                         <Edit className="w-2 h-2 sm:mr-1" />
                         <span className="hidden text-xs sm:inline">Edit</span>
                       </Button>
-                      <Impersonate creator={creator} />
+                      <Button size="sm" variant="outline" onClick={() => setSwitchContext(creator)}>
+                        <VenetianMask className="w-2 h-2 sm:mr-1" />
+                        <span className="hidden text-xs sm:inline">Mask</span>
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
+            <Impersonate creator={switchContext} />
           </Table>
         </InfiniteScrollManager>
       ) : (

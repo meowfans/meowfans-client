@@ -1,12 +1,12 @@
 'use client';
 
-import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { LikeButton } from '@/components/LikeButton';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
+import { NextImage } from '@/components/NextImage';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useLikes } from '@/hooks/useLikes';
-import { PurchaseType } from '@workspace/gql/generated/graphql';
+import { PurchaseType, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';
@@ -15,13 +15,16 @@ import { StatItem } from '@workspace/ui/globals/StatItem';
 import { normalizePath } from '@workspace/ui/lib/helpers';
 import { Lock, Maximize2, Minimize2, Unlock } from 'lucide-react';
 import moment from 'moment';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export const SingleVaultInfo = () => {
+interface SingleVaultInfoProps {
+  vault: VaultsEntity;
+}
+
+export const SingleVaultInfo: React.FC<SingleVaultInfoProps> = ({ vault }) => {
   const { fan } = useFan();
-  const { vault, setVault } = useVaultsStore();
+  const { setVault } = useVaultsStore();
   const { likeVault } = useLikes();
   const [extended, setExtended] = useState<boolean>(true);
 
@@ -36,7 +39,7 @@ export const SingleVaultInfo = () => {
     <Card className="w-full rounded-2xl overflow-hidden">
       {vault.preview && (
         <div className="relative w-full">
-          <Image src={vault.preview} alt="Vault preview" width={800} height={400} priority className="w-full max-h-90 object-cover" />
+          <NextImage imageUrl={vault.preview} alt="Vault preview" width={800} height={400} priority className="w-full max-h-90 object-cover" />
 
           <Badge className="absolute top-3 right-3 gap-1" variant={vault.isPurchased ? 'default' : 'destructive'}>
             {vault.isPurchased ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
@@ -105,8 +108,6 @@ export const SingleVaultInfo = () => {
             </button>
           </div>
         )}
-
-        <ExoAdProvider zoneId="5769740" zoneType={ExoAdZoneTypes.Gallery} />
       </CardContent>
 
       <Separator />

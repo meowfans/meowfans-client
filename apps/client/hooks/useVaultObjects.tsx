@@ -7,32 +7,35 @@ import { useEffect, useState } from 'react';
 export const useSingleVault = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getSingleVaultQuery } = useVaultsActions();
-  const { vault, setVault, setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
+  const { vault, setVault } = useVaultsStore();
+
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
   const loadVaultObjects = async (initialLoad = false) => {
-    const skip = initialLoad ? 0 : vault.vaultObjects.length;
     setLoading(vault?.vaultObjects.length === 0);
+
+    const skip = initialLoad ? 0 : (vault?.vaultObjects?.length ?? 0);
 
     try {
       const { data } = await getSingleVaultQuery({
         ...params,
         skip,
         take: params.take ?? 30,
-        relatedEntityId: params.relatedEntityId,
         orderBy: params.orderBy ?? SortOrder.Asc,
-        dataFetchType: DataFetchType.InfiniteScroll,
-        sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
+        sortBy: params.sortBy ?? SortBy.VaultObjectSuffix,
+        dataFetchType: DataFetchType.InfiniteScroll
       });
 
       const fetched = data?.getPublicSingleVault as VaultsEntity;
-      setHasMore(fetched.vaultObjects.length === (params.take ?? 30));
+      const vaultObjects = fetched?.vaultObjects ?? [];
 
-      if (initialLoad) {
-        setVault(data?.getPublicSingleVault as VaultsEntity);
-        setVaultObjects(fetched.vaultObjects);
-      } else appendVaultObjects(fetched.vaultObjects);
+      setHasMore(vaultObjects.length === (params.take ?? 30));
+
+      setVault({
+        ...fetched,
+        vaultObjects: initialLoad ? vaultObjects : [...(vault.vaultObjects ?? []), ...vaultObjects]
+      });
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -41,25 +44,31 @@ export const useSingleVault = (params: PaginationInput) => {
   };
 
   const loadMore = () => {
-    if (!loading && hasMore) loadVaultObjects();
+    if (!loading && hasMore) {
+      loadVaultObjects(false);
+    }
   };
 
   const refresh = () => {
-    setVaultObjects([]);
+    setVault({
+      ...vault,
+      vaultObjects: []
+    });
+    setHasMore(true);
     loadVaultObjects(true);
   };
 
   useEffect(() => {
-    loadVaultObjects(true);
-  }, [params.relatedEntityId, params.sortBy, params.orderBy]); //eslint-disable-line
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.relatedEntityId, params.sortBy, params.orderBy, params.take]);
 
   return {
-    vaultObjects,
+    vault,
     loading,
     hasMore,
     loadMore,
-    refresh,
-    vault
+    refresh
   };
 };
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
@@ -11,7 +12,8 @@ import { useRouter } from 'next/navigation';
 
 export const ImpersonationReturnGuard = () => {
   const router = useRouter();
-  const { setSwitchContext, switchContext } = useUtilsStore();
+  const { admin } = useAdmin();
+  const { setSwitchContext } = useUtilsStore();
 
   const handleReturnToAdmin = () => {
     const adminToken = getCookie(adminCookieKey);
@@ -23,7 +25,7 @@ export const ImpersonationReturnGuard = () => {
     deleteCookie(adminCookieKey);
     deleteCookie(impersonatedCreatorId);
 
-    setSwitchContext(false);
+    setSwitchContext(admin.user);
     router.refresh();
   };
 

@@ -4,39 +4,21 @@ import {
   CreatePostInput,
   DeletePostInput,
   DeletePostsInput,
-  GetPostsInfoOutput,
   PaginationInput,
   PostsEntity,
   PostStatAnalyticsOutput,
   PostStatsInput,
-  SortBy,
-  SortOrder,
   UpdatePostInput
 } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
 
-interface UsePostsProps {
-  pageNumber?: number;
-  username?: string;
-  fanId?: string;
-  sortBy?: SortBy;
-  orderBy?: SortOrder;
-  take?: number;
-}
-
 /**
  * This hook is designed to fetch paginated posts belonging to a creator.
  * No visibility or purchase logic is applied.
  */
-export const usePosts = ({
-  username,
-  fanId: relatedUserId,
-  sortBy = SortBy.PostCreatedAt,
-  orderBy = SortOrder.Asc,
-  take = 30
-}: UsePostsProps) => {
+export const usePosts = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { getPostsQuery } = usePostsActions();
@@ -47,17 +29,13 @@ export const usePosts = ({
     const skip = initialLoad ? 0 : posts.length;
     try {
       const { data } = await getPostsQuery({
-        take,
-        skip,
-        username,
-        orderBy,
-        relatedUserId,
-        sortBy
+        ...params,
+        skip
       });
 
       const fetchedPosts = (data?.getPosts ?? []) as PostsEntity[];
 
-      setHasMore(fetchedPosts.length === take);
+      setHasMore(fetchedPosts.length === params.take);
 
       if (initialLoad) setPosts(fetchedPosts);
       else setPosts([...posts, ...fetchedPosts]);
@@ -74,7 +52,7 @@ export const usePosts = ({
 
   useEffect(() => {
     loadPosts(true);
-  }, []);
+  }, [params.sortBy, params.orderBy]); //eslint-disable-line
 
   return { posts, handleLoadMore, loading, hasMore };
 };
@@ -203,47 +181,6 @@ export const useBulkDeletePosts = () => {
   return { handleBulkDeletePosts, loading };
 };
 
-/**
- * This hook is designed to fetch detailed posts information
- * It returns posts entity along with latest comment and total earning field
- */
-export const usePostsInfo = (input: PaginationInput) => {
-  const { errorHandler } = useErrorHandler();
-  const { getPostsInfoQuery } = usePostsActions();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [hasMore, setHasMore] = useState<boolean>(false);
-  const { setPostsInfo, postsInfo } = usePostsStore();
-
-  const loadPostsInfo = async (initialLoad = false) => {
-    const skip = initialLoad ? 0 : postsInfo.length;
-    setLoading(postsInfo.length === 0);
-
-    try {
-      const { data } = await getPostsInfoQuery({ ...input, skip });
-      const fetched = data?.getPostsInfo as GetPostsInfoOutput[];
-
-      setHasMore(fetched.length === input.take);
-
-      if (initialLoad) setPostsInfo(fetched);
-      else setPostsInfo([...postsInfo, ...fetched]);
-    } catch (error) {
-      errorHandler({ error });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLoadMore = () => {
-    if (!loading && hasMore) loadPostsInfo();
-  };
-
-  useEffect(() => {
-    loadPostsInfo(true);
-  }, [input.take, input.skip, input.postTypes]);
-
-  return { loading, handleLoadMore, hasMore, loadPostsInfo, postsInfo };
-};
-
 interface SinglePostHookProps {
   postId: string;
 }
@@ -295,7 +232,7 @@ export const usePostsAnalytics = (input: PostStatsInput) => {
 
   useEffect(() => {
     loadAnalytics();
-  }, []);
+  }, [input.postStats]); //eslint-disable-line
 
   return { postsAnalytics, loading };
 };
