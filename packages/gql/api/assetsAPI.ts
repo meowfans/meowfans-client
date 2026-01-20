@@ -100,38 +100,32 @@ export const GET_PUBLIC_SHORTS_ASSETS_QUERY = graphql(`
 export const GET_PUBLIC_ASSETS = graphql(`
   query GetPublicAssets($input: PaginationInput!) {
     getPublicAssets(input: $input) {
-      totalPages
-      hasPrev
-      hasNext
-      count
-      assets {
-        assetId
+      assetId
+      createdAt
+      creatorId
+      deletedAt
+      id
+      type
+      asset {
+        blurredUrl
         createdAt
         creatorId
-        deletedAt
+        fileType
         id
-        type
-        asset {
-          blurredUrl
-          createdAt
-          creatorId
-          fileType
+        mediaType
+        mimeType
+        rawUrl
+        updatedAt
+        vaultObjectId
+      }
+      creatorProfile {
+        bio
+        creatorId
+        user {
+          avatarUrl
+          bannerUrl
           id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-          vaultObjectId
-        }
-        creatorProfile {
-          bio
-          creatorId
-          user {
-            avatarUrl
-            bannerUrl
-            id
-            username
-          }
+          username
         }
       }
     }
@@ -165,44 +159,38 @@ export const GET_FAN_ASSETS_QUERY = graphql(`
 export const GET_PUBLIC_CREATOR_ASSETS_QUERY = graphql(`
   query GetPublicCreatorAssets($input: PaginationInput!) {
     getPublicCreatorAssets(input: $input) {
-      count
-      hasNext
-      hasPrev
-      totalPages
-      assets {
-        assetId
+      assetId
+      createdAt
+      creatorId
+      deletedAt
+      id
+      type
+      asset {
+        blurredUrl
         createdAt
         creatorId
-        deletedAt
+        fileType
         id
-        type
-        asset {
-          blurredUrl
-          createdAt
-          creatorId
-          fileType
+        mediaType
+        mimeType
+        rawUrl
+        updatedAt
+        vaultObjectId
+        viewCount
+        vaultObject {
+          isLiked
+          likeCount
+          contentType
           id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-          vaultObjectId
-          viewCount
-          vaultObject {
-            isLiked
-            likeCount
-            contentType
+          isPurchased
+          vault {
+            description
             id
             isPurchased
-            vault {
-              description
-              id
-              isPurchased
-              isLiked
-              keywords
-              likeCount
-              preview
-            }
+            isLiked
+            keywords
+            likeCount
+            preview
           }
         }
       }
