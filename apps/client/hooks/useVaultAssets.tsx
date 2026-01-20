@@ -4,7 +4,6 @@ import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
 import { CreatorAssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { set } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 interface UseVaultAssetsProps {
@@ -34,7 +33,7 @@ export const useVaultAssets = ({
 
     try {
       const { data } = await publicGetVaultAssetsQuery({ take, skip, username, orderBy, relatedUserId: fanId, sortBy });
-      const fetchedAssets = (data?.getPublicCreatorAssets.assets ?? []) as CreatorAssetsEntity[];
+      const fetchedAssets = (data?.getPublicCreatorAssets ?? []) as CreatorAssetsEntity[];
       setHasMore(fetchedAssets.length === take);
       if (initialLoad) setAssets(fetchedAssets);
       else setAssets([...assets, ...fetchedAssets]);
@@ -44,7 +43,7 @@ export const useVaultAssets = ({
       setLoading(false);
     }
   };
-  
+
   const handleLoadMore = () => {
     if (!loading && hasMore) loadAssets();
   };
@@ -56,7 +55,7 @@ export const useVaultAssets = ({
 
   useEffect(() => {
     loadAssets(true);
-  }, [username, fanId, sortBy, orderBy, take]);
+  }, [username, fanId, sortBy, orderBy, take]); //eslint-disable-line
 
   return {
     assets,
