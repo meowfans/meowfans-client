@@ -1,4 +1,4 @@
-import { PostsEntity } from '@workspace/gql/generated/graphql';
+import { VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Skeleton } from '@workspace/ui/components/skeleton';
@@ -7,15 +7,15 @@ import { handleFormatNumberToKAndM } from '@workspace/ui/lib/formatters';
 import moment from 'moment';
 import Link from 'next/link';
 
-interface RecentPostsProps {
+interface RecentAlbumsProps {
   loading: boolean;
-  posts: PostsEntity[];
+  vaults: VaultsEntity[];
 }
 
-export const RecentPosts = ({ loading, posts }: RecentPostsProps) => {
+export const RecentAlbums = ({ loading, vaults }: RecentAlbumsProps) => {
   return (
     <ExtendedCard
-      title="Recent Posts"
+      title="Recent Vaults"
       description="Quick glance at what’s fresh"
       contentClassName="space-y-3"
       className="bg-background/70 backdrop-blur"
@@ -26,12 +26,12 @@ export const RecentPosts = ({ loading, posts }: RecentPostsProps) => {
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-12 w-full" />
         </div>
-      ) : posts.length ? (
-        posts.slice(0, 6).map((p) => (
+      ) : vaults.length ? (
+        vaults.slice(0, 6).map((p) => (
           <div key={p.id} className="flex items-start justify-between gap-3 rounded-lg border bg-background/60 p-3">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <p className="text-sm font-medium line-clamp-1">{p.caption || 'Untitled post'}</p>
+                <p className="text-sm font-medium line-clamp-1">{p.description || 'Untitled vault'}</p>
                 {p.deletedAt ? <Badge variant="destructive">Deleted</Badge> : null}
               </div>
               <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
@@ -42,17 +42,17 @@ export const RecentPosts = ({ loading, posts }: RecentPostsProps) => {
               <div className="mt-1 text-[11px] text-muted-foreground">Created {moment(p.createdAt).fromNow()}</div>
             </div>
             <Badge variant="outline" className="shrink-0">
-              {Array.isArray(p.types) ? p.types.join(', ') : String(p.types ?? '')}
+              {/* {Array.isArray(p.) ? p.types.join(', ') : String(p.types ?? '')} */}
             </Badge>
           </div>
         ))
       ) : (
-        <div className="text-sm text-muted-foreground">No posts found.</div>
+        <div className="text-sm text-muted-foreground">No vaults found.</div>
       )}
 
       <div className="pt-2">
         <Button asChild variant="outline" className="w-full">
-          <Link href="/studio/posts">Open posts manager</Link>
+          <Link href="/album/vaults">Open vaults manager</Link>
         </Button>
       </div>
     </ExtendedCard>

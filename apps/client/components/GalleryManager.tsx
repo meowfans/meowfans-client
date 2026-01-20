@@ -102,7 +102,15 @@ export const GalleryManager = <T,>({
                 unoptimized={true}
               />
             ) : (
-              <NextImage imageUrl={getImageUrl(item)} alt={`asset_${getKey(item)}`} />
+              <Image
+                src={getImageUrl(item) ?? MEOW_FANS_BANNER}
+                alt={`asset_${getKey(item)}`}
+                className="h-full w-full object-cover justify-center"
+                loading="lazy"
+                width={300}
+                height={100}
+                unoptimized={true}
+              />
             )}
 
             {!renderOptionsOnMobile && renderOverlay && <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>}

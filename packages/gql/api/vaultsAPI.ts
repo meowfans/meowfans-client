@@ -53,6 +53,39 @@ export const GET_PUBLIC_SINGLE_VAULT_QUERY = graphql(`
   }
 `);
 
+export const GET_CREATOR_VAULTS_QUERY = graphql(`
+  query GetCreatorVaults($input: PaginationInput!) {
+    getCreatorVaults(input: $input) {
+      createdAt
+      creatorId
+      deletedAt
+      description
+      id
+      keywords
+      preview
+      updatedAt
+      isLiked
+      likeCount
+      isPurchased
+      unlockPrice
+      objectCount
+    }
+  }
+`);
+
+export const GET_VAULTS_ANALYTICS_QUERY = graphql(`
+  query GetVaultsAnalytics($input: VaultStatsInput!) {
+    getVaultsAnalytics(input: $input) {
+      timestamp
+      id
+      likeCount
+      totalEarning
+      unlockPrice
+      viewCount
+    }
+  }
+`);
+
 export const GET_LIKED_VAULTS_QUERY = graphql(`
   query GetLikedVaults($input: PaginationInput!) {
     getLikedVaults(input: $input) {

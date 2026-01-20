@@ -239,10 +239,20 @@ export const GET_POSTS_QUERY = graphql(`
       saveCount
       shareCount
       totalEarning
+      viewCount
       types
       preview
       unlockPrice
       updatedAt
+      latestComment {
+        comment
+        createdAt
+        deletedAt
+        fanId
+        id
+        postId
+        updatedAt
+      }
       postAssets {
         id
         deletedAt
@@ -262,35 +272,6 @@ export const GET_POSTS_QUERY = graphql(`
           viewCount
         }
       }
-    }
-  }
-`);
-
-/**
- * This api is used for detailed posts information
- * Along with posts entity also returns latest comment and total earning of each post
- * @returns
- */
-export const GET_POSTS_INFO_QUERY = graphql(`
-  query GetPostsInfo($input: PaginationInput!) {
-    getPostsInfo(input: $input) {
-      caption
-      commentCount
-      viewCount
-      preview
-      createdAt
-      creatorId
-      deletedAt
-      id
-      lastCommentId
-      latestComment
-      likeCount
-      saveCount
-      shareCount
-      totalEarning
-      types
-      unlockPrice
-      updatedAt
     }
   }
 `);

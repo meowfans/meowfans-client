@@ -1,36 +1,24 @@
-import { usePostsAnalytics } from '@/hooks/usePosts';
-import { DateTrunc, PostsEntity, PostStats } from '@workspace/gql/generated/graphql';
+import { useVaultsAnalytics } from '@/hooks/useVaults';
+import { DateTrunc, VaultsEntity, VaultStats } from '@workspace/gql/generated/graphql';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Skeleton } from '@workspace/ui/components/skeleton';
 import { handleFormatNumberToKAndM } from '@workspace/ui/lib/formatters';
 import { useMemo } from 'react';
 
-interface PostDetailsProps {
+interface AlbumDetailsProps {
   loading: boolean;
-  posts: PostsEntity[];
+  vaults: VaultsEntity[];
 }
 
-interface PostDetailsProps {
-  loading: boolean;
-  posts: PostsEntity[];
-}
-
-export const PostDetails = ({ loading, posts }: PostDetailsProps) => {
-  const { postsAnalytics, loading: analyticsLoading } = usePostsAnalytics({
-    postStats: [
-      PostStats.ViewCount,
-      PostStats.LikeCount,
-      PostStats.CommentCount,
-      PostStats.SaveCount,
-      PostStats.ShareCount,
-      PostStats.TotalEarning
-    ],
+export const AlbumDetails = ({ loading, vaults }: AlbumDetailsProps) => {
+  const { vaultAnalytics, loading: analyticsLoading } = useVaultsAnalytics({
+    vaultStats: [VaultStats.ViewCount, VaultStats.LikeCount, VaultStats.TotalEarning],
     field: DateTrunc.Month,
     addId: false
   });
 
   const summary = useMemo(() => {
-    if (!postsAnalytics?.length) {
+    if (!vaultAnalytics?.length) {
       return {
         views: 0,
         likes: 0,
@@ -41,13 +29,10 @@ export const PostDetails = ({ loading, posts }: PostDetailsProps) => {
       };
     }
 
-    return postsAnalytics.reduce(
+    return vaultAnalytics.reduce(
       (acc, row) => {
         acc.views += row.viewCount ?? 0;
         acc.likes += row.likeCount ?? 0;
-        acc.comments += row.commentCount ?? 0;
-        acc.saves += row.saveCount ?? 0;
-        acc.shares += row.shareCount ?? 0;
         acc.earnings += row.totalEarning ?? 0;
         return acc;
       },
@@ -60,15 +45,15 @@ export const PostDetails = ({ loading, posts }: PostDetailsProps) => {
         earnings: 0
       }
     );
-  }, [postsAnalytics]);
+  }, [vaultAnalytics]);
 
   const isLoading = loading || analyticsLoading;
 
   const details = [
     {
-      description: 'Total posts',
-      title: posts.length,
-      content: 'Fetched posts'
+      description: 'Total vaults',
+      title: vaults.length,
+      content: 'Fetched vaults'
     },
     {
       description: 'Views',
@@ -79,11 +64,6 @@ export const PostDetails = ({ loading, posts }: PostDetailsProps) => {
       description: 'Earnings',
       title: handleFormatNumberToKAndM(summary.earnings),
       content: 'From completed unlocks'
-    },
-    {
-      description: 'Engagement',
-      title: summary.likes.toLocaleString(),
-      content: `${summary.comments.toLocaleString()} comments · ${summary.saves.toLocaleString()} saves · ${summary.shares.toLocaleString()} shares`
     }
   ];
 

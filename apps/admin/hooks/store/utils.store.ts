@@ -1,11 +1,12 @@
+import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type UtilsStore = {
-  switchContext: boolean;
-  setSwitchContext: (switchContext: boolean) => void;
+  switchContext: UsersEntity | null;
+  setSwitchContext: (switchContext: UsersEntity | null) => void;
 };
 
 export const useUtilsStore = create<UtilsStore>((set) => ({
-  switchContext: false,
+  switchContext: null,
   setSwitchContext: (switchContext) => set({ switchContext })
 }));

@@ -12,8 +12,6 @@ export default function RootTemplate({ children }: Props) {
       <AppHeader />
       <AppNavBar />
       {children}
-      {/* <ExoAdProvider classIdName="eas6a97888e2" zoneId="5770822" className="flex justify-center items-center" /> */}
-      {/* <ExoAdProvider classIdName="eas6a97888e10" zoneId="5770828" className="flex justify-center items-center" /> */}
       <ExoAdProvider
         classIdName="eas6a97888e17"
         zoneId="5770830"

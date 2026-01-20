@@ -1,12 +1,11 @@
 'use client';
 
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   CREATE_POST_MUTATION,
   DELETE_POST_MUTATION,
   DELETE_POSTS_MUTATION,
   GET_POSTS_ANALYTICS_QUERY,
-  GET_POSTS_INFO_QUERY,
   GET_POSTS_QUERY,
   GET_PUBLIC_POSTS_QUERY,
   GET_PUBLIC_SINGLE_POST_QUERY,
@@ -30,7 +29,6 @@ export const usePostsActions = () => {
   const [updatePost] = useMutation(UPDATE_POST_MUTATION);
   const [deletePost] = useMutation(DELETE_POST_MUTATION);
   const [deletePosts] = useMutation(DELETE_POSTS_MUTATION);
-  const [getPostsInfo] = useLazyQuery(GET_POSTS_INFO_QUERY);
   const [getSinglePost] = useLazyQuery(GET_SINGLE_POST_QUERY);
   const [getPublicSinglePost] = useLazyQuery(GET_PUBLIC_SINGLE_POST_QUERY);
   const [getPostsAnalytics] = useLazyQuery(GET_POSTS_ANALYTICS_QUERY);
@@ -67,10 +65,6 @@ export const usePostsActions = () => {
     return getPublicPosts({ variables: { input } });
   };
 
-  const getPostsInfoQuery = (input: PaginationInput) => {
-    return getPostsInfo({ variables: { input } });
-  };
-
   const getPostsQuery = (input: PaginationInput) => {
     return getPosts({ variables: { input } });
   };
@@ -81,7 +75,6 @@ export const usePostsActions = () => {
     createPostQuery,
     deletePostMutation,
     deletePostsMutation,
-    getPostsInfoQuery,
     getPostsQuery,
     getSinglePostQuery,
     getPostAnalyticsQuery,
