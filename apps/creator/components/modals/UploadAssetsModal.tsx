@@ -7,6 +7,8 @@ import { useAssetsStore } from '@/hooks/store/assets.store';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { DropZone } from '@workspace/ui/globals/DropZone';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { MediaType, resolveFileType } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { useState } from 'react';
@@ -17,6 +19,8 @@ interface Props {
 
 export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
   const { upload } = useAPI();
+  const { successHandler } = useSuccessHandler();
+  const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const { openUploadModal, setOpenUploadModal } = useAssetsStore();
   const [files, setFiles] = useState<File[]>([]);
@@ -41,10 +45,10 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
       );
 
       onUpload(files.length);
+      successHandler({ isEnabledConfetti: true, message: 'Uploaded assets successfully' });
       toast.success('Uploaded');
     } catch (error) {
-      console.log(error);
-      toast.error('Something wrong happened!');
+      errorHandler({ error, msg: 'Unable to upload assets' });
     } finally {
       setLoading(false);
       handleClose();

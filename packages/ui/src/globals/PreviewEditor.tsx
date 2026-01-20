@@ -105,7 +105,6 @@ export const PreviewEditor = ({ image, isEditing, setImage, setIsEditing, onSave
     if (!file) return;
 
     const previewUrl = URL.createObjectURL(file);
-    console.log('created object url');
     // Emit to parent
     onSave(file, previewUrl);
 

@@ -10,15 +10,15 @@ import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
 import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import '@workspace/ui/globals.css';
-import { authCookieKey, FetchMethods, UserRoles, buildSafeUrl, decodeJwtToken } from '@workspace/ui/lib';
+import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Toaster } from 'sonner';
 import { cache } from 'react';
+import { Toaster } from 'sonner';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -128,11 +128,11 @@ export default async function RootLayout({ children }: Props) {
             >
               <Toaster richColors position="top-center" closeButton theme={'system'} />
               <SidebarProvider>
-                <div className="flex w-full min-h-screen overflow-hidden">
+                <div className="flex h-screen w-full overflow-hidden">
                   <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-h-screen">
+                  <SidebarInset className="flex flex-1 flex-col min-w-0">
                     <Toaster position="top-center" closeButton richColors theme="system" />
-                    <main className={`flex-1 w-full overflow-x-hidden`}>{children}</main>
+                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
                   </SidebarInset>
                 </div>
               </SidebarProvider>
