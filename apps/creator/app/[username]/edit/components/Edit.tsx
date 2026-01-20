@@ -9,12 +9,12 @@ import { Field } from '@workspace/ui/globals/Field';
 import { GenericCard } from '@workspace/ui/globals/GenericCard';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { PageManager } from '@workspace/ui/globals/PageManager';
+import { MediaType } from '@workspace/ui/lib/enums';
+import { resolveFileType } from '@workspace/ui/lib/helpers';
 import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { EditPicture } from './EditPicture';
 import { EditPrivacyAndVisibility } from './EditPrivacyAndVisibility';
-import { MediaType } from '@workspace/ui/lib/enums';
-import { resolveFileType } from '@workspace/ui/lib/helpers';
 
 export const Edit = () => {
   const { upload } = useAPI();
@@ -94,7 +94,6 @@ export const Edit = () => {
         fileType: resolveFileType(bannerFile.name)
       });
 
-      console.log({ rawUrl });
       bannerUrl = rawUrl;
     }
 

@@ -61,14 +61,11 @@ export const useGetAllObjectsCount = () => {
     processing: 0,
     rejected: 0
   });
-  console.log('hook');
 
   const fetchCounts = async () => {
     setLoading(true);
     try {
       const { data } = await getAllObjectsCountOfEachTypeQuery();
-      console.log('called');
-      console.log({ d: data?.getCountOfObjectsOfEachType });
       setObjectsCount(data?.getCountOfObjectsOfEachType as GetAllObjectsCountOutput);
     } catch (error) {
       errorHandler({ error });
