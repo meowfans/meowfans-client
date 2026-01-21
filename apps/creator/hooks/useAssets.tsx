@@ -4,25 +4,12 @@ import { CombinedGraphQLErrors } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react';
 import { useAssetsActions } from '@workspace/gql/actions';
 import { GET_POST_ASSETS_QUERY } from '@workspace/gql/api/postsAPI';
-import { AssetType, CreatorAssetsEntity, PostAssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatorAssetsEntity, PaginationInput, PostAssetsEntity, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-interface Props {
-  assetType?: AssetType;
-}
 
-interface UseAssetsProps extends Props {
-  pageNumber?: number;
-  username?: string;
-  fanId?: string;
-  sortBy?: SortBy;
-  orderBy?: SortOrder;
-  take?: number;
-  postId?: string;
-}
-
-export const useAssets = ({ assetType }: Props) => {
+export const useAssets = (params: PaginationInput) => {
   const { assets, setAssets } = useAssetsStore();
   const { refetchCreatorAssets, getCreatorAssetsQuery } = useAssetsActions();
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,7 +18,7 @@ export const useAssets = ({ assetType }: Props) => {
   const loadCreatorAssets = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : assets.length;
     try {
-      const { data } = await getCreatorAssetsQuery({ take: 30, skip, assetType });
+      const { data } = await getCreatorAssetsQuery({ ...params, take: 30, skip });
       const fetchedAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
 
       setHasMore(fetchedAssets.length === 30);
@@ -47,7 +34,7 @@ export const useAssets = ({ assetType }: Props) => {
   };
 
   const handleRefetch = async (take: number) => {
-    const { data } = await refetchCreatorAssets({ input: { take, skip: 0, assetType } });
+    const { data } = await refetchCreatorAssets({ input: { ...params, take, skip: 0 } });
     const creatorAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
     return creatorAssets;
   };
@@ -58,12 +45,12 @@ export const useAssets = ({ assetType }: Props) => {
 
   useEffect(() => {
     loadCreatorAssets(true);
-  }, [assetType]); //eslint-disable-line
+  }, [params.assetType, params.orderBy]); //eslint-disable-line
 
   return { handleLoadMore, hasMore, loading, assets, handleRefetch };
 };
 
-export const usePostAssets = ({ postId, username, take = 30, orderBy = SortOrder.Desc, assetType = AssetType.Private }: UseAssetsProps) => {
+export const usePostAssets = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { postAssets, setPostAssets } = usePostsStore();
   const [getCreatorAssets] = useLazyQuery(GET_POST_ASSETS_QUERY);
@@ -74,12 +61,14 @@ export const usePostAssets = ({ postId, username, take = 30, orderBy = SortOrder
     const skip = initialLoad ? 0 : postAssets.length;
     try {
       const { data } = await getCreatorAssets({
-        variables: { input: { take, skip, username, orderBy, relatedEntityId: postId, assetType } }
+        variables: {
+          input: { ...params, username: params.username, skip, take: 30, orderBy: SortOrder.Desc, assetType: AssetType.Private }
+        }
       });
 
       const fetchedPostsAssets = (data?.getPostAssets ?? []) as PostAssetsEntity[];
 
-      setHasMore(fetchedPostsAssets.length === take);
+      setHasMore(fetchedPostsAssets.length === params.take);
 
       if (initialLoad) setPostAssets(fetchedPostsAssets);
       else setPostAssets([...postAssets, ...fetchedPostsAssets]);
@@ -96,7 +85,7 @@ export const usePostAssets = ({ postId, username, take = 30, orderBy = SortOrder
 
   useEffect(() => {
     handleLoadMoreAssets(true);
-  }, [assetType]); //eslint-disable-line
+  }, [params.assetType]); //eslint-disable-line
 
   return { postAssets, handleLoadMore, loading, hasMore };
 };

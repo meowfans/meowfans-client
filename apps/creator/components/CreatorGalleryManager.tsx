@@ -1,6 +1,6 @@
 'use client';
 
-import Loading from '@/app/loading';
+import { FileType } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
@@ -16,7 +16,8 @@ interface MasonryGridProps<T> {
   loading?: boolean;
   items: T[];
   getKey: (item: T) => string | number;
-  getImageUrl: (item: T) => string | undefined;
+  getUrl: (item: T) => string | undefined;
+  getFileType?: (item: T) => FileType;
   renderOverlay?: (item: T, index: number, allItems: T[]) => React.ReactNode;
   className?: string;
   itemClassName?: string;
@@ -30,7 +31,8 @@ export const CreatorGalleryManager = <T,>({
   loading,
   items,
   getKey,
-  getImageUrl,
+  getFileType,
+  getUrl,
   renderOverlay,
   className,
   itemClassName,
@@ -71,7 +73,7 @@ export const CreatorGalleryManager = <T,>({
                         Click to view
                       </Badge>
                       <div className="relative overflow-hidden rounded-xl">
-                        <CreatorNextImage imageUrl={getImageUrl(item)} alt={`asset_${getKey(item)}`} />
+                        <CreatorNextImage imageUrl={getUrl(item)} alt={`asset_${getKey(item)}`} />
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       {renderOverlay && <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>}
@@ -81,11 +83,17 @@ export const CreatorGalleryManager = <T,>({
                       <Badge className="absolute top-2 left-2 w-fit px-2 py-1 bg-background/80 backdrop-blur-sm text-foreground shadow-md z-20">
                         #{idx + 1}
                       </Badge>
-                      <div className="relative overflow-hidden rounded-xl">
-                        <CreatorNextImage imageUrl={getImageUrl(item)} alt={`asset_${getKey(item)}`} />
-                        <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </div>
-                      {renderOverlay && <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>}
+                      {getFileType?.(item) === FileType.Image ? (
+                        <div className="relative overflow-hidden rounded-xl">
+                          <CreatorNextImage imageUrl={getUrl(item)} alt={`asset_${getKey(item)}`} />
+                          <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                      ) : (
+                        <video src={getUrl(item)} controls />
+                      )}
+                      {getFileType?.(item) === FileType.Image && renderOverlay && (
+                        <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>
+                      )}
                     </div>
                   )}
                 </motion.div>

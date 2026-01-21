@@ -13,6 +13,7 @@ interface InfiniteScrollManagerProps {
   customHeight?: string;
   scrollableDiv?: string;
   LoadingComponent?: React.ReactNode;
+  scrollThreshold?: number;
 }
 
 export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
@@ -22,6 +23,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   children,
   scrollableDiv,
   loading,
+  scrollThreshold = 0.7,
   customHeight = 'h-[100vh]',
   LoadingComponent
 }) => {
@@ -29,10 +31,10 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
     <InfiniteScroll
       loader={null}
       hasMore={hasMore}
-      scrollThreshold={0.7}
+      scrollThreshold={scrollThreshold}
       next={onLoadMore}
       dataLength={dataLength}
-      scrollableTarget="scrollableDiv"
+      scrollableTarget={scrollableDiv}
     >
       {children}
     </InfiniteScroll>

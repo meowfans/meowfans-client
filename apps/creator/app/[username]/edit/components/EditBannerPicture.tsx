@@ -63,11 +63,13 @@ export const EditBannerPicture = ({ banner, setBanner, setIsBannerEditing }: Edi
 
       <Label className="absolute top-3 left-3 text-xs text-white/90">Profile banner</Label>
       <Input ref={bannerInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleChange(e)} />
-      <AssetPickerModal
-        open={openAsstPickerModal}
-        onClose={() => setOpenAsstPickerModal(false)}
-        onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
-      />
+      {openAsstPickerModal && (
+        <AssetPickerModal
+          open={openAsstPickerModal}
+          onClose={() => setOpenAsstPickerModal(false)}
+          onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
+        />
+      )}
     </div>
   );
 };

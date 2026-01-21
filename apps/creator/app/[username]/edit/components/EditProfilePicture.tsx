@@ -72,11 +72,13 @@ export const EditProfilePicture = ({ avatar, setAvatar, setIsAvatarEditing }: Ed
         value={'square image, at least 400×400px'}
         className="text-xs text-muted-foreground text-center max-w-xs"
       />
-      <AssetPickerModal
-        open={openAsstPickerModal}
-        onClose={() => setOpenAsstPickerModal(false)}
-        onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
-      />
+      {openAsstPickerModal && (
+        <AssetPickerModal
+          open={openAsstPickerModal}
+          onClose={() => setOpenAsstPickerModal(false)}
+          onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
+        />
+      )}
     </div>
   );
 };

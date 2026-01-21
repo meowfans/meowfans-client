@@ -20,8 +20,8 @@ export const AssetPickerModal: React.FC<Props> = ({ open, onClose, onSelectUrl }
   const { loading, assets, hasMore, handleLoadMore } = useAssets({ assetType: AssetType.Private });
 
   return (
-    <Modal isOpen={open} onClose={onClose} title="Send from assets" description="Pick an image to attach to this message">
-      <div className="space-y-3">
+    <Modal isOpen={open} onClose={onClose} title="Upload from assets" description="Pick an image">
+      <div id={'asset-modal-scroll'} className="space-y-3">
         {loading ? (
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -29,7 +29,13 @@ export const AssetPickerModal: React.FC<Props> = ({ open, onClose, onSelectUrl }
             ))}
           </div>
         ) : assets.length ? (
-          <InfiniteScrollManager dataLength={assets.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
+          <InfiniteScrollManager
+            dataLength={assets.length}
+            hasMore={hasMore}
+            loading={loading}
+            scrollableDiv="asset-modal-scroll"
+            onLoadMore={handleLoadMore}
+          >
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {assets.map((a) => {
                 const url = a?.asset?.rawUrl;

@@ -6,7 +6,7 @@ import { UploadAssetsModal } from '@/components/modals/UploadAssetsModal';
 import { UploadPostsModal } from '@/components/modals/UploadPostsModal';
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssets } from '@/hooks/useAssets';
-import { AssetType } from '@workspace/gql/generated/graphql';
+import { AssetType, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { motion } from 'framer-motion';
@@ -16,9 +16,10 @@ import { AssetsHeader } from './AssetsHeader';
 
 export const Assets = () => {
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
+  const [orderBy, setOrderBy] = useState<SortOrder>(SortOrder.Desc);
   const { canSelect, selectedAssets, toggleSelect, rangeSelection, setAssets, setSelectedAssets, setRangeSelection, setCanSelect } =
     useAssetsStore();
-  const { assets, handleLoadMore, hasMore, loading, handleRefetch } = useAssets({ assetType });
+  const { assets, handleLoadMore, hasMore, loading, handleRefetch } = useAssets({ assetType, orderBy });
   const [selectedAssetsRecord, setSelectedAssetsRecord] = useState<{ id: string; url: string }[]>([]);
 
   const handleSelectRange = (fromId: string, toId: string) => {
@@ -66,14 +67,15 @@ export const Assets = () => {
   return (
     <PageManager>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
-        <AssetsHeader assetType={assetType} setAssetType={setAssetType} />
+        <AssetsHeader assetType={assetType} setAssetType={setAssetType} orderBy={orderBy} setOrderBy={setOrderBy} />
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
           <InfiniteScrollManager dataLength={assets.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
             <CreatorGalleryManager
               items={assets}
               loading={loading}
               getKey={({ asset }) => asset.id}
-              getImageUrl={({ asset }) => asset.rawUrl}
+              getUrl={({ asset }) => asset.rawUrl}
+              getFileType={(item) => item.asset.fileType}
               onClick={(item, e) => handleToggle(item.assetId, e)}
               renderOverlay={(creatorAsset, idx, creatorAssets) => (
                 <AssetOptions
