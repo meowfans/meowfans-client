@@ -2,7 +2,8 @@
 
 import { UploadVaultsModal } from '@/components/modals/UploadVaultsModal';
 import { useVaultObjects } from '@/hooks/useVaults';
-import { DownloadStates, FileType, GetUserQuery, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { DownloadStates, FileType, GetUserQuery } from '@workspace/gql/generated/graphql';
+import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -45,7 +46,7 @@ export default function CreatorVaults({ data: creatorData }: Props) {
     setSelectedUrls(
       !hasSelectedThirty
         ? (vaultObjects
-            .filter((vault) => vault.status !== DownloadStates.Fulfilled && vault.status !== DownloadStates.Processing)
+            .filter((vault) => ![DownloadStates.Fulfilled, DownloadStates.Processing].includes(vault.status))
             .map((v) => v.id)
             .slice(0, length) ?? [])
         : []
@@ -95,21 +96,13 @@ export default function CreatorVaults({ data: creatorData }: Props) {
 
       {vaultObjects.length ? (
         <InfiniteScrollManager dataLength={vaultObjects.length} hasMore={hasNext} loading={loading} onLoadMore={handleLoadMore}>
-          {vaultObjects.map((vaultObject, idx) => (
-            <CreatorVaultUrls
-              idx={idx}
-              key={idx}
-              isLoading={loading}
-              onToggle={(id) => handleToggle(id)}
-              selectedUrls={selectedUrls}
-              vaultObject={vaultObject as VaultObjectsEntity}
-            />
-          ))}
+          <CreatorVaultUrls isLoading={loading} onToggle={(id) => handleToggle(id)} selectedUrls={selectedUrls} vaultObjects={vaultObjects} />
         </InfiniteScrollManager>
       ) : (
-        <div className="text-center">
-          <p>Looks like there is nothing here</p>
-        </div>
+        <EmptyElement
+          description={`Looks like this creator does not have any ${status.toLowerCase()} ${fileType.toLowerCase()}`}
+          title={`Import ${fileType.toLowerCase()}s to download vaults`}
+        />
       )}
 
       <UploadVaultsModal

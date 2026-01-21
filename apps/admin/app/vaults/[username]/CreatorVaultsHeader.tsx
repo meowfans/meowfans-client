@@ -52,7 +52,7 @@ export const CreatorVaultsHeader: React.FC<Props> = ({
   return (
     <div
       className="
-        sticky top-0 z-50
+        sticky top-15
         bg-white/90 dark:bg-neutral-900/90
         backdrop-blur-md
         border-b
@@ -130,10 +130,10 @@ export const CreatorVaultsHeader: React.FC<Props> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuLabel>Select</DropdownMenuLabel>
+                    <DropdownMenuLabel>Fetch and select</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup value="30" onValueChange={(val) => onSelectThirty(true, Number(val))}>
-                      {['5', '10', '30', '100', '200', '300', '500', '1000'].map((v) => (
+                      {['5', '10', '30', '50', '100', '200', '300', '500', '1000'].map((v) => (
                         <DropdownMenuRadioItem key={v} value={v}>
                           {v}
                         </DropdownMenuRadioItem>

@@ -1,31 +1,29 @@
 'use client';
 
-import { DownloadStates, FileType, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
-import { Badge } from '@workspace/ui/components/badge';
+import { ImpersonatedCreatorID } from '@/util/helpers';
+import { DownloadStates, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
-import { Checkbox } from '@workspace/ui/components/checkbox';
-import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
+import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Copy, Download, ExternalLink, ImageDown, SquarePlay } from 'lucide-react';
-import moment from 'moment';
+import { Edit, GalleryVertical, Link } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-  idx: number;
-  vaultObject: VaultObjectsEntity;
   selectedUrls: string[];
-  onToggle: (url: string) => unknown;
+  onToggle: (id: string) => unknown;
   isLoading: boolean;
+  vaultObjects: VaultObjectsEntity[];
 }
 
-export const CreatorVaultUrls: React.FC<Props> = ({ idx, vaultObject, selectedUrls, onToggle, isLoading }) => {
+export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLoading, vaultObjects }) => {
   const [copied, setCopied] = useState(false);
+  const [selectedVaultObject, setSelectedVaultObject] = useState<VaultObjectsEntity>({} as VaultObjectsEntity);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(vaultObject.objectUrl);
+      await navigator.clipboard.writeText(selectedVaultObject.objectUrl);
       setCopied(true);
       toast.success('Copied to clipboard');
       setTimeout(() => setCopied(false), 2000);
@@ -53,75 +51,92 @@ export const CreatorVaultUrls: React.FC<Props> = ({ idx, vaultObject, selectedUr
     }
   };
 
-  const status = statusVariants[vaultObject.status];
-
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2 }}
-      className="h-full rounded-xl border p-3 shadow-sm bg-white dark:bg-neutral-900 hover:shadow-md transition-all flex flex-col space-y-2"
-    >
-      <div className="flex flex-row justify-between items-center gap-2">
-        <div className="flex flex-row items-center gap-2">
-          <Badge variant="secondary">{idx + 1}</Badge>
-          {vaultObject.vault && <SAvatar url={vaultObject.vault.creatorProfile.user.avatarUrl} />}
-        </div>
+    <Table>
+      <TableHeader className="bg-muted/50 backdrop-blur">
+        <TableRow>
+          <TableHead className="text-center w-28">Status</TableHead>
+          <TableHead className="text-center w-16">Select</TableHead>
+          <TableHead className="text-center w-16">File</TableHead>
+          <TableHead className="min-w-80">Object URL</TableHead>
+          <TableHead className="text-center w-36">Created</TableHead>
+          <TableHead className="bg-card">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
 
-        <div className="flex items-center gap-2">
-          <motion.div
-            key={vaultObject.status}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Badge className={status.className}>{status.text}</Badge>
-          </motion.div>
+      <TableBody>
+        {vaultObjects.map((vaultObject) => {
+          const user = vaultObject.vault?.creatorProfile?.user;
+          const status = statusVariants[vaultObject.status];
 
-          {vaultObject.status !== DownloadStates.Processing && vaultObject.status !== DownloadStates.Fulfilled && (
-            <Checkbox
-              className="h-5 w-5"
-              checked={selectedUrls.includes(vaultObject.id)}
-              onCheckedChange={() => onToggle(vaultObject.id)}
-              disabled={selectedUrls.length >= 30}
-            />
-          )}
-        </div>
-      </div>
+          return (
+            <TableRow
+              key={vaultObject.id}
+              className={cn('hover:bg-muted/30 transition-colors', ImpersonatedCreatorID(vaultObject.id) && 'bg-red-400')}
+            >
+              <TableCell className="sticky left-0 bg-card text-center">
+                <motion.span
+                  key={vaultObject.status}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className={cn('inline-flex px-2 py-0.5 rounded-full text-xs font-medium', status.className)}
+                >
+                  {status.text}
+                </motion.span>
+              </TableCell>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-1">
-        <div className="flex items-center gap-2 cursor-pointer">
-          <div className="h-12 w-12 rounded-md border flex items-center justify-center bg-gray-100 dark:bg-neutral-800">
-            {vaultObject.fileType === FileType.Image ? (
-              <ImageDown size={18} className="text-gray-500" />
-            ) : (
-              <SquarePlay size={18} className="text-gray-500" />
-            )}
-          </div>
-          <span className="truncate max-w-50 text-xs text-blue-600 hover:underline">{vaultObject.objectUrl}</span>
-        </div>
+              <TableCell className="text-center">
+                {vaultObject.status !== DownloadStates.Processing && vaultObject.status !== DownloadStates.Fulfilled && (
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={selectedUrls.includes(vaultObject.id)}
+                    onChange={() => onToggle(vaultObject.id)}
+                    disabled={selectedUrls.length >= 30}
+                  />
+                )}
+              </TableCell>
 
-        <div className="flex flex-row gap-2">
-          <Button size="icon" variant="outline" onClick={handleCopy} className="h-7 w-7" title="Copy URL">
-            {copied ? <span className="text-xs">✅</span> : <Copy size={14} />}
-          </Button>
-          <Button size="icon" variant="outline" asChild className="h-7 w-7" title="Open in new tab">
-            <a href={vaultObject.objectUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink size={14} />
-            </a>
-          </Button>
-        </div>
-      </div>
+              <TableCell className="text-center">{vaultObject.fileType}</TableCell>
 
-      <div className="flex flex-row justify-between items-center text-xs px-1">
-        <p className="text-gray-500 dark:text-gray-400">{moment(vaultObject.createdAt).format('LT L')}</p>
-        {vaultObject.status === DownloadStates.Processing && (
-          <LoadingButton size="icon" variant={'outline'} className="cursor-pointer animate-bounce h-7 w-7" Icon={Download} loading />
-        )}
-      </div>
-    </motion.div>
+              <TableCell>
+                <div className="flex items-center gap-2 max-w-md">
+                  <span className="truncate text-xs text-blue-600 hover:underline">{vaultObject.objectUrl}</span>
+
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="h-6 w-6"
+                    onClick={() => {
+                      setSelectedVaultObject(vaultObject);
+                      handleCopy();
+                    }}
+                  >
+                    <Link className="h-3 w-3" />
+                  </Button>
+
+                  <Button size="icon" variant="outline" className="h-6 w-6" asChild>
+                    <a href={vaultObject.objectUrl} target="_blank" rel="noopener noreferrer">
+                      <GalleryVertical className="h-3 w-3" />
+                    </a>
+                  </Button>
+                </div>
+              </TableCell>
+
+              <TableCell className="text-center text-xs text-muted-foreground">
+                {new Date(vaultObject.createdAt).toLocaleString()}
+              </TableCell>
+
+              <TableCell className="bg-card">
+                <Button size="sm" variant="outline">
+                  <Edit className="w-3 h-3" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };
