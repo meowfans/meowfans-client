@@ -229,30 +229,27 @@ export const GET_ALL_VAULTS_QUERY = graphql(`
 export const GET_CREATOR_VAULT_OBJECTS_QUERY = graphql(`
   query GetCreatorVaultObjectsByAdmin($input: PaginationInput!) {
     getCreatorVaultObjectsByAdmin(input: $input) {
-      count
-      vaultObjects {
+      createdAt
+      deletedAt
+      id
+      objectUrl
+      status
+      fileType
+      updatedAt
+      vaultId
+      vault {
         createdAt
+        creatorId
         deletedAt
         id
-        objectUrl
-        status
-        fileType
         updatedAt
-        vaultId
-        vault {
-          createdAt
+        url
+        creatorProfile {
           creatorId
-          deletedAt
-          id
-          updatedAt
-          url
-          creatorProfile {
-            creatorId
-            user {
-              avatarUrl
-              id
-              username
-            }
+          user {
+            avatarUrl
+            id
+            username
           }
         }
       }

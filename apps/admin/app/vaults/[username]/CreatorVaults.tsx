@@ -39,6 +39,9 @@ export default function CreatorVaults({ data: creatorData }: Props) {
 
   const handleSelectThirty = async (hasSelected: boolean, length: number) => {
     setHasSelectedThirty(hasSelected);
+
+    if (length > vaultObjects.length) setTake(length);
+
     setSelectedUrls(
       !hasSelectedThirty
         ? (vaultObjects

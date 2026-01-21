@@ -16,16 +16,11 @@ export const useVaultObjects = (params: PaginationInput) => {
     setLoading(vaultObjects.length === 0);
 
     try {
-      const { data } = await getCreatorVaultObjectsQuery({
-        ...params,
-        skip
-      });
+      const { data } = await getCreatorVaultObjectsQuery({ ...params, skip });
 
-      const fetched = data?.getCreatorVaultObjectsByAdmin.vaultObjects as VaultObjectsEntity[];
+      const fetched = data?.getCreatorVaultObjectsByAdmin as VaultObjectsEntity[];
       setHasNext(!!fetched.length);
-
-      if (initialLoad) setVaultObjects(fetched);
-      else setVaultObjects([...vaultObjects, ...fetched]);
+      setVaultObjects(initialLoad ? fetched : [...vaultObjects, ...fetched]);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -39,7 +34,7 @@ export const useVaultObjects = (params: PaginationInput) => {
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.status, params.fileType]); //eslint-disable-line
+  }, [params.status, params.fileType, params.relatedUserId, params.take]); //eslint-disable-line
 
   return {
     vaultObjects,
