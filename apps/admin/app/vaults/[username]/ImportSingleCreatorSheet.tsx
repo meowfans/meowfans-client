@@ -1,8 +1,10 @@
 'use client';
+import { useCreatorsStore } from '@/hooks/store/creators.store';
+import { useUser } from '@/hooks/useUser';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION } from '@workspace/gql/api/importAPI';
 import { GET_USER_QUERY } from '@workspace/gql/api/userAPI';
-import { DocumentQualityType, FileType, GetUserQuery, ImportTypes, ServiceType } from '@workspace/gql/generated/graphql';
+import { DocumentQualityType, FileType, ImportTypes, ServiceType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
@@ -30,7 +32,8 @@ export const ImportSingleCreatorSheet = () => {
   const [getUser] = useLazyQuery(GET_USER_QUERY);
   const [exclude, setExclude] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [creator, setCreator] = useState<GetUserQuery>();
+  const { loadCreator, user } = useUser();
+  const { setUser } = useCreatorsStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [exceptions, setExceptions] = useState<string[]>([]);
   const [totalContent, setTotalContent] = useState<number>(10);
@@ -45,20 +48,19 @@ export const ImportSingleCreatorSheet = () => {
 
   const handleGetUser = async () => {
     if (username) {
-      const { data } = await getUser({ variables: { username: username as string } });
-      setCreator(data);
-    } else setCreator(undefined);
+      await loadCreator(username.toString());
+    }
   };
 
   const handleInitiate = async () => {
     setLoading(true);
     try {
-      if (!creator?.getUser.id) return;
+      if (!user?.id) return;
       await initiateImport({
         variables: {
           input: {
             serviceType,
-            creatorId: creator?.getUser.id,
+            creatorId: user?.id,
             url: url.trim(),
             fileType,
             qualityType,
@@ -140,9 +142,9 @@ export const ImportSingleCreatorSheet = () => {
       </SheetTrigger>
       <SheetContent className="p-1">
         <SheetHeader>
-          <SheetTitle>Add new contents to {creator && creator?.getUser.username.toUpperCase()}</SheetTitle>
+          <SheetTitle>Add new contents to {user && user?.username.toUpperCase()}</SheetTitle>
           <SheetDescription>
-            {creator ? `You are importing to ${creator.getUser.username}` : 'Be descriptive about site information'}
+            {user ? `You are importing to ${user?.username}` : 'Be descriptive about site information'}
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-3 space-y-1">

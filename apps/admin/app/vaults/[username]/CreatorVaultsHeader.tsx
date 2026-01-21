@@ -1,6 +1,6 @@
 'use client';
 
-import { DownloadStates, FileType, GetUserQuery, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { DownloadStates, FileType, GetUserQuery, UsersEntity, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -21,7 +21,7 @@ import { ArrowUpWideNarrow, Download, ListFilterPlus, LucideLassoSelect, Refresh
 interface Props {
   vaultObjectsCount: number;
   onSetStatus: (val: DownloadStates) => unknown;
-  creatorData: GetUserQuery;
+  user: UsersEntity;
   hasSelectedThirty: boolean;
   onSelectThirty: (hasSelected: boolean, count: number) => unknown;
   onRefetch: () => unknown;
@@ -35,7 +35,7 @@ interface Props {
 }
 
 export const CreatorVaultsHeader: React.FC<Props> = ({
-  creatorData,
+  user,
   vaultObjectsCount,
   hasSelectedThirty,
   onSelectThirty,
@@ -71,19 +71,19 @@ export const CreatorVaultsHeader: React.FC<Props> = ({
           <Button size="sm" className="px-2">
             {vaultObjectsCount}
           </Button>
-          <Badge className="text-[11px] truncate max-w-30">{creatorData.getUser.username}</Badge>
+          <Badge className="text-[11px] truncate max-w-30">{user.username}</Badge>
         </div>
 
         <div className="flex flex-row space-x-1">
-          <Button size="sm">{creatorData.getUser?.pendingCount || 0}</Button>
+          <Button size="sm">{user?.creatorProfile.pendingObjectCount || 0}</Button>
           <Button size="sm" className="bg-orange-500">
-            {creatorData.getUser?.processingCount || 0}
+            {user?.creatorProfile?.processingObjectCount || 0}
           </Button>
           <Button size="sm" className="bg-red-500">
-            {creatorData.getUser?.rejectedCount || 0}
+            {user?.creatorProfile?.rejectedObjectCount || 0}
           </Button>
           <Button size="sm" className="bg-blue-500">
-            {creatorData.getUser?.fulfilledCount || 0}
+            {user?.creatorProfile?.fulfilledObjectCount || 0}
           </Button>
         </div>
 

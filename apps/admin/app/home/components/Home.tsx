@@ -1,22 +1,25 @@
 'use client';
 
+import { Impersonate } from '@/components/Impersonate';
+import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
+import { UpdateAllCreatorProfilesModal } from '@/components/modals/UpdateAllCreatorProfilesModal';
+import { UpdatePreviewOfVaultsModal } from '@/components/modals/UpdatePreviewOfVaultsModal';
+import { useUtilsStore } from '@/hooks/store/utils.store';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { useState } from 'react';
-
-import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
-import { UpdateAllCreatorProfilesModal } from '@/components/modals/UpdateAllCreatorProfilesModal';
-import { UpdatePreviewOfVaultsModal } from '@/components/modals/UpdatePreviewOfVaultsModal';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { Trash } from 'lucide-react';
+import { useState } from 'react';
 import { ImportCreatorsSheet } from '../../vaults/components/ImportCreatorsSheet';
+import { ImpersonateCreatorSheet } from './ImpersonateCreatorSheet';
 
 export const Home = () => {
   const [openUpdateAllCreatorsModal, setOpenUpdateAllCreatorsModal] = useState<boolean>(false);
   const [updateVaultPreviewModal, setUpdateVaultPreviewModal] = useState<boolean>(false);
   const [deleteAllAssetsModal, setDeleteAllAssetsModal] = useState(false);
+  const { switchContext } = useUtilsStore();
 
   return (
     <PageManager>
@@ -54,6 +57,8 @@ export const Home = () => {
             modalText="Delete your assets"
           />
           <UpdateAllCreatorProfilesModal isOpen={openUpdateAllCreatorsModal} onClose={() => setOpenUpdateAllCreatorsModal(false)} />
+          {/* Single-creator tools (mobile + desktop sheet) */}
+          <ImpersonateCreatorSheet />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -88,6 +93,8 @@ export const Home = () => {
       </div>
 
       <DeleteAllAssetsModal isOpen={deleteAllAssetsModal} setOpen={setDeleteAllAssetsModal} />
+      {/* Global impersonation modal controlled via utils store */}
+      <Impersonate creator={switchContext} />
     </PageManager>
   );
 };

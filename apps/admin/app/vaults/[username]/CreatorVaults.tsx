@@ -2,7 +2,7 @@
 
 import { UploadVaultsModal } from '@/components/modals/UploadVaultsModal';
 import { useVaultObjects } from '@/hooks/useVaults';
-import { DownloadStates, FileType, GetUserQuery } from '@workspace/gql/generated/graphql';
+import { DownloadStates, FileType, UsersEntity } from '@workspace/gql/generated/graphql';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -12,10 +12,10 @@ import { CreatorVaultUrls } from './CreatorVaultUrls';
 import { CreatorVaultsHeader } from './CreatorVaultsHeader';
 
 interface Props {
-  data?: GetUserQuery;
+  user?: UsersEntity;
 }
 
-export default function CreatorVaults({ data: creatorData }: Props) {
+export default function CreatorVaults({ user }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
@@ -26,7 +26,7 @@ export default function CreatorVaults({ data: creatorData }: Props) {
   const [status, setStatus] = useState<DownloadStates>((searchParams.get('status') as DownloadStates) || DownloadStates.Pending);
   const { loading, vaultObjects, hasNext, handleLoadMore } = useVaultObjects({
     take,
-    relatedUserId: creatorData!.getUser.id,
+    relatedUserId: user?.id,
     status: status ?? DownloadStates.Pending,
     fileType
   });
@@ -79,7 +79,7 @@ export default function CreatorVaults({ data: creatorData }: Props) {
   return (
     <PageManager>
       <CreatorVaultsHeader
-        creatorData={creatorData as GetUserQuery}
+        user={user as UsersEntity}
         vaultObjects={vaultObjects}
         vaultObjectsCount={vaultObjects.length ?? 0}
         hasSelectedThirty={hasSelectedThirty}
@@ -96,7 +96,12 @@ export default function CreatorVaults({ data: creatorData }: Props) {
 
       {vaultObjects.length ? (
         <InfiniteScrollManager dataLength={vaultObjects.length} hasMore={hasNext} loading={loading} onLoadMore={handleLoadMore}>
-          <CreatorVaultUrls isLoading={loading} onToggle={(id) => handleToggle(id)} selectedUrls={selectedUrls} vaultObjects={vaultObjects} />
+          <CreatorVaultUrls
+            isLoading={loading}
+            onToggle={(id) => handleToggle(id)}
+            selectedUrls={selectedUrls}
+            vaultObjects={vaultObjects}
+          />
         </InfiniteScrollManager>
       ) : (
         <EmptyElement
@@ -106,7 +111,7 @@ export default function CreatorVaults({ data: creatorData }: Props) {
       )}
 
       <UploadVaultsModal
-        creatorData={creatorData}
+        user={user}
         onJobAdded={() => setHasSelectedThirty(false)}
         isOpen={uploadVaultModal}
         onCancel={handleCancelUploadVaultModal}
