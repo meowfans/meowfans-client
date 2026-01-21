@@ -136,7 +136,7 @@ export const VaultsHeader: React.FC<Props> = ({
             <DropdownMenuContent align="end" className="w-50">
               <DropdownMenuLabel>Vault Status Counts</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {statusButtons.map(({ icon, status, label }, idx) => (
+              {statusButtons.map(({ icon, label }, idx) => (
                 <DropdownMenuItem key={idx} className="flex items-center justify-between cursor-pointer">
                   <div className="flex items-center gap-2">
                     {icon}
