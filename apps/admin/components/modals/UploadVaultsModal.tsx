@@ -2,7 +2,7 @@
 
 import { useMutation } from '@apollo/client/react';
 import { DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION } from '@workspace/gql/api/vaultsAPI';
-import { AssetType, GetUserQuery } from '@workspace/gql/generated/graphql';
+import { AssetType, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-  creatorData?: GetUserQuery;
+  user?: UsersEntity;
   onJobAdded: () => unknown;
   onCancel: () => unknown;
   vaultObjectIds: string[];
@@ -27,7 +27,7 @@ interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const UploadVaultsModal: React.FC<Props> = ({ isOpen, setOpen, vaultObjectIds, onCancel, onJobAdded, creatorData }) => {
+export const UploadVaultsModal: React.FC<Props> = ({ isOpen, setOpen, vaultObjectIds, onCancel, onJobAdded, user }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [destination, setDestination] = useState<AssetType>(AssetType.Private);
   const [downloadCreatorObjectsAsBatch] = useMutation(DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION);
@@ -41,11 +41,11 @@ export const UploadVaultsModal: React.FC<Props> = ({ isOpen, setOpen, vaultObjec
     if (!vaultObjectIds.length) return;
     setLoading(true);
     try {
-      if (!creatorData?.getUser.id) return;
+      if (!user?.id) return;
       await downloadCreatorObjectsAsBatch({
         variables: {
           input: {
-            creatorId: creatorData.getUser.id,
+            creatorId: user?.id,
             vaultObjectIds,
             destination
           }
@@ -66,7 +66,7 @@ export const UploadVaultsModal: React.FC<Props> = ({ isOpen, setOpen, vaultObjec
       isOpen={isOpen}
       onClose={() => setOpen(false)}
       title={`Upload ${vaultObjectIds.length} objects to queue for processing`}
-      description={`Objects are to be uploaded to ${creatorData?.getUser.username}`}
+      description={`Objects are to be uploaded to ${user?.username}`}
     >
       <div className="flex justify-center">
         <div className="gap-2 w-fit justify-self-start items-start flex">

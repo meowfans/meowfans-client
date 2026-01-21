@@ -20,10 +20,12 @@ export const GET_USER_QUERY = graphql(`
       roles
       updatedAt
       username
-      pendingCount
-      rejectedCount
-      processingCount
-      fulfilledCount
+      creatorProfile {
+        fulfilledObjectCount
+        pendingObjectCount
+        processingObjectCount
+        rejectedObjectCount
+      }
     }
   }
 `);

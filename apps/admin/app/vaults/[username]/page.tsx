@@ -1,6 +1,7 @@
 import { configService } from '@/util/config';
 import { GET_USER_QUERY } from '@workspace/gql/api/userAPI';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
+import { UsersEntity } from '@workspace/gql/generated/graphql';
 import CreatorVaults from './CreatorVaults';
 
 interface Props {
@@ -15,5 +16,6 @@ export default async function CreatorVaultPage({ params }: Props) {
     query: GET_USER_QUERY,
     variables: { username: (await params).username }
   });
-  return <CreatorVaults data={data} />;
+  const fetchedUser = data?.getUser as UsersEntity;
+  return <CreatorVaults user={fetchedUser} />;
 }

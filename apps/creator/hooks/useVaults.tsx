@@ -64,7 +64,7 @@ export const useVaultsAnalytics = (input: VaultStatsInput) => {
 
   useEffect(() => {
     loadAnalytics();
-  }, [input.vaultStats]); //eslint-disable-line
+  }, []); //eslint-disable-line
 
   return { vaultAnalytics, loading };
 };
