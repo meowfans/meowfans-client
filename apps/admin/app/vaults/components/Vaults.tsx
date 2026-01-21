@@ -95,16 +95,16 @@ export const Vaults = () => {
             <div className="block md:hidden h-full">
               <ScrollArea className="h-full w-full p-1">
                 <div ref={topRef} />
-                {sortedVaults.map((creator, idx) => (
-                  <div key={creator.id ?? idx} className="flex flex-col rounded-md border my-1 p-2">
+                {sortedVaults.map((user, idx) => (
+                  <div key={user.id ?? idx} className="flex flex-col rounded-md border my-1 p-2">
                     <div className="flex items-center space-x-2 mb-2">
                       <Checkbox
-                        checked={selectedCreatorIds.includes(creator.id)}
-                        onCheckedChange={() => toggleCreatorSelection(creator.id)}
+                        checked={selectedCreatorIds.includes(user.id)}
+                        onCheckedChange={() => toggleCreatorSelection(user.id)}
                       />
-                      <span className="text-sm">{creator.id}</span>
+                      <span className="text-sm">{user.id}</span>
                     </div>
-                    <VaultUrls idx={idx} creator={creator} onJobAdded={handleRefetch} onUpdateCreator={handleUpdateCreator} />
+                    <VaultUrls idx={idx} user={user} onJobAdded={handleRefetch} onUpdateCreator={handleUpdateCreator} />
                   </div>
                 ))}
                 <div ref={endRef} />
@@ -119,7 +119,7 @@ export const Vaults = () => {
                     <TableRow>
                       <TableHead className="w-12.5"></TableHead>
                       <TableHead className="w-12.5">#</TableHead>
-                      <TableHead>Creator</TableHead>
+                      <TableHead>user</TableHead>
                       {statusButtons.map((status) => (
                         <TableHead key={status.label} className="text-center">
                           <div className="flex items-center gap-2 justify-center" title={status.label}>
@@ -133,15 +133,15 @@ export const Vaults = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {sortedVaults.map((creator, idx) => (
+                    {sortedVaults.map((user, idx) => (
                       <VaultTableRow
-                        key={creator.id ?? idx}
+                        key={user.id ?? idx}
                         idx={idx}
-                        creator={creator}
+                        user={user}
                         onJobAdded={handleRefetch}
                         onUpdateCreator={handleUpdateCreator}
-                        isSelected={selectedCreatorIds.includes(creator.id)}
-                        onSelect={() => toggleCreatorSelection(creator.id)}
+                        isSelected={selectedCreatorIds.includes(user.id)}
+                        onSelect={() => toggleCreatorSelection(user.id)}
                       />
                     ))}
                   </TableBody>

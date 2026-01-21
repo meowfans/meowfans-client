@@ -17,14 +17,14 @@ import { statusButtons } from './VaultsHeader';
 
 interface Props {
   idx: number;
-  creator: UsersEntity;
+  user: UsersEntity;
   onJobAdded: () => unknown;
-  onUpdateCreator: (creator: UsersEntity) => unknown;
+  onUpdateCreator: (user: UsersEntity) => unknown;
   isSelected: boolean;
   onSelect: () => void;
 }
 
-export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpdateCreator, isSelected, onSelect }) => {
+export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdateCreator, isSelected, onSelect }) => {
   const [downloadAllCreatorVaultsModal, setDownloadAllCreatorVaultsModal] = useState<boolean>(false);
   const [cleanUpVaultObjects] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
 
@@ -35,10 +35,10 @@ export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpd
         description: data?.cleanUpVaultObjectsOfACreator
       });
       onUpdateCreator({
-        ...creator,
+        ...user,
         creatorProfile: {
-          ...creator.creatorProfile,
-          rejectedObjectCount: creator.creatorProfile.rejectedObjectCount + creator.creatorProfile.processingObjectCount,
+          ...user.creatorProfile,
+          rejectedObjectCount: user.creatorProfile.rejectedObjectCount + user.creatorProfile.processingObjectCount,
           processingObjectCount: 0
         }
       });
@@ -56,29 +56,29 @@ export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpd
         <TableCell className="font-medium text-xs text-muted-foreground">{idx + 1}</TableCell>
         <TableCell>
           <div className="flex items-center space-x-2">
-            <SAvatar url={creator.avatarUrl} fallback="cr" />
+            <SAvatar url={user.avatarUrl} fallback="cr" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm">{creator.username}</span>
-              <span className="text-xs text-muted-foreground">{creator.id}</span>
+              <span className="font-bold text-sm">{user.username}</span>
+              <span className="text-xs text-muted-foreground">{user.id}</span>
             </div>
           </div>
         </TableCell>
         {statusButtons.map((status) => (
           <TableCell key={status.label} className="text-center">
             <Badge className={status.className}>
-              {status.status === DownloadStates.Fulfilled && creator.creatorProfile.fulfilledObjectCount}
-              {status.status === DownloadStates.Pending && creator.creatorProfile.pendingObjectCount}
-              {status.status === DownloadStates.Processing && creator.creatorProfile.processingObjectCount}
-              {status.status === DownloadStates.Rejected && creator.creatorProfile.rejectedObjectCount}
+              {status.status === DownloadStates.Fulfilled && user.creatorProfile.fulfilledObjectCount}
+              {status.status === DownloadStates.Pending && user.creatorProfile.pendingObjectCount}
+              {status.status === DownloadStates.Processing && user.creatorProfile.processingObjectCount}
+              {status.status === DownloadStates.Rejected && user.creatorProfile.rejectedObjectCount}
             </Badge>
           </TableCell>
         ))}
         <TableCell className="whitespace-nowrap hidden lg:table-cell">
-          <span className="text-xs">{moment(creator.createdAt).format('LT L')}</span>
+          <span className="text-xs">{moment(user.createdAt).format('LT L')}</span>
         </TableCell>
         <TableCell>
           <div className="flex items-center space-x-2">
-            <Link href={`/vaults/${creator.username}?status=${DownloadStates.Pending}`}>
+            <Link href={`/vaults/${user.username}?status=${DownloadStates.Pending}`}>
               <ApplyButtonTooltip buttonProps={{ icon: ArrowUpRight, variant: 'ghost', size: 'icon' }} tootTipTitle="Visit" />
             </Link>
 
@@ -90,7 +90,7 @@ export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpd
                   description: 'Be aware of this as this is not reversible!',
                   action: {
                     label: 'Yes',
-                    onClick: () => handleCleanUpVaultObjects(creator.id)
+                    onClick: () => handleCleanUpVaultObjects(user.id)
                   }
                 })
               }
@@ -99,9 +99,9 @@ export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpd
             <Button
               variant="ghost"
               size="icon"
-              disabled={!creator.creatorProfile.pendingObjectCount}
+              disabled={!user.creatorProfile.pendingObjectCount}
               onClick={() => setDownloadAllCreatorVaultsModal(true)}
-              title={`Download all(${creator.creatorProfile.pendingObjectCount})`}
+              title={`Download all(${user.creatorProfile.pendingObjectCount + user.creatorProfile.rejectedObjectCount})`}
             >
               <Download className="h-4 w-4" />
             </Button>
@@ -109,7 +109,7 @@ export const VaultTableRow: React.FC<Props> = ({ idx, creator, onJobAdded, onUpd
         </TableCell>
       </TableRow>
       <DownloadCreatorsAllVaultsModal
-        creator={creator}
+        user={user}
         isOpen={downloadAllCreatorVaultsModal}
         setOpen={setDownloadAllCreatorVaultsModal}
         onJobAdded={onJobAdded}

@@ -3,6 +3,8 @@
 import { AssetType, UsersEntity } from '@workspace/gql/generated/graphql';
 
 import { useMutation } from '@apollo/client/react';
+import { GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api';
+import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION } from '@workspace/gql/api/downloadAPI';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -17,18 +19,16 @@ import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION } from '@workspace/gql/api/downloadAPI';
-import { GET_CREATORS_BY_ADMIN_QUERY } from '@workspace/gql/api';
 
 interface Props {
   onJobAdded: () => unknown;
   onCancel: () => unknown;
-  creator: UsersEntity;
+  user: UsersEntity;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const DownloadCreatorsAllVaultsModal: React.FC<Props> = ({ isOpen, setOpen, creator, onCancel, onJobAdded }) => {
+export const DownloadCreatorsAllVaultsModal: React.FC<Props> = ({ isOpen, setOpen, user, onCancel, onJobAdded }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [destination, setDestination] = useState<AssetType>(AssetType.Private);
   const [uploadVaults] = useMutation(DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION, {
@@ -46,7 +46,7 @@ export const DownloadCreatorsAllVaultsModal: React.FC<Props> = ({ isOpen, setOpe
     setLoading(true);
     try {
       await uploadVaults({
-        variables: { input: { creatorIds: [creator.id] } }
+        variables: { input: { creatorIds: [user.id] } }
       });
       onJobAdded();
       toast.success('Added to queue');
@@ -62,8 +62,8 @@ export const DownloadCreatorsAllVaultsModal: React.FC<Props> = ({ isOpen, setOpe
     <Modal
       isOpen={isOpen}
       onClose={() => setOpen(false)}
-      title={`Upload started for ${creator.username}`}
-      description={`Total objects ${creator.creatorProfile.vaultCount ?? 0}`}
+      title={`Upload started for ${user.username}`}
+      description={`Total objects ${(user?.creatorProfile?.pendingObjectCount ?? 0) + (user?.creatorProfile?.rejectedObjectCount ?? 0)}`}
     >
       <div className="flex justify-center">
         <div className="gap-2 w-fit justify-self-start items-start flex">
