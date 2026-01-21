@@ -20,10 +20,11 @@ export default function CreatorVaults({ data: creatorData }: Props) {
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
   const [uploadVaultModal, setUploadVaultModal] = useState<boolean>(false);
   const [hasSelectedThirty, setHasSelectedThirty] = useState<boolean>(false);
-  const [fileType, setFileType] = useState<FileType>(FileType.Image);
+  const [take, setTake] = useState<number>(50);
+  const [fileType, setFileType] = useState<FileType>((searchParams.get('fileType') as FileType) || FileType.Image);
   const [status, setStatus] = useState<DownloadStates>((searchParams.get('status') as DownloadStates) || DownloadStates.Pending);
   const { loading, vaultObjects, hasNext, handleLoadMore } = useVaultObjects({
-    take: 50,
+    take,
     relatedUserId: creatorData!.getUser.id,
     status: status ?? DownloadStates.Pending,
     fileType
@@ -50,7 +51,20 @@ export default function CreatorVaults({ data: creatorData }: Props) {
 
   const handleSetStatus = (stat: DownloadStates) => {
     setStatus(stat);
-    router.push(`?status=${stat}`);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set('status', stat);
+
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSetFileType = (fileType: FileType) => {
+    setFileType(fileType);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set('fileType', fileType);
+
+    router.push(`?${params.toString()}`);
   };
 
   const handleCancelUploadVaultModal = () => {
@@ -73,7 +87,7 @@ export default function CreatorVaults({ data: creatorData }: Props) {
         selectedUrls={selectedUrls}
         status={status}
         fileType={fileType}
-        onSetFileType={(f) => setFileType(f)}
+        onSetFileType={(f) => handleSetFileType(f)}
       />
 
       {vaultObjects.length ? (
