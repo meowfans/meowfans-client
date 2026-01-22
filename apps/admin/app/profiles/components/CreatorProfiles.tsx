@@ -1,6 +1,6 @@
 'use client';
 
-import { Impersonate } from '@/components/Impersonate';
+import { ImpersonateCreatorTrigger } from '@/components/ImpersonateTrigger';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useCreators } from '@/hooks/useCreators';
 import { SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
@@ -11,7 +11,7 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { cn } from '@workspace/ui/lib/utils';
-import { Edit, GalleryVertical, GalleryVerticalEnd, Vault, VenetianMask } from 'lucide-react';
+import { Edit, GalleryVertical, GalleryVerticalEnd, Vault } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -121,16 +121,12 @@ export const CreatorProfiles = () => {
                         <Edit className="w-2 h-2 sm:mr-1" />
                         <span className="hidden text-xs sm:inline">Edit</span>
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setSwitchContext(creator)}>
-                        <VenetianMask className="w-2 h-2 sm:mr-1" />
-                        <span className="hidden text-xs sm:inline">Mask</span>
-                      </Button>
+                      <ImpersonateCreatorTrigger creator={creator} />
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
-            <Impersonate creator={switchContext} />
           </Table>
         </InfiniteScrollManager>
       ) : (

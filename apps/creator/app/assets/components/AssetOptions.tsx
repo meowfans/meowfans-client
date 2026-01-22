@@ -51,16 +51,7 @@ export const AssetOptions: React.FC<AssetOptions> = ({ canSelect, creatorAsset, 
         animate={{ opacity: 1, x: 0 }}
         className="absolute top-2 right-2 pointer-events-auto z-30"
       >
-        <Badge
-          className={cn(
-            'shadow-xl backdrop-blur-md transition-all duration-300 font-medium text-xs px-3 py-1 border-0',
-            creatorAsset.asset.isPosted
-              ? 'bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white'
-              : 'bg-linear-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white'
-          )}
-        >
-          {creatorAsset.asset.isPosted ? '✓ POSTED' : '⏱ IN QUEUE'}
-        </Badge>
+        <Badge className='text-xs tracking-tight' variant={creatorAsset.asset.isPosted ? 'destructive' : 'default'}>{creatorAsset.asset.isPosted ? 'POSTED' : 'QUEUE'}</Badge>
       </motion.div>
 
       <motion.div

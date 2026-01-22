@@ -43,7 +43,7 @@ export const CreatorGalleryManager = <T,>({
       {loading ? (
         <div className="flex min-h-80 items-center justify-center">Loading...</div>
       ) : items.length ? (
-        <div className={`grid md:grid-cols-6 grid-cols-3 gap-1${className ?? ''}`}>
+        <div className={`grid md:grid-cols-4 grid-cols-2 gap-1${className ?? ''}`}>
           {items.map((item, index) => (
             <CreatorGalleryItem
               key={getKey(item)}
