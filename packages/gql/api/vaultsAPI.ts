@@ -192,7 +192,6 @@ export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
         isLiked
         likeCount
         asset {
-          blurredUrl
           createdAt
           creatorId
           fileType
@@ -300,7 +299,6 @@ export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
       updatedAt
       vaultId
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType

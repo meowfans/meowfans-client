@@ -259,7 +259,6 @@ export const GET_POSTS_QUERY = graphql(`
         assetId
         createdAt
         asset {
-          blurredUrl
           createdAt
           creatorId
           fileType
@@ -370,7 +369,6 @@ export const GET_POST_ASSETS_QUERY = graphql(`
       postId
       updatedAt
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType
@@ -389,7 +387,6 @@ export const GET_POST_ASSETS_QUERY = graphql(`
 export const GET_SINGLE_POST_QUERY = graphql(`
   query GetSinglePost($input: PaginationInput!) {
     getSinglePost(input: $input) {
-      blurredPreview
       caption
       commentCount
       createdAt
@@ -448,7 +445,6 @@ export const GET_SINGLE_POST_QUERY = graphql(`
 export const GET_PUBLIC_SINGLE_POST_QUERY = graphql(`
   query GetPublicSinglePost($input: GetPostInput!) {
     getPublicSinglePost(input: $input) {
-      blurredPreview
       caption
       commentCount
       createdAt

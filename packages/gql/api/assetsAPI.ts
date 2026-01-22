@@ -12,7 +12,6 @@ export const GET_ALL_ASSETS_QUERY = graphql(`
         id
         type
         asset {
-          blurredUrl
           createdAt
           fileType
           id
@@ -48,7 +47,6 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
       id
       type
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType
@@ -66,7 +64,6 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
 export const GET_PUBLIC_SHORTS_ASSETS_QUERY = graphql(`
   query GetPublicShortsAssets($input: PaginationInput!) {
     getPublicShortsAssets(input: $input) {
-      blurredUrl
       createdAt
       creatorId
       fileType
@@ -107,7 +104,6 @@ export const GET_PUBLIC_ASSETS = graphql(`
       id
       type
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType
@@ -166,7 +162,6 @@ export const GET_PUBLIC_CREATOR_ASSETS_QUERY = graphql(`
       id
       type
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType
@@ -220,7 +215,6 @@ export const UPDATE_ASSETS_MUTATION = graphql(`
       id
       type
       asset {
-        blurredUrl
         createdAt
         creatorId
         fileType
