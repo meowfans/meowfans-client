@@ -2,7 +2,6 @@
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { configService } from '@/util/config';
-import { buildSafeUrl } from '@/util/helpers';
 import { useMutation } from '@apollo/client/react';
 import { ISSUE_IMPERSONATE_TOKEN_MUTATION } from '@workspace/gql/api';
 import { UsersEntity } from '@workspace/gql/generated/graphql';
@@ -10,10 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/av
 import { Button } from '@workspace/ui/components/button';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
-import { adminCookieKey, creatorCookieKey, impersonatedCreatorId, MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
-import { decodeJwtToken } from '@workspace/ui/lib/helpers';
+import { creatorCookieKey, MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
+import { buildSafeUrl } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 
 interface ImpersonateProps {
@@ -31,15 +30,9 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
 
   const handleStartImpersonation = async (creatorId: string) => {
     try {
-      const existingCookieKey = getCookie(adminCookieKey);
-      setCookie(adminCookieKey, existingCookieKey);
-
       const { data } = await startImpersonation({ variables: { creatorId } });
 
       setCookie(creatorCookieKey, data?.issueImpersonationToken);
-      const decodedToken = decodeJwtToken(data?.issueImpersonationToken);
-      setCookie(impersonatedCreatorId, decodedToken?.sub);
-
       setSwitchContext(creator);
 
       successHandler({ isEnabledConfetti: true, message: 'Impersonation session has started' });
@@ -48,20 +41,13 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
     }
   };
 
-  const handleSwitchToCreator = () => {
-    handleStartImpersonation(creator.id);
-    router.replace(buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL }));
+  const handleSwitchToCreator = async () => {
+    await handleStartImpersonation(creator.id);
+    window.location.href = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL });
   };
 
   const handleCancelImpersonation = () => {
-    const adminToken = getCookie(adminCookieKey);
-
-    if (adminToken) {
-      setCookie(adminCookieKey, adminToken);
-    }
-
-    deleteCookie(adminCookieKey);
-    deleteCookie(impersonatedCreatorId);
+    deleteCookie(creatorCookieKey);
 
     setSwitchContext(null);
     router.refresh();

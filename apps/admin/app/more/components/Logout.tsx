@@ -1,8 +1,7 @@
 import { configService } from '@/util/config';
-import { buildSafeUrl } from '@/util/helpers';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
-import { adminCookieKey, adminRefreshCookieKey, authCookieKey, authRefreshCookieKey } from '@workspace/ui/lib';
+import { adminCookieKey, adminRefreshCookieKey, authCookieKey, authRefreshCookieKey, buildSafeUrl } from '@workspace/ui/lib';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 

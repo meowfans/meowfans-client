@@ -16,7 +16,7 @@ export const AppHeader: React.FC<Props> = ({ header }) => {
 
   return !pathname.startsWith('/channels') ? (
     <header
-      className={`${bgColor} sticky top-0 z-50 border-b
+      className={`${bgColor} sticky top-0 z-40 border-b
         bg-linear-to-bl from-background
          to-(--background)/80 backdrop-blur-md
           px-4 py-2 flex flex-col w-full`}

@@ -1,15 +1,14 @@
 import { DownloadStates } from '@workspace/gql/generated/graphql';
 import {
   AudioWaveform,
-  ChartLine,
-  CircleDollarSign,
   CircleUserRound,
   Command,
   GalleryVerticalEnd,
   Home,
+  HomeIcon,
   LayoutDashboard,
-  Mails,
-  Settings
+  Settings,
+  Settings2
 } from 'lucide-react';
 
 export const authenticatedPaths = ['/home', '/assets', '/profiles', '/more', '/vaults'];
@@ -29,12 +28,11 @@ export enum ProfileCharts {
 }
 
 export const appBottomNavButtonOptions = [
-  { icon: Home, title: 'Vaults', path: '/vaults' },
-  { icon: Mails, title: 'Channels', path: '/channels' },
-  { icon: ChartLine, title: 'Analytics', path: '/analytics' },
+  { icon: Settings2, title: 'Settings', path: '/more' },
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
-  { icon: CircleDollarSign, title: 'Subscriptions', path: '/subscriptions' },
-  { icon: CircleUserRound, title: 'Profiles', path: '/profiles' }
+  { icon: Home, title: 'Vaults', path: '/vaults' },
+  { icon: CircleUserRound, title: 'Profiles', path: '/profiles' },
+  { icon: HomeIcon, title: 'Subscriptions', path: '/home' }
 ];
 
 export const appSideBarButtonOptions = {
