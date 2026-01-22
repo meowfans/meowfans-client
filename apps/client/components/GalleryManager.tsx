@@ -66,7 +66,6 @@ export const GalleryManager = <T,>({
             title="Take a look"
             className="block relative w-full h-full overflow-hidden"
           >
-            {/* {!renderOptionsOnMobile && ( */}
             <div className="absolute top-0 left-0 z-20 m-1">
               <MultipleObjectsIcon hasMultiple={(getObjectsLength?.(item) ?? 0) > 1} />
             </div>
