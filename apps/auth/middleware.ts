@@ -1,53 +1,53 @@
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
 import { authCookieKey } from '@workspace/ui/lib/constants';
-import { UserRoles } from '@workspace/ui/lib/enums';
+import { AuthUserRoles, FetchMethods } from '@workspace/ui/lib/enums';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   // Build forward headers
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-params', `${pathname}${search}`);
-  requestHeaders.set('x-pathname', pathname);
-  requestHeaders.set('x-search', search);
+  const headers = new Headers(request.headers);
+  headers.set('x-params', `${pathname}${search}`);
+  headers.set('x-pathname', pathname);
+  headers.set('x-search', search);
 
-  const accessToken = request.cookies.get(authCookieKey)?.value;
+  const token = request.cookies.get(authCookieKey)?.value;
 
   // No token → allow auth pages but forward headers
-  if (!accessToken) return NextResponse.next({ request: { headers: requestHeaders } });
+  if (!token) return NextResponse.next({ request: { headers } });
 
   try {
     const verifyUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_API_URL, pathname: '/auth/verify' });
 
     const res = await fetch(verifyUrl, {
-      method: 'POST',
+      body: JSON.stringify({ token }),
+      method: FetchMethods.POST,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store'
-      },
-      body: JSON.stringify({ token: accessToken })
+      }
     });
 
     // Invalid / expired token → stay on auth app
-    if (!res.ok) return NextResponse.next({ request: { headers: requestHeaders } });
+    if (!res.ok) return NextResponse.next({ request: { headers } });
 
     const { roles } = (await res.json()) as { roles?: string[] };
     const role = roles?.[0];
 
-    if (!role) return NextResponse.next({ request: { headers: requestHeaders } });
+    if (!role) return NextResponse.next({ request: { headers } });
 
     switch (role) {
-      case UserRoles.ADMIN:
+      case AuthUserRoles.ADMIN:
         return NextResponse.redirect(
           buildSafeUrl({
             host: configService.NEXT_PUBLIC_ADMIN_URL,
-            pathname: '/vaults'
+            pathname: '/home'
           })
         );
 
-      case UserRoles.CREATOR:
+      case AuthUserRoles.CREATOR:
         return NextResponse.redirect(
           buildSafeUrl({
             host: configService.NEXT_PUBLIC_CREATOR_URL,
@@ -64,6 +64,6 @@ export async function middleware(request: NextRequest) {
         );
     }
   } catch {
-    return NextResponse.next({ request: { headers: requestHeaders } });
+    return NextResponse.next({ request: { headers } });
   }
 }

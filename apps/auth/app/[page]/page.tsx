@@ -7,7 +7,7 @@ import { buildSafeUrl } from '@/util/helpers';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { RetroGrid } from '@workspace/ui/components/shadcn-io/retro-grid';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { AppSizes, AuthPaths, LoginInput, SignupInput, UserRoles } from '@workspace/ui/lib/enums';
+import { AppSizes, AuthPaths, AuthUserRoles, LoginInput, SignupInput } from '@workspace/ui/lib/enums';
 import { CreatorSignupInput } from '@workspace/ui/lib/types';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
@@ -27,9 +27,12 @@ export default function Auth() {
   const { login, signup, creatorSignup } = useAPI();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const creatorAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/studio' });
-  const fanAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/dashboard' });
-  const adminAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL, pathname: '/vaults' });
+  const redirectUrlMap = {
+    [AuthUserRoles.CREATOR]: buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/studio' }),
+    [AuthUserRoles.ADMIN]: buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL, pathname: '/home' }),
+    [AuthUserRoles.FAN]: buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/dashboard' }),
+    [AuthUserRoles.SUPER_VIEWER]: buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/dashboard' })
+  };
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>, input: LoginInput) => {
     e.preventDefault();
@@ -37,18 +40,10 @@ export default function Auth() {
 
     try {
       const { roles } = await login(input);
-      const role = roles?.at(0) as UserRoles;
-
-      switch (role) {
-        case UserRoles.ADMIN:
-          return router.push(adminAppUrl);
-        case UserRoles.CREATOR:
-          return router.push(creatorAppUrl);
-        case UserRoles.FAN:
-          return router.push(fanAppUrl);
-      }
+      const role = roles?.at(0) as AuthUserRoles;
 
       toast.success('Logged in');
+      return router.push(redirectUrlMap[role]);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -63,7 +58,7 @@ export default function Auth() {
     try {
       await signup(input);
 
-      return router.push(fanAppUrl);
+      return router.push(redirectUrlMap[AuthUserRoles.FAN]);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -79,7 +74,7 @@ export default function Auth() {
       await creatorSignup(input);
 
       toast.success('Logged in');
-      return router.push(creatorAppUrl);
+      return router.push(redirectUrlMap[AuthUserRoles.CREATOR]);
     } catch (error) {
       errorHandler({ error });
     } finally {

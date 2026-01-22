@@ -1,22 +1,12 @@
-import { configService } from '@/util/config';
-import { buildSafeUrl } from '@/util/helpers';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
-import { authCookieKey } from '@workspace/ui/lib';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
-import { deleteCookie } from 'cookies-next';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface Props {
   setTerminateAccountModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TerminateAccount: React.FC<Props> = ({ setTerminateAccountModal }) => {
-  const router = useRouter();
-  const handleLogout = () => {
-    deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
-    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL }));
-  };
   return (
     <Card className="flex">
       <CardHeader>

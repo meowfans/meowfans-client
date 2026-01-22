@@ -10,11 +10,11 @@ import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api/fanAPI';
-import { FanProfilesEntity } from '@workspace/gql/generated/graphql';
+import { FanProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
-import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
+import { AuthUserRoles, buildSafeUrl, decodeJwtToken, fanCookieKey, FetchMethods } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
@@ -78,7 +78,7 @@ const verifyAccessToken = async (token: string) => {
 
 const getStatus = async () => {
   try {
-    const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
+    const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
     const client = await getClient();
     const { data } = await client.query({ query: GET_FAN_PROFILE_QUERY });
     return data?.getFanProfile as FanProfilesEntity;
@@ -89,7 +89,7 @@ const getStatus = async () => {
 
 const handleValidateAuth = async () => {
   const cookiesList = await cookies();
-  const accessToken = cookiesList.get(authCookieKey)?.value;
+  const accessToken = cookiesList.get(fanCookieKey)?.value;
   const decodedToken = decodeJwtToken(accessToken);
 
   if (!accessToken || !decodedToken) return null;
@@ -98,9 +98,9 @@ const handleValidateAuth = async () => {
     await verifyAccessToken(accessToken);
 
     switch (decodedToken.roles?.[0]) {
-      case UserRoles.ADMIN:
+      case AuthUserRoles.ADMIN:
         return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL }));
-      case UserRoles.CREATOR:
+      case AuthUserRoles.CREATOR:
         return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL }));
     }
 
@@ -111,7 +111,7 @@ const handleValidateAuth = async () => {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await handleValidateAuth();
+  const fan = await handleValidateAuth();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -138,8 +138,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
       <body className={cn(inter.variable, 'overscroll-none')}>
-        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
-          <UserContextWrapper user={user}>
+        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Fan}>
+          <UserContextWrapper fan={fan}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <AgeConfirmation />
               <SidebarProvider>

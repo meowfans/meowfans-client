@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { ButtonHTMLAttributes, ClassAttributes } from 'react';
-import { FileType, MediaType, TokenType, UserRoles } from './enums';
+import { AuthUserRoles, FileType, MediaType, TokenType } from './enums';
 
 export interface JwtUser {
   sub: string; // holds userId
@@ -9,7 +9,7 @@ export interface JwtUser {
   exp: number; // expiration time
   version: string;
   type: TokenType;
-  roles: UserRoles[];
+  roles: AuthUserRoles[];
   ip: string;
   admin?: JwtUser;
   impersonating: boolean;

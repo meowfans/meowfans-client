@@ -10,11 +10,11 @@ export const UserContext = createContext<[FanProfilesEntity | null, React.Dispat
 
 interface Props {
   children: React.ReactNode;
-  user: FanProfilesEntity | null;
+  fan: FanProfilesEntity | null;
 }
 
-export function UserContextWrapper({ children, user }: Props) {
-  const [userInfo, setUserInfo] = useState<FanProfilesEntity | null>(user);
+export function UserContextWrapper({ children, fan }: Props) {
+  const [userInfo, setUserInfo] = useState<FanProfilesEntity | null>(fan);
 
   return <UserContext.Provider value={[userInfo, setUserInfo]}>{children}</UserContext.Provider>;
 }

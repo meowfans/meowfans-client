@@ -8,11 +8,11 @@ import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
-import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
+import { CreatorProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
-import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
+import { adminCookieKey, AuthUserRoles, buildSafeUrl, decodeJwtToken, FetchMethods } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
@@ -77,7 +77,7 @@ const verifyAccessToken = async (token: string) => {
 };
 
 const getUser = async () => {
-  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
+  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Admin);
   const client = await getClient();
   const { data } = await client.query({ query: GET_CREATOR_PROFILE_QUERY });
   return data?.getCreatorProfile as CreatorProfilesEntity;
@@ -85,24 +85,24 @@ const getUser = async () => {
 
 const handleValidateAuth = async () => {
   const cookiesList = await cookies();
-  const accessToken = cookiesList.get(authCookieKey)?.value;
+  const accessToken = cookiesList.get(adminCookieKey)?.value;
   const decodedToken = decodeJwtToken(accessToken);
 
-  if (decodedToken && !decodedToken.impersonating && !decodedToken.roles.includes(UserRoles.ADMIN)) {
+  if (decodedToken && !decodedToken.impersonating && !decodedToken.roles.includes(AuthUserRoles.ADMIN)) {
     return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   }
 
   if (!accessToken) return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   try {
     const response = await verifyAccessToken(accessToken);
-    if (response !== null) return await getUser();
+    if (response) return await getUser();
   } catch {
     return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   }
 };
 
 export default async function RootLayout({ children }: Props) {
-  const accessToken = (await cookies()).get(authCookieKey)?.value;
+  const accessToken = (await cookies()).get(adminCookieKey)?.value;
   const decodedToken = decodeJwtToken(accessToken);
 
   const admin = await handleValidateAuth();
@@ -119,7 +119,7 @@ export default async function RootLayout({ children }: Props) {
       </head>
 
       <body className={cn(inter.variable, 'overscroll-none')}>
-        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
+        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Admin}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
             {decodedToken?.impersonating ? (
               <ImpersonationReturnGuard />

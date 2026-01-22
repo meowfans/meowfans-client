@@ -2,13 +2,12 @@
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { authCookieKey } from '@workspace/ui/lib';
 import { configService } from '@/util/config';
-import { buildSafeUrl } from '@workspace/ui/lib';
+import { Button } from '@workspace/ui/components/button';
+import { authCookieKey, authRefreshCookieKey, buildSafeUrl, fanCookieKey, fanRefreshCookieKey } from '@workspace/ui/lib';
+import { Modal } from '@workspace/ui/modals/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { Button } from '@workspace/ui/components/button';
-import { Modal } from '@workspace/ui/modals/Modal';
 
 export const LogoutModal = () => {
   const { openLogoutModal, setOpenLogoutModal } = useUtilsStore();
@@ -16,7 +15,11 @@ export const LogoutModal = () => {
   const { setFan } = useFan();
 
   const handleLogout = () => {
+    deleteCookie(fanCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(fanRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+
     deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL }));
     setFan(null);
   };

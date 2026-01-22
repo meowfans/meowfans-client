@@ -3,9 +3,18 @@ export const MEOW_FANS_AVATAR = 'https://meowfans-media.sfo3.cdn.digitaloceanspa
 
 export const authRefreshCookieKey = '_rt';
 export const authCookieKey = '_at';
-export const impersonatedCreatorId = '_ici'
 
-export const adminCookieKey = '_act'
+export const fanCookieKey = '_fat';
+export const fanRefreshCookieKey = '_frt';
+
+export const adminCookieKey = '_aat';
+export const adminRefreshCookieKey = '_art';
+
+export const creatorCookieKey = '_cat';
+export const creatorRefreshCookieKey = '_crt';
+
+export const impersonatedCreatorId = '_ici';
+
 export const THEME = '_theme';
 
 export const OK_URI = 'https://ok.xxx/albums';
