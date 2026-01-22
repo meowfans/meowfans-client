@@ -23,6 +23,7 @@ export const ImpersonateCreatorSheet = () => {
       return;
     }
     await loadCreator(username.trim());
+    setSwitchContext(user);
   };
 
   const handleStartImpersonation = () => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { configService } from '@/util/config';
+import { Button } from '@workspace/ui/components/button';
 import { creatorCookieKey } from '@workspace/ui/lib/constants';
 import { buildSafeUrl, decodeJwtToken } from '@workspace/ui/lib/helpers';
 import { deleteCookie, getCookie } from 'cookies-next';
@@ -46,9 +47,20 @@ export const ImpersonationCountdown = () => {
   const minutes = Math.floor(remainingMs / 60000);
   const seconds = Math.floor((remainingMs % 60000) / 1000);
 
+  const handleCancelImpersonation = () => {
+    deleteCookie(creatorCookieKey);
+    window.location.href = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL });
+  };
+
   return (
-    <div className="sticky top-0 z-50 bg-yellow-100 text-yellow-900 text-sm px-4 py-2 text-center">
-      Impersonation session ends in {minutes}:{seconds.toString().padStart(2, '0')}
+    <div className="sticky top-0 z-50 flex flex-row justify-between content-center bg-yellow-100">
+      <p className=" text-yellow-900 text-sm px-4 py-2 text-center">
+        Impersonation session ends in {minutes}:{seconds.toString().padStart(2, '0')}
+      </p>
+
+      <Button className="cursor-pointer m-2" onClick={handleCancelImpersonation}>
+        End impersonation
+      </Button>
     </div>
   );
 };

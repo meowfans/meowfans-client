@@ -8,7 +8,8 @@ import { Checkbox } from '@workspace/ui/components/checkbox';
 import { TableCell, TableRow } from '@workspace/ui/components/table';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { ArrowUpRight, Download, Redo } from 'lucide-react';
+import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { ArrowUpRight, Copy, CopyCheck, Download, Redo } from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -25,6 +26,9 @@ interface Props {
 }
 
 export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdateCreator, isSelected, onSelect }) => {
+  const { errorHandler } = useErrorHandler();
+  const [usernameCopied, setUsernameCopied] = useState<string | null>(null);
+  const [userIdCopied, setUserIdCopied] = useState<string | null>(null);
   const [downloadAllCreatorVaultsModal, setDownloadAllCreatorVaultsModal] = useState<boolean>(false);
   const [cleanUpVaultObjects] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
 
@@ -47,6 +51,25 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
     }
   };
 
+  const handleCopy = async (url: string, type: 'id' | 'username') => {
+    try {
+      await navigator.clipboard.writeText(url);
+      if (type === 'username') setUsernameCopied(url);
+      else setUserIdCopied(url);
+
+      toast.success('Copied to clipboard', {
+        description: url
+      });
+
+      setTimeout(() => {
+        setUserIdCopied(null);
+        setUsernameCopied(null);
+      }, 2000);
+    } catch (error) {
+      errorHandler({ error });
+    }
+  };
+
   return (
     <>
       <TableRow>
@@ -58,7 +81,14 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
           <div className="flex items-center space-x-2">
             <SAvatar url={user.avatarUrl} fallback="cr" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm">{user.username}</span>
+              <div className="flex flex-row content-center space-x-1">
+                <ApplyButtonTooltip
+                  buttonProps={{ icon: usernameCopied ? CopyCheck : Copy, variant: 'ghost', size: 'sm' }}
+                  tootTipTitle="Copy username"
+                  onClick={() => handleCopy(user.username, 'username')}
+                />
+                <span className="font-bold text-sm">{user.username}</span>
+              </div>
               <span className="text-xs text-muted-foreground">{user.id}</span>
             </div>
           </div>
@@ -78,6 +108,12 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
         </TableCell>
         <TableCell>
           <div className="flex items-center space-x-2">
+            <ApplyButtonTooltip
+              buttonProps={{ icon: userIdCopied ? CopyCheck : Copy, variant: 'ghost', size: 'icon' }}
+              tootTipTitle="Copy userId"
+              onClick={() => handleCopy(user.id, 'id')}
+            />
+
             <Link href={`/vaults/${user.username}?status=${DownloadStates.Pending}`}>
               <ApplyButtonTooltip buttonProps={{ icon: ArrowUpRight, variant: 'ghost', size: 'icon' }} tootTipTitle="Visit" />
             </Link>

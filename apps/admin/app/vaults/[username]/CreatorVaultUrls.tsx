@@ -5,7 +5,7 @@ import { Button } from '@workspace/ui/components/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Edit, GalleryVertical, Link } from 'lucide-react';
+import { Copy, CopyCheck, Edit, GalleryVertical } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -17,15 +17,14 @@ interface Props {
 }
 
 export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLoading, vaultObjects }) => {
-  const [copied, setCopied] = useState(false);
-  const [selectedVaultObject, setSelectedVaultObject] = useState<VaultObjectsEntity>({} as VaultObjectsEntity);
+  const [copied, setCopied] = useState<string | null>(null);
 
-  const handleCopy = async () => {
+  const handleCopy = async (url: string) => {
     try {
-      await navigator.clipboard.writeText(selectedVaultObject.objectUrl);
-      setCopied(true);
+      await navigator.clipboard.writeText(url);
+      setCopied(url);
       toast.success('Copied to clipboard');
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(null), 2000);
     } catch {
       toast.error('Failed to copy link');
     }
@@ -65,9 +64,7 @@ export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLo
 
       <TableBody>
         {vaultObjects.map((vaultObject) => {
-          const user = vaultObject.vault?.creatorProfile?.user;
           const status = statusVariants[vaultObject.status];
-
           return (
             <TableRow key={vaultObject.id} className={cn('hover:bg-muted/30 transition-colors')}>
               <TableCell className="sticky left-0 bg-card text-center">
@@ -83,7 +80,7 @@ export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLo
               </TableCell>
 
               <TableCell className="text-center">
-                {vaultObject.status !== DownloadStates.Processing && vaultObject.status !== DownloadStates.Fulfilled && (
+                {![DownloadStates.Processing, DownloadStates.Fulfilled].includes(vaultObject.status) && (
                   <input
                     type="checkbox"
                     className="h-4 w-4"
@@ -100,16 +97,8 @@ export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLo
                 <div className="flex items-center gap-2 max-w-md">
                   <span className="truncate text-xs text-blue-600 hover:underline">{vaultObject.objectUrl}</span>
 
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-6 w-6"
-                    onClick={() => {
-                      setSelectedVaultObject(vaultObject);
-                      handleCopy();
-                    }}
-                  >
-                    <Link className="h-3 w-3" />
+                  <Button size="icon" variant="outline" className="h-6 w-6" onClick={() => handleCopy(vaultObject.objectUrl)}>
+                    {copied === vaultObject.objectUrl ? <CopyCheck className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                   </Button>
 
                   <Button size="icon" variant="outline" className="h-6 w-6" asChild>
