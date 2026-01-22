@@ -1,6 +1,7 @@
 'use client';
 
 import { AppHeader } from '@/components/AppHeader';
+import { ImpersonationCountdown } from '@/components/ImpersonationCountdown';
 import { useNormalizePath } from '@/hooks/useNormalizePath';
 import { useBackground } from '@workspace/ui/hooks/useBackground';
 
@@ -18,6 +19,7 @@ export default function RootTemplate({ children }: Props) {
         <div>{children}</div>
       ) : (
         <div className={bgColor}>
+          <ImpersonationCountdown />
           <AppHeader />
           {children}
         </div>

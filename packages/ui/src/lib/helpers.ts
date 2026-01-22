@@ -1,5 +1,5 @@
 import confetti from 'canvas-confetti';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
 import { adminCookieKey, authCookieKey, creatorCookieKey, fanCookieKey } from './constants';
 import { FileType } from './enums';
@@ -76,6 +76,20 @@ export const decodeJwtToken = (token?: string): JwtUser | null => {
     return jwtDecode(token);
   } catch {
     return null;
+  }
+};
+
+export const deleteImpersonationTokenAfterSessionEnds = async () => {
+  const creatorCookie = getCookie(creatorCookieKey) as string;
+  if (!creatorCookie) return;
+
+  const decoded = decodeJwtToken(creatorCookie);
+  if (!decoded?.impersonating || !decoded.exp) return;
+
+  const expiresAtMs = decoded.exp * 1000;
+
+  if (Date.now() > expiresAtMs) {
+    deleteCookie(creatorCookieKey);
   }
 };
 

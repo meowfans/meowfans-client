@@ -3,7 +3,6 @@
 import { Impersonate } from '@/components/Impersonate';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useCreators } from '@/hooks/useCreators';
-import { ImpersonatedCreatorID } from '@/util/helpers';
 import { SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
@@ -21,7 +20,7 @@ export const CreatorProfiles = () => {
   const searchParams = useSearchParams();
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
   const topRef = useRef<HTMLDivElement>(null);
-  const { setSwitchContext,switchContext } = useUtilsStore();
+  const { setSwitchContext, switchContext } = useUtilsStore();
   const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
   const { creators, hasNext, loading } = useCreators({ pageNumber, sortBy: SortBy.AssetCount, orderBy: SortOrder.Desc });
 
@@ -68,10 +67,7 @@ export const CreatorProfiles = () => {
 
             <TableBody>
               {allCreators.map((creator) => (
-                <TableRow
-                  key={creator.id}
-                  className={cn('hover:bg-muted/30 transition-colors', ImpersonatedCreatorID(creator.id) ? 'bg-red-400' : '')}
-                >
+                <TableRow key={creator.id} className={cn('hover:bg-muted/30 transition-colors')}>
                   <TableCell className="sticky left-0 z-10 bg-card" id="name-cell">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-4 w-4 sm:h-10 sm:w-10">

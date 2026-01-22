@@ -1,6 +1,5 @@
 'use client';
 
-import { ImpersonatedCreatorID } from '@/util/helpers';
 import { DownloadStates, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
@@ -70,10 +69,7 @@ export const CreatorVaultUrls: React.FC<Props> = ({ selectedUrls, onToggle, isLo
           const status = statusVariants[vaultObject.status];
 
           return (
-            <TableRow
-              key={vaultObject.id}
-              className={cn('hover:bg-muted/30 transition-colors', ImpersonatedCreatorID(vaultObject.id) && 'bg-red-400')}
-            >
+            <TableRow key={vaultObject.id} className={cn('hover:bg-muted/30 transition-colors')}>
               <TableCell className="sticky left-0 bg-card text-center">
                 <motion.span
                   key={vaultObject.status}

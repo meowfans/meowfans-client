@@ -1,6 +1,5 @@
 import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
-import { ImpersonationReturnGuard } from '@/components/modals/ImpersonationGuard';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -84,11 +83,10 @@ const getUser = async () => {
 };
 
 const handleValidateAuth = async () => {
-  const cookiesList = await cookies();
-  const accessToken = cookiesList.get(adminCookieKey)?.value;
+  const accessToken = (await cookies()).get(adminCookieKey)?.value;
   const decodedToken = decodeJwtToken(accessToken);
 
-  if (decodedToken && !decodedToken.impersonating && !decodedToken.roles.includes(AuthUserRoles.ADMIN)) {
+  if (decodedToken && !decodedToken.roles.includes(AuthUserRoles.ADMIN)) {
     return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   }
 
@@ -102,9 +100,6 @@ const handleValidateAuth = async () => {
 };
 
 export default async function RootLayout({ children }: Props) {
-  const accessToken = (await cookies()).get(adminCookieKey)?.value;
-  const decodedToken = decodeJwtToken(accessToken);
-
   const admin = await handleValidateAuth();
 
   return (
@@ -121,22 +116,18 @@ export default async function RootLayout({ children }: Props) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Admin}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
-            {decodedToken?.impersonating ? (
-              <ImpersonationReturnGuard />
-            ) : (
-              <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                <SidebarProvider defaultOpen>
-                  <div className="flex h-screen w-full overflow-hidden">
-                    <AppSidebar />
-                    <SidebarInset className="flex flex-1 flex-col min-w-0">
-                      <Toaster position="top-center" closeButton richColors theme="system" />
-                      <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
-                    </SidebarInset>
-                  </div>
-                </SidebarProvider>
-                <AppBottomNav />
-              </ThemeProvider>
-            )}
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <SidebarProvider defaultOpen>
+                <div className="flex h-screen w-full overflow-hidden">
+                  <AppSidebar />
+                  <SidebarInset className="flex flex-1 flex-col min-w-0">
+                    <Toaster position="top-center" closeButton richColors theme="system" />
+                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
+                  </SidebarInset>
+                </div>
+              </SidebarProvider>
+              <AppBottomNav />
+            </ThemeProvider>
           </AdminContextWrapper>
         </ApolloWrapper>
       </body>

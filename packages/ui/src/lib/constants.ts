@@ -13,8 +13,6 @@ export const adminRefreshCookieKey = '_art';
 export const creatorCookieKey = '_cat';
 export const creatorRefreshCookieKey = '_crt';
 
-export const impersonatedCreatorId = '_ici';
-
 export const THEME = '_theme';
 
 export const OK_URI = 'https://ok.xxx/albums';
