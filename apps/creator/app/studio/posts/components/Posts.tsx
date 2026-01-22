@@ -2,7 +2,7 @@
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { usePosts } from '@/hooks/usePosts';
-import { PostTypes, SortOrder } from '@workspace/gql/generated/graphql';
+import { PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
@@ -25,9 +25,10 @@ export const Posts = () => {
 
   const { posts, hasMore, loading, handleLoadMore } = usePosts({
     take: 30,
-    searchTerm: searchTerm || undefined,
+    orderBy,
     postTypes: postType,
-    orderBy
+    sortBy: SortBy.PostCreatedAt,
+    searchTerm: searchTerm || undefined
   });
 
   return (
