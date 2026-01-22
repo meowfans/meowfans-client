@@ -1,6 +1,5 @@
 'use client';
 
-import { Impersonate } from '@/components/Impersonate';
 import { DeleteAllAssetsModal } from '@/components/modals/DeleteAllAssetsModal';
 import { UpdateAllCreatorProfilesModal } from '@/components/modals/UpdateAllCreatorProfilesModal';
 import { UpdatePreviewOfVaultsModal } from '@/components/modals/UpdatePreviewOfVaultsModal';
@@ -57,7 +56,6 @@ export const Home = () => {
             modalText="Delete your assets"
           />
           <UpdateAllCreatorProfilesModal isOpen={openUpdateAllCreatorsModal} onClose={() => setOpenUpdateAllCreatorsModal(false)} />
-          {/* Single-creator tools (mobile + desktop sheet) */}
           <ImpersonateCreatorSheet />
         </div>
 
@@ -91,10 +89,7 @@ export const Home = () => {
           </CardContent>
         </Card>
       </div>
-
       <DeleteAllAssetsModal isOpen={deleteAllAssetsModal} setOpen={setDeleteAllAssetsModal} />
-      {/* Global impersonation modal controlled via utils store */}
-      <Impersonate creator={switchContext} />
     </PageManager>
   );
 };

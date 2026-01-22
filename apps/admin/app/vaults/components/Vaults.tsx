@@ -6,8 +6,6 @@ import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
 import { DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
-import { Checkbox } from '@workspace/ui/components/checkbox';
-import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Paginate } from '@workspace/ui/globals/Paginate';
@@ -16,7 +14,6 @@ import { ScrollToTheTop } from '@workspace/ui/globals/ScrollToTheTop';
 import { useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { VaultTableRow } from './VaultTableRow';
-import { VaultUrls } from './VaultUrls';
 import { VaultsHeader, statusButtons } from './VaultsHeader';
 
 export const Vaults = () => {
@@ -75,7 +72,7 @@ export const Vaults = () => {
   };
 
   return (
-    <PageManager className="flex flex-col h-screen overflow-hidden">
+    <PageManager>
       <VaultsHeader
         sortBy={sortBy}
         onSortBy={(val) => setSortBy(val)}
@@ -88,81 +85,54 @@ export const Vaults = () => {
         selectedCreatorIds={selectedCreatorIds}
         onFilterBy={(stats) => setFilterBy(stats)}
       />
-
-      <div className="flex-1 overflow-hidden relative">
+      <div className="overflow-x-auto">
+        <div ref={topRef} />
         {sortedVaults && sortedVaults.length ? (
-          <>
-            <div className="block md:hidden h-full">
-              <ScrollArea className="h-full w-full p-1">
-                <div ref={topRef} />
-                {sortedVaults.map((user, idx) => (
-                  <div key={user.id ?? idx} className="flex flex-col rounded-md border my-1 p-2">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Checkbox
-                        checked={selectedCreatorIds.includes(user.id)}
-                        onCheckedChange={() => toggleCreatorSelection(user.id)}
-                      />
-                      <span className="text-sm">{user.id}</span>
+          <Table className="overflow-x-auto">
+            <TableHeader className="z-30 bg-muted/50 backdrop-blur">
+              <TableRow>
+                <TableHead className="sticky left-0 z-20 bg-card">User</TableHead>
+                <TableHead className="w-12.5"></TableHead>
+                {statusButtons.map((status) => (
+                  <TableHead key={status.label} className="text-center">
+                    <div className="flex items-center gap-2 justify-center" title={status.label}>
+                      {status.icon}
+                      <span className="capitalize inline-block">{status.label}</span>
                     </div>
-                    <VaultUrls idx={idx} user={user} onJobAdded={handleRefetch} onUpdateCreator={handleUpdateCreator} />
-                  </div>
+                  </TableHead>
                 ))}
-                <div ref={endRef} />
-              </ScrollArea>
-            </div>
-
-            <div className="hidden md:block h-full">
-              <ScrollArea className="h-full w-full rounded-md border">
-                <div ref={topRef} />
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-12.5"></TableHead>
-                      <TableHead className="w-12.5">#</TableHead>
-                      <TableHead>user</TableHead>
-                      {statusButtons.map((status) => (
-                        <TableHead key={status.label} className="text-center">
-                          <div className="flex items-center gap-2 justify-center" title={status.label}>
-                            {status.icon}
-                            <span className="capitalize hidden lg:inline-block">{status.label}</span>
-                          </div>
-                        </TableHead>
-                      ))}
-                      <TableHead className="hidden lg:table-cell">Created At</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {sortedVaults.map((user, idx) => (
-                      <VaultTableRow
-                        key={user.id ?? idx}
-                        idx={idx}
-                        user={user}
-                        onJobAdded={handleRefetch}
-                        onUpdateCreator={handleUpdateCreator}
-                        isSelected={selectedCreatorIds.includes(user.id)}
-                        onSelect={() => toggleCreatorSelection(user.id)}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
-                <div ref={endRef} />
-              </ScrollArea>
-            </div>
-          </>
+                <TableHead className="table-cell">Created At</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedVaults.map((user, idx) => (
+                <VaultTableRow
+                  key={user.id ?? idx}
+                  idx={idx}
+                  user={user}
+                  onJobAdded={handleRefetch}
+                  onUpdateCreator={handleUpdateCreator}
+                  isSelected={selectedCreatorIds.includes(user.id)}
+                  onSelect={() => toggleCreatorSelection(user.id)}
+                />
+              ))}
+            </TableBody>
+          </Table>
         ) : (
           <div className="text-center p-4">
             <p>✨Looks like there is nothing here✨</p>
           </div>
         )}
-
-        <div className="absolute bottom-4 right-4 z-10 flex gap-2">
-          <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
-          <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
-        </div>
+        <div ref={endRef} />
       </div>
 
-      <div className="p-2 border-t bg-background z-10">
+      <div className="sticky bottom-4 right-4 z-10 flex gap-2">
+        <ScrollToTheTop onClick={() => handleScrollToTheTop(topRef)} />
+        <ScrollToTheBottom onClick={() => handleScrollToTheEnd(endRef)} />
+      </div>
+
+      <div className="p-2 sticky md:bottom-0 bottom-16 border-t bg-background z-10">
         <Paginate
           hasNext={!!hasNext}
           hasPrev={!!hasPrev}

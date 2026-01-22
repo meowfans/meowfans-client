@@ -60,7 +60,7 @@ export const Assets = () => {
             <TableBody>
               {creators.map((creator) => (
                 <TableRow key={creator.id} className="group hover:bg-muted/30 transition-colors">
-                  <TableCell className="p-2 sm:p-4 sticky left-0">
+                  <TableCell className="p-2 sm:p-4 sticky left-0 bg-card">
                     <div className="flex items-center gap-3 sm:gap-4">
                       <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border-2 border-background ring-2 ring-muted/20">
                         <AvatarImage src={creator.avatarUrl ?? MEOW_FANS_AVATAR} className="object-cover" />
@@ -89,6 +89,7 @@ export const Assets = () => {
                           <span className="hidden sm:inline">Assets</span>
                         </Button>
                       </Link>
+
                       <Link href={`/vaults/${creator.username}`}>
                         <Button
                           size="sm"
