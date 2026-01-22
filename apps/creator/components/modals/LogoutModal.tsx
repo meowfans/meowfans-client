@@ -3,7 +3,7 @@
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
-import { authCookieKey, authRefreshCookieKey, buildSafeUrl } from '@workspace/ui/lib';
+import { authCookieKey, authRefreshCookieKey, buildSafeUrl, creatorCookieKey, creatorRefreshCookieKey } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,8 @@ export const LogoutModal = () => {
   const router = useRouter();
 
   const handleLogout = () => {
+    deleteCookie(creatorCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(creatorRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));

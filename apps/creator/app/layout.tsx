@@ -7,10 +7,10 @@ import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
-import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
+import { CreatorProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import '@workspace/ui/globals.css';
-import { authCookieKey, buildSafeUrl, decodeJwtToken, FetchMethods, UserRoles } from '@workspace/ui/lib';
+import { AuthUserRoles, buildSafeUrl, creatorCookieKey, decodeJwtToken, FetchMethods } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
@@ -72,7 +72,7 @@ const verifyAccessToken = async (token: string) => {
 };
 
 const getCreatorProfile = async (): Promise<CreatorProfilesEntity> => {
-  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
+  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Creator);
   const client = await getClient();
   const { data } = await client.query({ query: GET_CREATOR_PROFILE_QUERY });
   return data?.getCreatorProfile as CreatorProfilesEntity;
@@ -80,14 +80,14 @@ const getCreatorProfile = async (): Promise<CreatorProfilesEntity> => {
 
 const validateCreatorSession = cache(async () => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get(authCookieKey)?.value;
+  const accessToken = cookieStore.get(creatorCookieKey)?.value;
   const authAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL });
 
   if (!accessToken) redirect(authAppUrl);
 
   const decoded = decodeJwtToken(accessToken);
 
-  if (!decoded || !decoded.roles.includes(UserRoles.CREATOR)) redirect(authAppUrl);
+  if (!decoded || !decoded.roles.includes(AuthUserRoles.CREATOR)) redirect(authAppUrl);
   try {
     await verifyAccessToken(accessToken);
   } catch (error) {
@@ -117,7 +117,7 @@ export default async function RootLayout({ children }: Props) {
         <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
       <body className={cn(inter.variable, 'overscroll-none ')}>
-        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
+        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Creator}>
           <CreatorContextWrapper creator={creator}>
             <ThemeProvider
               attribute="class"

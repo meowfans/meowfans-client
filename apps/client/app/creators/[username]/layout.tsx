@@ -2,7 +2,7 @@ import { CreatorContextWrapper } from '@/hooks/context/CreatorContextWrapper';
 import { configService } from '@/util/config';
 import { GET_PUBLIC_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
-import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
+import { CreatorProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 
 interface Props {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default async function CreatorProfileLayout({ children, params }: Props) {
-  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL);
+  const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
   const client = await getClient();
   const { data } = await client.query({
     query: GET_PUBLIC_CREATOR_PROFILE_QUERY,

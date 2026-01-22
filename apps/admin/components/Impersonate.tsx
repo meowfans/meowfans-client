@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/av
 import { Button } from '@workspace/ui/components/button';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
-import { adminCookieKey, authCookieKey, impersonatedCreatorId, MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
+import { adminCookieKey, creatorCookieKey, impersonatedCreatorId, MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { decodeJwtToken } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -31,12 +31,12 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
 
   const handleStartImpersonation = async (creatorId: string) => {
     try {
-      const existingCookieKey = getCookie(authCookieKey);
+      const existingCookieKey = getCookie(adminCookieKey);
       setCookie(adminCookieKey, existingCookieKey);
 
       const { data } = await startImpersonation({ variables: { creatorId } });
 
-      setCookie(authCookieKey, data?.issueImpersonationToken);
+      setCookie(creatorCookieKey, data?.issueImpersonationToken);
       const decodedToken = decodeJwtToken(data?.issueImpersonationToken);
       setCookie(impersonatedCreatorId, decodedToken?.sub);
 
@@ -57,7 +57,7 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
     const adminToken = getCookie(adminCookieKey);
 
     if (adminToken) {
-      setCookie(authCookieKey, adminToken);
+      setCookie(adminCookieKey, adminToken);
     }
 
     deleteCookie(adminCookieKey);

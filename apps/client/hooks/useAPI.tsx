@@ -1,7 +1,6 @@
-import { FetchMethods, MediaType } from '@workspace/ui/lib';
-import { AssetType } from '@workspace/gql/generated/graphql';
 import { configService } from '@/util/config';
-import { BearerAccessToken } from '@workspace/ui/lib';
+import { AssetType, UserRoles } from '@workspace/gql/generated/graphql';
+import { BearerAccessToken, FetchMethods, MediaType } from '@workspace/ui/lib';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
@@ -11,7 +10,7 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
     ...init,
     headers: {
       ...init.headers,
-      Authorization: BearerAccessToken()
+      Authorization: BearerAccessToken(UserRoles.Fan)
     },
     method: fetchMethod
   });
@@ -26,7 +25,7 @@ export const useAPI = () => {
         init: {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: BearerAccessToken()
+            Authorization: BearerAccessToken(UserRoles.Fan)
           }
         }
       });
@@ -50,7 +49,7 @@ export const useAPI = () => {
         init: {
           body: params.formdata,
           headers: {
-            Authorization: BearerAccessToken()
+            Authorization: BearerAccessToken(UserRoles.Fan)
           }
         }
       });

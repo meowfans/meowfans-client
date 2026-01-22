@@ -48,7 +48,7 @@ export enum AppSizes {
   ICON_36 = '36'
 }
 
-export enum UserRoles {
+export enum AuthUserRoles {
   FAN = 'fan',
   ADMIN = 'admin',
   SUPER_VIEWER = 'super_viewer',

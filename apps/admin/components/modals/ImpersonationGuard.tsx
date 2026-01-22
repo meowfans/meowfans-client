@@ -4,7 +4,7 @@ import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
-import { adminCookieKey, authCookieKey, impersonatedCreatorId } from '@workspace/ui/lib/constants';
+import { adminCookieKey, impersonatedCreatorId } from '@workspace/ui/lib/constants';
 import { buildSafeUrl } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -19,7 +19,7 @@ export const ImpersonationReturnGuard = () => {
     const adminToken = getCookie(adminCookieKey);
 
     if (adminToken) {
-      setCookie(authCookieKey, adminToken);
+      setCookie(adminCookieKey, adminToken);
     }
 
     deleteCookie(adminCookieKey);

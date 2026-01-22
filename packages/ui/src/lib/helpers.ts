@@ -1,9 +1,9 @@
 import confetti from 'canvas-confetti';
 import { getCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
-import { JwtUser } from './types';
-import { authCookieKey } from './constants';
+import { adminCookieKey, authCookieKey, creatorCookieKey, fanCookieKey } from './constants';
 import { FileType } from './enums';
+import { JwtUser } from './types';
 
 export const handlePathName = (pathname: string) => {
   if (pathname.startsWith('/vaults')) return '/vaults';
@@ -13,12 +13,26 @@ export const handlePathName = (pathname: string) => {
   else return pathname;
 };
 
-export const BearerAccessToken = () => {
-  return `Bearer ${getCookie(authCookieKey)}`;
+enum UserRoles {
+  Admin = 'ADMIN',
+  Creator = 'CREATOR',
+  Fan = 'FAN',
+  SuperViewer = 'SUPER_VIEWER'
+}
+
+export const tokenMap = {
+  [UserRoles.Admin]: adminCookieKey,
+  [UserRoles.Creator]: creatorCookieKey,
+  [UserRoles.Fan]: fanCookieKey,
+  [UserRoles.SuperViewer]: authCookieKey
+};
+
+export const BearerAccessToken = (role: UserRoles) => {
+  return `Bearer ${getCookie(tokenMap[role])}`;
 };
 
 export const formatText = (value: number, text: string) => {
-  return (value  > 1) ? text.concat('s') : text;
+  return value > 1 ? text.concat('s') : text;
 };
 
 export const normalizePath = (...parts: Array<string>) => {

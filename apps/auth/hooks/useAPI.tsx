@@ -1,6 +1,15 @@
 import { configService } from '@/util/config';
-import { authCookieKey, authRefreshCookieKey } from '@workspace/ui/lib/constants';
-import { FetchMethods, LoginInput, SignupInput } from '@workspace/ui/lib/enums';
+import {
+  adminCookieKey,
+  adminRefreshCookieKey,
+  authCookieKey,
+  authRefreshCookieKey,
+  creatorCookieKey,
+  creatorRefreshCookieKey,
+  fanCookieKey,
+  fanRefreshCookieKey
+} from '@workspace/ui/lib/constants';
+import { AuthUserRoles, FetchMethods, LoginInput, SignupInput } from '@workspace/ui/lib/enums';
 import { CreatorSignupInput } from '@workspace/ui/lib/types';
 import { OptionsType, setCookie } from 'cookies-next';
 
@@ -17,6 +26,20 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
   if (!res.ok) throw new Error(data.message);
 
   return data;
+};
+
+const authTokenMap = {
+  [AuthUserRoles.ADMIN]: adminCookieKey,
+  [AuthUserRoles.CREATOR]: creatorCookieKey,
+  [AuthUserRoles.FAN]: fanCookieKey,
+  [AuthUserRoles.SUPER_VIEWER]: authCookieKey
+};
+
+const authRefreshTokenMap = {
+  [AuthUserRoles.ADMIN]: adminRefreshCookieKey,
+  [AuthUserRoles.CREATOR]: creatorRefreshCookieKey,
+  [AuthUserRoles.FAN]: fanRefreshCookieKey,
+  [AuthUserRoles.SUPER_VIEWER]: authRefreshCookieKey
 };
 
 const useAPI = () => {
@@ -43,6 +66,10 @@ const useAPI = () => {
       }
     });
 
+    const role = data.roles?.at(0) as AuthUserRoles;
+    setAuthCookie(authTokenMap[role], data.accessToken, {});
+    setAuthCookie(authRefreshTokenMap[role], data.refreshToken, {});
+
     setAuthCookie(authCookieKey, data.accessToken, {});
     setAuthCookie(authRefreshCookieKey, data.refreshToken, {});
     return data;
@@ -61,6 +88,9 @@ const useAPI = () => {
     });
     setAuthCookie(authCookieKey, data.accessToken, {});
     setAuthCookie(authRefreshCookieKey, data.refreshToken, {});
+
+    setAuthCookie(fanCookieKey, data.accessToken, {});
+    setAuthCookie(fanRefreshCookieKey, data.refreshToken, {});
     return data;
   };
 
@@ -75,8 +105,8 @@ const useAPI = () => {
         }
       }
     });
-    setAuthCookie(authCookieKey, data.accessToken, {});
-    setAuthCookie(authRefreshCookieKey, data.refreshToken, {});
+    setAuthCookie(creatorCookieKey, data.accessToken, {});
+    setAuthCookie(creatorRefreshCookieKey, data.refreshToken, {});
     return data;
   };
 
