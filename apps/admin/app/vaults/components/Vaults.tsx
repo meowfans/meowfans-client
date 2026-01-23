@@ -40,29 +40,6 @@ export const Vaults = () => {
     setSelectedCreatorIds(ids);
   };
 
-  const filteredCreatorVaults = filterText
-    ? creators.filter((c) => c.id.toLowerCase().includes(filterText.toLowerCase()) || (c.username ?? '').includes(filterText.toLowerCase()))
-    : creators;
-
-  const handleSortVaults = (a: UsersEntity, b: UsersEntity) => {
-    const final = b.creatorProfile;
-    const initial = a.creatorProfile;
-    switch (filterBy) {
-      case DownloadStates.Rejected:
-        return final.rejectedObjectCount - initial.rejectedObjectCount;
-      case DownloadStates.Pending:
-        return final.pendingObjectCount - initial.pendingObjectCount;
-      case DownloadStates.Processing:
-        return final.processingObjectCount - initial.processingObjectCount;
-      case DownloadStates.Fulfilled:
-        return final.fulfilledObjectCount - initial.fulfilledObjectCount;
-      default:
-        return final.pendingObjectCount - initial.pendingObjectCount;
-    }
-  };
-
-  const sortedVaults = filteredCreatorVaults?.slice().sort((a, b) => handleSortVaults(a, b));
-
   const handleUpdateCreator = (c: UsersEntity) => {
     setCreators([
       ...creators.map((cre) => {
@@ -73,6 +50,7 @@ export const Vaults = () => {
 
   return (
     <PageManager>
+      <div ref={topRef} />
       <VaultsHeader
         sortBy={sortBy}
         onSortBy={(val) => setSortBy(val)}
@@ -86,8 +64,7 @@ export const Vaults = () => {
         onFilterBy={(stats) => setFilterBy(stats)}
       />
       <div className="overflow-x-auto">
-        <div ref={topRef} />
-        {sortedVaults && sortedVaults.length ? (
+        {creators.length ? (
           <Table className="overflow-x-auto">
             <TableHeader className="z-30 bg-muted/50 backdrop-blur">
               <TableRow>
@@ -106,7 +83,7 @@ export const Vaults = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedVaults.map((user, idx) => (
+              {creators.map((user, idx) => (
                 <VaultTableRow
                   key={user.id ?? idx}
                   idx={idx}
@@ -124,7 +101,6 @@ export const Vaults = () => {
             <p>✨Looks like there is nothing here✨</p>
           </div>
         )}
-        <div ref={endRef} />
       </div>
 
       <div className="sticky bottom-4 right-4 z-10 flex gap-2">
@@ -141,6 +117,7 @@ export const Vaults = () => {
           setPageNumber={setPageNumber}
         />
       </div>
+      <div ref={endRef} />
 
       <TerminateImportingJobsModal />
       <TerminateDownloadingModal />

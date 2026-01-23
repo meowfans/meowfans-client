@@ -1,8 +1,8 @@
 'use client';
 
+import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
-import { useMutation, useQuery } from '@apollo/client/react';
-import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
+import { useMutation } from '@apollo/client/react';
 import { TERMINATE_ALL_JOBS_MUTATION } from '@workspace/gql/api/vaultsAPI';
 import { UserRoles } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -13,16 +13,15 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export const TerminateImportingJobsModal = () => {
+  const { admin } = useAdmin();
   const [loading, setLoading] = useState<boolean>(false);
-  const { terminatingImportsModal, setTerminatingImportsModal } = useVaultsStore();
-
   const [terminateAllJobs] = useMutation(TERMINATE_ALL_JOBS_MUTATION);
-  const { data: creator } = useQuery(GET_CREATOR_PROFILE_QUERY);
+  const { terminatingImportsModal, setTerminatingImportsModal } = useVaultsStore();
 
   const handleTerminate = async () => {
     setLoading(true);
     try {
-      if (!creator?.getCreatorProfile.user.roles.includes(UserRoles.Admin)) return;
+      if (!admin.user.roles.includes(UserRoles.Admin)) return;
       await terminateAllJobs();
       toast.success('All jobs terminated!');
     } catch {

@@ -2,9 +2,8 @@ import { ImpersonateCreatorTrigger } from '@/components/ImpersonateTrigger';
 import { DownloadCreatorsAllVaultsModal } from '@/components/modals/DownloadCreatorsAllVaultsModal';
 import { useMutation } from '@apollo/client/react';
 import { CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION } from '@workspace/gql/api/vaultsAPI';
-import { DownloadStates, UsersEntity } from '@workspace/gql/generated/graphql';
+import { CleanUpVaultOutput, DownloadStates, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
-import { Button } from '@workspace/ui/components/button';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import { TableCell, TableRow } from '@workspace/ui/components/table';
 import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
@@ -34,19 +33,26 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
   const [userIdCopied, setUserIdCopied] = useState<string | null>(null);
   const [downloadAllCreatorVaultsModal, setDownloadAllCreatorVaultsModal] = useState<boolean>(false);
   const [cleanUpVaultObjects] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
+  const creatorProfile = user.creatorProfile;
+  const canNotDownloadAllVaultObjects =
+    !creatorProfile.pendingObjectCount && !creatorProfile.rejectedObjectCount && !creatorProfile.processingObjectCount;
 
   const handleCleanUpVaultObjects = async (creatorId: string) => {
     try {
       const { data } = await cleanUpVaultObjects({ variables: { input: { creatorId } } });
+      const { affected, fulfilledObjectCount, pendingObjectCount, processingObjectCount, rejectedObjectCount } =
+        data?.cleanUpVaultObjectsOfACreator as CleanUpVaultOutput;
       toast.success('Reverted objects to rejected state', {
-        description: data?.cleanUpVaultObjectsOfACreator
+        description: affected
       });
       onUpdateCreator({
         ...user,
         creatorProfile: {
-          ...user.creatorProfile,
-          rejectedObjectCount: user.creatorProfile.rejectedObjectCount + user.creatorProfile.processingObjectCount,
-          processingObjectCount: 0
+          ...creatorProfile,
+          rejectedObjectCount,
+          processingObjectCount,
+          pendingObjectCount,
+          fulfilledObjectCount
         }
       });
     } catch {
@@ -104,10 +110,10 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
       {statusButtons.map((status) => (
         <TableCell key={status.label} className="text-center table-cell">
           <Badge className={status.className}>
-            {status.status === DownloadStates.Fulfilled && user.creatorProfile.fulfilledObjectCount}
-            {status.status === DownloadStates.Pending && user.creatorProfile.pendingObjectCount}
-            {status.status === DownloadStates.Processing && user.creatorProfile.processingObjectCount}
-            {status.status === DownloadStates.Rejected && user.creatorProfile.rejectedObjectCount}
+            {status.status === DownloadStates.Fulfilled && creatorProfile.fulfilledObjectCount}
+            {status.status === DownloadStates.Pending && creatorProfile.pendingObjectCount}
+            {status.status === DownloadStates.Processing && creatorProfile.processingObjectCount}
+            {status.status === DownloadStates.Rejected && creatorProfile.rejectedObjectCount}
           </Badge>
         </TableCell>
       ))}
@@ -142,15 +148,12 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
             }
           />
 
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled={!user.creatorProfile.pendingObjectCount}
+          <ApplyButtonTooltip
+            buttonProps={{ icon: Download, variant: 'ghost', size: 'icon' }}
+            tootTipTitle="Download all"
+            disabled={canNotDownloadAllVaultObjects}
             onClick={() => setDownloadAllCreatorVaultsModal(true)}
-            title={`Download all(${user.creatorProfile.pendingObjectCount + user.creatorProfile.rejectedObjectCount})`}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
+          />
         </div>
       </TableCell>
       <DownloadCreatorsAllVaultsModal

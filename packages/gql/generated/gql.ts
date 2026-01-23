@@ -89,7 +89,7 @@ type Documents = {
     "\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n": typeof types.DownloadCreatorObjectsAsBatchDocument,
     "\n  mutation Terminate {\n    terminate\n  }\n": typeof types.TerminateDocument,
     "\n  query GetTotalObjectsAsType($input: PaginationInput!) {\n    getTotalObjectsAsType(input: $input)\n  }\n": typeof types.GetTotalObjectsAsTypeDocument,
-    "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input)\n  }\n": typeof types.CleanUpVaultObjectsOfACreatorDocument,
+    "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n": typeof types.CleanUpVaultObjectsOfACreatorDocument,
     "\n  query GetCountOfObjectsOfEachType {\n    getCountOfObjectsOfEachType {\n      fulfilled\n      pending\n      processing\n      rejected\n    }\n  }\n": typeof types.GetCountOfObjectsOfEachTypeDocument,
     "\n  mutation UpdatePreviewOfDefaultVaults {\n    updatePreviewOfVaults\n  }\n": typeof types.UpdatePreviewOfDefaultVaultsDocument,
     "\n  query GetZonePlans {\n    getZonePlans {\n      id\n      unlockPrice\n      zoneType\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetZonePlansDocument,
@@ -170,7 +170,7 @@ const documents: Documents = {
     "\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n": types.DownloadCreatorObjectsAsBatchDocument,
     "\n  mutation Terminate {\n    terminate\n  }\n": types.TerminateDocument,
     "\n  query GetTotalObjectsAsType($input: PaginationInput!) {\n    getTotalObjectsAsType(input: $input)\n  }\n": types.GetTotalObjectsAsTypeDocument,
-    "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input)\n  }\n": types.CleanUpVaultObjectsOfACreatorDocument,
+    "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n": types.CleanUpVaultObjectsOfACreatorDocument,
     "\n  query GetCountOfObjectsOfEachType {\n    getCountOfObjectsOfEachType {\n      fulfilled\n      pending\n      processing\n      rejected\n    }\n  }\n": types.GetCountOfObjectsOfEachTypeDocument,
     "\n  mutation UpdatePreviewOfDefaultVaults {\n    updatePreviewOfVaults\n  }\n": types.UpdatePreviewOfDefaultVaultsDocument,
     "\n  query GetZonePlans {\n    getZonePlans {\n      id\n      unlockPrice\n      zoneType\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetZonePlansDocument,
@@ -493,7 +493,7 @@ export function graphql(source: "\n  query GetTotalObjectsAsType($input: Paginat
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input)\n  }\n"): (typeof documents)["\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input)\n  }\n"];
+export function graphql(source: "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n"): (typeof documents)["\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

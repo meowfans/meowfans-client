@@ -103,6 +103,15 @@ export type CleanUpVaultInput = {
   creatorId: Scalars['String']['input'];
 };
 
+export type CleanUpVaultOutput = {
+  __typename?: 'CleanUpVaultOutput';
+  affected: Scalars['Int']['output'];
+  fulfilledObjectCount: Scalars['Int']['output'];
+  pendingObjectCount: Scalars['Int']['output'];
+  processingObjectCount: Scalars['Int']['output'];
+  rejectedObjectCount: Scalars['Int']['output'];
+};
+
 export type ConfirmCardInput = {
   paymentMethodId: Scalars['String']['input'];
 };
@@ -716,7 +725,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   attachPaymentMethod: AttachPaymentMethodOutput;
   blockFan: Scalars['Boolean']['output'];
-  cleanUpVaultObjectsOfACreator: Scalars['Float']['output'];
+  cleanUpVaultObjectsOfACreator: CleanUpVaultOutput;
   confirmCard: ConfirmCardOutput;
   createChannel: MessageChannelsEntity;
   createComment: PostCommentsEntity;
@@ -2357,7 +2366,7 @@ export type CleanUpVaultObjectsOfACreatorMutationVariables = Exact<{
 }>;
 
 
-export type CleanUpVaultObjectsOfACreatorMutation = { __typename?: 'Mutation', cleanUpVaultObjectsOfACreator: number };
+export type CleanUpVaultObjectsOfACreatorMutation = { __typename?: 'Mutation', cleanUpVaultObjectsOfACreator: { __typename?: 'CleanUpVaultOutput', affected: number, rejectedObjectCount: number, pendingObjectCount: number, processingObjectCount: number, fulfilledObjectCount: number } };
 
 export type GetCountOfObjectsOfEachTypeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2450,7 +2459,7 @@ export const GetPublicVaultObjectsDocument = {"kind":"Document","definitions":[{
 export const DownloadCreatorObjectsAsBatchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DownloadCreatorObjectsAsBatch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UploadVaultQueueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"downloadCreatorObjectsAsBatch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DownloadCreatorObjectsAsBatchMutation, DownloadCreatorObjectsAsBatchMutationVariables>;
 export const TerminateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Terminate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"terminate"}}]}}]} as unknown as DocumentNode<TerminateMutation, TerminateMutationVariables>;
 export const GetTotalObjectsAsTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTotalObjectsAsType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getTotalObjectsAsType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<GetTotalObjectsAsTypeQuery, GetTotalObjectsAsTypeQueryVariables>;
-export const CleanUpVaultObjectsOfACreatorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CleanUpVaultObjectsOfACreator"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CleanUpVaultInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cleanUpVaultObjectsOfACreator"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CleanUpVaultObjectsOfACreatorMutation, CleanUpVaultObjectsOfACreatorMutationVariables>;
+export const CleanUpVaultObjectsOfACreatorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CleanUpVaultObjectsOfACreator"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CleanUpVaultInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cleanUpVaultObjectsOfACreator"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected"}},{"kind":"Field","name":{"kind":"Name","value":"rejectedObjectCount"}},{"kind":"Field","name":{"kind":"Name","value":"pendingObjectCount"}},{"kind":"Field","name":{"kind":"Name","value":"processingObjectCount"}},{"kind":"Field","name":{"kind":"Name","value":"fulfilledObjectCount"}}]}}]}}]} as unknown as DocumentNode<CleanUpVaultObjectsOfACreatorMutation, CleanUpVaultObjectsOfACreatorMutationVariables>;
 export const GetCountOfObjectsOfEachTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCountOfObjectsOfEachType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCountOfObjectsOfEachType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fulfilled"}},{"kind":"Field","name":{"kind":"Name","value":"pending"}},{"kind":"Field","name":{"kind":"Name","value":"processing"}},{"kind":"Field","name":{"kind":"Name","value":"rejected"}}]}}]}}]} as unknown as DocumentNode<GetCountOfObjectsOfEachTypeQuery, GetCountOfObjectsOfEachTypeQueryVariables>;
 export const UpdatePreviewOfDefaultVaultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdatePreviewOfDefaultVaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePreviewOfVaults"}}]}}]} as unknown as DocumentNode<UpdatePreviewOfDefaultVaultsMutation, UpdatePreviewOfDefaultVaultsMutationVariables>;
 export const GetZonePlansDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetZonePlans"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getZonePlans"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"unlockPrice"}},{"kind":"Field","name":{"kind":"Name","value":"zoneType"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetZonePlansQuery, GetZonePlansQueryVariables>;
