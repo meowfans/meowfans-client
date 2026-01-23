@@ -38,7 +38,9 @@ export const ImpersonationCountdown = () => {
     if (remainingMs === 0) {
       toast.warning('Impersonation session has ended');
       window.location.href = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL });
-      deleteCookie(creatorCookieKey);
+      deleteCookie(creatorCookieKey, {
+        domain: configService.NEXT_PUBLIC_APP_DOMAINS
+      });
     }
   }, [remainingMs]);
 
@@ -48,7 +50,9 @@ export const ImpersonationCountdown = () => {
   const seconds = Math.floor((remainingMs % 60000) / 1000);
 
   const handleCancelImpersonation = () => {
-    deleteCookie(creatorCookieKey);
+    deleteCookie(creatorCookieKey, {
+      domain: configService.NEXT_PUBLIC_APP_DOMAINS
+    });
     window.location.href = buildSafeUrl({ host: configService.NEXT_PUBLIC_ADMIN_URL });
   };
 

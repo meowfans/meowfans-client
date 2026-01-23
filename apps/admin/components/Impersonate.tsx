@@ -32,7 +32,9 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
     try {
       const { data } = await startImpersonation({ variables: { creatorId } });
 
-      setCookie(creatorCookieKey, data?.issueImpersonationToken);
+      setCookie(creatorCookieKey, data?.issueImpersonationToken, {
+        domain: configService.NEXT_PUBLIC_APP_DOMAINS
+      });
       setSwitchContext(creator);
 
       successHandler({ isEnabledConfetti: true, message: 'Impersonation session has started' });
@@ -47,7 +49,9 @@ export const Impersonate: React.FC<ImpersonateProps> = ({ creator }) => {
   };
 
   const handleCancelImpersonation = () => {
-    deleteCookie(creatorCookieKey);
+    deleteCookie(creatorCookieKey, {
+      domain: configService.NEXT_PUBLIC_APP_DOMAINS
+    });
 
     setSwitchContext(null);
     router.refresh();
