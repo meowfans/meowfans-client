@@ -9,12 +9,18 @@ import { DropZone } from '@workspace/ui/globals/DropZone';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
-import { MediaType, resolveFileType } from '@workspace/ui/lib';
+import { FileType, MediaType, resolveFileType } from '@workspace/ui/lib';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 interface Props {
   onUpload: (length: number) => unknown;
+}
+
+interface PreviewProps {
+  type: FileType.IMAGE | FileType.VIDEO;
+  file: File;
+  previewUrl: string;
 }
 
 export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
@@ -24,6 +30,7 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { openUploadModal, setOpenUploadModal } = useAssetsStore();
   const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<PreviewProps[]>([]);
   const [mediaType, setMediaType] = useState<MediaType>(MediaType.PROFILE_MEDIA);
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
 
@@ -64,6 +71,16 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
     setFiles([]);
   };
 
+  useEffect(() => {
+    const mapped = files.map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+      type: resolveFileType(file.name)
+    })) as PreviewProps[];
+
+    setPreviews(mapped);
+  }, [files]);
+
   return (
     <Modal isOpen={openUploadModal} onClose={handleClose} description="Upload your assets or click to remove" title="Upload">
       <div className="grid grid-cols-2">
@@ -90,21 +107,28 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
           trigger={{ label: assetType }}
         />
       </div>
-      {files.length ? (
+      {previews.length ? (
         <div className="flex w-full flex-col gap-3">
           <div className="grid grid-cols-3 gap-2 overflow-y-scroll max-h-80">
-            {files.map((file, idx) => {
-              const url = URL.createObjectURL(file);
-              return (
-                <div key={idx} className="relative group cursor-pointer">
+            {previews.map(({ file, previewUrl, type }, idx) => (
+              <div key={idx} className="relative group cursor-pointer">
+                {type === FileType.IMAGE ? (
                   <div
-                    style={{ backgroundImage: `url(${url})`, minHeight: 128, minWidth: '100%' }}
-                    className="w-full h-32 bg-cover bg-center rounded-lg shadow-md group-hover:opacity-80 transition"
+                    style={{ backgroundImage: `url(${previewUrl})` }}
+                    className="w-full h-32 bg-cover bg-center rounded-lg shadow-md"
                     onClick={() => handleFilterFiles(file)}
                   />
-                </div>
-              );
-            })}
+                ) : (
+                  <video
+                    src={previewUrl}
+                    muted
+                    playsInline
+                    className="w-full h-32 rounded-lg shadow-md object-cover"
+                    onClick={() => handleFilterFiles(file)}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
           <LoadingButton loading={loading} onClick={handleUpload} title="Upload" />
