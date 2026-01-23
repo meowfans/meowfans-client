@@ -7,7 +7,7 @@ import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CreatorVaultUrls } from './CreatorVaultUrls';
 import { CreatorVaultsHeader } from './CreatorVaultsHeader';
 
@@ -15,65 +15,59 @@ interface Props {
   user?: UsersEntity;
 }
 
+const parseEnumArray = <T extends string>(value: string | null, allowed: readonly T[], fallback: T[]): T[] => {
+  if (!value) return fallback;
+  return value.split(',').filter((v): v is T => allowed.includes(v as T));
+};
+
 export default function CreatorVaults({ user }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
-  const [uploadVaultModal, setUploadVaultModal] = useState<boolean>(false);
-  const [hasSelectedThirty, setHasSelectedThirty] = useState<boolean>(false);
-  const [take, setTake] = useState<number>(50);
-  const [fileType, setFileType] = useState<FileType>((searchParams.get('fileType') as FileType) || FileType.Image);
-  const [status, setStatus] = useState<DownloadStates>((searchParams.get('status') as DownloadStates) || DownloadStates.Pending);
+  const [uploadVaultModal, setUploadVaultModal] = useState(false);
+  const [hasSelectedThirty, setHasSelectedThirty] = useState(false);
+  const [take, setTake] = useState(50);
+
+  const fileType = useMemo(
+    () => parseEnumArray(searchParams.get('fileType'), Object.values(FileType), [FileType.Image, FileType.Video]),
+    [searchParams]
+  );
+
+  const status = useMemo(() => (searchParams.get('status') as DownloadStates) ?? DownloadStates.Pending, [searchParams]);
+
   const { loading, vaultObjects, hasNext, handleLoadMore } = useVaultObjects({
     take,
     relatedUserId: user?.id,
-    status: status ?? DownloadStates.Pending,
+    status,
     fileType
   });
 
   const handleToggle = (id: string) => {
-    setSelectedUrls((prev) => {
-      const hasSelected = prev.includes(id) ? prev.filter((u) => u !== id) : [...prev, id];
-      return hasSelected;
-    });
+    setSelectedUrls((prev) => (prev.includes(id) ? prev.filter((u) => u !== id) : [...prev, id]));
   };
 
-  const handleSelectThirty = async (hasSelected: boolean, length: number) => {
-    setHasSelectedThirty(hasSelected);
+  const handleSelectThirty = (select: boolean, count: number) => {
+    setHasSelectedThirty(select);
 
-    if (length > vaultObjects.length) setTake(length);
+    if (!select) {
+      setSelectedUrls([]);
+      return;
+    }
 
-    setSelectedUrls(
-      !hasSelectedThirty
-        ? (vaultObjects
-            .filter((vault) => ![DownloadStates.Fulfilled, DownloadStates.Processing].includes(vault.status))
-            .map((v) => v.id)
-            .slice(0, length) ?? [])
-        : []
-    );
+    if (count > vaultObjects.length) setTake(count);
+
+    const selectable = vaultObjects
+      .filter((v) => ![DownloadStates.Fulfilled, DownloadStates.Processing].includes(v.status))
+      .slice(0, count)
+      .map((v) => v.id);
+
+    setSelectedUrls(selectable);
   };
 
-  const handleSetStatus = (stat: DownloadStates) => {
-    setStatus(stat);
-
-    const params = new URLSearchParams(window.location.search);
-    params.set('status', stat);
-
+  const updateQuery = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(key, value);
     router.push(`?${params.toString()}`);
-  };
-
-  const handleSetFileType = (fileType: FileType) => {
-    setFileType(fileType);
-
-    const params = new URLSearchParams(window.location.search);
-    params.set('fileType', fileType);
-
-    router.push(`?${params.toString()}`);
-  };
-
-  const handleCancelUploadVaultModal = () => {
-    setHasSelectedThirty(false);
-    setSelectedUrls([]);
   };
 
   return (
@@ -81,42 +75,40 @@ export default function CreatorVaults({ user }: Props) {
       <CreatorVaultsHeader
         user={user as UsersEntity}
         vaultObjects={vaultObjects}
-        vaultObjectsCount={vaultObjects.length ?? 0}
+        vaultObjectsCount={vaultObjects.length}
         hasSelectedThirty={hasSelectedThirty}
         isLoading={loading}
         onRefetch={() => null}
-        onSelectThirty={(selected, count) => handleSelectThirty(selected, count)}
-        onSetStatus={(stat) => handleSetStatus(stat)}
+        onSelectThirty={handleSelectThirty}
+        onSetStatus={(s) => updateQuery('status', s)}
         onUploadVaultModal={() => setUploadVaultModal(true)}
         selectedUrls={selectedUrls}
         status={status}
         fileType={fileType}
-        onSetFileType={(f) => handleSetFileType(f)}
+        onSetFileType={(f) => updateQuery('fileType', f.join(','))}
       />
 
       {vaultObjects.length ? (
         <InfiniteScrollManager dataLength={vaultObjects.length} hasMore={hasNext} loading={loading} onLoadMore={handleLoadMore}>
-          <CreatorVaultUrls
-            isLoading={loading}
-            onToggle={(id) => handleToggle(id)}
-            selectedUrls={selectedUrls}
-            vaultObjects={vaultObjects}
-          />
+          <CreatorVaultUrls isLoading={loading} onToggle={handleToggle} selectedUrls={selectedUrls} vaultObjects={vaultObjects} />
         </InfiniteScrollManager>
       ) : (
         <EmptyElement
-          description={`Looks like this creator does not have any ${status.toLowerCase()} ${fileType.toLowerCase()}`}
-          title={`Import ${fileType.toLowerCase()}s to download vaults`}
+          title={`Import ${fileType.join(', ').toLowerCase()}s`}
+          description={`No ${status.toLowerCase()} ${fileType.join(', ').toLowerCase()} found`}
         />
       )}
 
       <UploadVaultsModal
         user={user}
-        onJobAdded={() => setHasSelectedThirty(false)}
         isOpen={uploadVaultModal}
-        onCancel={handleCancelUploadVaultModal}
         setOpen={setUploadVaultModal}
         vaultObjectIds={selectedUrls}
+        onCancel={() => {
+          setHasSelectedThirty(false);
+          setSelectedUrls([]);
+        }}
+        onJobAdded={() => setHasSelectedThirty(false)}
       />
     </PageManager>
   );

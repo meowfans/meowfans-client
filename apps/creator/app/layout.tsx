@@ -79,8 +79,7 @@ const getCreatorProfile = async (): Promise<CreatorProfilesEntity> => {
 };
 
 const validateCreatorSession = cache(async () => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get(creatorCookieKey)?.value;
+  const accessToken = (await cookies()).get(creatorCookieKey)?.value;
   const authAppUrl = buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL });
 
   if (!accessToken) redirect(authAppUrl);

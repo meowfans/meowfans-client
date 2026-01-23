@@ -1,7 +1,6 @@
 'use client';
 
 import { ImpersonateCreatorTrigger } from '@/components/ImpersonateTrigger';
-import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useCreators } from '@/hooks/useCreators';
 import { SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
@@ -20,7 +19,6 @@ export const CreatorProfiles = () => {
   const searchParams = useSearchParams();
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
   const topRef = useRef<HTMLDivElement>(null);
-  const { setSwitchContext, switchContext } = useUtilsStore();
   const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
   const { creators, hasNext, loading } = useCreators({ pageNumber, sortBy: SortBy.AssetCount, orderBy: SortOrder.Desc });
 

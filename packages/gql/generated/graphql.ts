@@ -1001,7 +1001,7 @@ export type PaginationInput = {
   assetType?: InputMaybe<AssetType>;
   creatorType?: InputMaybe<Array<CreatorType>>;
   dataFetchType?: InputMaybe<DataFetchType>;
-  fileType?: InputMaybe<FileType>;
+  fileType?: InputMaybe<Array<FileType>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<SortOrder>;
