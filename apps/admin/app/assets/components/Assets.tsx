@@ -100,7 +100,7 @@ export const Assets = () => {
                           <span className="hidden sm:inline">Vaults</span>
                         </Button>
                       </Link>
-                      <Link href={`/posts/${creator.username}`}>
+                      <Link href={`/${creator.username}`}>
                         <Button
                           size="sm"
                           variant="outline"

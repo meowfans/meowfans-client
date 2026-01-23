@@ -110,7 +110,7 @@ export const CreatorProfiles = () => {
                         </Button>
                       </Link>
 
-                      <Link href={`/posts/${creator.username}`}>
+                      <Link href={`/${creator.username}`}>
                         <Button size="sm" variant="outline">
                           <GalleryVertical className="w-2 h-2 sm:mr-1" />
                           <span className="hidden text-xs sm:inline">Posts</span>

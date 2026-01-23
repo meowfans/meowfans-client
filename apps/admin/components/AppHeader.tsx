@@ -19,7 +19,7 @@ export const AppHeader = () => {
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex flex-row items-center gap-2">
           <ReturnToPreviousPage applyReturn />
-          <Link href="/posts" className="shrink-0">
+          <Link href="/" className="shrink-0">
             <Image src="/icons/app_icon.svg" alt="Creator app logo" width={32} height={32} priority />
           </Link>
         </div>
