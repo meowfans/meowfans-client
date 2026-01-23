@@ -45,7 +45,7 @@ export const useAssets = (params: PaginationInput) => {
 
   useEffect(() => {
     loadCreatorAssets(true);
-  }, [params.assetType, params.orderBy]); //eslint-disable-line
+  }, [params.assetType, params.orderBy, params.fileType]); //eslint-disable-line
 
   return { handleLoadMore, hasMore, loading, assets, handleRefetch };
 };
