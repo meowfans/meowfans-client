@@ -1,7 +1,6 @@
 'use client';
 
 import { AssetPickerModal } from '@/components/modals/AssetPickerModal';
-import { useUtilsStore } from '@/hooks/store/utils.store';
 import { CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
@@ -10,7 +9,7 @@ import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { SpanView } from '@workspace/ui/globals/SpanView';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { Camera, GalleryVerticalEnd } from 'lucide-react';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface EditProfilePictureProps {
   avatar: string | null;
@@ -20,7 +19,7 @@ interface EditProfilePictureProps {
 
 export const EditProfilePicture = ({ avatar, setAvatar, setIsAvatarEditing }: EditProfilePictureProps) => {
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const { openAsstPickerModal, setOpenAsstPickerModal } = useUtilsStore();
+  const [openAsstPickerModal, setOpenAsstPickerModal] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;

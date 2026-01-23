@@ -1,3 +1,5 @@
+'use client';
+
 import { useCreator } from '@/hooks/context/useCreator';
 import useAPI from '@/hooks/useAPI';
 import { useCreatorMutation } from '@/hooks/useCreatorMutation';
@@ -12,117 +14,107 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 import { MediaType } from '@workspace/ui/lib/enums';
 import { resolveFileType } from '@workspace/ui/lib/helpers';
 import { Loader } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { EditPicture } from './EditPicture';
 import { EditPrivacyAndVisibility } from './EditPrivacyAndVisibility';
+
+const normalize = (v?: string | null) => v?.trim() ?? '';
 
 export const Edit = () => {
   const { upload } = useAPI();
   const { creator } = useCreator();
   const { loading, updateCreator } = useCreatorMutation();
-  const [disabled, setIsDisabled] = useState<boolean>(false);
-  const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const original = {
-    bio: creator.bio,
-    allowsComment: creator.allowsComment,
-    allowsMessaging: creator.allowsMessaging,
-    displayTotalPost: creator.displayTotalPost,
-    displayOnlineStatus: creator.displayOnlineStatus,
-    displayTotalSubscriber: creator.displayTotalPost,
-    avatarUrl: creator.user.avatarUrl,
-    bannerUrl: creator.user.bannerUrl,
-    username: creator.user.username
-  };
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [disabled, setDisabled] = useState(true);
 
-  const [input, setInput] = useState<UpdateCreatorProfileInput>({ ...original });
+  const original = useMemo<UpdateCreatorProfileInput>(
+    () => ({
+      bio: creator.bio,
+      allowsComment: creator.allowsComment,
+      allowsMessaging: creator.allowsMessaging,
+      displayTotalPost: creator.displayTotalPost,
+      displayOnlineStatus: creator.displayOnlineStatus,
+      displayTotalSubscriber: creator.displayTotalSubscriber,
+      avatarUrl: creator.user.avatarUrl,
+      bannerUrl: creator.user.bannerUrl,
+      username: creator.user.username
+    }),
+    [creator]
+  );
+
+  const [input, setInput] = useState<UpdateCreatorProfileInput>(original);
+
+  useEffect(() => {
+    setInput(original);
+    setAvatarFile(null);
+    setBannerFile(null);
+  }, [creator.creatorId]); // eslint-disable-line
 
   useEffect(() => {
     const noChange =
-      creator.bio === input.bio?.trim() &&
-      creator.user.username === input.username?.trim() &&
-      creator.user.avatarUrl === input.avatarUrl &&
-      creator.user.bannerUrl === input.bannerUrl &&
-      creator.allowsMessaging === input.allowsMessaging &&
-      creator.allowsComment === input.allowsComment &&
-      creator.displayOnlineStatus === input.displayOnlineStatus &&
-      creator.displayTotalPost === input.displayTotalPost &&
-      creator.displayTotalSubscriber === input.displayTotalSubscriber &&
+      normalize(original.bio) === normalize(input.bio) &&
+      normalize(original.username) === normalize(input.username) &&
+      original.avatarUrl === input.avatarUrl &&
+      original.bannerUrl === input.bannerUrl &&
+      original.allowsMessaging === input.allowsMessaging &&
+      original.allowsComment === input.allowsComment &&
+      original.displayOnlineStatus === input.displayOnlineStatus &&
+      original.displayTotalPost === input.displayTotalPost &&
+      original.displayTotalSubscriber === input.displayTotalSubscriber &&
       !avatarFile &&
       !bannerFile;
 
-    setIsDisabled(noChange);
-  }, [input, creator, avatarFile, bannerFile]);
+    setDisabled(noChange);
+  }, [input, original, avatarFile, bannerFile]);
 
-  const handleChangeInput = ({ key, value }: { key: keyof UpdateCreatorProfileInput; value: string | boolean }) => {
+  const handleChangeInput = <K extends keyof UpdateCreatorProfileInput>(key: K, value: UpdateCreatorProfileInput[K]) => {
     setInput((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleCancel = () => {
-    setInput({
-      ...creator,
-      avatarUrl: creator.user.avatarUrl,
-      bannerUrl: creator.user.bannerUrl,
-      username: creator.user.username
-    });
-
+    setInput(original);
     setAvatarFile(null);
     setBannerFile(null);
+  };
+
+  const uploadFile = async (file: File) => {
+    const fd = new FormData();
+    fd.append('file', file);
+
+    const { rawUrl } = await upload({
+      mediaType: MediaType.PROFILE_MEDIA,
+      formData: fd,
+      fileType: resolveFileType(file.name)
+    });
+
+    return rawUrl;
   };
 
   const handleUpdateCreator = async () => {
     let avatarUrl = input.avatarUrl;
     let bannerUrl = input.bannerUrl;
 
-    if (avatarFile) {
-      const fd = new FormData();
-      fd.append('file', avatarFile);
-      const { rawUrl } = await upload({
-        mediaType: MediaType.PROFILE_MEDIA,
-        formData: fd,
-        fileType: resolveFileType(avatarFile.name)
-      });
-      avatarUrl = rawUrl;
-    }
-
-    if (bannerFile) {
-      const fd = new FormData();
-      fd.append('file', bannerFile);
-      const { rawUrl } = await upload({
-        mediaType: MediaType.PROFILE_MEDIA,
-        formData: fd,
-        fileType: resolveFileType(bannerFile.name)
-      });
-
-      bannerUrl = rawUrl;
-    }
+    if (avatarFile) avatarUrl = await uploadFile(avatarFile);
+    if (bannerFile) bannerUrl = await uploadFile(bannerFile);
 
     await updateCreator({
       ...input,
       avatarUrl,
       bannerUrl
     });
+
     handleCancel();
   };
-
-  useEffect(() => {
-    setInput({ ...original });
-  }, [creator]); //eslint-disable-line
 
   return (
     <PageManager className="mx-auto max-w-3xl px-4 py-6 space-y-6">
       <EditPicture input={input} setAvatarFile={setAvatarFile} setBannerFile={setBannerFile} />
+
       <GenericCard title="Identity">
-        <div className="space-y-4">
-          <Field label="Username">
-            <Input
-              placeholder="username"
-              value={input.username ?? ''}
-              type="username"
-              onChange={(e) => handleChangeInput({ key: 'username', value: e.target.value })}
-            />
-          </Field>
-        </div>
+        <Field label="Username">
+          <Input placeholder="username" value={input.username ?? ''} onChange={(e) => handleChangeInput('username', e.target.value)} />
+        </Field>
       </GenericCard>
 
       <GenericCard title="Bio">
@@ -130,18 +122,18 @@ export const Edit = () => {
           rows={4}
           placeholder="Tell people about yourself"
           value={input.bio ?? ''}
-          onChange={(e) => handleChangeInput({ key: 'bio', value: e.target.value })}
+          onChange={(e) => handleChangeInput('bio', e.target.value)}
         />
       </GenericCard>
 
-      <EditPrivacyAndVisibility input={input} onChangeInput={({ key, value }) => handleChangeInput({ key, value })} />
+      <EditPrivacyAndVisibility input={input} onChangeInput={({ key, value }) => handleChangeInput(key, value)} />
 
-      <div className="flex justify-end gap-3 sticky bottom-0 bg-background pt-4">
+      <div className="sticky bottom-0 flex justify-end gap-3 bg-background pt-4">
         <Button variant="outline" onClick={handleCancel} disabled={disabled}>
           Cancel
         </Button>
+
         <LoadingButton
-          size="default"
           title="Save changes"
           variant="secondary"
           loading={loading}
