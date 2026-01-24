@@ -4,13 +4,15 @@ import { appBottomNavButtonOptions } from '@/lib/constants';
 import { Button } from '@workspace/ui/components/button';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 export const AppBottomNav = () => {
+  const { channelId } = useParams<{ channelId: string }>();
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const isMobilePath = isMobile && (pathname === '/shorts' || !pathname.startsWith(`/channels/${channelId}`));
 
-  if (!isMobile || pathname === '/shorts') return null;
+  if (!isMobilePath) return null;
 
   return (
     <div className="w-full bg-white dark:bg-black fixed bottom-0 h-16 z-50">

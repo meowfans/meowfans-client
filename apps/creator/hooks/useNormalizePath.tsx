@@ -3,10 +3,11 @@
 import { authenticatedPaths } from '@/lib/constants';
 import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useCreator } from './context/useCreator';
 
 export const useNormalizePath = () => {
+  const { channelId } = useParams<{ channelId: string }>();
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const {
@@ -23,6 +24,6 @@ export const useNormalizePath = () => {
     username,
     normalizedPath: PathNormalizer.resolve({ pathname, username }),
     isAuthenticatedPath,
-    isMobilePath: isAuthenticatedPath && isMobile
+    isMobilePath: isAuthenticatedPath && isMobile && !pathname.startsWith(`/channels/${channelId}`)
   };
 };

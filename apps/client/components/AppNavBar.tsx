@@ -18,7 +18,7 @@ const categories: { path: string; label: string }[] = [
 export const AppNavBar = () => {
   const router = useRouter();
   const pathName = usePathname();
-  const isWatchingShorts = '/shorts' === pathName;
+  const isWatchingShorts = '/shorts' === pathName || pathName.startsWith('/channels');
 
   return isWatchingShorts ? null : (
     <div className="flex-1 min-w-0 max-w-full overflow-hidden">

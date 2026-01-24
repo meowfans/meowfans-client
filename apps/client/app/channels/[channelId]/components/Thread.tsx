@@ -8,26 +8,28 @@ import { useState } from 'react';
 
 interface Props {
   message: MessagesEntity;
-  isSender?: boolean;
+  isOutgoing?: boolean;
 }
 
-export const MessageThread: React.FC<Props> = ({ message, isSender = false }) => {
+export const MessageThread: React.FC<Props> = ({ message, isOutgoing = false }) => {
   const [messageOptionModal, setMessageOptionModal] = useState<boolean>(false);
   return (
     <div
       className={cn(
         'group relative max-w-[min(34rem,90%)] rounded-2xl border px-3 py-2 shadow-sm',
-        isSender ? 'bg-primary text-primary-foreground border-primary/20' : 'bg-background/70 backdrop-blur border-border/60'
+        isOutgoing ? 'bg-primary text-primary-foreground border-primary/20' : 'bg-background/70 backdrop-blur border-border/60'
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className={cn('mt-1 text-sm leading-relaxed wrap-break-word', isSender ? 'text-primary-foreground' : 'text-foreground/90')}>
-            {message.content}
-          </p>
-          <div className={cn('flex items-center gap-2 text-[11px]', isSender ? 'text-primary-foreground/80' : 'text-muted-foreground')}>
+          <div className={cn('flex items-center gap-2 text-[11px]', isOutgoing ? 'text-primary-foreground/80' : 'text-muted-foreground')}>
+            <span className="font-medium">{message.content}</span>
+            <span aria-hidden="true">·</span>
             <span>{moment(message.createdAt).format('hh:mm')}</span>
           </div>
+          <p className={cn('mt-1 text-sm leading-relaxed wrap-break-word', isOutgoing ? 'text-primary-foreground' : 'text-foreground/90')}>
+            {message.content}
+          </p>
         </div>
 
         <TriggerModal
@@ -35,7 +37,7 @@ export const MessageThread: React.FC<Props> = ({ message, isSender = false }) =>
           modalIcon={{ icon: ChevronDown, size: 'sm', variant: 'ghost' }}
           className={cn(
             'h-7 w-7 p-0 opacity-0 transition-opacity group-hover:opacity-100',
-            isSender ? 'hover:bg-primary-foreground/10' : 'hover:bg-muted'
+            isOutgoing ? 'hover:bg-primary-foreground/10' : 'hover:bg-muted'
           )}
         />
       </div>

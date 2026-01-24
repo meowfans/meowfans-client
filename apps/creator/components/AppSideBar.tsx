@@ -35,6 +35,12 @@ export const AppSidebar = () => {
         url: creator.user.avatarUrl
       };
     }
+    if (item.path === '/followers') {
+      return {
+        ...item,
+        path: `/${username}/followers`
+      };
+    }
     return item;
   });
 
