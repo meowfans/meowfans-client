@@ -11,9 +11,10 @@ import {
   Heart,
   HeartHandshake,
   Home,
-  Image as LucideImage,
   ImageDown,
   Lightbulb,
+  Image as LucideImage,
+  Mails,
   Mars,
   MarsStroke,
   Settings,
@@ -23,8 +24,7 @@ import {
   Venus,
   Verified,
   VerifiedIcon,
-  Video,
-  icons
+  Video
 } from 'lucide-react';
 
 // Client-specific constants
@@ -73,6 +73,7 @@ export const appSideBarButtonOptions = {
         // { label: 'Watch History', url: '/history', emoji: '', icon: History, badge: '10' },
         // { label: 'Messages', url: '/message', emoji: '', icon: MessageCircleCode },
         { label: 'Shorts', url: '/shorts', emoji: '', icon: Video },
+        // { label: 'Messages', url: '/channels', emoji: '', icon: Mails },
         { label: 'Following', url: '/following', emoji: '', icon: Group },
         { label: 'Posts', url: '/posts', emoji: '', icon: GalleryHorizontal },
         { label: 'Creators', url: '/creators', emoji: '', icon: BadgeCheck },

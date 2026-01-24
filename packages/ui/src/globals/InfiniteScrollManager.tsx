@@ -14,6 +14,7 @@ interface InfiniteScrollManagerProps {
   scrollableDiv?: string;
   LoadingComponent?: React.ReactNode;
   scrollThreshold?: number;
+  inverse?: boolean;
 }
 
 export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
@@ -23,12 +24,14 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   children,
   scrollableDiv,
   loading,
+  inverse = false,
   scrollThreshold = 0.7,
   customHeight = 'h-[100vh]',
   LoadingComponent
 }) => {
   return scrollableDiv ? (
     <InfiniteScroll
+      inverse={inverse}
       loader={null}
       hasMore={hasMore}
       scrollThreshold={scrollThreshold}
@@ -42,6 +45,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
     <div id="scrollableDiv" className={cn('overflow-y-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
       <InfiniteScroll
         loader={null}
+        inverse={inverse}
         hasMore={hasMore}
         scrollThreshold={0.7}
         next={onLoadMore}

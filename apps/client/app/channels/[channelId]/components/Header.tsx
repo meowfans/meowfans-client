@@ -1,5 +1,3 @@
-import { useSingleChannel, useUpdateChannel } from '@/hooks/useChannels';
-import { UpdateChannelInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -13,28 +11,11 @@ import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { ArrowBigLeftDash, EllipsisVertical, GalleryVerticalEnd, Menu, ShieldBan, Trash2, VolumeOff, VolumeX } from 'lucide-react';
 import moment from 'moment';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export const MessageHeader = () => {
   const router = useRouter();
-  const { channelId } = useParams<{ channelId: string }>();
-  const { channel } = useSingleChannel({ channelId });
-  const { updateChannel } = useUpdateChannel();
-  const [input, setInput] = useState<UpdateChannelInput>({
-    channelId: channel.id,
-    isBlocked: channel.isMessagingBlocked,
-    isMessagingBlocked: channel.isMessagingBlocked,
-    isMuted: channel.isMuted,
-    isRestricted: channel.isRestricted
-  });
-
-  const handleChangeInput = async <K extends keyof UpdateChannelInput>(key: K, value: UpdateChannelInput[K]) => {
-    setInput((prev) => ({ ...prev, [key]: value }));
-    await updateChannel(input);
-  };
-
   return (
     <div className="fixed top-0 left-0 md:left-(--sidebar-width) md:right-(--sidebar-width) right-0 flex flex-row items-center justify-between border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 px-2 z-40 h-16">
       <div className="flex flex-row justify-between space-x-3 items-center">
@@ -45,10 +26,8 @@ export const MessageHeader = () => {
           <SAvatar />
         </div>
         <div className="flex flex-col">
-          <p className="font-bold">
-            {channel.fanProfile?.user?.firstName} {channel.fanProfile?.user?.lastName}
-          </p>
-          <p className="font-semibold text-xs">{moment(channel.fanProfile?.user?.lastLoginAt).format('hh:mm')}</p>
+          <p className="font-bold">{'Meow User'}</p>
+          <p className="font-semibold text-xs">{moment(new Date()).format('hh:mm')}</p>
         </div>
       </div>
       <div className="flex flex-row items-center space-x-3">
@@ -72,11 +51,11 @@ export const MessageHeader = () => {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>Chat actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleChangeInput('isMuted', !channel.isMuted)}>
+              <DropdownMenuItem onClick={() => toast.message('Muted chat')}>
                 <VolumeX className="h-4 w-4" />
                 Mute
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleChangeInput('isRestricted', !channel.isRestricted)}>
+              <DropdownMenuItem onClick={() => toast.message('Restricted user')}>
                 <ShieldBan className="h-4 w-4" />
                 Restrict
               </DropdownMenuItem>

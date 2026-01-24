@@ -24,6 +24,8 @@ const AppHeader: React.FC = () => {
   const isMobile = useIsMobile();
   const { setOpenZone, openZone } = useZonesStore();
 
+  if (pathname.startsWith('/channels')) return null;
+
   return (
     <header
       className={`sticky top-0 z-50 border-b

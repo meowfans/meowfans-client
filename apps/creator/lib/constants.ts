@@ -8,7 +8,8 @@ import {
   Inbox,
   Mails,
   Settings,
-  Sparkles
+  Sparkles,
+  Users
 } from 'lucide-react';
 
 export const authenticatedPaths = [
@@ -50,6 +51,7 @@ export const appSideBarButtonOptions = [
   { icon: CircleDollarSign, title: 'Subscriptions', path: '/subscriptions' },
   { icon: CreditCard, title: ' Add card', path: '/cards' },
   { icon: CircleUserRound, url: '', title: 'My profile', path: '/profile' },
+  { icon: Users, title: 'Followers', path: '/followers' },
   { icon: Settings, title: 'More', path: '/more' },
   { icon: ChartLine, title: 'Analytics', path: '/analytics' }
 ];

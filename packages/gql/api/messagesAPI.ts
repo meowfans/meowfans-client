@@ -1,0 +1,121 @@
+import { graphql } from '../generated';
+
+export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
+  query GetChannelMessages($input: PaginationInput!) {
+    getChannelMessages(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const SEND_MESSAGE_FROM_CREATOR_MUTATION = graphql(`
+  mutation SendMessageFromCreator($input: SendMessageFromCreatorInput!) {
+    sendMessageFromCreator(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const SEND_MESSAGE_FROM_FAN_MUTATION = graphql(`
+  mutation SendMessageFromFan($input: SendMessageFromFanInput!) {
+    sendMessageFromFan(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const SEND_REPLY_FROM_CREATOR_MUTATION = graphql(`
+  mutation SendReplyFromCreator($input: SendMessageFromCreatorInput!) {
+    sendReplyFromCreator(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const SEND_REPLY_FROM_FAN_MUTATION = graphql(`
+  mutation SendReplyFromFan($input: SendMessageFromFanInput!) {
+    sendReplyFromFan(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const UPDATE_MESSAGE_MUTATION = graphql(`
+  mutation UpdateMessage($input: UpdateMessageInput!) {
+    updateMessage(input: $input) {
+      channelId
+      content
+      createdAt
+      deletedAt
+      hasAccess
+      id
+      isExclusive
+      recipientUserId
+      senderId
+      unlockPrice
+      unlockedAt
+      updatedAt
+    }
+  }
+`);
+
+export const DELETE_MESSAGE_MUTATION = graphql(`
+  mutation DeleteMessage($input: DeleteMessageInput!) {
+    deleteMessage(input: $input)
+  }
+`);

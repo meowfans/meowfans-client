@@ -1,6 +1,6 @@
 'use client';
 
-import { useCreator } from '@/hooks/context/useCreator';
+import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
@@ -8,11 +8,12 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 export const MessageInput = () => {
   const { channel } = useChannelsStore();
-  const { creator } = useCreator();
+  const { fan } = useFan();
   const { sendMessage, loading } = useMessageMutations();
   const [openAssets, setOpenAssets] = useState(false);
   const [text, setText] = useState('');
@@ -28,12 +29,12 @@ export const MessageInput = () => {
   };
 
   const handleSend = async () => {
-    if (!text.trim()) return;
+    if (!text.trim() || !fan) return;
 
     await sendMessage({
       content: text.trim(),
-      senderId: creator.user.id,
-      recipientUserId: channel.fanProfile.user.id
+      senderId: fan.user.id,
+      recipientUserId: channel.creatorProfile.user.id
     });
 
     setText('');

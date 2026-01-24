@@ -13,7 +13,7 @@ import { cn } from '@workspace/ui/lib/utils';
 import { EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 enum ChannelBadgeVariant {
@@ -35,6 +35,13 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
   const [selected, setSelected] = useState<string[]>([]);
 
   const selectedCount = selected.length;
+
+  const channelMeta = useMemo(() => {
+    const selectedSet = new Set(selected);
+    return {
+      selectedSet
+    };
+  }, [selected]);
 
   const toggleSelected = (channelPath: string) => {
     setSelected((prev) => (prev.includes(channelPath) ? prev.filter((p) => p !== channelPath) : [...prev, channelPath]));
