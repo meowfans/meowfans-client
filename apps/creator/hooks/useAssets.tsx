@@ -1,15 +1,14 @@
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { CombinedGraphQLErrors } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react';
 import { useAssetsActions } from '@workspace/gql/actions';
 import { GET_POST_ASSETS_QUERY } from '@workspace/gql/api/postsAPI';
 import { AssetType, CreatorAssetsEntity, PaginationInput, PostAssetsEntity, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 export const useAssets = (params: PaginationInput) => {
+  const { errorHandler } = useErrorHandler();
   const { assets, setAssets } = useAssetsStore();
   const { refetchCreatorAssets, getCreatorAssetsQuery } = useAssetsActions();
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,12 +21,9 @@ export const useAssets = (params: PaginationInput) => {
       const fetchedAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
 
       setHasMore(fetchedAssets.length === 30);
-
-      if (initialLoad) setAssets(fetchedAssets);
-      else setAssets([...assets, ...fetchedAssets]);
+      setAssets(initialLoad ? fetchedAssets : [...assets, ...fetchedAssets]);
     } catch (error) {
-      if (error instanceof CombinedGraphQLErrors || error.name === 'AbortError') return;
-      toast.error(error.message);
+      errorHandler({ error });
     } finally {
       setLoading(false);
     }
