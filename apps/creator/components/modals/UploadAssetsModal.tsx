@@ -46,7 +46,8 @@ export const UploadAssetsModal: React.FC<Props> = ({ onUpload }) => {
           await upload({
             mediaType: MediaType.PROFILE_MEDIA,
             formData: formData,
-            fileType: resolveFileType(file.name)
+            fileType: resolveFileType(file.name),
+            assetType
           });
         })
       );

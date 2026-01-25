@@ -3,7 +3,7 @@
 import { useCreator } from '@/hooks/context/useCreator';
 import useAPI from '@/hooks/useAPI';
 import { useCreatorMutation } from '@/hooks/useCreatorMutation';
-import { UpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
+import { AssetType, UpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Textarea } from '@workspace/ui/components/textarea';
@@ -85,7 +85,8 @@ export const Edit = () => {
     const { rawUrl } = await upload({
       mediaType: MediaType.PROFILE_MEDIA,
       formData: fd,
-      fileType: resolveFileType(file.name)
+      fileType: resolveFileType(file.name),
+      assetType: AssetType.Private
     });
 
     return rawUrl;
