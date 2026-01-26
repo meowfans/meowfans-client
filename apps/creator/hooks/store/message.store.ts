@@ -5,40 +5,40 @@ type MessagesStore = {
   content: string;
   openAssets: boolean;
   isExclusive: boolean;
-  message: MessagesEntity;
+  selectedMessage: MessagesEntity | null;
   messages: MessagesEntity[];
   attachments: Array<CreatorAssetsEntity>;
   unlockAmount: number | null;
   replyMessageId: string | null;
   setContent: (content: string) => void;
-  messageOptionsMenu: MessagesEntity | null;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
   setOpenAssets: (openAssets: boolean) => void;
-  setMessage: (message: MessagesEntity) => void;
+  setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
   setIsExclusive: (isExclusive: boolean) => void;
   setAttachments: (attachments: CreatorAssetsEntity[]) => void;
   setMessages: (messages: MessagesEntity[]) => void;
   setUnlockAmount: (unlockAmount: number | null) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
-  setMessageOptionsMenu: (messageOptionsMenu: MessagesEntity | null) => void;
 };
 
 export const useMessagesStore = create<MessagesStore>()((set) => ({
   content: '',
   messages: [],
+  isEditing: false,
   isExclusive: false,
   openAssets: false,
   attachments: [],
   unlockAmount: null,
   replyMessageId: null,
-  messageOptionsMenu: null,
-  message: {} as MessagesEntity,
+  selectedMessage: null,
+  setIsEditing: (isEditing) => set({ isEditing }),
   setOpenAssets: (openAssets) => set({ openAssets }),
   setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
   setUnlockAmount: (unlockAmount) => set({ unlockAmount }),
   setIsExclusive: (isExclusive) => set({ isExclusive }),
   setAttachments: (attachments) => set({ attachments }),
   setContent: (content) => set({ content }),
-  setMessage: (message: MessagesEntity) => set({ message }),
-  setMessages: (messages: MessagesEntity[]) => set({ messages }),
-  setMessageOptionsMenu: (messageOptionsMenu) => set({ messageOptionsMenu })
+  setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
+  setMessages: (messages: MessagesEntity[]) => set({ messages })
 }));

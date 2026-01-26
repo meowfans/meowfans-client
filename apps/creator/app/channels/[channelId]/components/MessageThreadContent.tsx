@@ -17,7 +17,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
         className={cn(
           'text-sm leading-relaxed wrap-break-word',
           message.isExclusive && 'blur-sm select-none',
-          isSender ? 'text-primary-foreground' : 'text-foreground/90'
+          isSender ? 'text-primary' : 'text-foreground/90'
         )}
       >
         {message.content}
@@ -35,7 +35,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
         </div>
       )}
 
-      <div className={cn('flex items-center gap-2 text-[11px]', isSender ? 'text-primary-foreground/80' : 'text-muted-foreground')}>
+      <div className={cn('flex items-center gap-2 text-[11px]')}>
         <span>{moment(message.createdAt).format('hh:mm')}</span>
       </div>
     </div>

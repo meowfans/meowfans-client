@@ -8,14 +8,14 @@ import { useMessageMutations } from '@/hooks/useMessages';
 import { FileType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
-import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
+import { BadgeDollarSign, ImagePlus, Reply, Send, SquarePen, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 
 export const MessageInput = () => {
   const { creator } = useCreator();
   const { channel } = useChannelsStore();
-  const { sendMessage, sendReply, loading } = useMessageMutations();
+  const { sendMessage, sendReply, loading, updateMessage } = useMessageMutations();
 
   const {
     setAttachments,
@@ -28,7 +28,12 @@ export const MessageInput = () => {
     unlockAmount,
     replyMessageId,
     setIsExclusive,
-    setUnlockAmount
+    setUnlockAmount,
+    isEditing,
+    selectedMessage,
+    setIsEditing,
+    setReplyMessageId,
+    setSelectedMessage
   } = useMessagesStore();
 
   const handleRemove = (assetId: string) => {
@@ -46,6 +51,8 @@ export const MessageInput = () => {
     setAttachments([]);
     setIsExclusive(false);
     setUnlockAmount(null);
+    setIsEditing(false);
+    setSelectedMessage(null);
   };
 
   const handleSend = async () => {
@@ -71,9 +78,21 @@ export const MessageInput = () => {
     };
 
     if (replyMessageId) await sendReply({ ...payload, messageId: replyMessageId });
+    else if (isEditing) await updateMessage({ messageId: selectedMessage?.id as string, content });
     else await sendMessage(payload);
 
     handleCancel();
+  };
+
+  const resolveSendButton = () => {
+    if (replyMessageId) return <Reply className="h-4 w-4" />;
+    else if (isEditing) return <SquarePen className="h-4 w-4" />;
+    else return <Send className="h-4 w-4" />;
+  };
+
+  const handleCancelReplying = () => {
+    setSelectedMessage(null);
+    setReplyMessageId(null);
   };
 
   return (
@@ -124,6 +143,15 @@ export const MessageInput = () => {
           </div>
         )}
 
+        {replyMessageId && (
+          <div className="flex flex-row justify-between">
+            <p>{selectedMessage?.content}</p>
+            <Button variant="ghost" size="icon" onClick={handleCancelReplying}>
+              <X className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </div>
+        )}
+
         <div className="flex items-center gap-2">
           <div className="relative flex items-center rounded-xl border bg-background px-2 w-full">
             {(content.length > 0 || attachments.length > 0) && (
@@ -145,7 +173,7 @@ export const MessageInput = () => {
           </div>
 
           <Button type="button" size="icon" variant="outline" onClick={handleSend} disabled={loading}>
-            <Send className="h-4 w-4" />
+            {resolveSendButton()}
           </Button>
         </div>
       </div>
