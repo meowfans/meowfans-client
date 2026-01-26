@@ -10,18 +10,20 @@ import { AssetType, FileType, SortOrder } from '@workspace/gql/generated/graphql
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { motion } from 'framer-motion';
-import { MouseEvent, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { MouseEvent, useEffect, useState } from 'react';
 import { AssetOptions } from './AssetOptions';
 import { AssetsHeader } from './AssetsHeader';
 
 export const Assets = () => {
+  const searchParams = useSearchParams();
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
   const [orderBy, setOrderBy] = useState<SortOrder>(SortOrder.Desc);
   const [fileType, setFiletype] = useState<FileType[]>([FileType.Image, FileType.Video]);
-  const { canSelect, selectedAssets, toggleSelect, rangeSelection, setAssets, setSelectedAssets, setRangeSelection, setCanSelect } =
-    useAssetsStore();
   const { assets, handleLoadMore, hasMore, loading, handleRefetch } = useAssets({ assetType, orderBy, fileType });
   const [selectedAssetsRecord, setSelectedAssetsRecord] = useState<{ id: string; url: string }[]>([]);
+  const { canSelect, selectedAssets, toggleSelect, rangeSelection, setAssets, setSelectedAssets, setRangeSelection, setCanSelect } =
+    useAssetsStore();
 
   const handleSelectRange = (fromId: string, toId: string) => {
     if (!assets.length) return;
@@ -64,6 +66,13 @@ export const Assets = () => {
     setAssets([...newAssets, ...assets]);
     handleDoneUploading();
   };
+
+  useEffect(() => {
+    if (searchParams.has('create-post')) {
+      setRangeSelection(true);
+      setCanSelect(true);
+    }
+  }, []); // eslint-disable-line
 
   return (
     <PageManager>

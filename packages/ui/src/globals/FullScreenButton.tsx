@@ -22,19 +22,19 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
   urls,
   className = 'hover:text-red-500 rounded-xl hidden md:flex',
   size = 'icon',
-  variant = 'default',
+  variant = 'secondary',
   title = 'Full Screen',
   filetype = 'img',
   ...props
 }) => {
   return (
     <Button
+      asChild
       className={className}
       size={size}
       variant={variant}
       title={title}
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={() => {
         handleFullScreen(
           currentUrl,
           currentIdx,
@@ -44,7 +44,7 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       }}
       {...props}
     >
-      <Fullscreen />
+      <Fullscreen className='w-6 h-6 cursor-pointer' />
     </Button>
   );
 };

@@ -30,13 +30,14 @@ import {
   UserX,
   X
 } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const ApplyHeaderOptions = () => {
   const { creator } = useCreator();
   const pathname = usePathname();
   const router = useRouter();
   const isMobile = useIsMobile();
+  const searchParams = useSearchParams();
   const {
     setOpenUploadModal,
     setCanSelect,
@@ -112,6 +113,9 @@ export const ApplyHeaderOptions = () => {
                 setSelectedAssets([]);
                 setCanSelect(false);
                 setRangeSelection(false);
+                if (searchParams.has('create-post')) {
+                  router.push('/assets');
+                }
               }}
             />
           )}

@@ -29,7 +29,7 @@ export const StudioHeader = () => {
           </Link>
         </Button>
         <Button asChild>
-          <Link href="/assets">
+          <Link href="/assets?create-post">
             Create a post <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
