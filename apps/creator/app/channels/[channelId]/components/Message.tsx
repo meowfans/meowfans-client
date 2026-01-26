@@ -22,7 +22,7 @@ export const Message = () => {
           {messages.map((message) => {
             const isSender = message.senderId === creator.creatorId;
             return (
-              <div key={message.id} className={`flex w-full ${isSender ? 'justify-end' : 'justify-start'}`}>
+              <div key={message.id} className={`flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}>
                 <MessageThread message={message} isSender={isSender} />
               </div>
             );

@@ -7,8 +7,8 @@ interface Props {
   children: React.ReactNode;
   isOpen: boolean;
   onClose?: () => unknown;
-  title?: string;
-  description?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   hideCloseIcon?: boolean;
   showFooter?: boolean;
