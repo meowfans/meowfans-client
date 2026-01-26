@@ -8,7 +8,6 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 export const MessageInput = () => {

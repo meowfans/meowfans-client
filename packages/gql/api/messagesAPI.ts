@@ -3,28 +3,69 @@ import { graphql } from '../generated';
 export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
   query GetChannelMessages($input: PaginationInput!) {
     getChannelMessages(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
-      senderId
-      unlockPrice
-      unlockedAt
-      updatedAt
-      messageAssets {
-        assetId
-        asset {
-          createdAt
-          fileType
+      creatorId
+      fanId
+      isPinned
+      label
+      isMuted
+      isRestricted
+      isMessagingBlocked
+      totalEarning
+      creatorProfile {
+        user {
+          avatarUrl
+          bannerUrl
+          firstName
           id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
+          lastLoginAt
+          roles
+          username
+          lastName
+        }
+        isFollowing
+        creatorId
+        bio
+        allowsMessaging
+      }
+      fanProfile {
+        fanId
+        isBanned
+        user {
+          avatarUrl
+          bannerUrl
+          id
+          firstName
+          lastLoginAt
+          lastName
+          roles
+          username
+        }
+      }
+      messages {
+        channelId
+        content
+        createdAt
+        deletedAt
+        hasAccess
+        id
+        isExclusive
+        recipientUserId
+        senderId
+        unlockPrice
+        unlockedAt
+        updatedAt
+        messageAssets {
+          assetId
+          asset {
+            createdAt
+            fileType
+            id
+            mediaType
+            mimeType
+            rawUrl
+            updatedAt
+          }
         }
       }
     }

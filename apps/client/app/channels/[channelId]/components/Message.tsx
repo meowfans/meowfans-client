@@ -1,4 +1,3 @@
-import { useSingleChannel } from '@/hooks/useChannels';
 import { useChannelMessages } from '@/hooks/useMessages';
 import { Badge } from '@workspace/ui/components/badge';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -9,8 +8,7 @@ import { MessageInput } from './Input';
 
 export const Message = () => {
   const { channelId } = useParams<{ channelId: string }>();
-  const { channel, loading } = useSingleChannel({ channelId });
-  const { messages } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
+  const { channel } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
 
   return (
     <PageManager className="relative p-0">
@@ -26,7 +24,7 @@ export const Message = () => {
             <h1 className="text-xl font-semibold tracking-tight">{channel.creatorProfile.user.username ?? 'Channel'}</h1>
             <Badge variant="secondary">Private</Badge>
           </div>
-          <MessageContainer messages={messages} />
+          <MessageContainer messages={channel.messages} />
         </div>
       </div>
       <MessageInput />

@@ -12,13 +12,13 @@ import { MessageThread } from './MessageThread';
 export const Message = () => {
   const { creator } = useCreator();
   const { channelId } = useParams<{ channelId: string }>();
-  const { messages, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
+  const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
 
   return (
     <PageManager>
-      <MessageHeader />
-      <InfiniteScrollManager dataLength={messages.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
-        {messages.map((message) => {
+      <MessageHeader channel={channel} />
+      <InfiniteScrollManager dataLength={channel.messages?.length || 0} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
+        {channel.messages?.map((message) => {
           const isSender = message.senderId === creator.creatorId;
           return (
             <div key={message.id} className={`flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}>

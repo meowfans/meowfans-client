@@ -4,9 +4,10 @@ import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessagesActions } from '@workspace/gql/actions';
 import {
   DeleteMessageInput,
+  MessageChannelsEntity,
   MessagesEntity,
   PaginationInput,
-  SendMessageFromFanInput,
+  SendMessageFromCreatorInput,
   UpdateMessageInput
 } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
@@ -14,24 +15,29 @@ import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
 
 export const useChannelMessages = (input: PaginationInput) => {
-  const { messages, setMessages } = useMessagesStore();
+  const { channel, setChannel } = useMessagesStore();
   const { errorHandler } = useErrorHandler();
   const { getChannelMessagesQuery } = useMessagesActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadMessages = async (initialLoad = false) => {
-    const skip = initialLoad ? 0 : messages.length;
-    setLoading(messages.length === 0);
+    const skip = initialLoad ? 0 : channel.messages.length;
+    setLoading(channel.messages?.length === 0);
 
     try {
       const { data } = await getChannelMessagesQuery({ ...input, skip });
-      const fetchedMessages = (data?.getChannelMessages ?? []) as MessagesEntity[];
+      const fetchedChannel = data?.getChannelMessages as MessageChannelsEntity;
+      const fetchedMessages = fetchedChannel.messages ?? [];
 
       const take = input.take ?? fetchedMessages.length;
       setHasMore(fetchedMessages.length === take);
 
-      setMessages(initialLoad ? fetchedMessages : [...messages, ...fetchedMessages]);
+      setChannel(
+        initialLoad
+          ? { ...fetchedChannel, messages: fetchedMessages }
+          : { ...fetchedChannel, messages: [...channel.messages, ...fetchedMessages] }
+      );
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -44,33 +50,32 @@ export const useChannelMessages = (input: PaginationInput) => {
   };
 
   const handleRefresh = () => {
-    setMessages([]);
+    setChannel({} as MessageChannelsEntity);
     loadMessages(true);
   };
 
   useEffect(() => {
     loadMessages(true);
-    // We care mainly about entity scope and page size
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input.relatedEntityId, input.take]);
+  }, [input.relatedEntityId, input.take]); //eslint-disable-line
 
-  return { messages, loading, hasMore, handleLoadMore, handleRefresh };
+  return { channel, loading, hasMore, handleLoadMore, handleRefresh };
 };
 
 export const useMessageMutations = () => {
-  const { messages, setMessages } = useMessagesStore();
+  const { channel, setChannel } = useMessagesStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
-  const { sendMessageFromFanMutation, sendReplyFromFanMutation, updateMessageMutation, deleteMessageMutation } = useMessagesActions();
+  const { sendMessageFromCreatorMutation, sendReplyFromCreatorMutation, updateMessageMutation, deleteMessageMutation } =
+    useMessagesActions();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const sendMessage = async (input: SendMessageFromFanInput) => {
+  const sendMessage = async (input: SendMessageFromCreatorInput) => {
     setLoading(true);
     try {
-      const { data } = await sendMessageFromFanMutation(input);
-      const newMessage = data?.sendMessageFromFan as MessagesEntity;
+      const { data } = await sendMessageFromCreatorMutation(input);
+      const newMessage = data?.sendMessageFromCreator as MessagesEntity;
       if (newMessage) {
-        setMessages([...messages, newMessage]);
+        setChannel({ ...channel, messages: [...channel.messages, newMessage] });
         successHandler({ message: 'Message sent' });
       }
     } catch (error) {
@@ -80,13 +85,13 @@ export const useMessageMutations = () => {
     }
   };
 
-  const sendReply = async (input: SendMessageFromFanInput) => {
+  const sendReply = async (input: SendMessageFromCreatorInput) => {
     setLoading(true);
     try {
-      const { data } = await sendReplyFromFanMutation(input);
-      const newMessage = data?.sendReplyFromFan as MessagesEntity;
+      const { data } = await sendReplyFromCreatorMutation(input);
+      const newMessage = data?.sendReplyFromCreator as MessagesEntity;
       if (newMessage) {
-        setMessages([...messages, newMessage]);
+        setChannel({ ...channel, messages: [...channel.messages, newMessage] });
         successHandler({ message: 'Reply sent' });
       }
     } catch (error) {
@@ -102,7 +107,7 @@ export const useMessageMutations = () => {
       const { data } = await updateMessageMutation(input);
       const updated = data?.updateMessage as MessagesEntity;
       if (updated) {
-        setMessages(messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)));
+        setChannel({ ...channel, messages: channel.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) });
         successHandler({ message: 'Message updated' });
       }
     } catch (error) {
@@ -117,7 +122,7 @@ export const useMessageMutations = () => {
     try {
       const { data } = await deleteMessageMutation(input);
       if (data?.deleteMessage) {
-        setMessages(messages.filter((m) => m.id !== input.messageId));
+        setChannel({ ...channel, messages: channel.messages.filter((m) => m.id !== input.messageId) });
         successHandler({ message: 'Message deleted' });
       }
     } catch (error) {

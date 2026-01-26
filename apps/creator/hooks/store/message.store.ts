@@ -1,4 +1,4 @@
-import { CreatorAssetsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
+import { CreatorAssetsEntity, MessageChannelsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type MessagesStore = {
@@ -6,7 +6,7 @@ type MessagesStore = {
   openAssets: boolean;
   isExclusive: boolean;
   selectedMessage: MessagesEntity | null;
-  messages: MessagesEntity[];
+  channel: MessageChannelsEntity;
   attachments: Array<CreatorAssetsEntity>;
   unlockAmount: number | null;
   replyMessageId: string | null;
@@ -17,14 +17,14 @@ type MessagesStore = {
   setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
   setIsExclusive: (isExclusive: boolean) => void;
   setAttachments: (attachments: CreatorAssetsEntity[]) => void;
-  setMessages: (messages: MessagesEntity[]) => void;
+  setChannel: (channel: MessageChannelsEntity) => void;
   setUnlockAmount: (unlockAmount: number | null) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
 };
 
 export const useMessagesStore = create<MessagesStore>()((set) => ({
   content: '',
-  messages: [],
+  channel: {} as MessageChannelsEntity,
   isEditing: false,
   isExclusive: false,
   openAssets: false,
@@ -40,5 +40,5 @@ export const useMessagesStore = create<MessagesStore>()((set) => ({
   setAttachments: (attachments) => set({ attachments }),
   setContent: (content) => set({ content }),
   setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
-  setMessages: (messages: MessagesEntity[]) => set({ messages })
+  setChannel: (channel: MessageChannelsEntity) => set({ channel })
 }));

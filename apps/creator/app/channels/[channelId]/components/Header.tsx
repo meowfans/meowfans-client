@@ -1,5 +1,5 @@
-import { useSingleChannel, useUpdateChannel } from '@/hooks/useChannels';
-import { UpdateChannelInput } from '@workspace/gql/generated/graphql';
+import { useUpdateChannel } from '@/hooks/useChannels';
+import { MessageChannelsEntity, UpdateChannelInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -13,14 +13,16 @@ import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { ArrowBigLeftDash, EllipsisVertical, GalleryVerticalEnd, Menu, ShieldBan, Trash2, VolumeOff, VolumeX } from 'lucide-react';
 import moment from 'moment';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export const MessageHeader = () => {
+interface MessageHeaderProps {
+  channel: MessageChannelsEntity;
+}
+
+export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
   const router = useRouter();
-  const { channelId } = useParams<{ channelId: string }>();
-  const { channel } = useSingleChannel({ channelId });
   const { updateChannel } = useUpdateChannel();
   const [input, setInput] = useState<UpdateChannelInput>({
     channelId: channel.id,
@@ -42,7 +44,7 @@ export const MessageHeader = () => {
           <ArrowBigLeftDash />
         </Button>
         <div className="cursor-pointer">
-          <SAvatar />
+          <SAvatar url={channel.fanProfile?.user?.avatarUrl} />
         </div>
         <div className="flex flex-col">
           <p className="font-bold">
