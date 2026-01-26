@@ -2,13 +2,15 @@
 
 import { useAssets } from '@/hooks/useAssets';
 import { useInfiniteObserver } from '@/hooks/useInfiniteObserver';
-import { AssetType, CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatorAssetsEntity, FileType } from '@workspace/gql/generated/graphql';
+import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
 import { Skeleton } from '@workspace/ui/components/skeleton';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
+import { FullScreenButton } from '@workspace/ui/globals/FullScreenButton';
 import { Modal } from '@workspace/ui/modals/Modal';
-import { GalleryThumbnails, ImagePlus } from 'lucide-react';
+import { GalleryThumbnails, ImagePlus, Notebook, Video, Volume } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { CreatorNextImage } from '../CreatorNextImage';
 
@@ -21,7 +23,8 @@ interface AssetPickerModalProps {
 export const AssetPickerModal = ({ open, onClose, onSelectUrls }: AssetPickerModalProps) => {
   const [selected, setSelected] = useState<CreatorAssetsEntity[]>([]);
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
-  const { loading, assets, hasMore, handleLoadMore } = useAssets({ assetType });
+  const [fileType, setFileType] = useState<FileType[]>([FileType.Image, FileType.Video]);
+  const { loading, assets, hasMore, handleLoadMore } = useAssets({ assetType, fileType });
 
   // IMPORTANT: this is the actual scroll container in modal
   const scrollRootRef = useRef<HTMLDivElement | null>(null);
@@ -50,14 +53,21 @@ export const AssetPickerModal = ({ open, onClose, onSelectUrls }: AssetPickerMod
     onClose();
   };
 
+  const fileTypeMap = {
+    [FileType.Image]: <GalleryThumbnails />,
+    [FileType.Video]: <Video />,
+    [FileType.Audio]: <Volume />,
+    [FileType.Document]: <Notebook />
+  };
+
   return (
     <Modal
       isOpen={open}
       onClose={handleClose}
       title="Upload from assets"
-      description={
+      description="Pick from assets"
+      footerContent={
         <div className="flex flex-row justify-center space-x-5 items-center">
-          <div>Pick from assets</div>
           <Dropdown
             enumValue={AssetType}
             filterBy={assetType}
@@ -72,32 +82,45 @@ export const AssetPickerModal = ({ open, onClose, onSelectUrls }: AssetPickerMod
         </div>
       }
     >
-      <div ref={scrollRootRef}>
-        {loading && !assets.length && (
+      <div ref={scrollRootRef} />
+      <div id="asset-picker-scroll" className="flex-1 overflow-y-auto px-4 py-3">
+        {loading ? (
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {Array.from({ length: 12 }).map((_, i) => (
               <Skeleton key={i} className="aspect-square w-full rounded-lg" />
             ))}
           </div>
-        )}
-
-        {assets.length > 0 && (
+        ) : assets.length > 0 ? (
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {assets.map((a) => (
+            {assets.map((asset, idx) => (
               <div
-                key={a.id}
-                onClick={() => handleToggle(a)}
-                className={`relative aspect-square overflow-hidden rounded-lg border ${selected.some((ca) => ca.assetId === a.assetId) ? 'border-amber-500' : ''}`}
+                key={asset.id}
+                onClick={() => handleToggle(asset)}
+                className={`relative aspect-square rounded-lg overflow-hidden border cursor-pointer ${
+                  selected.some((a) => a.assetId === asset.assetId) ? 'border-amber-500' : ''
+                }`}
               >
-                <CreatorNextImage fill imageUrl={a.asset?.rawUrl} alt="Asset" className="object-cover" />
+                {asset.asset.fileType === FileType.Image ? (
+                  <CreatorNextImage fill imageUrl={asset.asset.rawUrl} alt="Asset" className="object-cover" />
+                ) : (
+                  <video src={asset.asset.rawUrl} muted className="w-full h-full object-cover" />
+                )}
+                <Badge variant={'secondary'} className="absolute top-0 right-0 p-1 m-0">
+                  {fileTypeMap[asset.asset.fileType]}
+                </Badge>
+                <FullScreenButton
+                  currentIdx={idx}
+                  urls={assets.map(({ asset }) => asset.rawUrl)}
+                  className="absolute top-0 left-0 p-0 m-0"
+                  currentUrl={asset.asset.rawUrl}
+                  size="icon"
+                  filetype={asset.asset.fileType === FileType.Image ? 'img' : 'video'}
+                />
               </div>
             ))}
+            <div ref={sentinelRef} className="h-1" />
           </div>
-        )}
-
-        <div ref={sentinelRef} className="h-1" />
-
-        {!loading && !assets.length && (
+        ) : (
           <Card>
             <div className="flex items-center gap-3 p-4">
               <ImagePlus className="h-4 w-4" />

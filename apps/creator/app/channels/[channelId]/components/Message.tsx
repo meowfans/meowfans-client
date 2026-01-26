@@ -7,7 +7,7 @@ import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useParams } from 'next/navigation';
 import { MessageHeader } from './Header';
 import { MessageInput } from './Input';
-import { MessageThread } from './Thread';
+import { MessageThread } from './MessageThread';
 
 export const Message = () => {
   const { creator } = useCreator();
@@ -17,18 +17,16 @@ export const Message = () => {
   return (
     <PageManager>
       <MessageHeader />
-      <div className="mt-16">
-        <InfiniteScrollManager dataLength={messages.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
-          {messages.map((message) => {
-            const isSender = message.senderId === creator.creatorId;
-            return (
-              <div key={message.id} className={`flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}>
-                <MessageThread message={message} isSender={isSender} />
-              </div>
-            );
-          })}
-        </InfiniteScrollManager>
-      </div>
+      <InfiniteScrollManager dataLength={messages.length} hasMore={hasMore} loading={loading} onLoadMore={handleLoadMore}>
+        {messages.map((message) => {
+          const isSender = message.senderId === creator.creatorId;
+          return (
+            <div key={message.id} className={`flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}>
+              <MessageThread message={message} isSender={isSender} />
+            </div>
+          );
+        })}
+      </InfiniteScrollManager>
       <MessageInput />
     </PageManager>
   );

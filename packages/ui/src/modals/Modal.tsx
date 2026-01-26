@@ -11,9 +11,10 @@ interface Props {
   onClose?: () => unknown;
   title?: React.ReactNode;
   description?: React.ReactNode;
+  footerContent?: React.ReactNode;
 }
 
-export const Modal: React.FC<Props> = ({ isOpen, onClose, children, title, description }) => {
+export const Modal: React.FC<Props> = ({ isOpen, onClose, children, title, description, footerContent }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
@@ -25,14 +26,14 @@ export const Modal: React.FC<Props> = ({ isOpen, onClose, children, title, descr
 
   if (!isMobile) {
     return (
-      <ExtendedDialog isOpen={open} onClose={handleClose} title={title} description={description}>
+      <ExtendedDialog isOpen={open} onClose={handleClose} title={title} description={description} footerContent={footerContent}>
         {children}
       </ExtendedDialog>
     );
   }
 
   return (
-    <ExtendedDrawer isOpen={open} onClose={handleClose} title={title} description={description}>
+    <ExtendedDrawer isOpen={open} onClose={handleClose} title={title} description={description} footerContent={footerContent}>
       <div className="px-4 pb-10">{children}</div>
     </ExtendedDrawer>
   );

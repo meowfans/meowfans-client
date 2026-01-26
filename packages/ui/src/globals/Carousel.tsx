@@ -4,6 +4,7 @@ import { Button } from '@workspace/ui/components/button';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { FullScreenButton } from './FullScreenButton';
 
 enum FileType {
   Audio = 'AUDIO',
@@ -17,9 +18,10 @@ interface CarouselProps<T> {
   getKey: (item: T) => string | number;
   getUrl: (item: T) => string | undefined;
   getFileType: (item: T) => FileType;
+  urls?: string[];
 }
 
-export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselProps<T>) => {
+export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls }: CarouselProps<T>) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     axis: 'x',
@@ -61,10 +63,15 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselPro
               {getFileType(item) === FileType.Image ? (
                 <img src={getUrl(item)} alt="Post content" draggable={false} className="h-full w-full object-contain select-none" />
               ) : (
-                <div className="relative w-full h-full">
-                  <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
-                </div>
+                <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
               )}
+              <FullScreenButton
+                currentIdx={idx}
+                urls={urls || []}
+                currentUrl={getUrl(item)}
+                filetype={getFileType(item) === FileType.Image ? 'img' : 'video'}
+                className="absolute top-1 right-1"
+              />
             </div>
           ))}
         </div>
@@ -73,8 +80,8 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselPro
       {items.length > 1 && (
         <>
           <Button
-            variant="ghost"
-            size="icon"
+            variant="outline"
+            size="icon-sm"
             className={`absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             onClick={() => emblaApi?.scrollPrev()}
           >
@@ -82,8 +89,8 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType }: CarouselPro
           </Button>
 
           <Button
-            variant="ghost"
-            size="icon"
+            variant="outline"
+            size="icon-sm"
             className={`absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full hover:bg-black/70 backdrop-blur-sm transition-opacity ${!canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             onClick={() => emblaApi?.scrollNext()}
           >
