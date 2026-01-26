@@ -75,7 +75,7 @@ export const EditProfilePicture = ({ avatar, setAvatar, setIsAvatarEditing }: Ed
         <AssetPickerModal
           open={openAsstPickerModal}
           onClose={() => setOpenAsstPickerModal(false)}
-          onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
+          onSelectUrls={(creatorAssets) => handleSelectFromAsset(creatorAssets[0])}
         />
       )}
     </div>

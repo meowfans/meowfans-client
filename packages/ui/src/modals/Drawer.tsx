@@ -5,8 +5,8 @@ interface Props {
   children: React.ReactNode;
   isOpen: boolean;
   onClose?: () => unknown;
-  title?: string;
-  description?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
 }
 
 export const ExtendedDrawer: React.FC<Props> = ({

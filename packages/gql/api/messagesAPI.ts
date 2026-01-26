@@ -15,6 +15,18 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
       unlockPrice
       unlockedAt
       updatedAt
+      messageAssets {
+        assetId
+        asset {
+          createdAt
+          fileType
+          id
+          mediaType
+          mimeType
+          rawUrl
+          updatedAt
+        }
+      }
     }
   }
 `);
@@ -34,6 +46,18 @@ export const SEND_MESSAGE_FROM_CREATOR_MUTATION = graphql(`
       unlockPrice
       unlockedAt
       updatedAt
+      messageAssets {
+        assetId
+        asset {
+          createdAt
+          fileType
+          id
+          mediaType
+          mimeType
+          rawUrl
+          updatedAt
+        }
+      }
     }
   }
 `);
@@ -72,6 +96,18 @@ export const SEND_REPLY_FROM_CREATOR_MUTATION = graphql(`
       unlockPrice
       unlockedAt
       updatedAt
+      messageAssets {
+        assetId
+        asset {
+          createdAt
+          fileType
+          id
+          mediaType
+          mimeType
+          rawUrl
+          updatedAt
+        }
+      }
     }
   }
 `);

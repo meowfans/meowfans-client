@@ -66,7 +66,7 @@ export const EditBannerPicture = ({ banner, setBanner, setIsBannerEditing }: Edi
         <AssetPickerModal
           open={openAsstPickerModal}
           onClose={() => setOpenAsstPickerModal(false)}
-          onSelectUrl={(creatorAsset) => handleSelectFromAsset(creatorAsset)}
+          onSelectUrls={(creatorAssets) => handleSelectFromAsset(creatorAssets[0])}
         />
       )}
     </div>
