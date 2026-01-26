@@ -102,105 +102,115 @@ export const resolveFileType = (url: string) => {
   return FileType.IMAGE;
 };
 
-export const handleFullScreen = (url: string, startIndex: number, imageUrls: string[]) => {
+export const handleFullScreen = (url: string, startIndex: number, mediaUrls: string[], type?: 'img' | 'video') => {
   let currentIndex = startIndex;
 
-  const image = document.createElement('img');
-  image.src = url;
-  image.style.maxWidth = '100%';
-  image.style.maxHeight = '100%';
-  image.style.margin = 'auto';
-  image.style.display = 'block';
-  image.style.userSelect = 'none';
+  let mediaEl: HTMLImageElement | HTMLVideoElement | null = null;
+
+  const createMedia = (src: string) => {
+    if (mediaEl && wrapper.contains(mediaEl)) {
+      wrapper.removeChild(mediaEl);
+    }
+
+    if (type === 'video') {
+      const video = document.createElement('video');
+      video.src = src;
+      video.controls = true;
+      video.autoplay = true;
+      video.style.maxWidth = '100%';
+      video.style.maxHeight = '100%';
+      mediaEl = video;
+    } else {
+      const img = document.createElement('img');
+      img.src = src;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '100%';
+      img.style.userSelect = 'none';
+      mediaEl = img;
+    }
+
+    mediaEl.style.margin = 'auto';
+    mediaEl.style.display = 'block';
+
+    wrapper.appendChild(mediaEl);
+  };
 
   const wrapper = document.createElement('div');
-  wrapper.style.width = '100%';
-  wrapper.style.height = '100%';
-  wrapper.style.display = 'flex';
-  wrapper.style.justifyContent = 'center';
-  wrapper.style.alignItems = 'center';
-  wrapper.style.background = 'black';
-  wrapper.style.position = 'relative';
+  Object.assign(wrapper.style, {
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'black',
+    position: 'fixed',
+    inset: '0',
+    zIndex: '9999'
+  });
 
-  const nextButton = document.createElement('button');
-  nextButton.innerHTML = '&#8594;';
-  nextButton.style.position = 'absolute';
-  nextButton.style.right = '20px';
-  nextButton.style.top = '50%';
-  nextButton.style.transform = 'translateY(-50%)';
-  nextButton.style.padding = '0px';
-  nextButton.style.background = '#000';
-  nextButton.style.color = 'white';
-  nextButton.style.border = 'none';
-  nextButton.style.cursor = 'pointer';
-  nextButton.style.fontSize = '24px';
-  nextButton.onclick = () => {
-    currentIndex = (currentIndex + 1) % imageUrls.length;
-    const nextImage = imageUrls[currentIndex];
-    if (nextImage) image.src = nextImage;
+  // initial media
+  createMedia(url);
+
+  const createButton = (content: string, style: Partial<CSSStyleDeclaration>, onClick: () => void) => {
+    const btn = document.createElement('button');
+    btn.innerHTML = content;
+    Object.assign(btn.style, {
+      position: 'absolute',
+      background: '#000',
+      color: 'white',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '24px',
+      padding: '4px',
+      ...style
+    });
+    btn.onclick = onClick;
+    wrapper.appendChild(btn);
+    return btn;
   };
 
-  const previousButton = document.createElement('button');
-  previousButton.innerHTML = '&#8592;';
-  previousButton.style.position = 'absolute';
-  previousButton.style.left = '20px';
-  previousButton.style.top = '50%';
-  previousButton.style.transform = 'translateY(-50%)';
-  previousButton.style.padding = '0px';
-  previousButton.style.background = '#000000';
-  previousButton.style.color = 'white';
-  previousButton.style.border = 'none';
-  previousButton.style.cursor = 'pointer';
-  previousButton.style.fontSize = '24px';
-  previousButton.onclick = () => {
-    currentIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
-    const prevImage = imageUrls[currentIndex];
-    if (prevImage) image.src = prevImage;
+  const next = () => {
+    currentIndex = (currentIndex + 1) % mediaUrls.length;
+    createMedia(mediaUrls[currentIndex] as string);
   };
 
-  const closeButton = document.createElement('button');
-  closeButton.innerHTML = '&#215;';
-  closeButton.style.position = 'absolute';
-  closeButton.style.top = '20px';
-  closeButton.style.right = '20px';
-  closeButton.style.padding = '0px';
-  closeButton.style.background = '#000000';
-  closeButton.style.color = 'white';
-  closeButton.style.border = 'none';
-  closeButton.style.cursor = 'pointer';
-  closeButton.style.fontSize = '20px';
-  closeButton.onclick = () => {
+  const prev = () => {
+    currentIndex = (currentIndex - 1 + mediaUrls.length) % mediaUrls.length;
+    createMedia(mediaUrls[currentIndex] as string);
+  };
+
+  const exit = () => {
     if (document.fullscreenElement) {
       document.exitFullscreen();
-    } else {
-      exitHandler();
+    }
+    cleanup();
+  };
+
+  createButton('&#8594;', { right: '20px', top: '50%', transform: 'translateY(-50%)' }, next);
+  createButton('&#8592;', { left: '20px', top: '50%', transform: 'translateY(-50%)' }, prev);
+  createButton('&#215;', { top: '20px', right: '20px', fontSize: '20px' }, exit);
+
+  const keyHandler = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'Escape') exit();
+  };
+
+  const fullscreenChangeHandler = () => {
+    if (!document.fullscreenElement) cleanup();
+  };
+
+  const cleanup = () => {
+    document.removeEventListener('keydown', keyHandler);
+    document.removeEventListener('fullscreenchange', fullscreenChangeHandler);
+    if (document.body.contains(wrapper)) {
+      document.body.removeChild(wrapper);
     }
   };
 
-  wrapper.appendChild(image);
-  wrapper.appendChild(nextButton);
-  wrapper.appendChild(previousButton);
-  wrapper.appendChild(closeButton);
   document.body.appendChild(wrapper);
+  wrapper.requestFullscreen?.();
 
-  if (wrapper.requestFullscreen) wrapper.requestFullscreen();
-
-  const keyHandler = (e: KeyboardEvent) => {
-    if (e.key === 'ArrowRight') nextButton.click();
-    if (e.key === 'ArrowLeft') previousButton.click();
-    if (e.key === 'Escape') closeButton.click();
-  };
-
-  const exitHandler = () => {
-    if (document.body.contains(wrapper)) document.body.removeChild(wrapper);
-    document.removeEventListener('fullscreenchange', onFullscreenChange);
-    document.removeEventListener('keydown', keyHandler);
-  };
-
-  const onFullscreenChange = () => {
-    if (!document.fullscreenElement) exitHandler();
-  };
-
-  document.addEventListener('fullscreenchange', onFullscreenChange);
   document.addEventListener('keydown', keyHandler);
+  document.addEventListener('fullscreenchange', fullscreenChangeHandler);
 };

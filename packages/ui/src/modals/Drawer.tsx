@@ -1,5 +1,5 @@
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@workspace/ui/components/drawer';
 import React, { useEffect, useState } from 'react';
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@workspace/ui/components/drawer';
 
 interface Props {
   children: React.ReactNode;
@@ -7,6 +7,7 @@ interface Props {
   onClose?: () => unknown;
   title?: React.ReactNode;
   description?: React.ReactNode;
+  footerContent?: React.ReactNode;
 }
 
 export const ExtendedDrawer: React.FC<Props> = ({
@@ -14,7 +15,8 @@ export const ExtendedDrawer: React.FC<Props> = ({
   children,
   onClose,
   title = 'Edit modal',
-  description = "Make changes to your profile here. Click save when you're done."
+  description = "Make changes to your profile here. Click save when you're done.",
+  footerContent
 }) => {
   const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
@@ -36,6 +38,7 @@ export const ExtendedDrawer: React.FC<Props> = ({
           <div className="overflow-y-auto pb-6">{children}</div>
         </div>
       </DrawerContent>
+      {footerContent && <DrawerFooter>{footerContent}</DrawerFooter>}
     </Drawer>
   );
 };

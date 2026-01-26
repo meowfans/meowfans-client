@@ -11,7 +11,6 @@ interface Props {
   description?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   hideCloseIcon?: boolean;
-  showFooter?: boolean;
   footerContent?: React.ReactNode;
   backdropBlur?: boolean;
 }
@@ -31,10 +30,9 @@ export const ExtendedDialog: React.FC<Props> = ({
   description = "Make changes here. Click save when you're done.",
   size = 'md',
   hideCloseIcon = false,
-  showFooter = false,
   footerContent
 }) => {
-  const [open, setOpen] = useState(isOpen);
+  const [open, setOpen] = useState<boolean>(isOpen);
   useEffect(() => setOpen(isOpen), [isOpen]);
 
   const handleClose = () => {
@@ -65,7 +63,7 @@ export const ExtendedDialog: React.FC<Props> = ({
 
         <div className="flex-1 overflow-y-auto px-4 py-3">{children}</div>
 
-        {showFooter && <div className="sticky bottom-0 bg-background border-t p-4">{footerContent}</div>}
+        {footerContent && <div className="sticky bottom-0 bg-background border-t p-4">{footerContent}</div>}
       </DialogContent>
     </Dialog>
   );

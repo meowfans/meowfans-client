@@ -5,6 +5,7 @@ import { useCreator } from '@/hooks/context/useCreator';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
+import { FileType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
@@ -80,9 +81,13 @@ export const MessageInput = () => {
       <div className="mx-auto w-full max-w-3xl">
         {attachments.length > 0 && (
           <div className="mb-2 flex gap-2 overflow-x-auto">
-            {attachments.map(({ asset }) => (
+            {attachments.map(({ asset }, idx) => (
               <div key={asset.id} className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border bg-muted/10">
-                <Image src={asset.rawUrl} alt="Attachment" fill className="object-cover" />
+                {asset.fileType === FileType.Image ? (
+                  <Image src={asset.rawUrl} alt="Post content" draggable={false} className="h-full w-full object-contain select-none" />
+                ) : (
+                  <video src={asset.rawUrl} muted className="h-full w-full object-contain" />
+                )}
                 <button
                   type="button"
                   onClick={() => handleRemove(asset.id)}
@@ -144,12 +149,13 @@ export const MessageInput = () => {
           </Button>
         </div>
       </div>
-
-      <AssetPickerModal
-        open={openAssets}
-        onClose={() => setOpenAssets(false)}
-        onSelectUrls={(creatorAssets) => setAttachments(creatorAssets)}
-      />
+      {openAssets && (
+        <AssetPickerModal
+          open={openAssets}
+          onClose={() => setOpenAssets(false)}
+          onSelectUrls={(creatorAssets) => setAttachments(creatorAssets)}
+        />
+      )}
     </div>
   );
 };
