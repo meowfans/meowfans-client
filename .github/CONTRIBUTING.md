@@ -1,6 +1,6 @@
 # Contributing to MeowFans Client
 
-  Thank you for your interest in contributing to MeowFans! This document provides guidelines and instruction for contributing
+Thank you for your interest in contributing to MeowFans! This document provides guidelines and instruction for contributing
 
 1.  **Clone the repository**:
 

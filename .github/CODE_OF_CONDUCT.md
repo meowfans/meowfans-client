@@ -25,7 +25,6 @@ Examples of unacceptable behavior include:
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team on Discord. The project team will review and investigate all complaints, and will respond in a way that it deems appropriate to the circumstances.
 
-
 ## Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html

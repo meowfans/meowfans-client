@@ -1,4 +1,4 @@
-import ShortsFeed from "./components/Shorts";
+import ShortsFeed from './components/Shorts';
 
 export default function ShortsPage() {
   return <ShortsFeed />;

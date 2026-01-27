@@ -1,4 +1,4 @@
-import { AppSizes } from "@workspace/ui/lib";
+import { AppSizes } from '@workspace/ui/lib';
 
 export const Icons = {
   _appIcon: () => {

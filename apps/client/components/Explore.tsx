@@ -1,6 +1,16 @@
 'use client';
 
-import { CircleDollarSign, Gem, LoaderIcon, LucideIcon, MessageCircle, NetworkIcon, ShieldQuestionIcon, TableOfContents, UserRoundCheck } from 'lucide-react';
+import {
+  CircleDollarSign,
+  Gem,
+  LoaderIcon,
+  LucideIcon,
+  MessageCircle,
+  NetworkIcon,
+  ShieldQuestionIcon,
+  TableOfContents,
+  UserRoundCheck
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Suspense, useRef, useState } from 'react';
 

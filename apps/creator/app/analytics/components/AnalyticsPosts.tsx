@@ -30,7 +30,7 @@ const chartConfig = {
 
 export const AnalyticsPosts = () => {
   return (
-    <Card className='w-full'>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Posts</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

@@ -44,7 +44,7 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       }}
       {...props}
     >
-      <Fullscreen className='w-6 h-6 cursor-pointer' />
+      <Fullscreen className="w-6 h-6 cursor-pointer" />
     </Button>
   );
 };

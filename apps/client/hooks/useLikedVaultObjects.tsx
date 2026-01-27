@@ -40,11 +40,10 @@ export function useLikedVaultObjects() {
   const loadMore = () => {
     if (!loading && hasMore) loadLikes(false);
   };
-  
+
   useEffect(() => {
     if (fan) loadLikes(true);
   }, [fan]);
-
 
   return {
     vaultObjectLikes: fan ? vaultObjectLikes : [],

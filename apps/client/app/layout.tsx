@@ -7,9 +7,6 @@ import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
-import { createApolloClient } from '@workspace/gql/ApolloClient';
-import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
-import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api/fanAPI';
 import { FanProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import { Toaster } from '@workspace/ui/components/sonner';
@@ -23,6 +20,9 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { title } from 'radash';
 import './globals.css';
+import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api';
+import { createApolloClient } from '@workspace/gql/ApolloClient';
+import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();

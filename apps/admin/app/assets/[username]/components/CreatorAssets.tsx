@@ -17,7 +17,6 @@ export const CreatorAssets = () => {
 
   const user = Array.isArray(username) ? username[0] : username;
 
-
   return (
     <PageManager>
       <div className="flex flex-col gap-4 p-4 md:p-8 min-h-screen">

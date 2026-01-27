@@ -21,7 +21,7 @@ export const DropZone: React.FC<Props> = ({ onUpload }) => {
     <Card {...getRootProps({ className: 'dropzone' })} className="border-dashed h-60 cursor-pointer">
       <input className="input-zone" {...getInputProps()} />
       <div className="text-center items-center align-middle my-auto justify-center flex flex-col">
-        <CloudUploadIcon className='animate-pulse' />
+        <CloudUploadIcon className="animate-pulse" />
         <p className="dropzone-content">Drag&apos;n&apos;drop some files here, or click to select files</p>
       </div>
     </Card>

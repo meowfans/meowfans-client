@@ -6,7 +6,7 @@ export const GET_FAN_PROFILE_QUERY = graphql(`
       fanId
       appliedAt
       hasZoneMembership
-      currentZone{
+      currentZone {
         id
         zoneType
         startedAt

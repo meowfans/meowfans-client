@@ -13,9 +13,7 @@ const DeleteAllAssets: React.FC<Props> = ({ setDeleteAllAssetsModal }) => {
         <CardTitle className="text-red-500">Delete all assets</CardTitle>
         <CardDescription>Be aware of this as this is irreversible!</CardDescription>
       </CardHeader>
-      <CardContent className="">
-    
-      </CardContent>
+      <CardContent className=""></CardContent>
     </Card>
   );
 };
