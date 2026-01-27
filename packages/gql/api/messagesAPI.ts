@@ -55,6 +55,20 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
         unlockPrice
         unlockedAt
         updatedAt
+        repliedTo {
+          channelId
+          content
+          createdAt
+          deletedAt
+          hasAccess
+          id
+          isExclusive
+          recipientUserId
+          senderId
+          unlockPrice
+          unlockedAt
+          updatedAt
+        }
         messageAssets {
           assetId
           asset {
@@ -137,6 +151,20 @@ export const SEND_REPLY_FROM_CREATOR_MUTATION = graphql(`
       unlockPrice
       unlockedAt
       updatedAt
+      repliedTo {
+        channelId
+        content
+        createdAt
+        deletedAt
+        hasAccess
+        id
+        isExclusive
+        recipientUserId
+        senderId
+        unlockPrice
+        unlockedAt
+        updatedAt
+      }
       messageAssets {
         assetId
         asset {
@@ -168,6 +196,20 @@ export const SEND_REPLY_FROM_FAN_MUTATION = graphql(`
       unlockPrice
       unlockedAt
       updatedAt
+      repliedTo {
+        channelId
+        content
+        createdAt
+        deletedAt
+        hasAccess
+        id
+        isExclusive
+        recipientUserId
+        senderId
+        unlockPrice
+        unlockedAt
+        updatedAt
+      }
     }
   }
 `);

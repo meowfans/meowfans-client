@@ -4,7 +4,7 @@ import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Delete, Edit, Reply } from 'lucide-react';
 import { MessageThreadContent } from './MessageThreadContent';
 
 interface Props {
@@ -50,9 +50,16 @@ export const MessageThread: React.FC<Props> = ({ message, isSender = false }) =>
         </div>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleReply}>Reply</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleReply}>
+            <Reply />
+            Reply
+          </DropdownMenuItem>
           <DropdownMenuItem className="text-destructive" onClick={handleDelete}>
+            <Delete />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
