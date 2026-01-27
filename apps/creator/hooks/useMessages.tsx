@@ -4,6 +4,7 @@ import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessagesActions } from '@workspace/gql/actions';
 import {
   DeleteMessageInput,
+  DeleteMessagesInput,
   MessageChannelsEntity,
   MessagesEntity,
   PaginationInput,
@@ -65,8 +66,13 @@ export const useMessageMutations = () => {
   const { channel, setChannel } = useMessagesStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
-  const { sendMessageFromCreatorMutation, sendReplyFromCreatorMutation, updateMessageMutation, deleteMessageMutation } =
-    useMessagesActions();
+  const {
+    sendMessageFromCreatorMutation,
+    sendReplyFromCreatorMutation,
+    updateMessageMutation,
+    deleteMessageMutation,
+    deleteMessagesMutation
+  } = useMessagesActions();
   const [loading, setLoading] = useState<boolean>(false);
 
   const sendMessage = async (input: SendMessageFromCreatorInput) => {
@@ -77,6 +83,23 @@ export const useMessageMutations = () => {
       if (newMessage) {
         setChannel({ ...channel, messages: [...channel.messages, newMessage] });
         successHandler({ message: 'Message sent' });
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteMessages = async (input: DeleteMessagesInput) => {
+    setLoading(true);
+    try {
+      const { data } = await deleteMessagesMutation(input);
+      const deleted = data?.deleteMessages;
+
+      if (deleted) {
+        setChannel({ ...channel, messages: channel.messages.filter((m) => !input.messageIds.includes(m.id)) });
+        successHandler({ message: 'Deleted messages' });
       }
     } catch (error) {
       errorHandler({ error });
@@ -132,5 +155,5 @@ export const useMessageMutations = () => {
     }
   };
 
-  return { loading, sendMessage, sendReply, updateMessage, deleteMessage };
+  return { loading, sendMessage, sendReply, updateMessage, deleteMessage, deleteMessages };
 };

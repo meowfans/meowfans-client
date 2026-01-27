@@ -233,6 +233,12 @@ export const UPDATE_MESSAGE_MUTATION = graphql(`
   }
 `);
 
+export const DELETE_MESSAGES_MUTATION = graphql(`
+  mutation DeleteMessages($input: DeleteMessagesInput!) {
+    deleteMessages(input: $input)
+  }
+`);
+
 export const DELETE_MESSAGE_MUTATION = graphql(`
   mutation DeleteMessage($input: DeleteMessageInput!) {
     deleteMessage(input: $input)

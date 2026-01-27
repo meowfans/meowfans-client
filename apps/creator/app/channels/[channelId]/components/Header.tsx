@@ -1,3 +1,4 @@
+import { useMessagesStore } from '@/hooks/store/message.store';
 import { useUpdateChannel } from '@/hooks/useChannels';
 import { MessageChannelsEntity, UpdateChannelInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { ArrowBigLeftDash, EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
+import { ArrowBigLeftDash, CircleCheckBig, EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,6 +23,7 @@ interface MessageHeaderProps {
 
 export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
   const router = useRouter();
+  const { setOpenMultiSelect } = useMessagesStore();
   const { updateChannel } = useUpdateChannel();
   const [input, setInput] = useState<UpdateChannelInput>({
     channelId: channel.id,
@@ -63,6 +65,10 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>Chat actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setOpenMultiSelect(true)}>
+                <CircleCheckBig className="h-4 w-4" />
+                Select
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleChangeInput('isMuted', !channel.isMuted)}>
                 <VolumeX className="h-4 w-4" />
                 Mute

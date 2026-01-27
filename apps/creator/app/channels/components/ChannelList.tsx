@@ -53,10 +53,9 @@ export const ChannelList = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  setMultiSelect((v) => {
-                    const next = !v;
-                    if (!next) setSelected([]);
-                    return next;
+                  setMultiSelect((prev) => {
+                    if (!prev) setSelected([]);
+                    return !prev;
                   });
                 }}
               >
