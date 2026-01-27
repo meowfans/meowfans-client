@@ -1,19 +1,23 @@
 'use client';
 
 import { useCreator } from '@/hooks/context/useCreator';
+import { useMessagesStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { Toggle } from '@workspace/ui/globals/Toggle';
 import { useParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { MessageHeader } from './Header';
 import { MessageInput } from './Input';
 import { MessageThread } from './MessageThread';
-import { useEffect, useRef } from 'react';
+import { MultiSelectButtons } from './MultiSelectButtons';
 
 export const Message = () => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
   const { creator } = useCreator();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams<{ channelId: string }>();
+  const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessagesStore();
   const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
 
   useEffect(() => {
@@ -43,9 +47,15 @@ export const Message = () => {
                 <div
                   id={`msg-${message.id}`}
                   key={`msg-${message.id}`}
-                  className={`flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}
+                  className={`relative flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}
                 >
                   <MessageThread message={message} isSender={isSender} />
+                  <Toggle
+                    visible={openMultiSelect}
+                    checked={deleteMessageIds.includes(message.id)}
+                    onChange={() => toggleMessageIds(message.id)}
+                    className="absolute left-0 top-1/2 -translate-y-1/2"
+                  />
                 </div>
               );
             })
@@ -54,7 +64,7 @@ export const Message = () => {
           )}
         </InfiniteScrollManager>
       </div>
-
+      <MultiSelectButtons />
       <MessageInput />
     </div>
   );

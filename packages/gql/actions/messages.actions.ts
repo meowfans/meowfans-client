@@ -3,6 +3,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   DELETE_MESSAGE_MUTATION,
+  DELETE_MESSAGES_MUTATION,
   GET_CHANNEL_MESSAGES_QUERY,
   SEND_MESSAGE_FROM_CREATOR_MUTATION,
   SEND_MESSAGE_FROM_FAN_MUTATION,
@@ -12,6 +13,7 @@ import {
 } from '../api/messagesAPI';
 import {
   DeleteMessageInput,
+  DeleteMessagesInput,
   PaginationInput,
   SendMessageFromCreatorInput,
   SendMessageFromFanInput,
@@ -26,6 +28,7 @@ export const useMessagesActions = () => {
   const [sendReplyFromFan] = useMutation(SEND_REPLY_FROM_FAN_MUTATION);
   const [updateMessage] = useMutation(UPDATE_MESSAGE_MUTATION);
   const [deleteMessage] = useMutation(DELETE_MESSAGE_MUTATION);
+  const [deleteMessages] = useMutation(DELETE_MESSAGES_MUTATION);
 
   const getChannelMessagesQuery = (input: PaginationInput) => {
     return getChannelMessages({ variables: { input } });
@@ -55,6 +58,10 @@ export const useMessagesActions = () => {
     return deleteMessage({ variables: { input } });
   };
 
+  const deleteMessagesMutation = (input: DeleteMessagesInput) => {
+    return deleteMessages({ variables: { input } });
+  };
+
   return {
     getChannelMessagesQuery,
     sendMessageFromCreatorMutation,
@@ -62,6 +69,7 @@ export const useMessagesActions = () => {
     sendReplyFromCreatorMutation,
     sendReplyFromFanMutation,
     updateMessageMutation,
-    deleteMessageMutation
+    deleteMessageMutation,
+    deleteMessagesMutation
   };
 };
