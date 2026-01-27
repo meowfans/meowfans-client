@@ -1,4 +1,3 @@
-'use client';
 import { SidebarProvider } from '@workspace/ui/components/sidebar';
 import React from 'react';
 import { ChannelListBar } from './components/ChannelListBar';
@@ -8,12 +7,10 @@ interface Props {
 }
 const ChannelPageLayout: React.FC<Props> = ({ children }) => {
   return (
-    <>
-      <SidebarProvider>
-        {children}
-        <ChannelListBar side={'right'} />
-      </SidebarProvider>
-    </>
+    <SidebarProvider>
+      {children}
+      <ChannelListBar side={'right'} />
+    </SidebarProvider>
   );
 };
 

@@ -7,12 +7,10 @@ interface Props {
 }
 const ChannelPageLayout: React.FC<Props> = ({ children }) => {
   return (
-    <>
-      <SidebarProvider>
-        {children}
-        <ChannelListBar side={'right'} />
-      </SidebarProvider>
-    </>
+    <SidebarProvider>
+      {children}
+      <ChannelListBar side={'right'} />
+    </SidebarProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import { MessageChannelsEntity } from '@workspace/gql/generated/graphql';
+import { useChannels } from '@/hooks/useChannels';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -9,39 +9,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
+import { normalizePath } from '@workspace/ui/lib/helpers';
 import { cn } from '@workspace/ui/lib/utils';
 import { EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-enum ChannelBadgeVariant {
-  General = 'default',
-  Design = 'outline',
-  Support = 'secondary',
-  Random = 'destructive'
-}
-
-type ChannelType = 'General' | 'Design' | 'Support' | 'Random';
-interface Props {
-  channels: MessageChannelsEntity[];
-  loading?: boolean;
-}
-
-export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
+export const ChannelList = () => {
   const router = useRouter();
   const [multiSelect, setMultiSelect] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-
+  const { channels, loading } = useChannels({ take: 30 });
   const selectedCount = selected.length;
-
-  const channelMeta = useMemo(() => {
-    const selectedSet = new Set(selected);
-    return {
-      selectedSet
-    };
-  }, [selected]);
 
   const toggleSelected = (channelPath: string) => {
     setSelected((prev) => (prev.includes(channelPath) ? prev.filter((p) => p !== channelPath) : [...prev, channelPath]));
@@ -52,7 +33,7 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
       toggleSelected(channelPath);
       return;
     }
-    router.push(`/channels/${channelPath}`);
+    router.push(normalizePath('channels', channelPath));
   };
 
   return (
@@ -72,10 +53,9 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  setMultiSelect((v) => {
-                    const next = !v;
-                    if (!next) setSelected([]);
-                    return next;
+                  setMultiSelect((prev) => {
+                    if (!prev) setSelected([]);
+                    return !prev;
                   });
                 }}
               >
@@ -110,7 +90,7 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
         </div>
       ) : null}
 
-      {loading && !channels.length ? <p className="text-sm text-muted-foreground">Loading channels...</p> : null}
+      {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
 
       {channels.map((c, idx) => {
         return (
@@ -129,7 +109,11 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
           >
             <div className="flex min-w-0 items-center gap-3">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2"></div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                    {c.creatorProfile?.user?.firstName.concat(' ', c.creatorProfile?.user?.lastName) ?? 'No messages yet'}
+                  </p>
+                </div>
                 <p className="mt-1 truncate text-xs text-muted-foreground">{c.lastMessage?.content ?? 'No messages yet'}</p>
               </div>
             </div>
