@@ -12,7 +12,7 @@ interface Props {
 
 export const SectionHeader: React.FC<Props> = ({ title, description, icon: Icon, badge, actions, className }) => {
   return (
-    <div className={cn('flex flex-col gap-4 md:flex-row md:items-start md:justify-between', className)}>
+    <div className={cn('flex flex-col gap-4', className)}>
       <div className="flex min-w-0 items-start gap-3">
         {Icon ? (
           <div className="rounded-lg border bg-background/70 p-2 backdrop-blur">
@@ -20,17 +20,18 @@ export const SectionHeader: React.FC<Props> = ({ title, description, icon: Icon,
           </div>
         ) : null}
 
-        <div className="min-w-0 space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
+        <div className="min-w-0 space-y-1 w-full">
+          <div className="flex flex-row gap-2 w-full">
+            <div className="flex flex-row justify-between w-full">
+              <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
+              {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+            </div>
             {badge}
           </div>
 
           {description ? <p className="max-w-xl text-sm text-muted-foreground">{description}</p> : null}
         </div>
       </div>
-
-      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
   );
 };
