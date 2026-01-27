@@ -26,15 +26,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
       {message.repliedTo && (
         <ReplyPreview onScroll={(id) => handleScrollToRepliedMessage(id)} repliedTo={message.repliedTo} isSender={isSender} />
       )}
-      <p
-        className={cn(
-          'text-sm leading-relaxed wrap-break-word',
-          message.isExclusive && 'blur-sm select-none',
-          isSender ? 'text-primary' : 'text-foreground/90'
-        )}
-      >
-        {message.content}
-      </p>
+      <p className={cn('text-sm leading-relaxed wrap-break-word', isSender ? 'text-primary' : 'text-foreground/90')}>{message.content}</p>
 
       {!!message.messageAssets?.length && (
         <div className="w-50">
