@@ -9,9 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
-import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { ArrowBigLeftDash, EllipsisVertical, GalleryVerticalEnd, Menu, ShieldBan, Trash2, VolumeOff, VolumeX } from 'lucide-react';
+import { ArrowBigLeftDash, EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -54,17 +53,7 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
         </div>
       </div>
       <div className="flex flex-row items-center space-x-3">
-        <div className="hidden md:flex">
-          <ApplyTheme />
-        </div>
         <div className="flex items-center gap-2">
-          <Button className="hidden md:inline-flex" variant="outline" size="icon" aria-label="Gallery">
-            <GalleryVerticalEnd />
-          </Button>
-          <Button className="hidden md:inline-flex" variant="outline" size="icon" aria-label="Mute">
-            <VolumeOff />
-          </Button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" aria-label="Chat actions">
@@ -89,10 +78,6 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <Button className="md:hidden inline-flex" variant="outline" size="icon" aria-label="Menu">
-            <Menu />
-          </Button>
         </div>
       </div>
     </div>
