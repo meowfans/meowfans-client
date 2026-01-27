@@ -1,9 +1,8 @@
-'use client';
-
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
 import { cn } from '@workspace/ui/lib/utils';
 import moment from 'moment';
+import { ReplyPreview } from './ReplyPreview';
 
 interface MessageThreadContentProps {
   message: MessagesEntity;
@@ -11,8 +10,22 @@ interface MessageThreadContentProps {
 }
 
 export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ message, isSender }) => {
+  const handleScrollToRepliedMessage = (messageId: string) => {
+    const element = document.getElementById(`msg-${messageId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.animate([{ backgroundColor: 'rgba(59,130,246,0.15)' }, { backgroundColor: 'transparent' }], {
+        duration: 3000,
+        easing: 'ease-out'
+      });
+    }
+  };
+
   return (
     <div className="min-w-0 w-full space-y-2">
+      {message.repliedTo && (
+        <ReplyPreview onScroll={(id) => handleScrollToRepliedMessage(id)} repliedTo={message.repliedTo} isSender={isSender} />
+      )}
       <p
         className={cn(
           'text-sm leading-relaxed wrap-break-word',
@@ -35,7 +48,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
         </div>
       )}
 
-      <div className={cn('flex items-center gap-2 text-[11px]')}>
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
         <span>{moment(message.createdAt).format('hh:mm')}</span>
       </div>
     </div>

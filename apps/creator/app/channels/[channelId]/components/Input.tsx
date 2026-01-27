@@ -2,7 +2,6 @@
 
 import { AssetPickerModal } from '@/components/modals/AssetPickerModal';
 import { useCreator } from '@/hooks/context/useCreator';
-import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { FileType } from '@workspace/gql/generated/graphql';
@@ -14,7 +13,7 @@ import { toast } from 'sonner';
 
 export const MessageInput = () => {
   const { creator } = useCreator();
-  const { channel } = useChannelsStore();
+  const { channel } = useMessagesStore();
   const { sendMessage, sendReply, loading, updateMessage } = useMessageMutations();
 
   const {
@@ -53,6 +52,7 @@ export const MessageInput = () => {
     setUnlockAmount(null);
     setIsEditing(false);
     setSelectedMessage(null);
+    setReplyMessageId(null);
   };
 
   const handleSend = async () => {
@@ -95,6 +95,13 @@ export const MessageInput = () => {
     setReplyMessageId(null);
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (content.trim()) handleSend();
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 md:left-(--sidebar-width) right-0 md:right-(--sidebar-width) border-t bg-background/80 backdrop-blur p-2">
       <div className="mx-auto w-full max-w-3xl">
@@ -103,14 +110,21 @@ export const MessageInput = () => {
             {attachments.map(({ asset }, idx) => (
               <div key={asset.id} className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border bg-muted/10">
                 {asset.fileType === FileType.Image ? (
-                  <Image src={asset.rawUrl} alt="Post content" draggable={false} className="h-full w-full object-contain select-none" />
+                  <Image
+                    src={asset.rawUrl}
+                    alt="Post content"
+                    width={300}
+                    height={400}
+                    draggable={false}
+                    className="h-full w-full object-contain select-none"
+                  />
                 ) : (
                   <video src={asset.rawUrl} muted className="h-full w-full object-contain" />
                 )}
                 <button
                   type="button"
                   onClick={() => handleRemove(asset.id)}
-                  className="absolute -right-2 -top-2 rounded-full border bg-background p-1"
+                  className="absolute right-0 top-0 rounded-full border bg-background p-1"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -165,10 +179,11 @@ export const MessageInput = () => {
             </Button>
 
             <Input
-              value={content}
               placeholder="Enter your message"
               onChange={(e) => setContent(e.target.value)}
               className="border-0 focus-visible:ring-0"
+              value={content}
+              onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
 
