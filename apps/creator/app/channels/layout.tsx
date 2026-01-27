@@ -1,4 +1,3 @@
-'use client';
 import { SidebarProvider } from '@workspace/ui/components/sidebar';
 import React from 'react';
 import { ChannelListBar } from './components/ChannelListBar';

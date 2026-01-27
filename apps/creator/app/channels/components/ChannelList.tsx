@@ -1,4 +1,4 @@
-import { MessageChannelsEntity } from '@workspace/gql/generated/graphql';
+import { useChannels } from '@/hooks/useChannels';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -16,23 +16,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-enum ChannelBadgeVariant {
-  General = 'default',
-  Design = 'outline',
-  Support = 'secondary',
-  Random = 'destructive'
-}
-
-type ChannelType = 'General' | 'Design' | 'Support' | 'Random';
-interface Props {
-  channels: MessageChannelsEntity[];
-  loading?: boolean;
-}
-
-export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
+export const ChannelList = () => {
   const router = useRouter();
   const [multiSelect, setMultiSelect] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const { channels, loading } = useChannels({ take: 30 });
 
   const selectedCount = selected.length;
 
@@ -103,7 +91,7 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
         </div>
       ) : null}
 
-      {loading && !channels.length ? <p className="text-sm text-muted-foreground">Loading channels...</p> : null}
+      {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
 
       {channels.map((c, idx) => {
         return (
@@ -122,7 +110,11 @@ export const ChannelList: React.FC<Props> = ({ channels, loading = false }) => {
           >
             <div className="flex min-w-0 items-center gap-3">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2"></div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                    {c.fanProfile?.user?.firstName.concat(' ', c.fanProfile?.user?.lastName) ?? 'No messages yet'}
+                  </p>
+                </div>
                 <p className="mt-1 truncate text-xs text-muted-foreground">{c.lastMessage?.content ?? 'No messages yet'}</p>
               </div>
             </div>
