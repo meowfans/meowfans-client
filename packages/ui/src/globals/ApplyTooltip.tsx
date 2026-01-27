@@ -1,13 +1,9 @@
-"use client";
+'use client';
 
-import { ButtonSize, ButtonVariant } from "@workspace/ui/lib/types";
-import { Component, LucideIcon } from "lucide-react";
-import { Button } from "@workspace/ui/components/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
+import { ButtonSize, ButtonVariant } from '@workspace/ui/lib/types';
+import { Component, LucideIcon } from 'lucide-react';
+import { Button } from '@workspace/ui/components/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@workspace/ui/components/tooltip';
 
 interface Props {
   children: React.ReactNode;
@@ -42,24 +38,18 @@ export const ApplyButtonTooltip: React.FC<TootTipProps> = ({
   onClick,
   buttonProps = {
     icon: Component,
-    size: "default",
-    variant: "default",
-    buttonText: "",
+    size: 'default',
+    variant: 'default',
+    buttonText: ''
   },
   tootTipTitle,
-  className = "",
-  disabled = false,
+  className = '',
+  disabled = false
 }) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          variant={buttonProps.variant}
-          onClick={onClick}
-          disabled={disabled}
-          size={buttonProps.size}
-          className={className}
-        >
+        <Button variant={buttonProps.variant} onClick={onClick} disabled={disabled} size={buttonProps.size} className={className}>
           {buttonProps && <buttonProps.icon className="" />}
           {buttonProps.buttonText}
         </Button>

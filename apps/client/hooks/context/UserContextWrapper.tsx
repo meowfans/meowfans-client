@@ -22,5 +22,5 @@ export function UserContextWrapper({ children, fan }: Props) {
 export const useFan = () => {
   const [fan, setFan] = useContext(UserContext);
 
-  return {fan, setFan}
+  return { fan, setFan };
 };

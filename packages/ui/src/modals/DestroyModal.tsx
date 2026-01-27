@@ -1,14 +1,11 @@
-"use client";
+'use client';
 
-import { cn } from "@workspace/ui/lib/utils";
-import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
-import {
-  LoadingButton,
-  LoadingButtonProps,
-} from "@workspace/ui/globals/LoadingButton";
-import { Button } from "@workspace/ui/components/button";
-import { Modal } from "./Modal";
+import { cn } from '@workspace/ui/lib/utils';
+import { motion } from 'framer-motion';
+import { AlertTriangle } from 'lucide-react';
+import { LoadingButton, LoadingButtonProps } from '@workspace/ui/globals/LoadingButton';
+import { Button } from '@workspace/ui/components/button';
+import { Modal } from './Modal';
 
 interface Props {
   relatedUserOrEntityId?: string;
@@ -21,22 +18,9 @@ interface Props {
   cancelButton: LoadingButtonProps;
 }
 
-export const DestroyModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  description,
-  subDescription,
-  title,
-  cancelButton,
-  submitButton,
-}) => {
+export const DestroyModal: React.FC<Props> = ({ isOpen, onClose, description, subDescription, title, cancelButton, submitButton }) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={title}
-      description={description}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={title} description={description}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -51,12 +35,7 @@ export const DestroyModal: React.FC<Props> = ({
             onClick={cancelButton.onClick}
             variant={cancelButton.variant}
             size={cancelButton.size}
-            className={
-              (cn(
-                "w-1/2 rounded-full hover:bg-gray-500 transition-all duration-300"
-              ),
-              cancelButton.className)
-            }
+            className={(cn('w-1/2 rounded-full hover:bg-gray-500 transition-all duration-300'), cancelButton.className)}
             title={cancelButton.title}
           >
             Cancel
@@ -66,12 +45,7 @@ export const DestroyModal: React.FC<Props> = ({
             destructive={submitButton.destructive}
             size={submitButton.size}
             title={submitButton.title}
-            className={
-              (cn(
-                "w-1/2 rounded-full bg-red-600 hover:bg-red-700 transition-all duration-300 shadow-sm"
-              ),
-              submitButton.className)
-            }
+            className={(cn('w-1/2 rounded-full bg-red-600 hover:bg-red-700 transition-all duration-300 shadow-sm'), submitButton.className)}
             Icon={submitButton.Icon}
             disabled={submitButton.disabled}
             loading={submitButton.loading}

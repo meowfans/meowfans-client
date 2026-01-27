@@ -1,20 +1,10 @@
-"use client";
+'use client';
 
-import { PaginationEllipsis } from "@workspace/ui/components/pagination";
-import { useIsMobile } from "@workspace/ui/hooks/useIsMobile";
-import {
-  ChevronFirst,
-  ChevronLast,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@workspace/ui/components/pagination";
+import { PaginationEllipsis } from '@workspace/ui/components/pagination';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
+import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@workspace/ui/components/pagination';
 
 interface Props {
   pageNumber: number;
@@ -24,18 +14,11 @@ interface Props {
   totalPages: number;
 }
 
-export const Paginate: React.FC<Props> = ({
-  pageNumber,
-  hasNext,
-  hasPrev,
-  setPageNumber,
-  totalPages,
-}) => {
+export const Paginate: React.FC<Props> = ({ pageNumber, hasNext, hasPrev, setPageNumber, totalPages }) => {
   const isMobile = useIsMobile();
-  const [currentPageNumber, setCurrentPageNumber] =
-    useState<number>(pageNumber);
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(pageNumber);
   useEffect(() => setCurrentPageNumber(pageNumber), [pageNumber]);
-  const pages: (number | "ellipsis")[] = [];
+  const pages: (number | 'ellipsis')[] = [];
 
   const updatePage = (newPage: number) => {
     const page = Math.max(1, Math.min(totalPages, newPage));
@@ -54,27 +37,24 @@ export const Paginate: React.FC<Props> = ({
     const end = Math.min(totalPages - 1, currentPageNumber + delta);
     pages.push(1);
 
-    if (start > 2) pages.push("ellipsis");
+    if (start > 2) pages.push('ellipsis');
 
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
 
-    if (end < totalPages - 1) pages.push("ellipsis");
+    if (end < totalPages - 1) pages.push('ellipsis');
 
     if (totalPages > 1) pages.push(totalPages);
 
     return pages.map((page, idx) =>
-      page === "ellipsis" ? (
+      page === 'ellipsis' ? (
         <PaginationItem key={`ellipsis-${idx}`}>
           <PaginationEllipsis />
         </PaginationItem>
       ) : (
         <PaginationItem key={page} onClick={() => updatePage(page)}>
-          <PaginationLink
-            href={`?p=${page}`}
-            isActive={currentPageNumber === page}
-          >
+          <PaginationLink href={`?p=${page}`} isActive={currentPageNumber === page}>
             {page}
           </PaginationLink>
         </PaginationItem>
@@ -89,10 +69,7 @@ export const Paginate: React.FC<Props> = ({
 
     return pages.map((page) => (
       <PaginationItem key={page} onClick={() => updatePage(page as number)}>
-        <PaginationLink
-          href={`?p=${page}`}
-          isActive={currentPageNumber === page}
-        >
+        <PaginationLink href={`?p=${page}`} isActive={currentPageNumber === page}>
           {page}
         </PaginationLink>
       </PaginationItem>
@@ -103,12 +80,7 @@ export const Paginate: React.FC<Props> = ({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationLink
-            href={`?p=1`}
-            aria-label="Go to first page"
-            size="icon"
-            onClick={() => updatePage(1)}
-          >
+          <PaginationLink href={`?p=1`} aria-label="Go to first page" size="icon" onClick={() => updatePage(1)}>
             <ChevronFirst className="h-4 w-4" />
           </PaginationLink>
         </PaginationItem>
@@ -140,12 +112,7 @@ export const Paginate: React.FC<Props> = ({
         </PaginationItem>
 
         <PaginationItem>
-          <PaginationLink
-            href={`?p=${totalPages}`}
-            aria-label="Go to last page"
-            size="icon"
-            onClick={handleEndPage}
-          >
+          <PaginationLink href={`?p=${totalPages}`} aria-label="Go to last page" size="icon" onClick={handleEndPage}>
             <ChevronLast className="h-4 w-4" />
           </PaginationLink>
         </PaginationItem>

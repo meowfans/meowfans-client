@@ -39,7 +39,14 @@ export const SingleVaultInfo: React.FC<SingleVaultInfoProps> = ({ vault }) => {
     <Card className="w-full rounded-2xl overflow-hidden">
       {vault.preview && (
         <div className="relative w-full">
-          <NextImage imageUrl={vault.preview} alt="Vault preview" width={800} height={400} priority className="w-full max-h-90 object-cover" />
+          <NextImage
+            imageUrl={vault.preview}
+            alt="Vault preview"
+            width={800}
+            height={400}
+            priority
+            className="w-full max-h-90 object-cover"
+          />
 
           <Badge className="absolute top-3 right-3 gap-1" variant={vault.isPurchased ? 'default' : 'destructive'}>
             {vault.isPurchased ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}

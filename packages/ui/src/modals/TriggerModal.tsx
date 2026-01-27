@@ -32,7 +32,7 @@ interface TriggerModalProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElem
  * disabled = false disable state
  *
  * onClick onClick handler
- * 
+ *
  * isVisible = true if !visible then @returns null
  */
 export const TriggerModal: React.FC<TriggerModalProps> = ({

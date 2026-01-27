@@ -1,13 +1,12 @@
-"use client";
+'use client';
 
-import { cn } from "@workspace/ui/lib/utils";
-import { ButtonSize, ButtonVariant } from "@workspace/ui/lib/types";
-import { Loader, LucideIcon } from "lucide-react";
-import { ButtonHTMLAttributes } from "react";
-import { Button } from "@workspace/ui/components/button";
+import { cn } from '@workspace/ui/lib/utils';
+import { ButtonSize, ButtonVariant } from '@workspace/ui/lib/types';
+import { Loader, LucideIcon } from 'lucide-react';
+import { ButtonHTMLAttributes } from 'react';
+import { Button } from '@workspace/ui/components/button';
 
-export interface LoadingButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface LoadingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -19,25 +18,19 @@ export interface LoadingButtonProps
 }
 
 export const LoadingButton: React.FC<LoadingButtonProps> = ({
-  size = "default",
-  title = "",
+  size = 'default',
+  title = '',
   variant,
   loading = false,
   Icon,
   disabled = false,
-  className = "",
+  className = '',
   destructive = false,
   ...props
 }) => {
   return (
-    <Button
-      variant={variant}
-      size={size}
-      disabled={disabled}
-      {...props}
-      className={(cn(className), destructive ? "bg-red-500" : "")}
-    >
-      {loading && <Loader className={"animate-spin"} />}
+    <Button variant={variant} size={size} disabled={disabled} {...props} className={(cn(className), destructive ? 'bg-red-500' : '')}>
+      {loading && <Loader className={'animate-spin'} />}
       {Icon && !loading && <Icon />}
       {title}
     </Button>

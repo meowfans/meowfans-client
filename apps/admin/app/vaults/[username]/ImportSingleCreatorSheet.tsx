@@ -143,9 +143,7 @@ export const ImportSingleCreatorSheet = () => {
       <SheetContent className="p-1">
         <SheetHeader>
           <SheetTitle>Add new contents to {user && user?.username.toUpperCase()}</SheetTitle>
-          <SheetDescription>
-            {user ? `You are importing to ${user?.username}` : 'Be descriptive about site information'}
-          </SheetDescription>
+          <SheetDescription>{user ? `You are importing to ${user?.username}` : 'Be descriptive about site information'}</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-3 space-y-1">
           <div className="grid gap-2">

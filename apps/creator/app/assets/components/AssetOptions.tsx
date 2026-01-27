@@ -51,7 +51,9 @@ export const AssetOptions: React.FC<AssetOptions> = ({ canSelect, creatorAsset, 
         animate={{ opacity: 1, x: 0 }}
         className="absolute top-2 right-2 pointer-events-auto z-30"
       >
-        <Badge className='text-xs tracking-tight' variant={creatorAsset.asset.isPosted ? 'destructive' : 'default'}>{creatorAsset.asset.isPosted ? 'POSTED' : 'QUEUE'}</Badge>
+        <Badge className="text-xs tracking-tight" variant={creatorAsset.asset.isPosted ? 'destructive' : 'default'}>
+          {creatorAsset.asset.isPosted ? 'POSTED' : 'QUEUE'}
+        </Badge>
       </motion.div>
 
       <motion.div

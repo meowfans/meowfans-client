@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
-import { Card, CardContent } from '@workspace/ui/components/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@workspace/ui/components/tabs';
 import { Button } from '@workspace/ui/components/button';
+import { Card, CardContent } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';
 import { Skeleton } from '@workspace/ui/components/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
+import React from 'react';
 
 export const CreatorProfileSkeleton: React.FC = () => {
   return (
@@ -78,10 +78,7 @@ export const CreatorProfileSkeleton: React.FC = () => {
             <TabsContent value="gallery" className="mt-4">
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-40 sm:h-44 md:h-48 w-full rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse"
-                  />
+                  <Skeleton key={i} className="h-40 sm:h-44 md:h-48 w-full rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
                 ))}
               </div>
             </TabsContent>
@@ -89,7 +86,10 @@ export const CreatorProfileSkeleton: React.FC = () => {
             <TabsContent value="vaults" className="mt-4">
               <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="p-4 md:p-6 rounded-lg border border-zinc-100 dark:border-zinc-700 bg-white/40 dark:bg-zinc-900/40 animate-pulse">
+                  <Skeleton
+                    key={i}
+                    className="p-4 md:p-6 rounded-lg border border-zinc-100 dark:border-zinc-700 bg-white/40 dark:bg-zinc-900/40 animate-pulse"
+                  >
                     <div className="flex items-start gap-4">
                       <Skeleton className="h-14 w-14 rounded-md bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
                       <div className="flex-1">
