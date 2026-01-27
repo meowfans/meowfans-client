@@ -1,33 +1,71 @@
+'use client';
+
+import { useFan } from '@/hooks/context/UserContextWrapper';
+import { useMessagesStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
-import { Badge } from '@workspace/ui/components/badge';
-import { PageManager } from '@workspace/ui/globals/PageManager';
+import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
+import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { Toggle } from '@workspace/ui/globals/Toggle';
 import { useParams } from 'next/navigation';
-import { MessageContainer } from './Container';
+import { useEffect, useRef } from 'react';
 import { MessageHeader } from './Header';
 import { MessageInput } from './Input';
+import { MessageThread } from './MessageThread';
+import { MultiSelectButtons } from './MultiSelectButtons';
 
 export const Message = () => {
+  const { fan } = useFan();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams<{ channelId: string }>();
-  const { channel } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
+  const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessagesStore();
+  const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    container.scrollTop = container.scrollHeight;
+  }, [channel.messages?.length]);
 
   return (
-    <PageManager className="relative p-0">
-      <MessageHeader />
-      <div className="absolute inset-0 -z-10">
-        <div className="h-full w-full bg-linear-to-b from-background via-background to-muted/20" />
-        <div className="absolute inset-x-0 -top-24 mx-auto h-72 w-72 rounded-full bg-muted/30 blur-3xl" />
-        <div className="absolute -right-16 top-24 h-72 w-72 rounded-full bg-muted/20 blur-3xl" />
+    <div className="w-full relative h-screen overflow-hidden">
+      <MessageHeader channel={channel} />
+
+      <div ref={scrollRef} id="channel-scroll" className="absolute top-16 bottom-16 left-0 right-0 overflow-y-auto">
+        <InfiniteScrollManager
+          scrollableDiv="channel-scroll"
+          dataLength={channel.messages?.length || 0}
+          hasMore={hasMore}
+          loading={loading}
+          onLoadMore={handleLoadMore}
+        >
+          {channel.messages?.length > 0 ? (
+            channel.messages.map((message) => {
+              const isSender = message.senderId === fan?.fanId;
+
+              return (
+                <div
+                  id={`msg-${message.id}`}
+                  key={`msg-${message.id}`}
+                  className={`relative flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}
+                >
+                  <MessageThread message={message} isSender={isSender} />
+                  <Toggle
+                    visible={openMultiSelect && isSender}
+                    checked={deleteMessageIds.includes(message.id)}
+                    onChange={() => toggleMessageIds(message.id)}
+                    className="absolute left-0 top-1/2 -translate-y-1/2"
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <EmptyElement title="Start messaging" description="Looks like you have not messaged yet, Say Hi!" />
+          )}
+        </InfiniteScrollManager>
       </div>
-      <div className="pt-20 pb-24 px-4">
-        <div className="mx-auto w-full max-w-3xl">
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-semibold tracking-tight">{channel.creatorProfile.user.username ?? 'Channel'}</h1>
-            <Badge variant="secondary">Private</Badge>
-          </div>
-          <MessageContainer messages={channel.messages} />
-        </div>
-      </div>
+      <MultiSelectButtons />
       <MessageInput />
-    </PageManager>
+    </div>
   );
 };

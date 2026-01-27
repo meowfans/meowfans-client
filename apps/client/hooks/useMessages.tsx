@@ -4,17 +4,20 @@ import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessagesActions } from '@workspace/gql/actions';
 import {
   DeleteMessageInput,
+  DeleteMessagesInput,
   MessageChannelsEntity,
   MessagesEntity,
   PaginationInput,
-  SendMessageFromCreatorInput,
+  SendMessageFromFanInput,
   UpdateMessageInput
 } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from './context/UserContextWrapper';
 
 export const useChannelMessages = (input: PaginationInput) => {
+  const { fan } = useFan();
   const { channel, setChannel } = useMessagesStore();
   const { errorHandler } = useErrorHandler();
   const { getChannelMessagesQuery } = useMessagesActions();
@@ -55,8 +58,16 @@ export const useChannelMessages = (input: PaginationInput) => {
   };
 
   useEffect(() => {
-    loadMessages(true);
+    if (fan) loadMessages(true);
   }, [input.relatedEntityId, input.take]); //eslint-disable-line
+
+  if (!fan)
+    return {
+      loading: false,
+      hasMore: false,
+      handleLoadMore: () => null,
+      channel: {} as MessageChannelsEntity
+    };
 
   return { channel, loading, hasMore, handleLoadMore, handleRefresh };
 };
@@ -65,15 +76,15 @@ export const useMessageMutations = () => {
   const { channel, setChannel } = useMessagesStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
-  const { sendMessageFromCreatorMutation, sendReplyFromCreatorMutation, updateMessageMutation, deleteMessageMutation } =
+  const { updateMessageMutation, deleteMessageMutation, deleteMessagesMutation, sendReplyFromFanMutation, sendMessageFromFanMutation } =
     useMessagesActions();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const sendMessage = async (input: SendMessageFromCreatorInput) => {
+  const sendMessage = async (input: SendMessageFromFanInput) => {
     setLoading(true);
     try {
-      const { data } = await sendMessageFromCreatorMutation(input);
-      const newMessage = data?.sendMessageFromCreator as MessagesEntity;
+      const { data } = await sendMessageFromFanMutation(input);
+      const newMessage = data?.sendMessageFromFan as MessagesEntity;
       if (newMessage) {
         setChannel({ ...channel, messages: [...channel.messages, newMessage] });
         successHandler({ message: 'Message sent' });
@@ -85,11 +96,28 @@ export const useMessageMutations = () => {
     }
   };
 
-  const sendReply = async (input: SendMessageFromCreatorInput) => {
+  const deleteMessages = async (input: DeleteMessagesInput) => {
     setLoading(true);
     try {
-      const { data } = await sendReplyFromCreatorMutation(input);
-      const newMessage = data?.sendReplyFromCreator as MessagesEntity;
+      const { data } = await deleteMessagesMutation(input);
+      const deleted = data?.deleteMessages;
+
+      if (deleted) {
+        setChannel({ ...channel, messages: channel.messages.filter((m) => !input.messageIds.includes(m.id)) });
+        successHandler({ message: 'Deleted messages' });
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendReply = async (input: SendMessageFromFanInput) => {
+    setLoading(true);
+    try {
+      const { data } = await sendReplyFromFanMutation(input);
+      const newMessage = data?.sendReplyFromFan as MessagesEntity;
       if (newMessage) {
         setChannel({ ...channel, messages: [...channel.messages, newMessage] });
         successHandler({ message: 'Reply sent' });
@@ -132,5 +160,5 @@ export const useMessageMutations = () => {
     }
   };
 
-  return { loading, sendMessage, sendReply, updateMessage, deleteMessage };
+  return { loading, sendMessage, sendReply, updateMessage, deleteMessage, deleteMessages };
 };

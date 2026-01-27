@@ -1,93 +1,98 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useChannelsStore } from '@/hooks/store/channels.store';
+import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
-import { CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
-import { BadgeDollarSign, ImagePlus, Send, X } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
+import { Reply, Send, SquarePen, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const MessageInput = () => {
-  const { channel } = useChannelsStore();
   const { fan } = useFan();
-  const { sendMessage, loading } = useMessageMutations();
-  const [openAssets, setOpenAssets] = useState(false);
-  const [text, setText] = useState('');
-  const [attachments, setAttachments] = useState<string[]>([]);
+  const { channel } = useMessagesStore();
+  const { sendMessage, sendReply, loading, updateMessage } = useMessageMutations();
+  const { content, setContent, replyMessageId, isEditing, selectedMessage, setIsEditing, setReplyMessageId, setSelectedMessage } =
+    useMessagesStore();
 
-  const handleAttach = (creatorAsset: CreatorAssetsEntity) => {
-    setAttachments((prev) => (prev.includes(creatorAsset.asset.rawUrl) ? prev : [creatorAsset.asset.rawUrl, ...prev].slice(0, 3)));
-    setOpenAssets(false);
-  };
-
-  const handleRemove = (url: string) => {
-    setAttachments((prev) => prev.filter((u) => u !== url));
+  const handleCancel = () => {
+    setContent('');
+    setIsEditing(false);
+    setSelectedMessage(null);
+    setReplyMessageId(null);
   };
 
   const handleSend = async () => {
-    if (!text.trim() || !fan) return;
+    if (!content.trim()) {
+      return toast.warning("Message can't be empty", {
+        description: "Empty message can't be sent!"
+      });
+    }
 
-    await sendMessage({
-      content: text.trim(),
-      senderId: fan.user.id,
-      recipientUserId: channel.creatorProfile.user.id
-    });
+    if (!fan?.fanId) return;
 
-    setText('');
-    setAttachments([]);
+    const payload = {
+      content: content.trim(),
+      senderId: fan?.fanId,
+      recipientUserId: channel.fanProfile.user.id
+    };
+
+    if (replyMessageId) await sendReply({ ...payload, messageId: replyMessageId });
+    else if (isEditing) await updateMessage({ messageId: selectedMessage?.id as string, content });
+    else await sendMessage(payload);
+
+    handleCancel();
+  };
+
+  const resolveSendButton = () => {
+    if (replyMessageId) return <Reply className="h-4 w-4" />;
+    else if (isEditing) return <SquarePen className="h-4 w-4" />;
+    else return <Send className="h-4 w-4" />;
+  };
+
+  const handleCancelReplying = () => {
+    setSelectedMessage(null);
+    setReplyMessageId(null);
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (content.trim()) handleSend();
+    }
   };
 
   return (
-    <div className="fixed bottom-0 left-0 md:left-(--sidebar-width) right-0 md:right-(--sidebar-width) border-t bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 p-2">
+    <div className="fixed bottom-0 left-0 md:left-(--sidebar-width) right-0 md:right-(--sidebar-width) border-t bg-background/80 backdrop-blur p-2">
       <div className="mx-auto w-full max-w-3xl">
-        {attachments.length ? (
-          <div className="mb-2 flex gap-2 overflow-x-auto">
-            {attachments.map((url) => (
-              <div key={url} className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border bg-muted/10">
-                <Image src={url} alt="Attachment" fill className="object-cover" />
-                <button
-                  type="button"
-                  onClick={() => handleRemove(url)}
-                  className="absolute -right-2 -top-2 rounded-full border bg-background p-1"
-                  aria-label="Remove attachment"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
+        {replyMessageId && (
+          <div className="flex flex-row justify-between">
+            <p>{selectedMessage?.content}</p>
+            <Button variant="ghost" size="icon" onClick={handleCancelReplying}>
+              <X className="h-5 w-5 text-muted-foreground" />
+            </Button>
           </div>
-        ) : null}
+        )}
 
         <div className="flex items-center gap-2">
-          <div className="relative flex items-center rounded-xl border bg-background/70 backdrop-blur focus-within:ring-1 focus-within:ring-ring px-2 w-full">
-            <Button variant={'ghost'} size="icon" aria-label="PPV">
-              <BadgeDollarSign className="h-5 w-5 text-muted-foreground" />
-            </Button>
-
-            <Button variant={'ghost'} size="icon" aria-label="Attach from assets" onClick={() => setOpenAssets(true)}>
-              <ImagePlus className="h-5 w-5 text-muted-foreground" />
-            </Button>
+          <div className="relative flex items-center rounded-xl border bg-background px-2 w-full">
+            {content.length > 0 && (
+              <Button variant="ghost" size="icon" onClick={handleCancel}>
+                <X className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            )}
 
             <Input
               placeholder="Enter your message"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              className="border-0 focus-visible:ring-0 shadow-none"
+              onChange={(e) => setContent(e.target.value)}
+              className="border-0 focus-visible:ring-0"
+              value={content}
+              onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
 
-          <Button
-            type="button"
-            size="icon"
-            variant="outline"
-            aria-label="Send"
-            onClick={handleSend}
-            disabled={loading || (!text.trim() && !attachments.length)}
-          >
-            <Send className="h-4 w-4" />
+          <Button type="button" size="icon" variant="outline" onClick={handleSend} disabled={loading}>
+            {resolveSendButton()}
           </Button>
         </div>
       </div>

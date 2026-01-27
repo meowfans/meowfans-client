@@ -1,44 +1,46 @@
-import { CreatorAssetsEntity, MessageChannelsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessageChannelsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type MessagesStore = {
-  content: string;
-  openAssets: boolean;
-  isExclusive: boolean;
-  selectedMessage: MessagesEntity | null;
-  channel: MessageChannelsEntity;
-  attachments: Array<CreatorAssetsEntity>;
-  unlockAmount: number | null;
-  replyMessageId: string | null;
-  setContent: (content: string) => void;
-  isEditing: boolean;
-  setIsEditing: (isEditing: boolean) => void;
-  setOpenAssets: (openAssets: boolean) => void;
   setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
-  setIsExclusive: (isExclusive: boolean) => void;
-  setAttachments: (attachments: CreatorAssetsEntity[]) => void;
   setChannel: (channel: MessageChannelsEntity) => void;
-  setUnlockAmount: (unlockAmount: number | null) => void;
+  selectedMessage: MessagesEntity | null;
+  setContent: (content: string) => void;
+  channel: MessageChannelsEntity;
+  deleteMessageIds: string[];
+  toggleMessageIds: (deleteMessageId: string) => void;
+  isEditing: boolean;
+  content: string;
+  openMultiSelect: boolean;
+  replyMessageId: string | null;
+  setIsEditing: (isEditing: boolean) => void;
+  setDeleteMessageIds: (deleteMessageIds: string[]) => void;
+  setOpenMultiSelect: (openMultiSelect: boolean) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
 };
 
 export const useMessagesStore = create<MessagesStore>()((set) => ({
-  content: '',
-  channel: {} as MessageChannelsEntity,
-  isEditing: false,
-  isExclusive: false,
-  openAssets: false,
-  attachments: [],
-  unlockAmount: null,
-  replyMessageId: null,
-  selectedMessage: null,
-  setIsEditing: (isEditing) => set({ isEditing }),
-  setOpenAssets: (openAssets) => set({ openAssets }),
+  setChannel: (channel: MessageChannelsEntity) => set({ channel }),
   setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
-  setUnlockAmount: (unlockAmount) => set({ unlockAmount }),
-  setIsExclusive: (isExclusive) => set({ isExclusive }),
-  setAttachments: (attachments) => set({ attachments }),
-  setContent: (content) => set({ content }),
+  setDeleteMessageIds: (deleteMessageIds) => set({ deleteMessageIds }),
+  openMultiSelect: false,
+  selectedMessage: null,
+  isEditing: false,
   setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
-  setChannel: (channel: MessageChannelsEntity) => set({ channel })
+  content: '',
+  deleteMessageIds: [],
+  replyMessageId: null,
+  channel: {} as MessageChannelsEntity,
+  setContent: (content) => set({ content }),
+  setIsEditing: (isEditing) => set({ isEditing }),
+  setOpenMultiSelect: (openMultiSelect) => set({ openMultiSelect }),
+  toggleMessageIds: (deleteMessageId) =>
+    set((state) => {
+      const isSelected = state.deleteMessageIds.includes(deleteMessageId);
+      return {
+        deleteMessageIds: isSelected
+          ? state.deleteMessageIds.filter((id) => id !== deleteMessageId)
+          : [...state.deleteMessageIds, deleteMessageId]
+      };
+    })
 }));

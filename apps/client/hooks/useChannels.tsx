@@ -5,9 +5,11 @@ import { GetChannelInput, MessageChannelsEntity, PaginationInput, UpdateChannelI
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from './context/UserContextWrapper';
 import { useChannelsStore } from './store/channels.store';
 
 export const useChannels = (input: PaginationInput) => {
+  const { fan } = useFan();
   const { channels, setChannels } = useChannelsStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
@@ -35,8 +37,16 @@ export const useChannels = (input: PaginationInput) => {
   };
 
   useEffect(() => {
-    loadChannels(true);
+    if (fan) loadChannels(true);
   }, [input.take]); //eslint-disable-line
+
+  if (!fan)
+    return {
+      loading: false,
+      hasMore: false,
+      handleLoadMore: () => null,
+      channels: []
+    };
 
   return {
     loading,

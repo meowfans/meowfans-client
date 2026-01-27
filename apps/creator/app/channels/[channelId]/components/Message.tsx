@@ -51,7 +51,7 @@ export const Message = () => {
                 >
                   <MessageThread message={message} isSender={isSender} />
                   <Toggle
-                    visible={openMultiSelect}
+                    visible={openMultiSelect && isSender}
                     checked={deleteMessageIds.includes(message.id)}
                     onChange={() => toggleMessageIds(message.id)}
                     className="absolute left-0 top-1/2 -translate-y-1/2"
