@@ -14,7 +14,7 @@ export const CommunicationSse = () => {
     setChannel((prev) => {
       return {
         ...prev,
-        messages: [...prev.messages, newMessage]
+        messages: [newMessage, ...prev.messages]
       };
     });
   };
