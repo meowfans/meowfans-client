@@ -1,39 +1,40 @@
 'use client';
 
-import { Send } from 'lucide-react';
-import { useState } from 'react';
+import { useCommentsStore } from '@/hooks/store/comments.store';
+import { useCommentMutations } from '@/hooks/useCommentMutations';
 import { Button } from '@workspace/ui/components/button';
 import { Label } from '@workspace/ui/components/label';
 import { Textarea } from '@workspace/ui/components/textarea';
-import { Modal } from '@workspace/ui/modals/Modal';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
-import { useCommentMutations } from '@/hooks/useCommentMutations';
+import { Modal } from '@workspace/ui/modals/Modal';
+import { Send } from 'lucide-react';
+import { useState } from 'react';
 
-interface Props {
-  postId: string;
-  isOpen: boolean;
-  onClose?: () => unknown;
-}
-
-export const CreateCommentModal: React.FC<Props> = ({ isOpen, onClose, postId }) => {
+export const CreateCommentModal = () => {
   const { createComment } = useCommentMutations();
+  const { setCommentOnPost, commentOnPost } = useCommentsStore();
   const [comment, setComment] = useState<string>('');
 
   const handleClose = () => {
     setComment('');
-    onClose?.();
   };
 
   const handleCreateComment = async () => {
+    if (!commentOnPost?.id) return;
     try {
-      await createComment(postId, comment);
+      await createComment(commentOnPost?.id, comment);
     } finally {
       handleClose();
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} description="Share your thoughts on this post" title="New comment">
+    <Modal
+      isOpen={!!commentOnPost}
+      onClose={() => setCommentOnPost(null)}
+      description="Share your thoughts on this post"
+      title="New comment"
+    >
       <div className="w-full h-full">
         <div className="space-y-1">
           <Label htmlFor="message-2">Your comment</Label>

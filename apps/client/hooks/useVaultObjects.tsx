@@ -8,12 +8,11 @@ export const useSingleVault = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getSingleVaultQuery } = useVaultsActions();
   const { vault, setVault } = useVaultsStore();
-
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
   const loadVaultObjects = async (initialLoad = false) => {
-    setLoading(vault?.vaultObjects.length === 0);
+    setLoading(vault?.vaultObjects?.length === 0);
 
     const skip = initialLoad ? 0 : (vault?.vaultObjects?.length ?? 0);
 

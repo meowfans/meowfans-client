@@ -6,13 +6,13 @@ import { LikeButton } from '@/components/LikeButton';
 import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useFan } from '@/hooks/context/UserContextWrapper';
+import { useCommentsStore } from '@/hooks/store/comments.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { useLikes } from '@/hooks/useLikes';
-import { PostsEntity, PurchaseType } from '@workspace/gql/generated/graphql';
+import { PurchaseType } from '@workspace/gql/generated/graphql';
 import { EllipsisDescription } from '@workspace/ui/globals/EllipsisDescription';
 import { LinkDescription } from '@workspace/ui/globals/LinkDescription';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
-import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
@@ -24,7 +24,7 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
   const { fan } = useFan();
   const { likePost } = useLikes();
   const { post, setPost } = usePostsStore();
-  const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
+  const { commentOnPost, setCommentOnPost } = useCommentsStore();
 
   const handleLikePost = useDebouncedCallback(async (postId: string) => {
     const isLiked = await likePost(postId);
@@ -81,7 +81,7 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
               title="Post a comment"
               className="flex items-center gap-2"
               titleEnabled
-              onClick={() => setCommentPost(post)}
+              onClick={() => setCommentOnPost(post)}
             />
           </div>
         ) : (
@@ -99,7 +99,7 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
           )
         )}
       </div>
-      {commentPost && <CreateCommentModal isOpen={!!commentPost} postId={commentPost.id} onClose={() => setCommentPost(null)} />}
+      {commentOnPost && <CreateCommentModal />}
     </div>
   );
 };

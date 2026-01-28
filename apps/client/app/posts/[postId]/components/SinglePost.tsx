@@ -1,5 +1,7 @@
 'use client';
 
+import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
+import { useCommentsStore } from '@/hooks/store/comments.store';
 import { useSinglePost } from '@/hooks/usePosts';
 import { Carousel } from '@workspace/ui/globals/Carousel';
 import { PageManager } from '@workspace/ui/globals/PageManager';
@@ -9,6 +11,7 @@ import { SinglePostInsight } from './SinglePostInsight';
 export const SinglePost = () => {
   const { postId } = useParams<{ postId: string }>();
   const { post } = useSinglePost({ postId });
+  const { commentOnPost } = useCommentsStore();
 
   if (!post) {
     return (
@@ -34,6 +37,7 @@ export const SinglePost = () => {
           <SinglePostInsight post={post} />
         </div>
       </div>
+      {commentOnPost && <CreateCommentModal />}
     </PageManager>
   );
 };

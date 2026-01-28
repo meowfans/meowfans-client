@@ -1,26 +1,34 @@
 import { VaultObjectsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+
+type VaultUpdater = VaultsEntity | ((prev: VaultsEntity) => VaultsEntity);
+type VaultObjectsUpdater = VaultObjectsEntity[] | ((prev: VaultObjectsEntity[]) => VaultObjectsEntity[]);
 
 type VaultsStore = {
   vault: VaultsEntity;
   vaults: VaultsEntity[];
   vaultObjects: VaultObjectsEntity[];
-  setVault: (vault: VaultsEntity) => void;
+  setVault: (updater: VaultUpdater) => void;
   setVaults: (vaults: VaultsEntity[]) => void;
   appendVaults: (vaults: VaultsEntity[]) => void;
-  setVaultObjects: (vaultObjects: VaultObjectsEntity[]) => void;
+  setVaultObjects: (updater: VaultObjectsUpdater) => void;
   appendVaultObjects: (vaultObjects: VaultObjectsEntity[]) => void;
 };
 
-export const useVaultsStore = create<VaultsStore>()(
-  devtools((set) => ({
-    vaults: [],
-    vaultObjects: [],
-    setVault: (vault) => set(() => ({ vault })),
-    setVaults: (vaults) => set(() => ({ vaults })),
-    setVaultObjects: (vaultObjects) => set(() => ({ vaultObjects })),
-    appendVaults: (newVaults) => set((state) => ({ vaults: [...state.vaults, ...newVaults] })),
-    appendVaultObjects: (newObjects) => set((state) => ({ vaultObjects: [...state.vaultObjects, ...newObjects] }))
-  }))
-);
+export const useVaultsStore = create<VaultsStore>()((set) => ({
+  vaults: [],
+  vault: {} as VaultsEntity,
+  vaultObjects: [],
+  setVault: (updater) =>
+    set((state) => ({
+      vault: typeof updater === 'function' ? (updater as (prev: VaultsEntity) => VaultsEntity)(state.vault) : updater
+    })),
+  setVaults: (vaults) => set(() => ({ vaults })),
+  setVaultObjects: (updater) =>
+    set((state) => ({
+      vaultObjects:
+        typeof updater === 'function' ? (updater as (prev: VaultObjectsEntity[]) => VaultObjectsEntity[])(state.vaultObjects) : updater
+    })),
+  appendVaults: (newVaults) => set((state) => ({ vaults: [...state.vaults, ...newVaults] })),
+  appendVaultObjects: (newObjects) => set((state) => ({ vaultObjects: [...state.vaultObjects, ...newObjects] }))
+}));
