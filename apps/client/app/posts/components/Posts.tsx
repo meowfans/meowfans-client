@@ -4,14 +4,14 @@ import { GalleryManager } from '@/components/GalleryManager';
 import { CreateCommentModal } from '@/components/modals/CreateCommentModal';
 import { PageHeader } from '@/components/PageHeader';
 import { PostsGalleryOptions } from '@/components/PostsGalleryOptions';
+import { useCommentsStore } from '@/hooks/store/comments.store';
 import { usePosts } from '@/hooks/usePosts';
-import { PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { useState } from 'react';
 
 export const Posts = () => {
-  const [commentPost, setCommentPost] = useState<PostsEntity | null>(null);
+  const { commentOnPost, setCommentOnPost } = useCommentsStore();
   const { posts, loading, handleLoadMore, hasMore, handleRefresh } = usePosts({
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc
@@ -33,10 +33,10 @@ export const Posts = () => {
           loading={loading}
           getKey={(post) => post.id}
           getImageUrl={(post) => post.preview}
-          renderOverlay={(post) => <PostsGalleryOptions post={post} setCommentPost={setCommentPost} />}
+          renderOverlay={(post) => <PostsGalleryOptions post={post} />}
         />
       </InfiniteScrollManager>
-      {commentPost && <CreateCommentModal isOpen={!!commentPost} postId={commentPost.id} onClose={() => setCommentPost(null)} />}
+      {commentOnPost && <CreateCommentModal />}
     </PageManager>
   );
 };

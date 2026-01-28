@@ -13,8 +13,8 @@ import { toast } from 'sonner';
 export const Sse = () => {
   const { setFan, fan } = useFan();
   const { setChannel } = useChannelsStore();
-  const { setPost, setPostAssets, post } = usePostsStore();
-  const { setVaultObjects, setVault, vault, vaultObjects } = useVaultsStore();
+  const { setPost, setPostAssets } = usePostsStore();
+  const { setVaultObjects, setVault, vaultObjects } = useVaultsStore();
 
   const onSuccess = () => {
     toast.promise(
@@ -27,7 +27,7 @@ export const Sse = () => {
           <div className="flex flex-col items-start">
             <span className="text-lg font-semibold">🎉 Content Unlocked!</span>
             <span className="text-sm">
-              You’ve gained access to <strong>exclusive content</strong> ✨
+              You&apos;ve gained access to <strong>exclusive content</strong> ✨
             </span>
           </div>
         ),
@@ -40,35 +40,38 @@ export const Sse = () => {
 
   const onPostUnlocked = async (event: CustomEvent) => {
     const { data } = event.detail;
-    await new Promise((res) => setTimeout(res, 2500));
     const { post: purchased_post, postAssets } = data.purchasedPost;
-    setPost({ ...post, isPurchased: purchased_post.isPurchased, preview: purchased_post.preview });
+    setPost((prev) => {
+      return { ...prev, isPurchased: purchased_post.isPurchased, preview: purchased_post.preview };
+    });
     setPostAssets(postAssets);
     onSuccess();
   };
 
   const onVaultObjectUnlocked = async (event: CustomEvent) => {
     const { data } = event.detail;
-    await new Promise((res) => setTimeout(res, 2500));
-    const { vaultObject: purchasedVaultObject, vault: purchasedVault } = data.purchasedVaultObject;
+    const { vaultObject: pvo, vault } = data.purchasedVaultObject;
 
-    setVault({
-      ...vault,
-      isPurchased: purchasedVault.isPurchased,
-      unlockPrice: purchasedVault.unlockPrice,
-      preview: purchasedVault.preview
+    setVault((prev) => {
+      return {
+        ...prev,
+        isPurchased: vault.isPurchased,
+        unlockPrice: vault.unlockPrice,
+        preview: vault.preview
+      };
     });
 
     setVaultObjects(
-      vaultObjects.map((vaultObject) =>
-        vaultObject.id === purchasedVaultObject.id
-          ? {
-              ...vaultObject,
-              isPurchased: purchasedVaultObject.isPurchased,
-              asset: { ...vaultObject.asset, rawUrl: purchasedVaultObject.asset.rawUrl }
-            }
-          : vaultObject
-      ) as VaultObjectsEntity[]
+      (prev) =>
+        prev.map((vaultObject) =>
+          vaultObject.id === pvo.id
+            ? {
+                ...vaultObject,
+                isPurchased: pvo.isPurchased,
+                asset: { ...vaultObject.asset, rawUrl: pvo?.asset?.rawUrl }
+              }
+            : vaultObject
+        ) as VaultObjectsEntity[]
     );
 
     onSuccess();
@@ -76,29 +79,30 @@ export const Sse = () => {
 
   const onVaultUnlocked = async (event: CustomEvent) => {
     const { data } = event.detail;
-    await new Promise((res) => setTimeout(res, 2500));
     const { vault: purchased_vault, vaultObjects: purchasedVaultObjects } = data.purchasedVault;
 
-    setVaultObjects(
-      vaultObjects.map((vaultObject) => {
-        const purchased = purchasedVaultObjects.find((pvo: any) => pvo.id === vaultObject.id);
-        return purchased
-          ? {
-              ...vaultObject,
-              isPurchased: purchased.isPurchased,
-              asset: { ...vaultObject.asset, rawUrl: purchased.purchasedUrl }
-            }
-          : vaultObject;
-      }) as VaultObjectsEntity[]
-    );
-
-    setVault({ ...vault, isPurchased: purchased_vault.isPurchased, preview: purchased_vault.preview });
+    setVault((prev) => {
+      return {
+        ...prev,
+        isPurchased: purchased_vault.isPurchased,
+        preview: purchased_vault.preview,
+        vaultObjects: prev.vaultObjects.map((vaultObject) => {
+          const purchased = purchasedVaultObjects.find((pvo: VaultObjectsEntity) => pvo.id === vaultObject.id);
+          return purchased
+            ? ({
+                ...vaultObject,
+                isPurchased: purchased.isPurchased,
+                asset: { ...vaultObject.asset, rawUrl: purchased.purchasedUrl }
+              } as VaultObjectsEntity)
+            : vaultObject;
+        }) as VaultObjectsEntity[]
+      };
+    });
     onSuccess();
   };
 
   const onZonePurchase = async (event: CustomEvent) => {
     const { data } = event.detail;
-    await new Promise((res) => setTimeout(res, 2500));
     const { currentZone, hasZoneMembership } = data.purchasedZone;
     setFan({ ...fan, hasZoneMembership, currentZone } as FanProfilesEntity);
   };

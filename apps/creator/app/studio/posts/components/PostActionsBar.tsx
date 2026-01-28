@@ -1,6 +1,7 @@
 'use client';
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
+import { usePostsActions } from '@workspace/gql/actions';
 import { PostsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { normalizePath } from '@workspace/ui/lib/helpers';
@@ -15,6 +16,11 @@ interface PostActionsBarProps {
 export const PostActionsBar = ({ disabled, post }: PostActionsBarProps) => {
   const router = useRouter();
   const { setShareModal } = useUtilsStore();
+  const { deletePostMutation } = usePostsActions();
+
+  const handleDeletePost = async () => {
+    await deletePostMutation({ postId: post.id });
+  };
 
   const buttons = [
     {
@@ -26,7 +32,7 @@ export const PostActionsBar = ({ disabled, post }: PostActionsBarProps) => {
       }
     },
     { label: 'Edit', icon: <Pencil className="h-4 w-4" />, disabled: disabled, onClick: () => null },
-    { label: 'Delete', icon: <Trash2 className="h-4 w-4" />, disabled: disabled, onClick: () => null },
+    { label: 'Delete', icon: <Trash2 className="h-4 w-4" />, disabled: disabled, onClick: () => handleDeletePost() },
     { label: 'Comments', icon: <MessageSquare className="h-4 w-4" />, disabled: false, onClick: () => null },
     { label: 'Likes', icon: <Heart className="h-4 w-4" />, disabled: false, onClick: () => null },
     { label: 'Share', icon: <Share2 className="h-4 w-4" />, disabled: false, onClick: () => setShareModal(post) }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCommentsStore } from '@/hooks/store/comments.store';
 import { useLikes } from '@/hooks/useLikes';
 import { PostsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
@@ -14,12 +15,12 @@ import { LikeButton } from './LikeButton';
 
 interface PostsGalleryOptionsProps {
   post: PostsEntity;
-  setCommentPost: React.Dispatch<React.SetStateAction<PostsEntity | null>>;
 }
 
-export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, setCommentPost }) => {
+export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }) => {
   const router = useRouter();
   const { likePost } = useLikes();
+  const { setCommentOnPost } = useCommentsStore();
   const handleLikePost = useDebouncedCallback(likePost, 250);
 
   return (
@@ -88,7 +89,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post, 
                 title="Like"
                 onLikeDisLike={() => handleLikePost(post.id)}
               />
-              <CommentButton onClick={() => setCommentPost(post)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
+              <CommentButton onClick={() => setCommentOnPost(post)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
             </>
           )}
           <MultipleObjectsIcon hasMultiple={post.objectCount > 1} />

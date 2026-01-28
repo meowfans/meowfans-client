@@ -1,10 +1,10 @@
+import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { PostsEntity } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { StatItem } from '@workspace/ui/globals/StatItem';
 import { Bookmark, Eye, Heart, MessageCircle, Share2 } from 'lucide-react';
+import { SinglePostAction } from './SinglePostAction';
 import { SinglePostDetails } from './SinglePostDetails';
-import { SinglePostCommentsBlock } from './SinglePostCommentsBlock';
-import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 
 interface SinglePostStatsProps {
   post: PostsEntity;
@@ -26,7 +26,7 @@ export const SinglePostInsight = ({ post }: SinglePostStatsProps) => {
           </div>
         </CardContent>
       </Card>
-      {/* <SinglePostCommentsBlock post={post} /> */}
+      <SinglePostAction post={post} />
     </div>
   );
 };
