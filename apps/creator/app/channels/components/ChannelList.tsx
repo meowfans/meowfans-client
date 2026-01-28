@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
+import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { cn } from '@workspace/ui/lib/utils';
 import { EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
@@ -110,11 +111,12 @@ export const ChannelList = () => {
             <div className="flex min-w-0 items-center gap-3">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
+                  <SAvatar url={c.fanProfile?.user?.avatarUrl} />
                   <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {c.fanProfile?.user?.firstName.concat(' ', c.fanProfile?.user?.lastName) ?? 'No messages yet'}
+                    {c.fanProfile?.user?.firstName.concat(' ', c.fanProfile?.user?.lastName)}
                   </p>
                 </div>
-                <p className="mt-1 truncate text-xs text-muted-foreground">{c.lastMessage?.content ?? 'No messages yet'}</p>
+                <p className="mt-1 truncate text-xs text-muted-foreground">{c.lastMessage?.content ?? 'Last message is erased'}</p>
               </div>
             </div>
 
