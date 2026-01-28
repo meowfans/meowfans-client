@@ -2,7 +2,7 @@ import { AgeConfirmation } from '@/app/(legal)/components/AgeConfirmation';
 import { CookieBanner } from '@/app/(legal)/components/CookieBanner';
 import { AppSidebar } from '@/components/AppSideBar';
 import { Sse } from '@/components/Sse';
-import { EventsProvider } from '@/hooks/context/EventsContextWrapper';
+import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';

@@ -1,9 +1,9 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
+import { useChannelsStore } from '@/hooks/store/channels.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
-import { useWebhookStore } from '@/hooks/store/webhook.store';
 import { FanProfilesEntity, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { eventEmitter } from '@workspace/ui/hooks/EventsEmitter';
 import { EventTypes, triggerSparkles } from '@workspace/ui/lib';
@@ -12,9 +12,9 @@ import { toast } from 'sonner';
 
 export const Sse = () => {
   const { setFan, fan } = useFan();
+  const { setChannel } = useChannelsStore();
   const { setPost, setPostAssets, post } = usePostsStore();
   const { setVaultObjects, setVault, vault, vaultObjects } = useVaultsStore();
-  const { setWebhook, webhook } = useWebhookStore();
 
   const onSuccess = () => {
     toast.promise(
@@ -36,7 +36,6 @@ export const Sse = () => {
     );
 
     triggerSparkles();
-    setWebhook(false);
   };
 
   const onPostUnlocked = async (event: CustomEvent) => {
@@ -104,24 +103,71 @@ export const Sse = () => {
     setFan({ ...fan, hasZoneMembership, currentZone } as FanProfilesEntity);
   };
 
+  const onSendMessageFromCreator = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const newMessage = data.newMessage;
+    setChannel((prev) => {
+      return {
+        ...prev,
+        messages: [...prev.messages, newMessage]
+      };
+    });
+  };
+
+  const onUpdateMessage = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const updatedMessage = data.updatedMessage;
+    setChannel((prev) => {
+      return { ...prev, messages: prev.messages.map((m) => (m.id === updatedMessage.id ? { ...m, ...updatedMessage } : m)) };
+    });
+  };
+
+  const onDeleteMessage = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const deleteMessageId = data.deletableId;
+    setChannel((prev) => {
+      return { ...prev, messages: prev.messages.filter((m) => m.id !== deleteMessageId) };
+    });
+  };
+
+  const onDeleteMessages = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const deletableIds = data.deletableIds;
+    setChannel((prev) => {
+      return { ...prev, messages: prev.messages.filter((m) => !deletableIds.includes(m.id)) };
+    });
+  };
+
   useEffect(() => {
-    if (webhook) {
-      eventEmitter.addEventListener(EventTypes.PostUnlocked, (event) => onPostUnlocked(event as any));
-      eventEmitter.addEventListener(EventTypes.ZonePurchased, (event) => onZonePurchase(event as any));
-      eventEmitter.addEventListener(EventTypes.VaultObjectUnlocked, (event) => onVaultObjectUnlocked(event as any));
-      eventEmitter.addEventListener(EventTypes.VaultUnlocked, (event) => onVaultUnlocked(event as any));
-      eventEmitter.addEventListener(EventTypes.Ping, (event) => console.log(event));
-    }
+    const postUnlockHandler = (e: Event) => onPostUnlocked(e as CustomEvent);
+    const zonePurchaseHandler = (e: Event) => onZonePurchase(e as CustomEvent);
+    const vaultObjectUnlockHandler = (e: Event) => onVaultObjectUnlocked(e as CustomEvent);
+    const vaultUnlockHandler = (e: Event) => onVaultUnlocked(e as CustomEvent);
+    const sendHandler = (e: Event) => onSendMessageFromCreator(e as CustomEvent);
+    const updateHandler = (e: Event) => onUpdateMessage(e as CustomEvent);
+    const deleteHandler = (e: Event) => onDeleteMessage(e as CustomEvent);
+    const deleteManyHandler = (e: Event) => onDeleteMessages(e as CustomEvent);
+
+    eventEmitter.addEventListener(EventTypes.PostUnlocked, postUnlockHandler);
+    eventEmitter.addEventListener(EventTypes.ZonePurchased, zonePurchaseHandler);
+    eventEmitter.addEventListener(EventTypes.VaultUnlocked, vaultUnlockHandler);
+    eventEmitter.addEventListener(EventTypes.VaultObjectUnlocked, vaultObjectUnlockHandler);
+    eventEmitter.addEventListener(EventTypes.SendMessageFromCreator, sendHandler);
+    eventEmitter.addEventListener(EventTypes.UpdateMessage, updateHandler);
+    eventEmitter.addEventListener(EventTypes.DeleteMessage, deleteHandler);
+    eventEmitter.addEventListener(EventTypes.DeleteMessages, deleteManyHandler);
 
     return () => {
-      if (webhook) {
-        eventEmitter.removeEventListener(EventTypes.ZonePurchased, (event) => onZonePurchase(event as any));
-        eventEmitter.removeEventListener(EventTypes.PostUnlocked, (event) => onPostUnlocked(event as any));
-        eventEmitter.removeEventListener(EventTypes.VaultObjectUnlocked, (event) => onVaultObjectUnlocked(event as any));
-        eventEmitter.removeEventListener(EventTypes.VaultUnlocked, (event) => onVaultUnlocked(event as any));
-      }
+      eventEmitter.removeEventListener(EventTypes.PostUnlocked, postUnlockHandler);
+      eventEmitter.removeEventListener(EventTypes.ZonePurchased, zonePurchaseHandler);
+      eventEmitter.removeEventListener(EventTypes.VaultUnlocked, vaultUnlockHandler);
+      eventEmitter.removeEventListener(EventTypes.VaultObjectUnlocked, vaultObjectUnlockHandler);
+      eventEmitter.removeEventListener(EventTypes.SendMessageFromCreator, sendHandler);
+      eventEmitter.removeEventListener(EventTypes.UpdateMessage, updateHandler);
+      eventEmitter.removeEventListener(EventTypes.DeleteMessage, deleteHandler);
+      eventEmitter.removeEventListener(EventTypes.DeleteMessages, deleteManyHandler);
     };
-  }, [webhook]); // eslint-disable-line
+  }, []); //eslint-disable-line
 
   return null;
 };

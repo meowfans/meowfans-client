@@ -1,11 +1,11 @@
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { Button } from '@workspace/ui/components/button';
 import { toast } from 'sonner';
 
 export const MultiSelectButtons = () => {
   const { deleteMessages } = useMessageMutations();
-  const { deleteMessageIds, setDeleteMessageIds, setOpenMultiSelect, openMultiSelect } = useMessagesStore();
+  const { deleteMessageIds, setDeleteMessageIds, setOpenMultiSelect, openMultiSelect } = useMessageMultiSelectStore();
 
   const handleCancelMultiSelection = () => {
     setDeleteMessageIds([]);
@@ -27,7 +27,7 @@ export const MultiSelectButtons = () => {
   };
 
   return openMultiSelect ? (
-    <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-sm flex justify-between bg-card border-2 rounded-xs p-2">
+    <div className="fixed bottom-0 flex justify-between left-0 md:left-(--sidebar-width) right-0 md:right-(--sidebar-width) border-t bg-background/80 backdrop-blur p-2">
       <Button variant="outline" onClick={handleCancelMultiSelection}>
         Cancel
       </Button>

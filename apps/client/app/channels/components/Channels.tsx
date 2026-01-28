@@ -8,7 +8,6 @@ import { NoChatSelected } from './NoChatSelected';
 
 export const Channels = () => {
   const isMobile = useIsMobile();
-
   return (
     <PageManager className="relative p-0">
       <ChannelHeader />

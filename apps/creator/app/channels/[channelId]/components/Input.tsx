@@ -2,7 +2,8 @@
 
 import { AssetPickerModal } from '@/components/modals/AssetPickerModal';
 import { useCreator } from '@/hooks/context/useCreator';
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useChannelsStore } from '@/hooks/store/channels.store';
+import { useMessageUIStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { FileType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -13,7 +14,7 @@ import { toast } from 'sonner';
 
 export const MessageInput = () => {
   const { creator } = useCreator();
-  const { channel } = useMessagesStore();
+  const { channel } = useChannelsStore();
   const { sendMessage, sendReply, loading, updateMessage } = useMessageMutations();
 
   const {
@@ -33,7 +34,7 @@ export const MessageInput = () => {
     setIsEditing,
     setReplyMessageId,
     setSelectedMessage
-  } = useMessagesStore();
+  } = useMessageUIStore();
 
   const handleRemove = (assetId: string) => {
     const filtered = attachments.filter((u) => u.assetId !== assetId);

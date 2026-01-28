@@ -1,7 +1,7 @@
 'use client';
 
 import { useCreator } from '@/hooks/context/useCreator';
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -17,7 +17,7 @@ export const Message = () => {
   const { creator } = useCreator();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams<{ channelId: string }>();
-  const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessagesStore();
+  const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessageMultiSelectStore();
   const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
 
   useEffect(() => {
@@ -64,8 +64,7 @@ export const Message = () => {
           )}
         </InfiniteScrollManager>
       </div>
-      <MultiSelectButtons />
-      <MessageInput />
+      {openMultiSelect ? <MultiSelectButtons /> : <MessageInput />}
     </div>
   );
 };

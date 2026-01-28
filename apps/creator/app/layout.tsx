@@ -20,6 +20,8 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { Toaster } from 'sonner';
 import './globals.css';
+import { EventsProvider } from '@/hooks/context/EventsProvider';
+import { CommunicationSse } from '@/components/CommunicationSse';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
@@ -131,6 +133,8 @@ export default async function RootLayout({ children }: Props) {
                   <AppSidebar />
                   <SidebarInset className="flex flex-1 flex-col min-w-0">
                     <Toaster position="top-center" closeButton richColors theme="system" />
+                    <EventsProvider />
+                    <CommunicationSse />
                     <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
                   </SidebarInset>
                 </div>

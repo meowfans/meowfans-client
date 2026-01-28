@@ -24,7 +24,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   children,
   scrollableDiv,
   loading,
-  inverse = false,
+  inverse,
   scrollThreshold = 0.7,
   customHeight = 'h-[100vh]',
   LoadingComponent
