@@ -25,13 +25,13 @@ export const Message = () => {
     if (!container) return;
 
     container.scrollTop = container.scrollHeight;
-  }, [channel.messages?.length]);
+  }, []);
 
   return (
     <div className="w-full relative h-screen overflow-hidden">
       <MessageHeader channel={channel} />
 
-      <div ref={scrollRef} id="channel-scroll" className="absolute top-16 bottom-16 left-0 right-0 overflow-y-auto">
+      <div ref={scrollRef} id="channel-scroll" className="absolute top-16 bottom-16 left-0 right-0 overflow-y-auto flex flex-col-reverse">
         <InfiniteScrollManager
           scrollableDiv="channel-scroll"
           dataLength={channel.messages?.length || 0}
@@ -40,29 +40,31 @@ export const Message = () => {
           inverse={true}
           onLoadMore={handleLoadMore}
         >
-          {channel.messages?.length > 0 ? (
-            channel.messages.map((message) => {
-              const isSender = message.senderId === fan?.fanId;
+          <div className="flex flex-col-reverse">
+            {channel.messages?.length > 0 ? (
+              channel.messages.map((message) => {
+                const isSender = message.senderId === fan?.fanId;
 
-              return (
-                <div
-                  id={`msg-${message.id}`}
-                  key={`msg-${message.id}`}
-                  className={`relative flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}
-                >
-                  <MessageThread message={message} isSender={isSender} />
-                  <Toggle
-                    visible={openMultiSelect && isSender}
-                    checked={deleteMessageIds.includes(message.id)}
-                    onChange={() => toggleMessageIds(message.id)}
-                    className="absolute left-0 top-1/2 -translate-y-1/2"
-                  />
-                </div>
-              );
-            })
-          ) : (
-            <EmptyElement title="Start messaging" description="Looks like you have not messaged yet, Say Hi!" />
-          )}
+                return (
+                  <div
+                    id={message.id}
+                    key={`msg-${message.id}`}
+                    className={`relative flex w-full my-2 ${isSender ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <MessageThread message={message} isSender={isSender} />
+                    <Toggle
+                      visible={openMultiSelect && isSender}
+                      checked={deleteMessageIds.includes(message.id)}
+                      onChange={() => toggleMessageIds(message.id)}
+                      className="absolute left-0 top-1/2 -translate-y-1/2"
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <EmptyElement title="Start messaging" description="Looks like you have not messaged yet, Say Hi!" />
+            )}
+          </div>
         </InfiniteScrollManager>
       </div>
       {openMultiSelect ? <MultiSelectButtons /> : <MessageInput />}

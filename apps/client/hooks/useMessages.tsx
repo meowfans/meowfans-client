@@ -18,8 +18,8 @@ import { useChannelsStore } from './store/channels.store';
 
 export const useChannelMessages = (input: PaginationInput) => {
   const { fan } = useFan();
-  const { channel, setChannel } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
+  const { channel, setChannel } = useChannelsStore();
   const { getChannelMessagesQuery } = useMessagesActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
@@ -86,7 +86,7 @@ export const useMessageMutations = () => {
       const { data } = await sendMessageFromFanMutation(input);
       const newMessage = data?.sendMessageFromFan as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [...channel.messages, newMessage] });
+        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
         successHandler({ message: 'Message sent' });
       }
     } catch (error) {

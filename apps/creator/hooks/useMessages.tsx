@@ -81,7 +81,7 @@ export const useMessageMutations = () => {
       const { data } = await sendMessageFromCreatorMutation(input);
       const newMessage = data?.sendMessageFromCreator as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [...channel.messages, newMessage] });
+        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
         successHandler({ message: 'Message sent' });
       }
     } catch (error) {
