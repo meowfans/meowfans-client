@@ -60,7 +60,7 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls }: Carou
         <div className="flex touch-pan-y">
           {items.map((item, idx) => (
             <div key={getKey(item) ?? idx} className="relative min-w-full aspect-square flex items-center justify-center bg-black">
-              {getFileType(item) === FileType.Image ? (
+              {getFileType(item).toUpperCase() === FileType.Image ? (
                 <img src={getUrl(item)} alt="Post content" draggable={false} className="h-full w-full object-contain select-none" />
               ) : (
                 <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
@@ -69,7 +69,7 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls }: Carou
                 currentIdx={idx}
                 urls={urls || []}
                 currentUrl={getUrl(item)}
-                filetype={getFileType(item) === FileType.Image ? 'img' : 'video'}
+                filetype={getFileType(item).toUpperCase() === FileType.Image ? 'img' : 'video'}
                 className="absolute top-1 right-1"
               />
             </div>

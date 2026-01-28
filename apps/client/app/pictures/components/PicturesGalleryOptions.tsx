@@ -40,7 +40,7 @@ export const PicturesGalleryOptions: React.FC<PicturesGalleryProps> = ({ vaultOb
         </div>
       )}
       <div className="flex flex-col justify-end h-full">
-        <div className="flex justify-end place-content-end w-full p-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+        <div className="flex justify-end place-content-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
           <div className="flex flex-row justify-between space-x-1">
             <Link href={`/vaults/${vaultObject.vaultId}`} className="z-10">
               <Badge>Visit vault</Badge>

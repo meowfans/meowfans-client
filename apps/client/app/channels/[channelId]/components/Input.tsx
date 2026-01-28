@@ -1,7 +1,8 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useChannelsStore } from '@/hooks/store/channels.store';
+import { useMessageInputStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
@@ -10,10 +11,10 @@ import { toast } from 'sonner';
 
 export const MessageInput = () => {
   const { fan } = useFan();
-  const { channel } = useMessagesStore();
+  const { channel } = useChannelsStore();
   const { sendMessage, sendReply, loading, updateMessage } = useMessageMutations();
   const { content, setContent, replyMessageId, isEditing, selectedMessage, setIsEditing, setReplyMessageId, setSelectedMessage } =
-    useMessagesStore();
+    useMessageInputStore();
 
   const handleCancel = () => {
     setContent('');

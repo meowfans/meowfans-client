@@ -1,6 +1,5 @@
 'use client';
 
-import { useWebhookStore } from '@/hooks/store/webhook.store';
 import usePaypal, { CreateOrderInput } from '@/hooks/usePaypal';
 import { configService } from '@/util/config';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -8,7 +7,6 @@ import { PurchaseSheetProps } from './modals/PurchaseSheet';
 
 export const Paypal = ({ entityId, purchaseType, amount, onTransactionDone, creatorId, zoneType }: PurchaseSheetProps) => {
   const { createOrder, onApprove } = usePaypal();
-  const { setWebhook } = useWebhookStore();
 
   const createOrderInput: CreateOrderInput = {
     quantity: 1,
@@ -41,7 +39,6 @@ export const Paypal = ({ entityId, purchaseType, amount, onTransactionDone, crea
             label: 'paypal'
           }}
           createOrder={async () => {
-            setWebhook(true);
             return await createOrder(createOrderInput);
           }}
           onApprove={async (data: any, actions: any) => {

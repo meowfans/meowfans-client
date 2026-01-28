@@ -1,4 +1,4 @@
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useMessageInputStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const MessageThread: React.FC<Props> = ({ message, isSender = false }) => {
-  const { setContent, setIsEditing, setReplyMessageId, setSelectedMessage } = useMessagesStore();
+  const { setContent, setIsEditing, setReplyMessageId, setSelectedMessage } = useMessageInputStore();
   const { deleteMessage } = useMessageMutations();
 
   const handleEdit = () => {

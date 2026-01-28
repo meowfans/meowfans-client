@@ -1,38 +1,40 @@
-import { MessageChannelsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
-type MessagesStore = {
-  setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
-  setChannel: (channel: MessageChannelsEntity) => void;
+type MessageInputStore = {
   selectedMessage: MessagesEntity | null;
-  setContent: (content: string) => void;
-  channel: MessageChannelsEntity;
-  deleteMessageIds: string[];
-  toggleMessageIds: (deleteMessageId: string) => void;
   isEditing: boolean;
   content: string;
-  openMultiSelect: boolean;
   replyMessageId: string | null;
+  setContent: (content: string) => void;
   setIsEditing: (isEditing: boolean) => void;
-  setDeleteMessageIds: (deleteMessageIds: string[]) => void;
-  setOpenMultiSelect: (openMultiSelect: boolean) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
+  setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
 };
 
-export const useMessagesStore = create<MessagesStore>()((set) => ({
-  setChannel: (channel: MessageChannelsEntity) => set({ channel }),
+export const useMessageInputStore = create<MessageInputStore>()((set) => ({
   setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
-  setDeleteMessageIds: (deleteMessageIds) => set({ deleteMessageIds }),
-  openMultiSelect: false,
   selectedMessage: null,
   isEditing: false,
   setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
   content: '',
-  deleteMessageIds: [],
   replyMessageId: null,
-  channel: {} as MessageChannelsEntity,
   setContent: (content) => set({ content }),
-  setIsEditing: (isEditing) => set({ isEditing }),
+  setIsEditing: (isEditing) => set({ isEditing })
+}));
+
+type MessageMultiSelectStore = {
+  openMultiSelect: boolean;
+  deleteMessageIds: string[];
+  setOpenMultiSelect: (openMultiSelect: boolean) => void;
+  toggleMessageIds: (deleteMessageId: string) => void;
+  setDeleteMessageIds: (deleteMessageIds: string[]) => void;
+};
+
+export const useMessageMultiSelectStore = create<MessageMultiSelectStore>((set) => ({
+  setDeleteMessageIds: (deleteMessageIds) => set({ deleteMessageIds }),
+  openMultiSelect: false,
+  deleteMessageIds: [],
   setOpenMultiSelect: (openMultiSelect) => set({ openMultiSelect }),
   toggleMessageIds: (deleteMessageId) =>
     set((state) => {

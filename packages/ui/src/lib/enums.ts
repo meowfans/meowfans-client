@@ -18,7 +18,14 @@ export enum EventTypes {
   PostUnlocked = 'post_unlocked',
   VaultUnlocked = 'vault_unlocked',
   VaultObjectUnlocked = 'vault_object_unlocked',
-  ZonePurchased = 'zonePurchased'
+  ZonePurchased = 'zonePurchased',
+  SendMessageFromCreator = 'send_message_from_creator',
+  SendReplyFromCreator = 'send_reply_from_creator',
+  SendMessageFromFan = 'send_message_from_fan',
+  SendReplyFromFan = 'send_reply_from_fan',
+  DeleteMessage = 'delete_message',
+  DeleteMessages = 'delete_messages',
+  UpdateMessage = 'update_message'
 }
 
 export enum BackGroundColors {

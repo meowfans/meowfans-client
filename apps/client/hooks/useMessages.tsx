@@ -1,6 +1,5 @@
 'use client';
 
-import { useMessagesStore } from '@/hooks/store/message.store';
 import { useMessagesActions } from '@workspace/gql/actions';
 import {
   DeleteMessageInput,
@@ -15,10 +14,11 @@ import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
 import { useFan } from './context/UserContextWrapper';
+import { useChannelsStore } from './store/channels.store';
 
 export const useChannelMessages = (input: PaginationInput) => {
   const { fan } = useFan();
-  const { channel, setChannel } = useMessagesStore();
+  const { channel, setChannel } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
   const { getChannelMessagesQuery } = useMessagesActions();
   const [loading, setLoading] = useState<boolean>(true);
@@ -73,7 +73,7 @@ export const useChannelMessages = (input: PaginationInput) => {
 };
 
 export const useMessageMutations = () => {
-  const { channel, setChannel } = useMessagesStore();
+  const { channel, setChannel } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
   const { updateMessageMutation, deleteMessageMutation, deleteMessagesMutation, sendReplyFromFanMutation, sendMessageFromFanMutation } =

@@ -54,7 +54,7 @@ export const PurchaseSheet = ({
 
   return (
     <Sheet open={open} onOpenChange={handleToggle}>
-      <SheetTrigger asChild className={`${className} h-fit w-fit bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500`}>
+      <SheetTrigger asChild className={`${className} h-fit w-fit bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500`}>
         <AuthAwareButton allowPropagation variant="outline">
           Unlock ${amount}
         </AuthAwareButton>

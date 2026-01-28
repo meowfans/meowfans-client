@@ -1,4 +1,4 @@
-import { useMessagesStore } from '@/hooks/store/message.store';
+import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useUpdateChannel } from '@/hooks/useChannels';
 import { MessageChannelsEntity, UpdateChannelInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -23,7 +23,7 @@ interface MessageHeaderProps {
 
 export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
   const router = useRouter();
-  const { setOpenMultiSelect } = useMessagesStore();
+  const { setOpenMultiSelect } = useMessageMultiSelectStore();
   const { updateChannel } = useUpdateChannel();
   const [input, setInput] = useState<UpdateChannelInput>({
     channelId: channel.id,
