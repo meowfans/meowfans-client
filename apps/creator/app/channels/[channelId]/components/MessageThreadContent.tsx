@@ -1,7 +1,7 @@
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
+import { formatDate } from '@workspace/ui/lib/formatters';
 import { cn } from '@workspace/ui/lib/utils';
-import moment from 'moment';
 import { ReplyPreview } from './ReplyPreview';
 
 interface MessageThreadContentProps {
@@ -41,7 +41,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
       )}
 
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-        <span>{moment(message.createdAt).format('hh:mm')}</span>
+        <span>{formatDate(message.createdAt)}</span>
       </div>
     </div>
   );
