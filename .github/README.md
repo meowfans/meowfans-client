@@ -94,6 +94,7 @@ pnpm lint
 ```
 
 To format code with Prettier:
+Be aware of this as this will format the gql generated file which might cause error
 
 ```bash
 pnpm format
