@@ -11,8 +11,6 @@ export const ChannelList = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const { channels, loading } = useChannels({ take: 30 });
 
-  const selectedCount = selected.length;
-
   const toggleSelected = (channelPath: string) => {
     setSelected((prev) => (prev.includes(channelPath) ? prev.filter((p) => p !== channelPath) : [...prev, channelPath]));
   };
@@ -40,7 +38,7 @@ export const ChannelList = () => {
         channels={channels}
         multiSelect={multiSelect}
         onSelect={handleSelect}
-        selectedCount={selectedCount}
+        selectedCount={selected.length}
         setSelected={setSelected}
       />
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
