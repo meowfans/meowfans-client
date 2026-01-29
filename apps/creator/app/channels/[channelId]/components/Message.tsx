@@ -3,6 +3,8 @@
 import { useCreator } from '@/hooks/context/useCreator';
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
+import { useQuery } from '@apollo/client/react';
+import { UPDATE_LAST_SEEN_QUERY } from '@workspace/gql/api';
 import { SortOrder } from '@workspace/gql/generated/graphql';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -21,7 +23,7 @@ export const Message = () => {
   const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessageMultiSelectStore();
   const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({
     relatedEntityId: channelId,
-    take: 10,
+    take: 30,
     orderBy: SortOrder.Desc
   });
 
@@ -31,6 +33,18 @@ export const Message = () => {
 
     container.scrollTop = 0;
   }, []);
+
+  const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
+    skip: !channelId && !loading,
+    variables: { input: { messageChannelId: channelId } }
+  });
+
+  useEffect(() => {
+    const lastMessage = (channel.messages || []).at(0);
+    if (lastMessage?.recipientUserId === creator?.creatorId) {
+      refetch({ input: { messageChannelId: channelId, messageId: lastMessage.id } });
+    }
+  }, [channel?.messages, channelId, refetch, creator]);
 
   return (
     <div className="relative w-full h-screen overflow-hidden">

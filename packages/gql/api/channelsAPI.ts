@@ -17,6 +17,14 @@ export const CREATE_CHANNEL_MUTATION = graphql(`
   }
 `);
 
+export const UPDATE_LAST_SEEN_QUERY = graphql(`
+  query UpdateLastSeen($input: UpdateParticipantTimestampInput!) {
+    updateLastSeen(input: $input) {
+      message
+    }
+  }
+`);
+
 export const UPDATE_CHANNEL_MUTATION = graphql(`
   mutation UpdateChannel($input: UpdateChannelInput!) {
     updateChannel(input: $input) {
@@ -62,6 +70,15 @@ export const GET_CHANNELS_QUERY = graphql(`
         unlockPrice
         unlockedAt
         updatedAt
+        hasSeen
+      }
+      participants {
+        id
+        messageChannelId
+        userId
+        role
+        lastSeenAt
+        lastSentAt
       }
       creatorProfile {
         user {

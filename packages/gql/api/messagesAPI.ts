@@ -12,6 +12,14 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
       isRestricted
       isMessagingBlocked
       totalEarning
+      participants {
+        id
+        messageChannelId
+        userId
+        role
+        lastSeenAt
+        lastSentAt
+      }
       creatorProfile {
         user {
           avatarUrl
@@ -49,6 +57,7 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
         deletedAt
         hasAccess
         id
+        hasSeen
         isExclusive
         recipientUserId
         senderId

@@ -10,9 +10,9 @@ import { EventTypes, triggerSparkles } from '@workspace/ui/lib';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
-export const Sse = () => {
+export const Events = () => {
   const { setFan, fan } = useFan();
-  const { setChannel } = useChannelsStore();
+  const { setChannel, setChannels } = useChannelsStore();
   const { setPost, setPostAssets } = usePostsStore();
   const { setVaultObjects, setVault } = useVaultsStore();
 
@@ -36,6 +36,30 @@ export const Sse = () => {
     );
 
     triggerSparkles();
+  };
+
+  const onUpdateChannelLastMessage = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const lastMessage = data.lastMessage;
+    setChannels((prev) =>
+      prev?.map((channel) => ({
+        ...channel,
+        lastMessage: channel.id === lastMessage?.channelId ? lastMessage : channel?.lastMessage
+      }))
+    );
+  };
+
+  const onSeenMessage = async (event: CustomEvent) => {
+    const { seenAt, senderId } = event.detail.data;
+
+    console.log({ seenAt });
+    setChannel((prev) => {
+      const prevParticipants = prev?.participants ?? [];
+      return {
+        ...prev,
+        participants: prevParticipants?.map((p) => (p.userId === senderId ? { ...p, lastSeenAt: seenAt } : p))
+      };
+    });
   };
 
   const onPostUnlocked = async (event: CustomEvent) => {
@@ -111,10 +135,8 @@ export const Sse = () => {
     const { data } = event.detail;
     const newMessage = data.newMessage;
     setChannel((prev) => {
-      return {
-        ...prev,
-        messages: [newMessage, ...prev.messages]
-      };
+      const prevMessages = prev?.messages ?? [];
+      return { ...prev, messages: [newMessage, ...prevMessages] };
     });
   };
 
@@ -122,7 +144,8 @@ export const Sse = () => {
     const { data } = event.detail;
     const updatedMessage = data.updatedMessage;
     setChannel((prev) => {
-      return { ...prev, messages: prev.messages.map((m) => (m.id === updatedMessage.id ? { ...m, ...updatedMessage } : m)) };
+      const prevMessages = prev?.messages ?? [];
+      return { ...prev, messages: prevMessages?.map((m) => (m.id === updatedMessage.id ? { ...m, ...updatedMessage } : m)) };
     });
   };
 
@@ -130,7 +153,8 @@ export const Sse = () => {
     const { data } = event.detail;
     const deleteMessageId = data.deletableId;
     setChannel((prev) => {
-      return { ...prev, messages: prev.messages.filter((m) => m.id !== deleteMessageId) };
+      const prevMessages = prev?.messages ?? [];
+      return { ...prev, messages: prevMessages?.filter((m) => m.id !== deleteMessageId) };
     });
   };
 
@@ -138,11 +162,13 @@ export const Sse = () => {
     const { data } = event.detail;
     const deletableIds = data.deletableIds;
     setChannel((prev) => {
-      return { ...prev, messages: prev.messages.filter((m) => !deletableIds.includes(m.id)) };
+      const prevMessages = prev?.messages ?? [];
+      return { ...prev, messages: prevMessages?.filter((m) => !deletableIds.includes(m.id)) };
     });
   };
 
   useEffect(() => {
+    const onUpdateChannelLastMessageHandler = (e: Event) => onUpdateChannelLastMessage(e as CustomEvent);
     const postUnlockHandler = (e: Event) => onPostUnlocked(e as CustomEvent);
     const zonePurchaseHandler = (e: Event) => onZonePurchase(e as CustomEvent);
     const vaultObjectUnlockHandler = (e: Event) => onVaultObjectUnlocked(e as CustomEvent);
@@ -151,7 +177,9 @@ export const Sse = () => {
     const updateHandler = (e: Event) => onUpdateMessage(e as CustomEvent);
     const deleteHandler = (e: Event) => onDeleteMessage(e as CustomEvent);
     const deleteManyHandler = (e: Event) => onDeleteMessages(e as CustomEvent);
+    const onSeenMessageHandler = (e: Event) => onSeenMessage(e as CustomEvent);
 
+    eventEmitter.addEventListener(EventTypes.LastMessage, onUpdateChannelLastMessageHandler);
     eventEmitter.addEventListener(EventTypes.PostUnlocked, postUnlockHandler);
     eventEmitter.addEventListener(EventTypes.ZonePurchased, zonePurchaseHandler);
     eventEmitter.addEventListener(EventTypes.VaultUnlocked, vaultUnlockHandler);
@@ -160,6 +188,7 @@ export const Sse = () => {
     eventEmitter.addEventListener(EventTypes.UpdateMessage, updateHandler);
     eventEmitter.addEventListener(EventTypes.DeleteMessage, deleteHandler);
     eventEmitter.addEventListener(EventTypes.DeleteMessages, deleteManyHandler);
+    eventEmitter.addEventListener(EventTypes.MessageSeen, onSeenMessageHandler);
 
     return () => {
       eventEmitter.removeEventListener(EventTypes.PostUnlocked, postUnlockHandler);
@@ -167,9 +196,11 @@ export const Sse = () => {
       eventEmitter.removeEventListener(EventTypes.VaultUnlocked, vaultUnlockHandler);
       eventEmitter.removeEventListener(EventTypes.VaultObjectUnlocked, vaultObjectUnlockHandler);
       eventEmitter.removeEventListener(EventTypes.SendMessageFromCreator, sendHandler);
+      eventEmitter.removeEventListener(EventTypes.LastMessage, onUpdateChannelLastMessageHandler);
       eventEmitter.removeEventListener(EventTypes.UpdateMessage, updateHandler);
       eventEmitter.removeEventListener(EventTypes.DeleteMessage, deleteHandler);
       eventEmitter.removeEventListener(EventTypes.DeleteMessages, deleteManyHandler);
+      eventEmitter.removeEventListener(EventTypes.MessageSeen, onSeenMessageHandler);
     };
   }, []); //eslint-disable-line
 

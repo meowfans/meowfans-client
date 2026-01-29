@@ -1,12 +1,15 @@
 import { AgeConfirmation } from '@/app/(legal)/components/AgeConfirmation';
 import { CookieBanner } from '@/app/(legal)/components/CookieBanner';
 import { AppSidebar } from '@/components/AppSideBar';
-import { Sse } from '@/components/Sse';
+import { Events } from '@/components/Events';
 import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
+import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api';
+import { createApolloClient } from '@workspace/gql/ApolloClient';
+import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { FanProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import { Toaster } from '@workspace/ui/components/sonner';
@@ -20,9 +23,6 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { title } from 'radash';
 import './globals.css';
-import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api';
-import { createApolloClient } from '@workspace/gql/ApolloClient';
-import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
@@ -148,7 +148,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <SidebarInset className="flex flex-1 flex-col min-h-screen">
                     <Toaster position="top-center" closeButton richColors theme="system" />
                     <EventsProvider />
-                    <Sse />
+                    <Events />
                     <main className="flex-1 w-full overflow-x-hidden">{children}</main>
                   </SidebarInset>
                 </div>

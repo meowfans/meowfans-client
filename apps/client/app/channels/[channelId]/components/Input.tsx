@@ -35,7 +35,7 @@ export const MessageInput = () => {
     const payload = {
       content: content.trim(),
       senderId: fan?.fanId,
-      recipientUserId: channel.fanProfile.user.id
+      recipientUserId: channel.creatorProfile.creatorId
     };
 
     if (replyMessageId) await sendReply({ ...payload, messageId: replyMessageId });

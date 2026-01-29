@@ -1,5 +1,7 @@
 import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
+import { Events } from '@/components/Events';
+import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { CreatorContextWrapper } from '@/hooks/context/useCreator';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -20,8 +22,6 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { Toaster } from 'sonner';
 import './globals.css';
-import { EventsProvider } from '@/hooks/context/EventsProvider';
-import { CommunicationSse } from '@/components/CommunicationSse';
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = headers();
@@ -134,7 +134,7 @@ export default async function RootLayout({ children }: Props) {
                   <SidebarInset className="flex flex-1 flex-col min-w-0">
                     <Toaster position="top-center" closeButton richColors theme="system" />
                     <EventsProvider />
-                    <CommunicationSse />
+                    <Events />
                     <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
                   </SidebarInset>
                 </div>

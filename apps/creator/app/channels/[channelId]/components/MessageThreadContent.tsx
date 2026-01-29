@@ -1,7 +1,11 @@
+import { useCreator } from '@/hooks/context/useCreator';
+import { useChannelsStore } from '@/hooks/store/channels.store';
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
+import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { formatDate } from '@workspace/ui/lib/formatters';
 import { cn } from '@workspace/ui/lib/utils';
+import { useMemo } from 'react';
 import { ReplyPreview } from './ReplyPreview';
 
 interface MessageThreadContentProps {
@@ -10,6 +14,15 @@ interface MessageThreadContentProps {
 }
 
 export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ message, isSender }) => {
+  const { channel } = useChannelsStore();
+  const { creator } = useCreator();
+
+  const hasSeen = useMemo(() => {
+    const fan = channel.participants.find(({ userId }) => userId !== creator.creatorId);
+    const timestamp = fan ? new Date(Number(fan.lastSeenAt)).getTime() : new Date(0).getTime();
+    return timestamp >= new Date(message.createdAt).getTime();
+  }, [channel, creator, message]);
+
   const handleScrollToRepliedMessage = (messageId: string) => {
     const element = document.getElementById(`msg-${messageId}`);
     if (element) {
@@ -41,6 +54,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
       )}
 
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+        <SeenPreview isSender={isSender} seen={hasSeen} />
         <span>{formatDate(message.createdAt)}</span>
       </div>
     </div>

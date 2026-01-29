@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import moment from 'moment';
 
 export const handleFormatNumberToKAndM = (digit: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -14,7 +13,7 @@ export const handleFormatNumberToKAndM = (digit: number) => {
 
 export function formatDate(date: Date) {
   const now = dayjs();
-  const targetDate = dayjs(date);
+  const targetDate = dayjs(new Date(date));
 
   if (targetDate.isSame(now, 'day')) {
     return targetDate.format('HH:MM');
