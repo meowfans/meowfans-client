@@ -50,7 +50,7 @@ export const Events = () => {
   };
 
   const onSeenMessage = async (event: CustomEvent) => {
-    const { seenAt, senderId } = event.detail.data;
+    const { seenAt, senderId, channelId } = event.detail.data;
 
     setChannel((prev) => {
       const prevParticipants = prev?.participants ?? [];
@@ -59,6 +59,20 @@ export const Events = () => {
         participants: prevParticipants?.map((p) => (p.userId === senderId ? { ...p, lastSeenAt: seenAt } : p))
       };
     });
+
+    setChannels((prev) =>
+      prev?.map((channel) => {
+        const prevParticipants = channel?.participants ?? [];
+        return {
+          ...channel,
+          participants: prevParticipants?.map((participant) =>
+            participant?.messageChannelId === channelId && participant?.userId === senderId
+              ? { ...participant, lastSeenAt: seenAt }
+              : participant
+          )
+        };
+      })
+    );
   };
 
   const onPostUnlocked = async (event: CustomEvent) => {

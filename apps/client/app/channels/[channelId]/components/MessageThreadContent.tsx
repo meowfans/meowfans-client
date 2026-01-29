@@ -1,4 +1,3 @@
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
@@ -15,13 +14,12 @@ interface MessageThreadContentProps {
 
 export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ message, isSender }) => {
   const { channel } = useChannelsStore();
-  const { fan } = useFan();
 
   const hasSeen = useMemo(() => {
-    const creator = channel.participants.find(({ userId }) => userId !== fan?.fanId);
+    const creator = channel.participants.find(({ userId }) => userId !== channel.fanId);
     const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
     return timestamp >= new Date(message.createdAt).getTime();
-  }, [channel, fan, message]);
+  }, [channel, message]);
 
   const handleScrollToRepliedMessage = (messageId: string) => {
     const element = document.getElementById(`msg-${messageId}`);

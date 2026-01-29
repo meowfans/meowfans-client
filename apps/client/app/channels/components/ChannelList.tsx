@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { normalizePath } from '@workspace/ui/lib/helpers';
 import { cn } from '@workspace/ui/lib/utils';
 import { EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
@@ -36,6 +37,8 @@ export const ChannelList = () => {
     }
     router.push(normalizePath('channels', channelPath));
   };
+
+  console.log({ channels });
 
   return (
     <div className="space-y-2">
@@ -94,6 +97,11 @@ export const ChannelList = () => {
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
 
       {channels.map((c, idx) => {
+        const creator = c.participants.find(({ userId }) => userId === c?.creatorProfile?.creatorId);
+        const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
+        const hasSeenLastMessage = timestamp >= new Date(c?.lastMessage?.createdAt).getTime();
+
+        console.log({ creator, timestamp, hasSeenLastMessage });
         return (
           <div
             key={idx}
@@ -109,20 +117,33 @@ export const ChannelList = () => {
             )}
           >
             <div className="flex min-w-0 items-center gap-3">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <SAvatar url={c.creatorProfile?.user?.avatarUrl} />
-                  <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {c.creatorProfile?.user?.firstName.concat(' ', c.creatorProfile?.user?.lastName)}
+              <SAvatar url={c.creatorProfile?.user?.avatarUrl} />
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-medium">
+                  {c.creatorProfile?.user?.firstName} {c.creatorProfile?.user?.lastName}
+                </p>
+
+                <div className="mt-0.5 flex items-center gap-2">
+                  <SeenPreview isSender={creator?.userId === c?.lastMessage?.recipientUserId} seen={hasSeenLastMessage} />
+
+                  <p
+                    className={cn(
+                      'min-w-0 flex-1 truncate text-xs',
+                      hasSeenLastMessage ? 'text-muted-foreground' : 'text-primary font-medium'
+                    )}
+                  >
+                    {c.lastMessage?.content ?? 'Last message is erased'}
                   </p>
+
+                  <span className="shrink-0 text-[11px] text-muted-foreground">
+                    {c.lastMessage?.createdAt ? moment(c.lastMessage.createdAt).format('HH:mm') : ''}
+                  </span>
                 </div>
-                <p className="mt-1 truncate text-xs text-muted-foreground">{c.lastMessage?.content ?? 'Last message is erased'}</p>
               </div>
             </div>
 
             <div className="flex shrink-0 items-center gap-2 text-muted-foreground">
-              <span className="text-[11px]">{c.lastMessage?.createdAt ? moment(c.lastMessage.createdAt).format('hh:mm') : ''}</span>
-
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -130,7 +151,7 @@ export const ChannelList = () => {
                     size="icon"
                     className="h-8 w-8 opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                     onClick={(e) => e.stopPropagation()}
-                    aria-label={`Options for ${c.id}`}
+                    aria-label={`Options for ${c.creatorProfile?.user?.username}`}
                   >
                     <EllipsisVertical className="h-4 w-4" />
                   </Button>
