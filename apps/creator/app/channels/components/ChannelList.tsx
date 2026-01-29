@@ -30,7 +30,6 @@ export const ChannelList = () => {
     });
   };
 
-  console.log({ channels });
 
   return (
     <div className="space-y-2">
