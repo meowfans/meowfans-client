@@ -14,7 +14,7 @@ export const Sse = () => {
   const { setFan, fan } = useFan();
   const { setChannel } = useChannelsStore();
   const { setPost, setPostAssets } = usePostsStore();
-  const { setVaultObjects, setVault, vaultObjects } = useVaultsStore();
+  const { setVaultObjects, setVault } = useVaultsStore();
 
   const onSuccess = () => {
     toast.promise(

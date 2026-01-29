@@ -119,7 +119,7 @@ export const useMessageMutations = () => {
       const { data } = await sendReplyFromFanMutation(input);
       const newMessage = data?.sendReplyFromFan as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [...channel.messages, newMessage] });
+        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
         successHandler({ message: 'Reply sent' });
       }
     } catch (error) {
