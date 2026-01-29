@@ -52,7 +52,6 @@ export const Events = () => {
   const onSeenMessage = async (event: CustomEvent) => {
     const { seenAt, senderId } = event.detail.data;
 
-    console.log({ seenAt });
     setChannel((prev) => {
       const prevParticipants = prev?.participants ?? [];
       return {
