@@ -25,7 +25,9 @@ export enum EventTypes {
   SendReplyFromFan = 'send_reply_from_fan',
   DeleteMessage = 'delete_message',
   DeleteMessages = 'delete_messages',
-  UpdateMessage = 'update_message'
+  UpdateMessage = 'update_message',
+  MessageSeen = 'message_seen',
+  LastMessage = 'last_message'
 }
 
 export enum BackGroundColors {

@@ -1,11 +1,14 @@
+import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessageUIStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { MessagesEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
-import { ChevronDown, Delete, Edit, Reply } from 'lucide-react';
+import { ChevronDown, Delete, Edit, Flag, Reply } from 'lucide-react';
 import { MessageThreadContent } from './MessageThreadContent';
+import { useCreator } from '@/hooks/context/useCreator';
+import { useMemo } from 'react';
 
 interface Props {
   message: MessagesEntity;
@@ -48,19 +51,22 @@ export const MessageThread: React.FC<Props> = ({ message, isSender = false }) =>
             </Button>
           </DropdownMenuTrigger>
         </div>
-
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={handleEdit}>
+          <DropdownMenuItem visible={isSender} onClick={handleEdit}>
             <Edit />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleReply}>
+          <DropdownMenuItem visible={isSender} onClick={handleReply}>
             <Reply />
             Reply
           </DropdownMenuItem>
-          <DropdownMenuItem className="text-destructive" onClick={handleDelete}>
+          <DropdownMenuItem visible={isSender} className="text-destructive" onClick={handleDelete}>
             <Delete />
             Delete
+          </DropdownMenuItem>
+          <DropdownMenuItem visible={!isSender} className="text-destructive">
+            <Flag />
+            Report
           </DropdownMenuItem>
         </DropdownMenuContent>
       </div>

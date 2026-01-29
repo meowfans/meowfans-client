@@ -3,6 +3,9 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
+import { useQuery } from '@apollo/client/react';
+import { UPDATE_LAST_SEEN_QUERY } from '@workspace/gql/api';
+import { SortOrder } from '@workspace/gql/generated/graphql';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Toggle } from '@workspace/ui/globals/Toggle';
@@ -18,7 +21,11 @@ export const Message = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams<{ channelId: string }>();
   const { openMultiSelect, deleteMessageIds, toggleMessageIds } = useMessageMultiSelectStore();
-  const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({ relatedEntityId: channelId, take: 30 });
+  const { channel, handleLoadMore, hasMore, loading } = useChannelMessages({
+    relatedEntityId: channelId,
+    take: 30,
+    orderBy: SortOrder.Desc
+  });
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -26,6 +33,18 @@ export const Message = () => {
 
     container.scrollTop = container.scrollHeight;
   }, []);
+
+  const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
+    skip: !channelId && !loading,
+    variables: { input: { messageChannelId: channelId } }
+  });
+
+  useEffect(() => {
+    const lastMessage = (channel.messages || []).at(0);
+    if (lastMessage?.recipientUserId === fan?.fanId) {
+      refetch({ input: { messageChannelId: channelId, messageId: lastMessage?.id } });
+    }
+  }, [channel?.messages, channelId, refetch, fan]);
 
   return (
     <div className="w-full relative h-screen overflow-hidden">
