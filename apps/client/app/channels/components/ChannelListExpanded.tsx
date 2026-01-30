@@ -65,7 +65,7 @@ export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
             </p>
 
             <span className="shrink-0 text-[11px] text-muted-foreground">
-              {lastMessage?.createdAt ? moment(lastMessage.createdAt).format('HH:mm') : ''}
+              {lastMessage?.createdAt ? moment(lastMessage?.createdAt).format('HH:mm') : ''}
             </span>
           </div>
         </div>

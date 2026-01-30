@@ -13,7 +13,7 @@ export const EventsProvider = () => {
 
     if (!authCookieKey) return;
 
-    const sseURL = buildSafeUrl({ host: configService.NEXT_PUBLIC_API_URL, pathname: `/sse/stream/${authCookieKey}` });
+    const sseURL = configService.NEXT_PUBLIC_API_URL + `/sse/stream?token=${authCookieKey}`;
     const es = new EventSource(sseURL);
 
     es.onmessage = (event) => {
