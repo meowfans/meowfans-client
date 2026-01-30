@@ -1,4 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
+import { useCreator } from '@/hooks/context/useCreator';
+import { useChannelMutations } from '@/hooks/useChannels';
+import { CreatorFollowsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { ExtendedCard } from '@workspace/ui/globals/ExtendedCard';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
@@ -8,9 +10,17 @@ interface FollowerCardProps {
   username: string;
   avatarUrl: string;
   location?: string;
+  fan: CreatorFollowsEntity;
 }
 
-export const FollowerCard = ({ username, avatarUrl, location }: FollowerCardProps) => {
+export const FollowerCard = ({ username, avatarUrl, location, fan }: FollowerCardProps) => {
+  const { creator } = useCreator();
+  const { createChannel } = useChannelMutations();
+
+  const handleCreateOrGetChannel = async () => {
+    await createChannel({ fanId: fan.fanId, creatorId: creator.creatorId });
+  };
+
   return (
     <ExtendedCard title="" className="py-0 gap-0" contentClassName="p-4">
       <div className="flex items-center justify-between gap-3">
@@ -28,17 +38,11 @@ export const FollowerCard = ({ username, avatarUrl, location }: FollowerCardProp
         </div>
 
         <div className="shrink-0">
-          <FollowButton />
+          <Button variant="outline" size="sm" className="rounded-full px-5" onClick={handleCreateOrGetChannel}>
+            Message
+          </Button>
         </div>
       </div>
     </ExtendedCard>
-  );
-};
-
-const FollowButton = () => {
-  return (
-    <Button variant="outline" size="sm" className="rounded-full px-5">
-      Follow
-    </Button>
   );
 };

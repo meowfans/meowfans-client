@@ -90,6 +90,7 @@ export const GET_CHANNELS_QUERY = graphql(`
           roles
           username
           lastName
+          isOnline
         }
         isFollowing
         creatorId
@@ -108,6 +109,7 @@ export const GET_CHANNELS_QUERY = graphql(`
           lastName
           roles
           username
+          isOnline
         }
       }
     }

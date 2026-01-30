@@ -42,7 +42,7 @@ export const ChannelList = () => {
       />
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
       {channels.map((channel, idx) => {
-        const fan = channel.participants.find(({ userId }) => userId === channel?.fanProfile?.fanId);
+        const fan = channel?.participants.find(({ userId }) => userId === channel?.fanProfile?.fanId);
         const timestamp = fan ? new Date(Number(fan.lastSeenAt)).getTime() : new Date(0).getTime();
         const hasSeenLastMessage = timestamp >= new Date(channel?.lastMessage?.createdAt).getTime();
 
