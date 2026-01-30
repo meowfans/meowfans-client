@@ -48,11 +48,12 @@ export const Followers = () => {
             <NoFollowers />
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {followers.map((f) => (
+              {followers.map((fan) => (
                 <FollowerCard
-                  key={f.fanId}
-                  username={f.fanProfile.user.username}
-                  avatarUrl={f.fanProfile.user.username}
+                  key={fan.fanId}
+                  fan={fan}
+                  username={fan.fanProfile.user.username}
+                  avatarUrl={fan.fanProfile.user.username}
                   location={'Argentina'}
                 />
               ))}

@@ -63,7 +63,7 @@ export const useChannelMessages = (input: PaginationInput) => {
 };
 
 export const useMessageMutations = () => {
-  const { channel, setChannel, setChannels } = useChannelsStore();
+  const { setChannel, setChannels } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
   const {
@@ -81,7 +81,7 @@ export const useMessageMutations = () => {
       const { data } = await sendMessageFromCreatorMutation(input);
       const newMessage = data?.sendMessageFromCreator as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -101,7 +101,7 @@ export const useMessageMutations = () => {
       const deleted = data?.deleteMessages;
 
       if (deleted) {
-        setChannel({ ...channel, messages: channel.messages.filter((m) => !input.messageIds.includes(m.id)) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => !input.messageIds.includes(m.id)) }));
         successHandler({ message: 'Deleted messages' });
       }
     } catch (error) {
@@ -117,7 +117,7 @@ export const useMessageMutations = () => {
       const { data } = await sendReplyFromCreatorMutation(input);
       const newMessage = data?.sendReplyFromCreator as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -136,7 +136,7 @@ export const useMessageMutations = () => {
       const { data } = await updateMessageMutation(input);
       const updated = data?.updateMessage as MessagesEntity;
       if (updated) {
-        setChannel({ ...channel, messages: channel.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) }));
         setChannels((prev) => prev.map((channel) => (channel.id === updated.channelId ? { ...channel, lastMessage: updated } : channel)));
         successHandler({ message: 'Message updated' });
       }
@@ -152,7 +152,7 @@ export const useMessageMutations = () => {
     try {
       const { data } = await deleteMessageMutation(input);
       if (data?.deleteMessage) {
-        setChannel({ ...channel, messages: channel.messages.filter((m) => m.id !== input.messageId) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.id !== input.messageId) }));
         successHandler({ message: 'Message deleted' });
       }
     } catch (error) {

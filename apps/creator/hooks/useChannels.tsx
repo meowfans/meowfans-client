@@ -1,9 +1,16 @@
 'use client';
 
 import { useChannelsActions } from '@workspace/gql/actions';
-import { GetChannelInput, MessageChannelsEntity, PaginationInput, UpdateChannelInput } from '@workspace/gql/generated/graphql';
+import {
+  CreateChannelInput,
+  GetChannelInput,
+  MessageChannelsEntity,
+  PaginationInput,
+  UpdateChannelInput
+} from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useChannelsStore } from './store/channels.store';
 
@@ -105,4 +112,31 @@ export const useSingleChannel = (input: GetChannelInput) => {
     loading,
     channel
   };
+};
+
+export const useChannelMutations = () => {
+  const router = useRouter();
+  const { setChannel } = useChannelsStore();
+  const { errorHandler } = useErrorHandler();
+  const { createChannelMutation } = useChannelsActions();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const createChannel = async (input: CreateChannelInput) => {
+    setLoading(true);
+    try {
+      const { data } = await createChannelMutation(input);
+      const newOrExistingChannel = data?.createChannel as MessageChannelsEntity;
+
+      if (newOrExistingChannel) {
+        setChannel(newOrExistingChannel);
+        router.push(`/channels/${newOrExistingChannel.id}`);
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createChannel, loading };
 };

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { OnlinePreview } from '@workspace/ui/globals/OnlinePreview';
 import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { cn } from '@workspace/ui/lib/utils';
 import { EllipsisVertical } from 'lucide-react';
@@ -49,7 +49,7 @@ export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
       )}
     >
       <div className="flex min-w-0 items-center gap-3">
-        <SAvatar url={fanProfile?.user?.avatarUrl} />
+        <OnlinePreview avatarUrl={fanProfile?.user?.avatarUrl as string} isOnline={fanProfile?.user?.isOnline} />
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium">
