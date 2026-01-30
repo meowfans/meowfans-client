@@ -30,7 +30,6 @@ export const ChannelList = () => {
     });
   };
 
-
   return (
     <div className="space-y-2">
       <ChannelSelectionDropdown
@@ -42,9 +41,10 @@ export const ChannelList = () => {
       />
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
       {channels.map((channel, idx) => {
-        const fan = channel?.participants.find(({ userId }) => userId === channel?.fanProfile?.fanId);
+        const { fanProfile, participants, lastMessage } = channel;
+        const fan = participants.find(({ userId }) => userId === fanProfile?.fanId);
         const timestamp = fan ? new Date(Number(fan.lastSeenAt)).getTime() : new Date(0).getTime();
-        const hasSeenLastMessage = timestamp >= new Date(channel?.lastMessage?.createdAt).getTime();
+        const hasSeen = timestamp >= Math.max(new Date(lastMessage?.createdAt).getTime(), new Date(lastMessage?.updatedAt).getTime());
 
         return (
           <ChannelListExpanded
@@ -52,7 +52,7 @@ export const ChannelList = () => {
             channel={channel}
             fanParticipant={fan as MessageChannelParticipantsEntity}
             fanProfile={channel.fanProfile}
-            hasSeenLastMessage={hasSeenLastMessage}
+            hasSeenLastMessage={hasSeen}
             lastMessage={channel?.lastMessage}
             onRowClick={(id) => handleRowClick(id)}
           />

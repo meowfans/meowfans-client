@@ -34,10 +34,10 @@ export const useChannelMessages = (input: PaginationInput) => {
       const take = input.take ?? fetchedMessages.length;
       setHasMore(fetchedMessages.length === take);
 
-      setChannel(
+      setChannel((prev) =>
         initialLoad
           ? { ...fetchedChannel, messages: fetchedMessages }
-          : { ...fetchedChannel, messages: [...channel.messages, ...fetchedMessages] }
+          : { ...fetchedChannel, messages: [...prev?.messages, ...fetchedMessages] }
       );
     } catch (error) {
       errorHandler({ error });
