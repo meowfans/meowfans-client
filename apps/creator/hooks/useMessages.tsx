@@ -63,7 +63,7 @@ export const useChannelMessages = (input: PaginationInput) => {
 };
 
 export const useMessageMutations = () => {
-  const { channel, setChannel } = useChannelsStore();
+  const { channel, setChannel, setChannels } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
   const {
@@ -82,6 +82,9 @@ export const useMessageMutations = () => {
       const newMessage = data?.sendMessageFromCreator as MessagesEntity;
       if (newMessage) {
         setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannels((prev) =>
+          prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
+        );
         successHandler({ message: 'Message sent' });
       }
     } catch (error) {
@@ -115,6 +118,9 @@ export const useMessageMutations = () => {
       const newMessage = data?.sendReplyFromCreator as MessagesEntity;
       if (newMessage) {
         setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannels((prev) =>
+          prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
+        );
         successHandler({ message: 'Reply sent' });
       }
     } catch (error) {
@@ -131,6 +137,7 @@ export const useMessageMutations = () => {
       const updated = data?.updateMessage as MessagesEntity;
       if (updated) {
         setChannel({ ...channel, messages: channel.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) });
+        setChannels((prev) => prev.map((channel) => (channel.id === updated.channelId ? { ...channel, lastMessage: updated } : channel)));
         successHandler({ message: 'Message updated' });
       }
     } catch (error) {
