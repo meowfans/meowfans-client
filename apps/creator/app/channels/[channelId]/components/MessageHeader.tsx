@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { OnlinePreview } from '@workspace/ui/globals/OnlinePreview';
 import { ArrowBigLeftDash, CircleCheckBig, EllipsisVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
@@ -45,13 +45,13 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
           <ArrowBigLeftDash />
         </Button>
         <div className="cursor-pointer">
-          <SAvatar url={channel.creatorProfile?.user?.avatarUrl} />
+          <OnlinePreview avatarUrl={channel?.fanProfile?.user?.avatarUrl as string} isOnline={channel?.fanProfile?.user?.isOnline} />
         </div>
         <div className="flex flex-col">
           <p className="font-bold">
-            {channel.creatorProfile?.user?.firstName} {channel.creatorProfile?.user?.lastName}
+            {channel.fanProfile?.user?.firstName} {channel.fanProfile?.user?.lastName}
           </p>
-          <p className="font-semibold text-xs">{moment(channel.creatorProfile?.user?.lastLoginAt).format('hh:mm')}</p>
+          <p className="font-semibold text-xs">{moment(channel.fanProfile?.user?.lastLoginAt).format('hh:mm')}</p>
         </div>
       </div>
       <div className="flex flex-row items-center space-x-3">

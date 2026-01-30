@@ -30,6 +30,7 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
           roles
           username
           lastName
+          isOnline
         }
         isFollowing
         creatorId
@@ -48,6 +49,7 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
           lastName
           roles
           username
+          isOnline
         }
       }
       messages {

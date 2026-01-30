@@ -11,7 +11,7 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { Toggle } from '@workspace/ui/globals/Toggle';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { MessageHeader } from './Header';
+import { MessageHeader } from './MessageHeader';
 import { MessageInput } from './Input';
 import { MessageThread } from './MessageThread';
 import { MultiSelectButtons } from './MultiSelectButtons';
