@@ -18,7 +18,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
   const hasSeen = useMemo(() => {
     const creator = channel.participants.find(({ userId }) => userId !== channel.fanId);
     const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
-    return timestamp >= new Date(message.createdAt).getTime();
+    return timestamp >= Math.max(new Date(message.createdAt).getTime(), new Date(message.updatedAt).getTime());
   }, [channel, message]);
 
   const handleScrollToRepliedMessage = (messageId: string) => {

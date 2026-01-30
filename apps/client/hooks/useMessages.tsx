@@ -36,10 +36,10 @@ export const useChannelMessages = (input: PaginationInput) => {
       const take = input.take ?? fetchedMessages.length;
       setHasMore(fetchedMessages.length === take);
 
-      setChannel(
+      setChannel((prev) =>
         initialLoad
           ? { ...fetchedChannel, messages: fetchedMessages }
-          : { ...fetchedChannel, messages: [...channel.messages, ...fetchedMessages] }
+          : { ...fetchedChannel, messages: [...prev?.messages, ...fetchedMessages] }
       );
     } catch (error) {
       errorHandler({ error });
@@ -86,7 +86,7 @@ export const useMessageMutations = () => {
       const { data } = await sendMessageFromFanMutation(input);
       const newMessage = data?.sendMessageFromFan as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -106,7 +106,7 @@ export const useMessageMutations = () => {
       const deleted = data?.deleteMessages;
 
       if (deleted) {
-        setChannel({ ...channel, messages: channel.messages.filter((m) => !input.messageIds.includes(m.id)) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => !input.messageIds.includes(m.id)) }));
         successHandler({ message: 'Deleted messages' });
       }
     } catch (error) {
@@ -122,7 +122,7 @@ export const useMessageMutations = () => {
       const { data } = await sendReplyFromFanMutation(input);
       const newMessage = data?.sendReplyFromFan as MessagesEntity;
       if (newMessage) {
-        setChannel({ ...channel, messages: [newMessage, ...channel.messages] });
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -141,7 +141,7 @@ export const useMessageMutations = () => {
       const { data } = await updateMessageMutation(input);
       const updated = data?.updateMessage as MessagesEntity;
       if (updated) {
-        setChannel({ ...channel, messages: channel.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) }));
         setChannels((prev) => prev.map((channel) => (channel.id === updated.channelId ? { ...channel, lastMessage: updated } : channel)));
         successHandler({ message: 'Message updated' });
       }
@@ -157,7 +157,7 @@ export const useMessageMutations = () => {
     try {
       const { data } = await deleteMessageMutation(input);
       if (data?.deleteMessage) {
-        setChannel({ ...channel, messages: channel.messages.filter((m) => m.id !== input.messageId) });
+        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.id !== input.messageId) }));
         successHandler({ message: 'Message deleted' });
       }
     } catch (error) {
