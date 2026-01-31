@@ -2,7 +2,7 @@
 
 import { Creator } from '@/components/Creator';
 import { LikeButton } from '@/components/LikeButton';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
@@ -16,7 +16,7 @@ type Props = {
 
 export const ShortVideoCard: React.FC<Props> = ({ globalMute, onSetGlobalMute, short }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const { likeVaultObject } = useLikes();
+  const { likeVaultObject } = useLikeMutations();
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -88,9 +88,7 @@ export const ShortVideoCard: React.FC<Props> = ({ globalMute, onSetGlobalMute, s
       >
         <div className="flex flex-col">
           <Creator username={short.creatorUsername} avatarUrl={short.creatorAvatarUrl!} />
-          <div className="mt-1 text-sm opacity-90">
-            {short.vaultDescription!.replace(/\s*\|\s*MeowFans\.App\s*/g, '').trim()}
-          </div>
+          <div className="mt-1 text-sm opacity-90">{short.vaultDescription!.replace(/\s*\|\s*MeowFans\.App\s*/g, '').trim()}</div>
         </div>
       </div>
 

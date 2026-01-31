@@ -1,6 +1,6 @@
 import { LikeButton } from '@/components/LikeButton';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicVaultObjectsOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { FullScreenButton } from '@workspace/ui/globals/FullScreenButton';
 import { useDebouncedCallback } from 'use-debounce';
@@ -12,7 +12,7 @@ interface VaultObjectsGalleryProps {
 }
 
 export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({ idx, vaultObject, vaultObjects }) => {
-  const { likeVaultObject } = useLikes();
+  const { likeVaultObject } = useLikeMutations();
   const handleDebounceLikeVaultObject = useDebouncedCallback(likeVaultObject, 350);
 
   return (

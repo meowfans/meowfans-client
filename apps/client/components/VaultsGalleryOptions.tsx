@@ -1,14 +1,14 @@
 'use client';
 
 import { AuthAwareButton } from '@/components/AuthAwareButton';
-import { useLikes } from '@/hooks/useLikes';
-import { GetPublicVaultsOutput, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
+import { GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
+import { Badge } from '@workspace/ui/components/badge';
 import { GalleryHorizontalEnd } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { LikeButton } from './LikeButton';
-import { Badge } from '@workspace/ui/components/badge';
 
 interface VaultsGalleryOptionsProps {
   vault: GetPublicVaultsOutput;
@@ -16,7 +16,7 @@ interface VaultsGalleryOptionsProps {
 
 export const VaultsGalleryOptions: React.FC<VaultsGalleryOptionsProps> = ({ vault }) => {
   const router = useRouter();
-  const { likeVault } = useLikes();
+  const { likeVault } = useLikeMutations();
   const handleDebounceLikeVault = useDebouncedCallback(likeVault, 350);
 
   return (

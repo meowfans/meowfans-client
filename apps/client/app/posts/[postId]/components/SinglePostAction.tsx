@@ -2,7 +2,7 @@ import { CommentButton } from '@/components/CommentButton';
 import { LikeButton } from '@/components/LikeButton';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useCommentsStore } from '@/hooks/store/comments.store';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicSinglePostOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -11,7 +11,7 @@ interface SinglePostActionProps {
 }
 
 export const SinglePostAction: React.FC<SinglePostActionProps> = ({ post }) => {
-  const { likePost } = useLikes();
+  const { likePost } = useLikeMutations();
   const { setCommentOnPost } = useCommentsStore();
   const handleLikePost = useDebouncedCallback(likePost, 250);
 

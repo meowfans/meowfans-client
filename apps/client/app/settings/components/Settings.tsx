@@ -7,7 +7,7 @@ import { Separator } from '@workspace/ui/components/separator';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useContext, useState } from 'react';
 import { Account } from './Account';
-import { Display } from './Display';
+import { Footer } from './Footer';
 import { Header } from './Header';
 import Logout from './Logout';
 import TerminateAccount from './TerminateAccount';
@@ -18,7 +18,7 @@ export const Settings = () => {
   const [terminateAccountModal, setTerminateAccountModal] = useState<boolean>(false);
 
   return (
-    <PageManager className="mb-10">
+    <PageManager className="">
       <div className="min-h-screen bg-surface-50 p-6 md:p-10 lg:p-16">
         <div className="max-w-5xl mx-auto space-y-6">
           <Header />
@@ -30,10 +30,9 @@ export const Settings = () => {
               <ZoneSubscription />
               <TerminateAccount setTerminateAccountModal={setTerminateAccountModal} />
               <Logout />
+              <Footer />
             </div>
           )}
-
-          <Display />
         </div>
       </div>
 

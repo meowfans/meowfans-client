@@ -8,7 +8,7 @@ import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useCommentsStore } from '@/hooks/store/comments.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { PurchaseType } from '@workspace/gql/generated/graphql';
 import { EllipsisDescription } from '@workspace/ui/globals/EllipsisDescription';
 import { LinkDescription } from '@workspace/ui/globals/LinkDescription';
@@ -22,7 +22,7 @@ interface Props {
 
 export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
   const { fan } = useFan();
-  const { likePost } = useLikes();
+  const { likePost } = useLikeMutations();
   const { post, setPost } = usePostsStore();
   const { commentOnPost, setCommentOnPost } = useCommentsStore();
 
@@ -65,7 +65,11 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
               ✨ — Sharing moments of creativity and passion.
             </span>
           ) : (
-            <LinkDescription href={`/creators/${post.creatorUsername}`} className="text-pink-500 font-semibold" description={post.creatorUsername} />
+            <LinkDescription
+              href={`/creators/${post.creatorUsername}`}
+              className="text-pink-500 font-semibold"
+              description={post.creatorUsername}
+            />
           )}
           <ExoAdProvider zoneId="5770664" zoneType={ExoAdZoneTypes.MobileBanner} />
         </div>

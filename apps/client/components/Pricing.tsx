@@ -49,7 +49,7 @@ const Pricing: React.FC<Props> = ({ highLightedId, divRefs }) => {
       ref={(el: HTMLDivElement | null) => {
         divRefs.current['6'] = el;
       }}
-      className={'py-12 bg-gradient-to-br rounded-2xl '}
+      className={'py-12 bg-linear-to-br rounded-2xl '}
       id="6"
     >
       <h2 className="text-center font-extrabold text-4xl mb-10">Pricing Plans</h2>
@@ -58,7 +58,7 @@ const Pricing: React.FC<Props> = ({ highLightedId, divRefs }) => {
           <div
             key={i}
             className={`border rounded-2xl shadow-lg p-6 flex flex-col justify-between hover:scale-105 transition-transform ${
-              highLightedId === '6' ? 'bg-gradient-to-r' : 'bg-accent'
+              highLightedId === '6' ? 'bg-linear-to-r' : 'bg-accent'
             }`}
           >
             <div className="flex flex-col items-center space-y-3">
