@@ -21,7 +21,7 @@ export const LikedPictures = () => {
         <PageHeader title="Liked pictures" />
         <GalleryManager
           items={vaultObjectLikes}
-          getImageUrl={(vo) => vo.preview}
+          getImageUrl={(vo) => vo.preview as string}
           getKey={(vo) => vo.id}
           loading={loading}
           renderOverlay={(vaultObject) => (
