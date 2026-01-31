@@ -556,7 +556,7 @@ export type GetLikedVaultObjectsOutput = {
   __typename?: 'GetLikedVaultObjectsOutput';
   id: Scalars['String']['output'];
   isLiked: Scalars['Boolean']['output'];
-  preview: Scalars['String']['output'];
+  preview?: Maybe<Scalars['String']['output']>;
 };
 
 export type GetLikedVaultsOutput = {
@@ -870,7 +870,7 @@ export type Mutation = {
   issueImpersonationToken: Scalars['String']['output'];
   likePost?: Maybe<GetLikedPostsOutput>;
   likeVault?: Maybe<GetLikedVaultsOutput>;
-  likeVaultObject: GetLikedVaultObjectsOutput;
+  likeVaultObject?: Maybe<GetLikedVaultObjectsOutput>;
   purchasePost: PostPurchasesEntity;
   restrictFan: Scalars['Boolean']['output'];
   savePost: PostsEntity;
@@ -2480,7 +2480,7 @@ export type LikeVaultObjectMutationVariables = Exact<{
 }>;
 
 
-export type LikeVaultObjectMutation = { __typename?: 'Mutation', likeVaultObject: { __typename?: 'GetLikedVaultObjectsOutput', id: string, isLiked: boolean, preview: string } };
+export type LikeVaultObjectMutation = { __typename?: 'Mutation', likeVaultObject?: { __typename?: 'GetLikedVaultObjectsOutput', id: string, isLiked: boolean, preview?: string | null } | null };
 
 export type LikeVaultMutationVariables = Exact<{
   input: PaginationInput;
@@ -2494,7 +2494,7 @@ export type GetLikedVaultObjectsQueryVariables = Exact<{
 }>;
 
 
-export type GetLikedVaultObjectsQuery = { __typename?: 'Query', getLikedVaultObjects: Array<{ __typename?: 'GetLikedVaultObjectsOutput', id: string, isLiked: boolean, preview: string }> };
+export type GetLikedVaultObjectsQuery = { __typename?: 'Query', getLikedVaultObjects: Array<{ __typename?: 'GetLikedVaultObjectsOutput', id: string, isLiked: boolean, preview?: string | null }> };
 
 export type GetAllVaultsByAdminQueryVariables = Exact<{
   input: PaginationInput;
