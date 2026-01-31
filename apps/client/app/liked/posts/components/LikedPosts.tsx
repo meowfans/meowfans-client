@@ -21,7 +21,7 @@ export const LikedPosts = () => {
         <PageHeader title="Liked posts" />
         <GalleryManager
           items={postLikes}
-          getImageUrl={(post) => post.preview}
+          getImageUrl={(post) => post.preview as string}
           getKey={(post) => post.id}
           loading={loading}
           renderOverlay={(post) => (

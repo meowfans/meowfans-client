@@ -549,7 +549,7 @@ export type GetLikedPostsOutput = {
   __typename?: 'GetLikedPostsOutput';
   id: Scalars['String']['output'];
   isLiked: Scalars['Boolean']['output'];
-  preview: Scalars['String']['output'];
+  preview?: Maybe<Scalars['String']['output']>;
 };
 
 export type GetLikedVaultObjectsOutput = {
@@ -2335,7 +2335,7 @@ export type LikePostMutationVariables = Exact<{
 }>;
 
 
-export type LikePostMutation = { __typename?: 'Mutation', likePost?: { __typename?: 'GetLikedPostsOutput', id: string, isLiked: boolean, preview: string } | null };
+export type LikePostMutation = { __typename?: 'Mutation', likePost?: { __typename?: 'GetLikedPostsOutput', id: string, isLiked: boolean, preview?: string | null } | null };
 
 export type SavePostMutationVariables = Exact<{
   input: SavePostInput;
@@ -2349,7 +2349,7 @@ export type GetLikedPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetLikedPostsQuery = { __typename?: 'Query', getLikedPosts: Array<{ __typename?: 'GetLikedPostsOutput', id: string, isLiked: boolean, preview: string }> };
+export type GetLikedPostsQuery = { __typename?: 'Query', getLikedPosts: Array<{ __typename?: 'GetLikedPostsOutput', id: string, isLiked: boolean, preview?: string | null }> };
 
 export type GetPostsQueryVariables = Exact<{
   input: PaginationInput;
