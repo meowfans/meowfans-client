@@ -3,13 +3,13 @@
 import { Creator } from '@/components/Creator';
 import { LikeButton } from '@/components/LikeButton';
 import { useLikes } from '@/hooks/useLikes';
-import { AssetsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 type Props = {
-  short: AssetsEntity;
+  short: GetPublicShortsOutput;
   globalMute: boolean;
   onSetGlobalMute: (mute: boolean) => unknown;
 };
@@ -87,9 +87,9 @@ export const ShortVideoCard: React.FC<Props> = ({ globalMute, onSetGlobalMute, s
         `}
       >
         <div className="flex flex-col">
-          <Creator username={short.creatorProfile.user.username} avatarUrl={short.creatorProfile.user.avatarUrl!} />
+          <Creator username={short.creatorUsername} avatarUrl={short.creatorAvatarUrl!} />
           <div className="mt-1 text-sm opacity-90">
-            {short.vaultObject?.vault?.description!.replace(/\s*\|\s*MeowFans\.App\s*/g, '').trim()}
+            {short.vaultDescription!.replace(/\s*\|\s*MeowFans\.App\s*/g, '').trim()}
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ export const ShortVideoCard: React.FC<Props> = ({ globalMute, onSetGlobalMute, s
 
       <div className="absolute right-4 bottom-20 flex flex-col gap-6 text-white">
         <LikeButton
-          isLiked={short.vaultObject?.isLiked || false}
+          isLiked={short.vaultObjectIsLiked || false}
           onLikeDisLike={() => likeVaultObject(short.vaultObjectId as string)}
           className="p-3 rounded-full"
           variant={'default'}

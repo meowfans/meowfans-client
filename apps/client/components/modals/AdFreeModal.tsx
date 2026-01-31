@@ -5,7 +5,7 @@ import { useZonesStore } from '@/hooks/store/zones.store';
 import { useZones } from '@/hooks/useZones';
 import { configService } from '@/util/config';
 import { handleBenefits } from '@/util/helpers';
-import { PurchaseType, ZonePlansEntity, ZoneTypes } from '@workspace/gql/generated/graphql';
+import { GetZonePlansOutput, PurchaseType, ZoneTypes } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group';
@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { AuthAwareButton } from '../AuthAwareButton';
 import { Paypal } from '../Paypal';
 
-interface ZonePlans extends ZonePlansEntity {
+interface ZonePlans extends GetZonePlansOutput {
   label: string;
   tagline: string;
   bestFor: string;
@@ -27,11 +27,10 @@ interface ZonePlans extends ZonePlansEntity {
 
 export default function AdFreeModal() {
   const { fan } = useFan();
-  const { getZonePlans } = useZones();
+  const { zonePlans, loading, setLoading } = useZones();
   const currentZone = fan?.currentZone;
   const { openZone, setOpenZone } = useZonesStore();
   const [selected, setSelected] = useState<ZonePlans | null>(null);
-  const { loading, setLoading, zonePlans } = getZonePlans(openZone);
   const [transactionStarted, setTransactionStarted] = useState<boolean>(false);
 
   const implementedZonePlans = zonePlans.map((plan) => ({

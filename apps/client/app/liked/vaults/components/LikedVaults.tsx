@@ -8,7 +8,6 @@ import { useLikes } from '@/hooks/useLikes';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const LikedVaults = () => {
@@ -23,8 +22,8 @@ export const LikedVaults = () => {
         <PageHeader title="Liked vaults" />
         <GalleryManager
           items={vaultLikes}
-          getImageUrl={(vaultLike) => vaultLike.vault.preview}
-          getKey={(vaultLike) => vaultLike.vaultId}
+          getImageUrl={(vaultLike) => vaultLike.preview as string}
+          getKey={(vaultLike) => vaultLike.id as string}
           loading={loading}
           renderOverlay={(vaultLike) => (
             <motion.div
@@ -34,28 +33,13 @@ export const LikedVaults = () => {
               className="absolute bottom-0 right-0"
             >
               <LikeButton
-                onLikeDisLike={() => handleDebounceLikeVault(vaultLike.vaultId)}
+                onLikeDisLike={() => handleDebounceLikeVault(vaultLike.id as string)}
                 className="rounded-full p-2 shadow-lg backdrop-blur-sm bg-white/30 hover:bg-red-500 transition-all duration-300"
-                isLiked={vaultLike.vault.isLiked}
+                isLiked={vaultLike.isLiked}
               />
             </motion.div>
           )}
         />
-        <Link href={'/vaults'}>
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            className="aspect-square rounded-xl bg-linear-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center border border-white/10"
-            style={{
-              backgroundImage: `url('/meowfans_banner.png')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-          >
-            <span className="bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm text-white text-sm font-semibold">
-              Explore More Vaults
-            </span>
-          </motion.div>
-        </Link>
       </InfiniteScrollManager>
     </PageManager>
   );

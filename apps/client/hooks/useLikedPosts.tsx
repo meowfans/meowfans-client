@@ -1,11 +1,11 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
-import { PostLikesEntity, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetLikedPostsOutput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export function useLikedPosts() {
+export const useLikedPosts = () => {
   const { fan } = useFan();
   const { getLikedPostsQuery } = useLikesActions();
   const { postLikes, setPostLikes } = useLikesStore();
@@ -25,7 +25,7 @@ export function useLikedPosts() {
         orderBy: SortOrder.Desc
       });
 
-      const fetched: PostLikesEntity[] = (data?.getLikedPosts ?? []) as PostLikesEntity[];
+      const fetched = (data?.getLikedPosts ?? []) as GetLikedPostsOutput[];
       setHasMore(fetched.length === 30);
 
       if (initial) setPostLikes(fetched);
@@ -39,7 +39,7 @@ export function useLikedPosts() {
 
   useEffect(() => {
     if (fan) loadLikes(true);
-  }, [fan]);
+  }, [fan]); // eslint-disable-line
 
   const loadMore = () => {
     if (!loading && hasMore) loadLikes(false);
@@ -51,4 +51,4 @@ export function useLikedPosts() {
     hasMore: fan ? hasMore : false,
     loadMore
   };
-}
+};

@@ -22,11 +22,11 @@ const TrendingCreators = () => {
         <GalleryManager
           loading={loading}
           items={creators}
-          getKey={(creator) => creator.username}
-          getImageUrl={(creator) => creator.avatarUrl as string}
+          getKey={(user) => user.username}
+          getImageUrl={(user) => user.avatarUrl as string}
           applyLink
           pathname="/creators"
-          renderOverlay={(creator) => <CreatorsGalleryOptions creator={creator} />}
+          renderOverlay={(user) => <CreatorsGalleryOptions user={user} />}
         />
       </InfiniteScrollManager>
     </PageManager>

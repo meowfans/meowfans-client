@@ -1,7 +1,7 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
-import { SortOrder, VaultLikesEntity } from '@workspace/gql/generated/graphql';
+import { GetLikedVaultsOutput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,7 @@ export function useLikedVaults() {
         orderBy: SortOrder.Desc
       });
 
-      const fetched: VaultLikesEntity[] = (data?.getLikedVaults ?? []) as VaultLikesEntity[];
+      const fetched = (data?.getLikedVaults ?? []) as GetLikedVaultsOutput[];
       setHasMore(fetched.length === 30);
 
       if (initial) setVaultLikes(fetched);
@@ -39,7 +39,7 @@ export function useLikedVaults() {
 
   useEffect(() => {
     if (fan) loadLikes(true);
-  }, [fan]);
+  }, [fan]); // eslint-disable-line
 
   const loadMore = () => {
     if (!loading && hasMore) loadLikes(false);

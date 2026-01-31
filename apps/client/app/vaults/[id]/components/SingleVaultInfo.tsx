@@ -6,7 +6,7 @@ import { NextImage } from '@/components/NextImage';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useLikes } from '@/hooks/useLikes';
-import { PurchaseType, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicSingleVaultOutput, PurchaseType, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';
@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 interface SingleVaultInfoProps {
-  vault: VaultsEntity;
+  vault: GetPublicSingleVaultOutput;
 }
 
 export const SingleVaultInfo: React.FC<SingleVaultInfoProps> = ({ vault }) => {
@@ -56,13 +56,13 @@ export const SingleVaultInfo: React.FC<SingleVaultInfoProps> = ({ vault }) => {
       )}
 
       <CardHeader className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <Link href={normalizePath('creators', vault.creatorProfile?.user?.username)}>
-          <SAvatar className="h-14 w-14 shrink-0" url={vault.creatorProfile?.user?.avatarUrl} />
+        <Link href={normalizePath('creators', vault.username)}>
+          <SAvatar className="h-14 w-14 shrink-0" url={vault.avatarUrl} />
         </Link>
 
         <div className="flex-1 space-y-1">
-          <Link href={normalizePath('creators', vault.creatorProfile?.user?.username)}>
-            <p className="text-base font-semibold hover:underline">{vault.creatorProfile?.user?.username}</p>
+          <Link href={normalizePath('creators', vault.username)}>
+            <p className="text-base font-semibold hover:underline">{vault.username}</p>
           </Link>
 
           <p className="text-xs text-muted-foreground">Created {moment(vault.createdAt).fromNow()}</p>

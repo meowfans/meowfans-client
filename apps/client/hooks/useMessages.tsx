@@ -73,7 +73,7 @@ export const useChannelMessages = (input: PaginationInput) => {
 };
 
 export const useMessageMutations = () => {
-  const { channel, setChannel, setChannels } = useChannelsStore();
+  const { setChannel, setChannels } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
   const { updateMessageMutation, deleteMessageMutation, deleteMessagesMutation, sendReplyFromFanMutation, sendMessageFromFanMutation } =

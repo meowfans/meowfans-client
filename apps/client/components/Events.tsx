@@ -98,17 +98,16 @@ export const Events = () => {
       };
     });
 
-    setVaultObjects(
-      (prev) =>
-        prev.map((vaultObject) =>
-          vaultObject.id === pvo.id
-            ? {
-                ...vaultObject,
-                isPurchased: pvo.isPurchased,
-                asset: { ...vaultObject.asset, rawUrl: pvo?.asset?.rawUrl }
-              }
-            : vaultObject
-        ) as VaultObjectsEntity[]
+    setVaultObjects((prev) =>
+      prev.map((vaultObject) =>
+        vaultObject.id === pvo.id
+          ? {
+              ...vaultObject,
+              isPurchased: pvo.isPurchased,
+              rawUrl: pvo.rawUrl
+            }
+          : vaultObject
+      )
     );
 
     onSuccess();
@@ -126,13 +125,13 @@ export const Events = () => {
         vaultObjects: prev.vaultObjects.map((vaultObject) => {
           const purchased = purchasedVaultObjects.find((pvo: VaultObjectsEntity) => pvo.id === vaultObject.id);
           return purchased
-            ? ({
+            ? {
                 ...vaultObject,
                 isPurchased: purchased.isPurchased,
-                asset: { ...vaultObject.asset, rawUrl: purchased.purchasedUrl }
-              } as VaultObjectsEntity)
+                rawUrl: purchased.rawUrl
+              }
             : vaultObject;
-        }) as VaultObjectsEntity[]
+        })
       };
     });
     onSuccess();

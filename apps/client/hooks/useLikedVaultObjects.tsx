@@ -1,11 +1,11 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
-import { SortOrder, VaultObjectsLikesEntity } from '@workspace/gql/generated/graphql';
+import { GetLikedVaultObjectsOutput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export function useLikedVaultObjects() {
+export const useLikedVaultObjects = () => {
   const { fan } = useFan();
   const { getLikedVaultObjectsQuery } = useLikesActions();
   const { vaultObjectLikes, setVaultObjectLikes, appendVaultObjectLikes } = useLikesStore();
@@ -25,7 +25,7 @@ export function useLikedVaultObjects() {
         orderBy: SortOrder.Desc
       });
 
-      const fetched: VaultObjectsLikesEntity[] = (data?.getLikedVaultObjects ?? []) as VaultObjectsLikesEntity[];
+      const fetched = (data?.getLikedVaultObjects ?? []) as GetLikedVaultObjectsOutput[];
       setHasMore(fetched.length === 30);
 
       if (initial) setVaultObjectLikes(fetched);
@@ -43,7 +43,7 @@ export function useLikedVaultObjects() {
 
   useEffect(() => {
     if (fan) loadLikes(true);
-  }, [fan]);
+  }, [fan]); // eslint-disable-line
 
   return {
     vaultObjectLikes: fan ? vaultObjectLikes : [],
@@ -51,4 +51,4 @@ export function useLikedVaultObjects() {
     hasMore: fan ? hasMore : false,
     loadMore
   };
-}
+};

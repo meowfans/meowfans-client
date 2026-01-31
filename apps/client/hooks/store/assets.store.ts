@@ -1,12 +1,12 @@
-import { AssetsEntity, CreatorAssetsEntity, FanAssetsEntity } from '@workspace/gql/generated/graphql';
+import { CreatorAssetsEntity, GetFanAssetsOutput, GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type AssetsStore = {
-  fanAssets: FanAssetsEntity[];
+  fanAssets: GetFanAssetsOutput[];
   assets: CreatorAssetsEntity[];
-  publicShorts: AssetsEntity[];
-  setPublicShorts: (publicShorts: AssetsEntity[]) => void;
-  setFanAssets: (fanAssets: FanAssetsEntity[]) => void;
+  publicShorts: GetPublicShortsOutput[];
+  setPublicShorts: (publicShorts: GetPublicShortsOutput[]) => void;
+  setFanAssets: (fanAssets: GetFanAssetsOutput[]) => void;
   setAssets: (assets: CreatorAssetsEntity[]) => void;
 };
 

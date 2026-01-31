@@ -1,9 +1,9 @@
-import { PostCommentsEntity, PostsEntity } from '@workspace/gql/generated/graphql';
+import { PostCommentsEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type CommentsStore = {
-  commentOnPost: PostsEntity | null;
-  setCommentOnPost: (commentOnPost: PostsEntity | null) => void;
+  commentOnPost: string | null;
+  setCommentOnPost: (commentOnPost: string | null) => void;
   postComments: PostCommentsEntity[];
   setPostComments: (postComments: PostCommentsEntity[]) => void;
 };

@@ -3,7 +3,7 @@
 import { AuthAwareButton } from '@/components/AuthAwareButton';
 import { useCreator } from '@/hooks/context/CreatorContextWrapper';
 import { UserContext } from '@/hooks/context/UserContextWrapper';
-import { useFollowings } from '@/hooks/useFollow';
+import { useFollowingMutations } from '@/hooks/useFollow';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { formatText } from '@workspace/ui/lib/helpers';
@@ -16,7 +16,7 @@ export const CreatorProfileHeader = () => {
   const { creator, setCreator } = useCreator();
   const [fan] = useContext(UserContext);
   const [unfollowModal, setUnfollowModal] = useState(false);
-  const { followCreator } = useFollowings();
+  const { followCreator } = useFollowingMutations();
 
   const handleFollowCreator = async () => {
     await followCreator(creator.creatorId);

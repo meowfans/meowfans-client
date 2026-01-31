@@ -21,7 +21,7 @@ const MostLikedVaultObjects = () => {
         loading={loading}
         items={vaultObjects}
         getKey={(vaultObject) => vaultObject.id}
-        getImageUrl={(vaultObject) => vaultObject.asset?.rawUrl}
+        getImageUrl={(vaultObject) => vaultObject.rawUrl}
         renderOverlay={(vaultObject, idx, allVaultObjects) => (
           <VaultObjectsGalleryOptions idx={idx} vaultObject={vaultObject} vaultObjects={allVaultObjects} />
         )}

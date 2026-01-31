@@ -1,6 +1,6 @@
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { usePostsActions } from '@workspace/gql/actions/posts.actions';
-import { GetPostInput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetPostInput, GetPublicPostsOutput, GetPublicSinglePostOutput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -31,7 +31,7 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
         sortBy
       });
 
-      const fetchedPosts = (data?.getPublicPosts ?? []) as PostsEntity[];
+      const fetchedPosts = (data?.getPublicPosts ?? []) as GetPublicPostsOutput[];
       setHasMore(fetchedPosts.length === take);
 
       if (initialLoad) setPosts(fetchedPosts);
@@ -54,7 +54,7 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
 
   useEffect(() => {
     loadPosts(true);
-  }, [username, sortBy, orderBy, take]);
+  }, [username, sortBy, orderBy, take]); // eslint-disable-line
 
   return { posts, loading, hasMore, loadPosts, handleLoadMore, handleRefresh };
 };
@@ -69,7 +69,7 @@ export const useSinglePost = (input: GetPostInput) => {
     setLoading(true);
     try {
       const { data } = await getPublicSinglePostQuery(input);
-      const fetched = data?.getPublicSinglePost as PostsEntity;
+      const fetched = data?.getPublicSinglePost as GetPublicSinglePostOutput;
       setPost(fetched);
     } catch (error) {
       errorHandler({ error });
@@ -80,7 +80,7 @@ export const useSinglePost = (input: GetPostInput) => {
 
   useEffect(() => {
     loadSinglePost();
-  }, []);
+  }, [input.postId]); // eslint-disable-line
 
   return { post, loading };
 };

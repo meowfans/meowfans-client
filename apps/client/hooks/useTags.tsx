@@ -9,7 +9,7 @@ interface UseTagsProps {
 }
 
 export const useTags = ({ limit = 300 }: UseTagsProps) => {
-  const { getPublicTagsQuery, getSearchedTagsQuery } = useTagsActions();
+  const { getPublicTagsQuery } = useTagsActions();
   const { tags, setTags } = useTagsStore();
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(true);
@@ -49,7 +49,7 @@ export const useTags = ({ limit = 300 }: UseTagsProps) => {
 
   useEffect(() => {
     loadTags(true);
-  }, [limit]);
+  }, [limit]); // eslint-disable-line
 
   return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh };
 };

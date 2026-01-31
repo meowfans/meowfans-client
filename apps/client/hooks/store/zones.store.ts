@@ -1,10 +1,10 @@
-import { ZonePlansEntity } from '@workspace/gql/generated/graphql';
+import { GetZonePlansOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type ZonesStore = {
   openZone: boolean;
-  zonePlans: ZonePlansEntity[];
-  setZonePlans: (zonePlans: ZonePlansEntity[]) => void;
+  zonePlans: GetZonePlansOutput[];
+  setZonePlans: (zonePlans: GetZonePlansOutput[]) => void;
   setOpenZone: (openZone: boolean) => void;
 };
 

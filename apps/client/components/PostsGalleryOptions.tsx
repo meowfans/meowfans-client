@@ -2,7 +2,7 @@
 
 import { useCommentsStore } from '@/hooks/store/comments.store';
 import { useLikes } from '@/hooks/useLikes';
-import { PostsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicPostsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { MultipleObjectsIcon } from '@workspace/ui/globals/MultipleObjectsIcon';
 import { formatDate } from '@workspace/ui/lib';
@@ -14,7 +14,7 @@ import { CommentButton } from './CommentButton';
 import { LikeButton } from './LikeButton';
 
 interface PostsGalleryOptionsProps {
-  post: PostsEntity;
+  post: GetPublicPostsOutput;
 }
 
 export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }) => {
@@ -89,7 +89,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }
                 title="Like"
                 onLikeDisLike={() => handleLikePost(post.id)}
               />
-              <CommentButton onClick={() => setCommentOnPost(post)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
+              <CommentButton onClick={() => setCommentOnPost(post.id)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
             </>
           )}
           <MultipleObjectsIcon hasMultiple={post.objectCount > 1} />

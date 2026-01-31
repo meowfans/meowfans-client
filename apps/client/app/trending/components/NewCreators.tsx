@@ -21,7 +21,6 @@ const NewCreators = () => {
           >
             <SAvatar className="w-16 h-16 object-center rounded-full mb-2" url={creator.avatarUrl as string} />
             <p className="text-sm font-medium">{creator.username}</p>
-            <p className="text-xs text-muted-foreground">{creator?.creatorProfile?.assetCount || 0} assets</p>
           </Link>
         ))}
       </div>

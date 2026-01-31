@@ -10,10 +10,9 @@ import { SingleVaultInfo } from './SingleVaultInfo';
 import { VaultObjectsGalleryOptions } from './VaultObjectsGalleryOptions';
 
 export const SingleVault = () => {
-  const { id } = useParams();
-
+  const { id } = useParams<{ id: string }>();
   const { vault, loadMore, hasMore, loading } = useSingleVault({
-    relatedEntityId: id as string,
+    relatedEntityId: id,
     sortBy: SortBy.VaultObjectSuffix,
     orderBy: SortOrder.Asc
   });
@@ -34,7 +33,7 @@ export const SingleVault = () => {
             loading={loading}
             items={vault?.vaultObjects ?? []}
             getKey={(v) => v.id}
-            getImageUrl={(v) => v.asset?.rawUrl}
+            getImageUrl={(v) => v.rawUrl}
             renderOverlay={(v, idx, all) => <VaultObjectsGalleryOptions idx={idx} vaultObject={v} vaultObjects={all} />}
           />
         </InfiniteScrollManager>

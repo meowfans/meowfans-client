@@ -30,9 +30,9 @@ export const SinglePost = () => {
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr] items-start">
           <Carousel
             items={post.postAssets}
-            getKey={(item) => item.asset.id}
-            getUrl={(item) => item.asset.rawUrl}
-            getFileType={(item) => item.asset.fileType}
+            getKey={(item) => item.assetId}
+            getUrl={(item) => item.rawUrl}
+            getFileType={(item) => item.fileType}
           />
           <SinglePostInsight post={post} />
         </div>

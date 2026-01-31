@@ -1,13 +1,13 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
-import { CreatorType, DataFetchType, PaginationInput, SortBy, SortOrder, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { CreatorType, DataFetchType, GetPublicVaultsOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useVaults = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getPublicVaultsQuery } = useVaultsActions();
-  const { vaults, setVaults, appendVaults } = useVaultsStore();
+  const { vaults, setVaults } = useVaultsStore();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
@@ -27,10 +27,10 @@ export const useVaults = (params: PaginationInput) => {
         creatorType: [CreatorType.ImportedOnlyFansUser, CreatorType.ImportedPornStar]
       });
 
-      const fetched = (data?.getPublicVaults ?? []) as VaultsEntity[];
+      const fetched = (data?.getPublicVaults ?? []) as GetPublicVaultsOutput[];
       setHasMore(fetched.length === (params.take ?? 40));
       if (initialLoad) setVaults(fetched);
-      else appendVaults(fetched);
+      else setVaults((prev) => [...prev, ...fetched]);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -49,7 +49,7 @@ export const useVaults = (params: PaginationInput) => {
 
   useEffect(() => {
     loadVaults(true);
-  }, [params.searchTerm, params.sortBy, params.orderBy, params.username]);
+  }, [params.searchTerm, params.sortBy, params.orderBy, params.username]); //eslint-disable-line
 
   return {
     vaults,

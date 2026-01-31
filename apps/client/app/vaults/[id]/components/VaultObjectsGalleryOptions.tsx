@@ -1,14 +1,14 @@
 import { LikeButton } from '@/components/LikeButton';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useLikes } from '@/hooks/useLikes';
-import { PurchaseType, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicVaultObjectsOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { FullScreenButton } from '@workspace/ui/globals/FullScreenButton';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface VaultObjectsGalleryProps {
-  vaultObject: VaultObjectsEntity;
+  vaultObject: GetPublicVaultObjectsOutput;
   idx: number;
-  vaultObjects: VaultObjectsEntity[];
+  vaultObjects: GetPublicVaultObjectsOutput[];
 }
 
 export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({ idx, vaultObject, vaultObjects }) => {
@@ -21,8 +21,8 @@ export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({
         <FullScreenButton
           className="cursor-pointer border-dashed hidden md:flex z-10"
           currentIdx={idx}
-          currentUrl={vaultObject.asset?.rawUrl}
-          urls={(vaultObjects.map((vo) => vo.asset?.rawUrl) ?? []) as string[]}
+          currentUrl={vaultObject.rawUrl}
+          urls={(vaultObjects.map((vo) => vo.rawUrl) ?? []) as string[]}
         />
       </div>
       {vaultObject.isPurchased ? (
@@ -42,7 +42,7 @@ export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({
               entityId={vaultObject.id}
               amount={vaultObject.unlockPrice}
               purchaseType={PurchaseType.VaultObject}
-              creatorId={vaultObject.asset?.creatorId as string}
+              creatorId={vaultObject.creatorId as string}
               className="h-fit w-fit"
             />
           )}

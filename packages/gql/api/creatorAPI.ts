@@ -3,23 +3,9 @@ import { graphql } from '../generated';
 export const GET_FOLLOWING_QUERY = graphql(`
   query GetFollowing($input: PaginationInput!) {
     getFollowing(input: $input) {
-      creatorId
-      fanId
-      followedAt
+      avatarUrl
       id
-      unFollowedAt
-      creatorProfile {
-        creatorId
-        assetCount
-        viewCount
-        vaultCount
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          username
-        }
-      }
+      username
     }
   }
 `);
@@ -169,33 +155,9 @@ export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
 export const GET_DEFAULT_CREATORS_QUERY = graphql(`
   query GetDefaultCreators($input: PaginationInput!) {
     getDefaultCreators(input: $input) {
-      count
-      totalPages
-      hasNext
-      hasPrev
-      creators {
-        avatarUrl
-        bannerUrl
-        createdAt
-        deletedAt
-        firstName
-        id
-        lastLoginAt
-        lastName
-        roles
-        updatedAt
-        username
-        creatorProfile {
-          totalExclusivePost
-          totalPost
-          totalPublicPost
-          totalSubscriber
-          assetCount
-          vaultCount
-          viewCount
-          isFollowing
-        }
-      }
+      avatarUrl
+      username
+      isFollowing
     }
   }
 `);

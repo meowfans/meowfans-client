@@ -23,8 +23,8 @@ const TrendingPictures = () => {
         <GalleryManager
           loading={loading}
           items={vaultObjects}
-          getKey={(vaultObject) => vaultObject.asset?.id as string}
-          getImageUrl={(vaultObject) => vaultObject.asset?.rawUrl}
+          getKey={(vaultObject) => vaultObject.id as string}
+          getImageUrl={(vaultObject) => vaultObject.rawUrl}
           renderOverlay={(vaultObject, idx, allVaultObjects) => (
             <PicturesGalleryOptions vaultObject={vaultObject} idx={idx} allVaultObjects={allVaultObjects} />
           )}

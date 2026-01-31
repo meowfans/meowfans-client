@@ -1,6 +1,6 @@
 import { useCreatorsStore } from '@/hooks/store/users.store';
 import { useCreatorsActions } from '@workspace/gql/actions/creators.actions';
-import { CreatorType, DataFetchType, PaginationInput, SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
+import { CreatorType, DataFetchType, GetDefaultCreatorsOutput, PaginationInput, SortBy, SortOrder, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -24,7 +24,7 @@ export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy 
         dataFetchType: DataFetchType.InfiniteScroll
       });
 
-      const fetchedCreators = (data?.getDefaultCreators.creators ?? []) as UsersEntity[];
+      const fetchedCreators = (data?.getDefaultCreators ?? []) as GetDefaultCreatorsOutput[];
 
       setHasMore(fetchedCreators.length === take);
 
