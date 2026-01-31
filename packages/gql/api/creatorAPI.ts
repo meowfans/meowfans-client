@@ -49,20 +49,9 @@ export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
 export const FOLLOW_CREATOR_MUTATION = graphql(`
   mutation FollowCreator($input: FollowCreatorInput!) {
     followCreator(input: $input) {
-      creatorId
-      fanId
-      followedAt
       id
-      unFollowedAt
-      creatorProfile {
-        creatorId
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          username
-        }
-      }
+      avatarUrl
+      username
     }
   }
 `);
@@ -155,6 +144,7 @@ export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
 export const GET_DEFAULT_CREATORS_QUERY = graphql(`
   query GetDefaultCreators($input: PaginationInput!) {
     getDefaultCreators(input: $input) {
+      id
       avatarUrl
       username
       isFollowing

@@ -68,10 +68,12 @@ export const useFollowingMutations = () => {
     setLoading(true);
     try {
       const { data } = await followCreatorMutation({ creatorId });
-      const newFollowedCreator = data?.followCreator?.creatorProfile?.user as GetFollowingOutput;
+      const newFollowedCreator = data?.followCreator as GetFollowingOutput;
 
-      setFollowings([...followings, newFollowedCreator]);
-      setCreators(creators.map((c) => (c.id === creatorId ? { ...c, creatorProfile: { ...c, isFollowing: true } } : c)));
+      if (newFollowedCreator) {
+        setFollowings([...followings, newFollowedCreator]);
+        setCreators(creators.map((c) => (c.id === creatorId ? { ...c, isFollowing: true } : c)));
+      }
 
       successHandler({ message: 'You have followed a new creator 😄' });
       return true;
@@ -87,10 +89,11 @@ export const useFollowingMutations = () => {
     if (!creatorId) return;
     setLoading(true);
     try {
-      await unFollowCreatorMutation({ creatorId });
-
-      setFollowings(followings.filter((f) => f.id !== creatorId));
-      setCreators(creators.map((c) => (c.id === creatorId ? { ...c, creatorProfile: { ...c, isFollowing: false } } : c)));
+      const { data } = await unFollowCreatorMutation({ creatorId });
+      if (data?.unFollowCreator) {
+        setFollowings(followings.filter((f) => f.id !== creatorId));
+        setCreators(creators.map((c) => (c.id === creatorId ? { ...c, isFollowing: false } : c)));
+      }
 
       successHandler({ message: 'Successfully unfollowed!' });
       return true;

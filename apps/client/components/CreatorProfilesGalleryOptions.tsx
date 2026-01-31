@@ -10,6 +10,7 @@ interface CreatorProfilesGalleryOptionsProps {
 
 export const CreatorProfilesGalleryOptions: React.FC<CreatorProfilesGalleryOptionsProps> = ({ user }) => {
   const { followCreator } = useFollowingMutations();
+
   return (
     <div className="flex flex-col justify-end h-full">
       <div className="flex justify-between items-end w-full flex-wrap p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
@@ -21,7 +22,7 @@ export const CreatorProfilesGalleryOptions: React.FC<CreatorProfilesGalleryOptio
           {user.isFollowing ? (
             <Heart className="fill-red-500 z-10" />
           ) : (
-            <AuthAwareButton variant="secondary" size="sm" title="Follow" onClick={() => followCreator(user.id)}>
+            <AuthAwareButton className="cursor-pointer" variant="secondary" size="sm" title="Follow" onClick={() => followCreator(user.id)}>
               Follow
             </AuthAwareButton>
           )}
