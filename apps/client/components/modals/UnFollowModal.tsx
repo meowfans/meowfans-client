@@ -1,6 +1,6 @@
 'use client';
 
-import { useFollowings } from '@/hooks/useFollow';
+import { useFollowingMutations } from '@/hooks/useFollow';
 import { Button } from '@workspace/ui/components/button';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { Modal } from '@workspace/ui/modals/Modal';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const UnFollowModal: React.FC<Props> = ({ isOpen, setOpen, creatorId, onUnFollowed }) => {
-  const { unfollowCreator } = useFollowings();
+  const { unfollowCreator } = useFollowingMutations();
 
   const handleClose = () => setOpen(false);
 

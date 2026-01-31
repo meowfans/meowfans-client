@@ -11,7 +11,7 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { PageManager } from '@workspace/ui/globals/PageManager';
 
 export const Posts = () => {
-  const { commentOnPost, setCommentOnPost } = useCommentsStore();
+  const { commentOnPost } = useCommentsStore();
   const { posts, loading, handleLoadMore, hasMore, handleRefresh } = usePosts({
     sortBy: SortBy.PostCreatedAt,
     orderBy: SortOrder.Desc

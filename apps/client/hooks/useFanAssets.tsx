@@ -2,11 +2,10 @@
 
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
-import { FanAssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { FanAssetsEntity, GetFanAssetsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useFan } from './context/UserContextWrapper';
-import { sort } from 'radash';
 
 interface UseFanAssetsProps {
   orderBy?: SortOrder;
@@ -15,12 +14,12 @@ interface UseFanAssetsProps {
 }
 
 export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: UseFanAssetsProps) => {
-  const { fanAssets, setFanAssets } = useAssetsStore();
-  const { privateGetFanAssetsQuery } = useAssetsActions();
-  const { errorHandler } = useErrorHandler();
   const { fan } = useFan();
-  const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(false);
+  const { errorHandler } = useErrorHandler();
+  const { fanAssets, setFanAssets } = useAssetsStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const { privateGetFanAssetsQuery } = useAssetsActions();
 
   const loadFanAssets = async (initialLoad = false) => {
     if (!fan) return;
@@ -29,7 +28,7 @@ export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: 
 
     try {
       const { data } = await privateGetFanAssetsQuery({ skip, take, orderBy });
-      const fetchedFanAssets = (data?.getFanAssets ?? []) as FanAssetsEntity[];
+      const fetchedFanAssets = (data?.getFanAssets ?? []) as GetFanAssetsOutput[];
       setHasMore(fetchedFanAssets.length === take);
       if (initialLoad) setFanAssets(fetchedFanAssets);
       else setFanAssets([...fanAssets, ...fetchedFanAssets]);

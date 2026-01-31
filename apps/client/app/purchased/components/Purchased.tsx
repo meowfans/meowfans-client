@@ -5,7 +5,6 @@ import { useFanAssets } from '@/hooks/useFanAssets';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { FanAssetsGalleryOptions } from './PurchasedGalleryOptions';
 
 export const Purchased = () => {
   const { fanAssets, handleLoadMore, handleRefresh, hasMore, loading } = useFanAssets({
@@ -27,8 +26,8 @@ export const Purchased = () => {
           loading={loading}
           items={fanAssets}
           getKey={(fanAsset) => fanAsset.id}
-          getImageUrl={(fanAsset) => fanAsset.asset.rawUrl}
-          renderOverlay={(fanAsset) => <FanAssetsGalleryOptions />}
+          getImageUrl={(fanAsset) => fanAsset.rawUrl}
+          renderOverlay={() => null}
         />
       </InfiniteScrollManager>
     </PageManager>

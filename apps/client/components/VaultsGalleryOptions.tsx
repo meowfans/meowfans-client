@@ -2,7 +2,7 @@
 
 import { AuthAwareButton } from '@/components/AuthAwareButton';
 import { useLikes } from '@/hooks/useLikes';
-import { VaultsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicVaultsOutput, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { GalleryHorizontalEnd } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -11,7 +11,7 @@ import { LikeButton } from './LikeButton';
 import { Badge } from '@workspace/ui/components/badge';
 
 interface VaultsGalleryOptionsProps {
-  vault: VaultsEntity;
+  vault: GetPublicVaultsOutput;
 }
 
 export const VaultsGalleryOptions: React.FC<VaultsGalleryOptionsProps> = ({ vault }) => {

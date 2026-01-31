@@ -3,17 +3,15 @@
 import { useCreator } from '@/hooks/context/useCreator';
 import { useFollowers } from '@/hooks/useFollowers';
 import { SortOrder } from '@workspace/gql/generated/graphql';
-import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Badge } from '@workspace/ui/components/badge';
-import { Card, CardContent } from '@workspace/ui/components/card';
 import { Input } from '@workspace/ui/components/input';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { FollowerCard } from './FollowerCard';
-import { NoFollowers } from './NoFollowers';
 import { FollowerProfileCard } from './FollowerProfileCard';
+import { NoFollowers } from './NoFollowers';
 
 export const Followers = () => {
   const { creator } = useCreator();

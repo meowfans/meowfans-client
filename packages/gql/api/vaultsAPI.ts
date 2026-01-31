@@ -3,51 +3,26 @@ import { graphql } from '../generated';
 export const GET_PUBLIC_SINGLE_VAULT_QUERY = graphql(`
   query GetPublicSingleVault($input: PaginationInput!) {
     getPublicSingleVault(input: $input) {
-      createdAt
-      creatorId
-      deletedAt
-      description
       id
-      keywords
       preview
-      updatedAt
-      isLiked
-      likeCount
-      isPurchased
-      unlockPrice
       objectCount
-      creatorProfile {
-        assetCount
-        creatorId
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          username
-        }
-      }
+      isLiked
+      isPurchased
+      description
+      unlockPrice
+      creatorId
+      username
+      avatarUrl
+      keywords
+      createdAt
+      updatedAt
       vaultObjects {
-        asset {
-          blurredUrl
-          createdAt
-          creatorId
-          fileType
-          id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-          vaultObjectId
-        }
         id
-        unlockPrice
+        rawUrl
+        creatorId
         isPurchased
-        contentType
-        fileType
-        status
-        vaultId
         isLiked
-        likeCount
+        unlockPrice
       }
     }
   }
@@ -89,24 +64,9 @@ export const GET_VAULTS_ANALYTICS_QUERY = graphql(`
 export const GET_LIKED_VAULTS_QUERY = graphql(`
   query GetLikedVaults($input: PaginationInput!) {
     getLikedVaults(input: $input) {
-      createdAt
-      fanId
       id
-      vaultId
-      vault {
-        createdAt
-        creatorId
-        deletedAt
-        description
-        id
-        keywords
-        likeCount
-        preview
-        updatedAt
-        viewCount
-        isLiked
-        isPurchased
-      }
+      preview
+      isLiked
     }
   }
 `);
@@ -114,39 +74,9 @@ export const GET_LIKED_VAULTS_QUERY = graphql(`
 export const LIKE_VAULT_OBJECT_MUTATION = graphql(`
   mutation LikeVaultObject($input: PaginationInput!) {
     likeVaultObject(input: $input) {
-      entity {
-        createdAt
-        fanId
-        id
-        vaultObjectId
-        vaultObject {
-          contentType
-          createdAt
-          deletedAt
-          fileType
-          id
-          importedAt
-          likeCount
-          status
-          suffix
-          updatedAt
-          vaultId
-          asset {
-            blurredUrl
-            createdAt
-            creatorId
-            fileType
-            id
-            mediaType
-            mimeType
-            rawUrl
-            updatedAt
-            vaultObjectId
-            viewCount
-          }
-        }
-      }
+      id
       isLiked
+      preview
     }
   }
 `);
@@ -155,24 +85,8 @@ export const LIKE_VAULT_MUTATION = graphql(`
   mutation LikeVault($input: PaginationInput!) {
     likeVault(input: $input) {
       isLiked
-      entity {
-        createdAt
-        fanId
-        id
-        vaultId
-        vault {
-          createdAt
-          creatorId
-          deletedAt
-          description
-          id
-          keywords
-          likeCount
-          preview
-          updatedAt
-          viewCount
-        }
-      }
+      id
+      preview
     }
   }
 `);
@@ -180,30 +94,9 @@ export const LIKE_VAULT_MUTATION = graphql(`
 export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
   query GetLikedVaultObjects($input: PaginationInput!) {
     getLikedVaultObjects(input: $input) {
-      createdAt
-      fanId
       id
-      vaultObjectId
-      vaultObject {
-        contentType
-        fileType
-        id
-        status
-        isLiked
-        likeCount
-        asset {
-          createdAt
-          creatorId
-          fileType
-          id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-          vaultObjectId
-          viewCount
-        }
-      }
+      isLiked
+      preview
     }
   }
 `);
@@ -259,26 +152,13 @@ export const GET_CREATOR_VAULT_OBJECTS_QUERY = graphql(`
 export const GET_PUBLIC_VAULTS_QUERY = graphql(`
   query GetPublicVaults($input: PaginationInput!) {
     getPublicVaults(input: $input) {
-      creatorId
-      description
       id
-      keywords
-      isLiked
-      likeCount
-      createdAt
       preview
       objectCount
+      isLiked
       isPurchased
+      description
       unlockPrice
-      creatorProfile {
-        creatorId
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          username
-        }
-      }
     }
   }
 `);
@@ -286,30 +166,12 @@ export const GET_PUBLIC_VAULTS_QUERY = graphql(`
 export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
   query GetPublicVaultObjects($input: PaginationInput!) {
     getPublicVaultObjects(input: $input) {
-      contentType
-      createdAt
-      deletedAt
-      fileType
       id
-      importedAt
-      likeCount
-      objectUrl
-      status
-      suffix
-      updatedAt
-      vaultId
-      asset {
-        createdAt
-        creatorId
-        fileType
-        id
-        mediaType
-        mimeType
-        rawUrl
-        updatedAt
-        vaultObjectId
-        viewCount
-      }
+      rawUrl
+      creatorId
+      isPurchased
+      isLiked
+      unlockPrice
     }
   }
 `);

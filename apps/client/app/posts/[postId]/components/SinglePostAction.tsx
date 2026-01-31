@@ -3,11 +3,11 @@ import { LikeButton } from '@/components/LikeButton';
 import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useCommentsStore } from '@/hooks/store/comments.store';
 import { useLikes } from '@/hooks/useLikes';
-import { PostsEntity, PurchaseType } from '@workspace/gql/generated/graphql';
+import { GetPublicSinglePostOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface SinglePostActionProps {
-  post: PostsEntity;
+  post: GetPublicSinglePostOutput;
 }
 
 export const SinglePostAction: React.FC<SinglePostActionProps> = ({ post }) => {
@@ -22,7 +22,7 @@ export const SinglePostAction: React.FC<SinglePostActionProps> = ({ post }) => {
         onLikeDisLike={() => handleLikePost(post.id)}
         isLiked={post.isLiked}
       />
-      <CommentButton onClick={() => setCommentOnPost(post)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
+      <CommentButton onClick={() => setCommentOnPost(post.id)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
     </div>
   ) : (
     <div className="flex justify-center place-content-center items-center">

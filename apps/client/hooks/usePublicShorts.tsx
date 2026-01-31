@@ -2,7 +2,7 @@
 
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
-import { AssetsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetsEntity, GetPublicShortsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useFan } from './context/UserContextWrapper';
@@ -27,7 +27,7 @@ export const usePublicShorts = ({ sortBy = SortBy.AssetCreatedAt, orderBy = Sort
 
     try {
       const { data } = await publicGetShortsQuery({ sortBy, orderBy, take, skip, relatedUserId: fan?.fanId });
-      const fetchedShorts = data?.getPublicShortsAssets as AssetsEntity[];
+      const fetchedShorts = data?.getPublicShortsAssets as GetPublicShortsOutput[];
 
       setHasMore(fetchedShorts.length === take);
 
@@ -51,7 +51,7 @@ export const usePublicShorts = ({ sortBy = SortBy.AssetCreatedAt, orderBy = Sort
 
   useEffect(() => {
     loadShorts(true);
-  }, [fan]);
+  }, [fan]); // eslint-disable-line
 
   return {
     publicShorts,

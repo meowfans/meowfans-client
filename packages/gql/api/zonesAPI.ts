@@ -6,8 +6,6 @@ export const GET_ZONE_PLANS_QUERY = graphql(`
       id
       unlockPrice
       zoneType
-      createdAt
-      updatedAt
     }
   }
 `);

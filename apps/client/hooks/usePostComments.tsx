@@ -6,14 +6,12 @@ import { PaginationInput, PostCommentsEntity } from '@workspace/gql/generated/gr
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface UsePostCommentsProps extends PaginationInput {}
-
-export const usePostComments = ({ take, relatedEntityId }: UsePostCommentsProps) => {
+export const usePostComments = ({ take, relatedEntityId }: PaginationInput) => {
+  const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const { postComments, setPostComments } = useCommentsStore();
   const { publicGetCommentsOfPostQuery } = useCommentsActions();
-  const { errorHandler } = useErrorHandler();
-  const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(false);
 
   const loadComments = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : postComments.length;
@@ -44,7 +42,7 @@ export const usePostComments = ({ take, relatedEntityId }: UsePostCommentsProps)
 
   useEffect(() => {
     loadComments(true);
-  }, [relatedEntityId, take]);
+  }, [relatedEntityId, take]); // eslint-disable-line
 
   return {
     postComments,

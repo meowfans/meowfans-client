@@ -12,17 +12,17 @@ import { useState } from 'react';
 
 export const CreateCommentModal = () => {
   const { createComment } = useCommentMutations();
-  const { setCommentOnPost, commentOnPost } = useCommentsStore();
   const [comment, setComment] = useState<string>('');
+  const { setCommentOnPost, commentOnPost } = useCommentsStore();
 
   const handleClose = () => {
     setComment('');
   };
 
   const handleCreateComment = async () => {
-    if (!commentOnPost?.id) return;
+    if (!commentOnPost) return;
     try {
-      await createComment(commentOnPost?.id, comment);
+      await createComment(commentOnPost, comment);
     } finally {
       handleClose();
     }

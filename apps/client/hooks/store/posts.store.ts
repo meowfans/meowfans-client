@@ -1,14 +1,14 @@
-import { PostAssetsEntity, PostsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicPostsOutput, GetPublicSinglePostOutput, PostAssetsEntity } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
-type PostUpdater = PostsEntity | ((prev: PostsEntity) => PostsEntity);
+type PostUpdater = GetPublicSinglePostOutput | ((prev: GetPublicSinglePostOutput) => GetPublicSinglePostOutput);
 
 type PostsStore = {
-  post: PostsEntity;
-  posts: PostsEntity[];
+  post: GetPublicSinglePostOutput;
+  posts: GetPublicPostsOutput[];
   postsLoading: boolean;
   postAssets: PostAssetsEntity[];
-  setPosts: (posts: PostsEntity[]) => void;
+  setPosts: (posts: GetPublicPostsOutput[]) => void;
   setPostsLoading: (postsLoading: boolean) => void;
   setPostAssets: (postAssets: PostAssetsEntity[]) => void;
   setPost: (updater: PostUpdater) => void;
@@ -18,13 +18,14 @@ export const usePostsStore = create<PostsStore>()((set, get) => ({
   posts: [],
   postAssets: [],
   postsLoading: false,
-  post: {} as PostsEntity,
+  post: {} as GetPublicSinglePostOutput,
   setPosts: (posts) => set({ posts }),
   setPostAssets: (postAssets) => set({ postAssets }),
   setPostsLoading: (postsLoading) => set({ postsLoading }),
   setPost: (updater) => {
     set((state) => ({
-      post: typeof updater === 'function' ? (updater as (prev: PostsEntity) => PostsEntity)(state.post) : updater
+      post:
+        typeof updater === 'function' ? (updater as (prev: GetPublicSinglePostOutput) => GetPublicSinglePostOutput)(state.post) : updater
     }));
   }
 }));

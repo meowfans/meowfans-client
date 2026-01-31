@@ -64,32 +64,13 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
 export const GET_PUBLIC_SHORTS_ASSETS_QUERY = graphql(`
   query GetPublicShortsAssets($input: PaginationInput!) {
     getPublicShortsAssets(input: $input) {
-      createdAt
-      creatorId
-      fileType
       id
-      mediaType
-      mimeType
       rawUrl
-      updatedAt
+      creatorUsername
+      creatorAvatarUrl
+      vaultDescription
       vaultObjectId
-      creatorProfile {
-        creatorId
-        user {
-          id
-          username
-          avatarUrl
-          bannerUrl
-        }
-      }
-      vaultObject {
-        id
-        isLiked
-        vault {
-          id
-          description
-        }
-      }
+      vaultObjectIsLiked
     }
   }
 `);
@@ -131,64 +112,8 @@ export const GET_PUBLIC_ASSETS = graphql(`
 export const GET_FAN_ASSETS_QUERY = graphql(`
   query GetFanAssets($input: PaginationInput!) {
     getFanAssets(input: $input) {
-      assetId
-      createdAt
-      deletedAt
-      fanId
       id
-      asset {
-        createdAt
-        creatorId
-        fileType
-        id
-        mediaType
-        mimeType
-        rawUrl
-        updatedAt
-        vaultObjectId
-        viewCount
-      }
-    }
-  }
-`);
-
-export const GET_PUBLIC_CREATOR_ASSETS_QUERY = graphql(`
-  query GetPublicCreatorAssets($input: PaginationInput!) {
-    getPublicCreatorAssets(input: $input) {
-      assetId
-      createdAt
-      creatorId
-      deletedAt
-      id
-      type
-      asset {
-        createdAt
-        creatorId
-        fileType
-        id
-        mediaType
-        mimeType
-        rawUrl
-        updatedAt
-        vaultObjectId
-        viewCount
-        vaultObject {
-          isLiked
-          likeCount
-          contentType
-          id
-          isPurchased
-          vault {
-            description
-            id
-            isPurchased
-            isLiked
-            keywords
-            likeCount
-            preview
-          }
-        }
-      }
+      rawUrl
     }
   }
 `);

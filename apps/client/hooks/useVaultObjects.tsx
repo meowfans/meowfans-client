@@ -1,6 +1,13 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
-import { DataFetchType, PaginationInput, SortBy, SortOrder, VaultObjectsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
+import {
+  DataFetchType,
+  GetPublicSingleVaultOutput,
+  GetPublicVaultObjectsOutput,
+  PaginationInput,
+  SortBy,
+  SortOrder
+} from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -26,15 +33,15 @@ export const useSingleVault = (params: PaginationInput) => {
         dataFetchType: DataFetchType.InfiniteScroll
       });
 
-      const fetched = data?.getPublicSingleVault as VaultsEntity;
+      const fetched = data?.getPublicSingleVault as GetPublicSingleVaultOutput;
       const vaultObjects = fetched?.vaultObjects ?? [];
 
       setHasMore(vaultObjects.length === (params.take ?? 30));
 
-      setVault({
+      setVault((prev) => ({
         ...fetched,
-        vaultObjects: initialLoad ? vaultObjects : [...(vault.vaultObjects ?? []), ...vaultObjects]
-      });
+        vaultObjects: initialLoad ? vaultObjects : [...(prev.vaultObjects ?? []), ...vaultObjects]
+      }));
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -74,7 +81,7 @@ export const useSingleVault = (params: PaginationInput) => {
 export const useVaultObjects = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getPublicVaultObjectsQuery } = useVaultsActions();
-  const { setVaultObjects, vaultObjects, appendVaultObjects } = useVaultsStore();
+  const { setVaultObjects, vaultObjects } = useVaultsStore();
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
@@ -92,12 +99,10 @@ export const useVaultObjects = (params: PaginationInput) => {
         sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
       });
 
-      const fetched = data?.getPublicVaultObjects as VaultObjectsEntity[];
+      const fetched = data?.getPublicVaultObjects as GetPublicVaultObjectsOutput[];
       setHasMore(fetched.length === (params.take ?? 30));
 
-      if (initialLoad) {
-        setVaultObjects(fetched);
-      } else appendVaultObjects(fetched);
+      setVaultObjects((prev) => (initialLoad ? fetched : [...prev, ...fetched]));
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -116,7 +121,7 @@ export const useVaultObjects = (params: PaginationInput) => {
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.relatedEntityId, params.sortBy, params.orderBy]); //eslint-disable-line
+  }, [params.relatedEntityId, params.sortBy, params.orderBy]); // eslint-disable-line
 
   return {
     vaultObjects,

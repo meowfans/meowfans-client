@@ -40,9 +40,6 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
 
   if (!post) return null;
 
-  const username = post.creatorProfile?.user?.username || 'Unknown';
-  const usernameUpper = username.toUpperCase();
-
   return (
     <div className="flex flex-col items-start gap-6 mb-10">
       <SAvatar url={post.preview} className="h-28 w-28 shrink-0 rounded-full border-4 shadow-md object-cover" />
@@ -57,18 +54,18 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
         />
 
         <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          {username !== 'porn' ? (
+          {post.creatorUsername !== 'porn' ? (
             <span>
               Captured by
               <LinkDescription
-                href={`/creators/${username}`}
-                description={usernameUpper}
+                href={`/creators/${post.creatorUsername}`}
+                description={post.creatorUsername.toUpperCase()}
                 className="text-pink-500 hover:text-pink-400 font-medium transition-colors"
               />
               ✨ — Sharing moments of creativity and passion.
             </span>
           ) : (
-            <LinkDescription href={`/creators/${username}`} className="text-pink-500 font-semibold" description={usernameUpper} />
+            <LinkDescription href={`/creators/${post.creatorUsername}`} className="text-pink-500 font-semibold" description={post.creatorUsername} />
           )}
           <ExoAdProvider zoneId="5770664" zoneType={ExoAdZoneTypes.MobileBanner} />
         </div>
@@ -81,7 +78,7 @@ export const SinglePostHeader: React.FC<Props> = ({ onExpanded, expanded }) => {
               title="Post a comment"
               className="flex items-center gap-2"
               titleEnabled
-              onClick={() => setCommentOnPost(post)}
+              onClick={() => setCommentOnPost(post.id)}
             />
           </div>
         ) : (

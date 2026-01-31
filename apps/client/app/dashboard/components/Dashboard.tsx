@@ -21,11 +21,11 @@ export const Dashboard = () => {
         <GalleryManager
           loading={loading}
           items={creators}
-          getKey={(creator) => creator.username}
-          getImageUrl={(creator) => creator.avatarUrl as string}
+          getKey={(user) => user.username}
+          getImageUrl={(user) => user.avatarUrl}
           applyLink
           pathname="/creators"
-          renderOverlay={(creator) => <CreatorProfilesGalleryOptions creator={creator} />}
+          renderOverlay={(user) => <CreatorProfilesGalleryOptions user={user} />}
         />
       </InfiniteScrollManager>
     </PageManager>

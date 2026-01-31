@@ -1,5 +1,5 @@
 import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
-import { PostsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicSinglePostOutput } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { StatItem } from '@workspace/ui/globals/StatItem';
 import { Bookmark, Eye, Heart, MessageCircle, Share2 } from 'lucide-react';
@@ -7,7 +7,7 @@ import { SinglePostAction } from './SinglePostAction';
 import { SinglePostDetails } from './SinglePostDetails';
 
 interface SinglePostStatsProps {
-  post: PostsEntity;
+  post: GetPublicSinglePostOutput;
 }
 
 export const SinglePostInsight = ({ post }: SinglePostStatsProps) => {

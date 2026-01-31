@@ -1,11 +1,11 @@
-import { PostsEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicSinglePostOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
-import { Card, CardHeader, CardContent } from '@workspace/ui/components/card';
+import { Card, CardContent, CardHeader } from '@workspace/ui/components/card';
 import { MoreVertical } from 'lucide-react';
 
 interface SinglePostDetailsProps {
-  post: PostsEntity;
+  post: GetPublicSinglePostOutput;
 }
 
 export const SinglePostDetails = ({ post }: SinglePostDetailsProps) => {
@@ -14,7 +14,7 @@ export const SinglePostDetails = ({ post }: SinglePostDetailsProps) => {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="font-medium capitalize">
-            {post.types?.[0]?.toLowerCase() || 'Post'}
+            {post.postType || 'Post'}
           </Badge>
           <span className="text-xs text-muted-foreground">
             {new Date(post.createdAt).toLocaleDateString(undefined, {
