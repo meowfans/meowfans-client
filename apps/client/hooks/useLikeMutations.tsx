@@ -7,12 +7,12 @@ import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { triggerSparkles } from '@workspace/ui/lib/helpers';
 import { toast } from 'sonner';
 
-export function useLikes() {
-  const { likePostMutation, likeVaultMutation, likeVaultObjectMutation } = useLikesActions();
+export function useLikeMutations() {
   const { errorHandler } = useErrorHandler();
-  const { vaultLikes, setVaultLikes, vaultObjectLikes, setVaultObjectLikes, postLikes, setPostLikes } = useLikesStore();
-  const { vaults, setVaults, vaultObjects, setVaultObjects } = useVaultsStore();
   const { posts, setPosts } = usePostsStore();
+  const { vaults, setVaults, vaultObjects, setVaultObjects } = useVaultsStore();
+  const { likePostMutation, likeVaultMutation, likeVaultObjectMutation } = useLikesActions();
+  const { vaultLikes, setVaultLikes, vaultObjectLikes, setVaultObjectLikes, postLikes, setPostLikes } = useLikesStore();
 
   const likeVault = async (vaultId: string) => {
     if (!vaultId) return;
@@ -25,8 +25,8 @@ export function useLikes() {
 
       toast[isLiked ? 'success' : 'info'](isLiked ? 'The album is saved ❤️' : 'The album is removed 💔');
       return isLiked;
-    } catch (e) {
-      errorHandler({ error: e });
+    } catch (error) {
+      errorHandler({ error });
     }
   };
 
@@ -43,8 +43,8 @@ export function useLikes() {
 
       toast[isLiked ? 'success' : 'info'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
       return isLiked;
-    } catch (e) {
-      errorHandler({ error: e });
+    } catch (error) {
+      errorHandler({ error });
     }
   };
 
@@ -62,8 +62,8 @@ export function useLikes() {
       triggerSparkles();
 
       return isLiked;
-    } catch (e) {
-      errorHandler({ error: e });
+    } catch (error) {
+      errorHandler({ error });
     }
   };
 

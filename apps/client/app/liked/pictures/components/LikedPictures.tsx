@@ -4,14 +4,14 @@ import { GalleryManager } from '@/components/GalleryManager';
 import { LikeButton } from '@/components/LikeButton';
 import { PageHeader } from '@/components/PageHeader';
 import { useLikedVaultObjects } from '@/hooks/useLikedVaultObjects';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { motion } from 'framer-motion';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const LikedPictures = () => {
-  const { likeVaultObject } = useLikes();
+  const { likeVaultObject } = useLikeMutations();
   const { vaultObjectLikes, loadMore, hasMore, loading } = useLikedVaultObjects();
   const handleDebounceLikeVaultObject = useDebouncedCallback(likeVaultObject, 350);
 

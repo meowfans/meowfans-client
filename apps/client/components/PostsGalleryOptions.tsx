@@ -1,7 +1,7 @@
 'use client';
 
 import { useCommentsStore } from '@/hooks/store/comments.store';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicPostsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { MultipleObjectsIcon } from '@workspace/ui/globals/MultipleObjectsIcon';
@@ -19,7 +19,7 @@ interface PostsGalleryOptionsProps {
 
 export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }) => {
   const router = useRouter();
-  const { likePost } = useLikes();
+  const { likePost } = useLikeMutations();
   const { setCommentOnPost } = useCommentsStore();
   const handleLikePost = useDebouncedCallback(likePost, 250);
 
@@ -89,7 +89,11 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }
                 title="Like"
                 onLikeDisLike={() => handleLikePost(post.id)}
               />
-              <CommentButton onClick={() => setCommentOnPost(post.id)} className="rounded-xl text-white hover:text-blue-400" title="Comment" />
+              <CommentButton
+                onClick={() => setCommentOnPost(post.id)}
+                className="rounded-xl text-white hover:text-blue-400"
+                title="Comment"
+              />
             </>
           )}
           <MultipleObjectsIcon hasMultiple={post.objectCount > 1} />

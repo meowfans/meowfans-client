@@ -2,7 +2,7 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useZonesStore } from '@/hooks/store/zones.store';
 import { Button } from '@workspace/ui/components/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@workspace/ui/components/sheet';
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@workspace/ui/components/sheet';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
@@ -23,7 +23,7 @@ export const AppHeaderSheet = () => {
       <SheetTrigger asChild>
         {fan ? <SAvatar url={fan?.user.avatarUrl} className="border-green-400 border" /> : <Button variant="outline">Login</Button>}
       </SheetTrigger>
-      <SheetContent side="right" className="w-64 sm:w-80 bg-linear-to-bl from-white to-slate-100 dark:from-black dark:to-neutral-900">
+      <SheetContent aria-describedby='app-header-sheet' side="right" className="w-64 sm:w-80 bg-linear-to-bl from-white to-slate-100 dark:from-black dark:to-neutral-900">
         <SheetHeader className="flex flex-row items-center border-b">
           <ApplyTheme />
           <SheetTitle>MeowFans</SheetTitle>
@@ -61,6 +61,14 @@ export const AppHeaderSheet = () => {
           </div>
         </div>
         <LogoutModal />
+        <SheetFooter>
+          <p className="text-xs">
+            Having problems with payment related issues or something else?{' '}
+            <a href="mailto:support@meowfans.app" className="font-medium text-blue-600 underline hover:text-blue-700">
+              Email us
+            </a>
+          </p>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

@@ -4,13 +4,13 @@ import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { GalleryManager } from '@/components/GalleryManager';
 import { LikeButton } from '@/components/LikeButton';
 import { PageHeader } from '@/components/PageHeader';
-import { useLikes } from '@/hooks/useLikes';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { useVaults } from '@/hooks/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useDebouncedCallback } from 'use-debounce';
 
 const MostLikedVaults = () => {
-  const { likeVault } = useLikes();
+  const { likeVault } = useLikeMutations();
   const { vaults } = useVaults({ take: 20, sortBy: SortBy.VaultLikeCount, orderBy: SortOrder.Desc });
 
   const handleDebounceLikeVault = useDebouncedCallback(likeVault, 350);

@@ -5,8 +5,8 @@ import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { NextImage } from '@/components/NextImage';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
-import { useLikes } from '@/hooks/useLikes';
-import { GetPublicSingleVaultOutput, PurchaseType, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { useLikeMutations } from '@/hooks/useLikeMutations';
+import { GetPublicSingleVaultOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';
@@ -25,7 +25,7 @@ interface SingleVaultInfoProps {
 export const SingleVaultInfo: React.FC<SingleVaultInfoProps> = ({ vault }) => {
   const { fan } = useFan();
   const { setVault } = useVaultsStore();
-  const { likeVault } = useLikes();
+  const { likeVault } = useLikeMutations();
   const [extended, setExtended] = useState<boolean>(true);
 
   if (!vault) return null;
