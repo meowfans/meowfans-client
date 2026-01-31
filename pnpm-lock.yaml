@@ -70,7 +70,7 @@ importers:
         version: link:../../packages/ui
       cookies-next:
         specifier: ^6.1.0
-        version: 6.1.1(next@15.4.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        version: 6.1.1(next@15.4.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -200,7 +200,7 @@ importers:
         version: link:../../packages/ui
       cookies-next:
         specifier: ^6.1.0
-        version: 6.1.1(next@15.4.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        version: 6.1.1(next@15.4.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       dotenv:
         specifier: ^17.2.2
         version: 17.2.3
@@ -454,7 +454,7 @@ importers:
         version: link:../../packages/ui
       cookies-next:
         specifier: ^6.1.0
-        version: 6.1.1(next@15.4.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        version: 6.1.1(next@15.4.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       dotenv:
         specifier: ^17.2.1
         version: 17.2.3
@@ -724,8 +724,8 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/themes':
-        specifier: ^3.2.1
-        version: 3.2.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: ^3.3.0
+        version: 3.3.0(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -3003,8 +3003,8 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@radix-ui/themes@3.2.1':
-    resolution: {integrity: sha512-WJL2YKAGItkunwm3O4cLTFKCGJTfAfF6Hmq7f5bCo1ggqC9qJQ/wfg/25AAN72aoEM1yqXZQ+pslsw48AFR0Xg==}
+  '@radix-ui/themes@3.3.0':
+    resolution: {integrity: sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -9428,7 +9428,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@radix-ui/themes@3.2.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@radix-ui/themes@3.3.0(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@radix-ui/colors': 3.0.0
       classnames: 2.5.1
@@ -10426,7 +10426,7 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cookies-next@6.1.1(next@15.4.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
+  cookies-next@6.1.1(next@15.4.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
     dependencies:
       cookie: 1.1.1
       next: 15.4.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
