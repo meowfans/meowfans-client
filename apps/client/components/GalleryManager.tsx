@@ -150,7 +150,7 @@ export const GalleryManager = <T,>({
               />
             )}
 
-            {!renderOptionsOnMobile && renderOverlay && <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>}
+            {!renderOptionsOnMobile && renderOverlay && <div className="absolute inset-0 pointer-events-none">{renderOverlay(item, idx, items)}</div>}
           </>
         )}
       </div>

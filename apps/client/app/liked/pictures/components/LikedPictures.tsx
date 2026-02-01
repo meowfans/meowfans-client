@@ -29,7 +29,7 @@ export const LikedPictures = () => {
               whileTap={{ scale: 0.85 }}
               whileHover={{ scale: 1.1 }}
               transition={{ type: 'spring', stiffness: 250 }}
-              className="absolute bottom-0 right-0"
+              className="absolute top-0 right-0"
             >
               <LikeButton
                 onLikeDisLike={() => handleDebounceLikeVaultObject(vaultObject.id)}
