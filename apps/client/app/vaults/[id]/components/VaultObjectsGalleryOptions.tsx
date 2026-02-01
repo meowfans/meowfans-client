@@ -16,7 +16,7 @@ export const VaultObjectsGalleryOptions: React.FC<VaultObjectsGalleryProps> = ({
   const handleDebounceLikeVaultObject = useDebouncedCallback(likeVaultObject, 350);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full pointer-events-none">
       <div className="flex justify-end place-content-end p-1">
         <FullScreenButton
           className="cursor-pointer border-dashed hidden md:flex z-10"

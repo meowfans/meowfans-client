@@ -18,8 +18,8 @@ export const PicturesGalleryOptions: React.FC<PicturesGalleryProps> = ({ vaultOb
   const handleDebounceLikeVaultObject = useDebouncedCallback(likeVaultObject, 350);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex justify-end place-content-end p-1 z-10">
+    <div className="relative flex flex-col h-full w-full overflow-hidden pointer-events-auto">
+      <div className="absolute top-0 right-0">
         <FullScreenButton
           className="cursor-pointer border-dashed hidden md:flex"
           currentIdx={idx}

@@ -4,7 +4,6 @@ import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
 import { GetLikedPostsOutput, GetLikedVaultObjectsOutput, GetLikedVaultsOutput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { triggerSparkles } from '@workspace/ui/lib/helpers';
 import { toast } from 'sonner';
 
 export function useLikeMutations() {
@@ -59,8 +58,6 @@ export function useLikeMutations() {
       setPosts(posts.map((p) => (p.id === postId ? { ...p, isLiked: !!isLiked } : p)));
 
       toast[isLiked ? 'success' : 'info'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
-      triggerSparkles();
-
       return isLiked;
     } catch (error) {
       errorHandler({ error });

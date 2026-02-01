@@ -22,8 +22,8 @@ export const VaultsGalleryOptions: React.FC<VaultsGalleryOptionsProps> = ({ vaul
   return (
     <div
       className={`
-        relative flex flex-col justify-between
-        h-full w-full rounded-xl overflow-hidden
+        relative flex flex-col justify-between h-full w-full
+        rounded-xl overflow-hidden pointer-events-auto
         bg-linear-to-b from-black/10 via-black/20 to-black/40
       `}
     >

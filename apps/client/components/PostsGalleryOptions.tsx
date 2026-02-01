@@ -27,7 +27,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }
     <div
       className={`
         relative flex flex-col justify-between h-full w-full
-        rounded-xl overflow-hidden
+        rounded-xl overflow-hidden pointer-events-auto
         bg-linear-to-b from-black/10 via-black/20 to-black/40
       `}
     >
@@ -83,7 +83,7 @@ export const PostsGalleryOptions: React.FC<PostsGalleryOptionsProps> = ({ post }
             <>
               <LikeButton
                 isLiked={post.isLiked}
-                className="hover:text-red-500 rounded-xl transition pointer-events-auto"
+                className="hover:text-red-500 rounded-xl transition"
                 variant="secondary"
                 size="sm"
                 title="Like"

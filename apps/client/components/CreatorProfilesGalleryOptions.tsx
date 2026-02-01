@@ -12,7 +12,7 @@ export const CreatorProfilesGalleryOptions: React.FC<CreatorProfilesGalleryOptio
   const { followCreator } = useFollowingMutations();
 
   return (
-    <div className="flex flex-col justify-end h-full">
+    <div className="flex flex-col justify-end h-full pointer-events-auto">
       <div className="flex justify-between items-end w-full flex-wrap p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
         <Badge variant="secondary" className="z-10 bg-blue-500 text-white dark:bg-blue-600 flex items-center gap-1 text-xs">
           <BadgeCheckIcon className="w-3 h-3" />

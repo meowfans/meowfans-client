@@ -7,7 +7,6 @@ import { useLikedVaultObjects } from '@/hooks/useLikedVaultObjects';
 import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
-import { motion } from 'framer-motion';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const LikedPictures = () => {
@@ -25,18 +24,13 @@ export const LikedPictures = () => {
           getKey={(vo) => vo.id}
           loading={loading}
           renderOverlay={(vaultObject) => (
-            <motion.div
-              whileTap={{ scale: 0.85 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: 'spring', stiffness: 250 }}
-              className="absolute top-0 right-0"
-            >
+            <div className="relative">
               <LikeButton
                 onLikeDisLike={() => handleDebounceLikeVaultObject(vaultObject.id)}
-                className="rounded-full p-2 shadow-lg backdrop-blur-sm bg-white/30 hover:bg-red-500 transition-all duration-300"
+                className="absolute top-0 right-0 pointer-events-auto rounded-full p-2 shadow-lg backdrop-blur-sm bg-white/30 hover:bg-red-500 transition-all duration-300"
                 isLiked={vaultObject.isLiked}
               />
-            </motion.div>
+            </div>
           )}
         />
       </InfiniteScrollManager>
