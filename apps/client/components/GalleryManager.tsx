@@ -78,7 +78,7 @@ export const GalleryManager = <T,>({
                   muted
                   controls
                   src={getImageUrl(item)}
-                className="h-full w-full object-cover z-50"
+                  className="h-full w-full object-cover z-50"
                   controlsList="nodownload noremoteplayback"
                 />
               ) : (
@@ -104,7 +104,11 @@ export const GalleryManager = <T,>({
               <NextImage imageUrl={getImageUrl(item)} alt={`asset_${getKey(item)}`} />
             )}
 
-            {!renderOptionsOnMobile && renderOverlay && <div className="absolute inset-0">{renderOverlay(item, idx, items)}</div>}
+            {!renderOptionsOnMobile && renderOverlay && (
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="pointer-events-auto">{renderOverlay(item, idx, items)}</div>
+              </div>
+            )}
           </Link>
         ) : (
           <>
@@ -116,7 +120,7 @@ export const GalleryManager = <T,>({
                   muted
                   controls
                   src={getImageUrl(item)}
-                className="h-full w-full object-cover z-50"
+                  className="h-full w-full object-cover z-50"
                   controlsList="nodownload noremoteplayback"
                 />
               ) : (
@@ -150,7 +154,11 @@ export const GalleryManager = <T,>({
               />
             )}
 
-            {!renderOptionsOnMobile && renderOverlay && <div className="absolute inset-0 pointer-events-none">{renderOverlay(item, idx, items)}</div>}
+            {!renderOptionsOnMobile && renderOverlay && (
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="pointer-events-auto">{renderOverlay(item, idx, items)}</div>
+              </div>
+            )}
           </>
         )}
       </div>
