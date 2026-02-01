@@ -43,7 +43,7 @@ export const ChannelList = () => {
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
       {channels.map((channel, idx) => {
         const { creatorProfile, participants, lastMessage } = channel;
-        const creator = participants.find(({ userId }) => userId === creatorProfile?.creatorId);
+        const creator = participants.find(({ userId }) => userId === channel.creatorId);
         const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
         const hasSeen = timestamp >= Math.max(new Date(lastMessage?.createdAt).getTime(), new Date(lastMessage?.updatedAt).getTime());
 
@@ -52,7 +52,7 @@ export const ChannelList = () => {
             key={idx}
             channel={channel}
             creatorParticipant={creator as MessageChannelParticipantsEntity}
-            creatorProfile={channel.creatorProfile}
+            creatorProfile={creatorProfile}
             hasSeenLastMessage={hasSeen}
             lastMessage={channel?.lastMessage}
             onRowClick={(id) => handleRowClick(id)}

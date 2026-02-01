@@ -11,6 +11,8 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
       isMuted
       isRestricted
       isMessagingBlocked
+      isCreatorOnline
+      isFanOnline
       totalEarning
       participants {
         id

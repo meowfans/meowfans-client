@@ -45,7 +45,7 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
           <ArrowBigLeftDash />
         </Button>
         <div className="cursor-pointer">
-          <OnlinePreview avatarUrl={channel?.fanProfile?.user?.avatarUrl as string} isOnline={channel?.fanProfile?.user?.isOnline} />
+          <OnlinePreview avatarUrl={channel?.fanProfile?.user?.avatarUrl as string} isOnline={channel.isFanOnline} />
         </div>
         <div className="flex flex-col">
           <p className="font-bold">

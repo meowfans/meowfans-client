@@ -81,6 +81,15 @@ export const Events = () => {
     });
   };
 
+  const onPresence = async (event: CustomEvent) => {
+    const { channelId, userId, isOnline } = event.detail.data;
+    console.log({ channelId, userId, isOnline });
+    setChannel((prev) => (prev.id === channelId && userId === prev.fanId ? { ...prev, isFanOnline: isOnline } : prev));
+    setChannels((prev) =>
+      prev?.map((channel) => (channel.id === channelId && userId === channel.fanId ? { ...channel, isFanOnline: isOnline } : channel))
+    );
+  };
+
   useEffect(() => {
     const sendHandler = (e: Event) => onSendMessageFromFan(e as CustomEvent);
     const updateHandler = (e: Event) => onUpdateMessage(e as CustomEvent);
@@ -88,6 +97,7 @@ export const Events = () => {
     const deleteManyHandler = (e: Event) => onDeleteMessages(e as CustomEvent);
     const onSeenMessageHandler = (e: Event) => onSeenMessage(e as CustomEvent);
     const onUpdateChannelLastMessageHandler = (e: Event) => onUpdateChannelLastMessage(e as CustomEvent);
+    const onPresenceHandler = (e: Event) => onPresence(e as CustomEvent);
 
     eventEmitter.addEventListener(EventTypes.SendMessageFromFan, sendHandler);
     eventEmitter.addEventListener(EventTypes.UpdateMessage, updateHandler);
@@ -95,6 +105,7 @@ export const Events = () => {
     eventEmitter.addEventListener(EventTypes.DeleteMessages, deleteManyHandler);
     eventEmitter.addEventListener(EventTypes.MessageSeen, onSeenMessageHandler);
     eventEmitter.addEventListener(EventTypes.LastMessage, onUpdateChannelLastMessageHandler);
+    eventEmitter.addEventListener(EventTypes.Presence, onPresenceHandler);
 
     return () => {
       eventEmitter.removeEventListener(EventTypes.SendMessageFromFan, sendHandler);
@@ -103,6 +114,7 @@ export const Events = () => {
       eventEmitter.removeEventListener(EventTypes.DeleteMessages, deleteManyHandler);
       eventEmitter.removeEventListener(EventTypes.MessageSeen, onSeenMessageHandler);
       eventEmitter.removeEventListener(EventTypes.LastMessage, onUpdateChannelLastMessageHandler);
+      eventEmitter.removeEventListener(EventTypes.Presence, onPresenceHandler);
     };
   }, []); // eslint-disable-line
 

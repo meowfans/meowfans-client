@@ -55,8 +55,12 @@ export const GET_CHANNELS_QUERY = graphql(`
       isPinned
       isRestricted
       label
+      creatorId
+      fanId
       lastMessageId
       totalEarning
+      isCreatorOnline
+      isFanOnline
       lastMessage {
         channelId
         content

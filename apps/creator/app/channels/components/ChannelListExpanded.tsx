@@ -49,7 +49,7 @@ export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
       )}
     >
       <div className="flex min-w-0 items-center gap-3">
-        <OnlinePreview avatarUrl={fanProfile?.user?.avatarUrl as string} isOnline={fanProfile?.user?.isOnline} />
+        <OnlinePreview avatarUrl={fanProfile?.user?.avatarUrl as string} isOnline={channel?.isFanOnline} />
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium">
