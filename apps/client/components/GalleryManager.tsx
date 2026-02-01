@@ -54,6 +54,8 @@ export const GalleryManager = <T,>({
   const isMobile = useIsMobile();
   const renderOptionsOnMobile = isGrid && isMobile;
 
+  const isVideo = (url?: string) => url?.endsWith('.mp4');
+
   const renderItem = (item: T, idx: number) => {
     if (React.isValidElement(item)) return item;
 
@@ -71,14 +73,32 @@ export const GalleryManager = <T,>({
             </div>
 
             {isGrid ? (
-              <Image
-                src={getImageUrl(item) ?? MEOW_FANS_BANNER}
-                alt={`asset_${getKey(item)}`}
-                className="h-full w-full object-cover"
-                loading="lazy"
-                width={300}
-                height={400}
-                unoptimized={true}
+              isVideo(getImageUrl(item)) ? (
+                <video
+                  muted
+                  controls
+                  src={getImageUrl(item)}
+                className="h-full w-full object-cover z-50"
+                  controlsList="nodownload noremoteplayback"
+                />
+              ) : (
+                <Image
+                  src={getImageUrl(item) ?? MEOW_FANS_BANNER}
+                  alt={`asset_${getKey(item)}`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  width={300}
+                  height={400}
+                  unoptimized={true}
+                />
+              )
+            ) : isVideo(getImageUrl(item)) ? (
+              <video
+                muted
+                controls
+                src={getImageUrl(item)}
+                controlsList="nodownload noremoteplayback"
+                className="h-full w-full object-cover z-50"
               />
             ) : (
               <NextImage imageUrl={getImageUrl(item)} alt={`asset_${getKey(item)}`} />
@@ -91,14 +111,32 @@ export const GalleryManager = <T,>({
             <Badge className="absolute top-0 left-0 z-20 m-1">{idx + 1}</Badge>
 
             {isGrid ? (
-              <Image
-                src={getImageUrl(item) ?? MEOW_FANS_BANNER}
-                alt={`asset_${getKey(item)}`}
-                className="h-full w-full object-cover"
-                loading="lazy"
-                width={300}
-                height={100}
-                unoptimized={true}
+              isVideo(getImageUrl(item)) ? (
+                <video
+                  muted
+                  controls
+                  src={getImageUrl(item)}
+                className="h-full w-full object-cover z-50"
+                  controlsList="nodownload noremoteplayback"
+                />
+              ) : (
+                <Image
+                  src={getImageUrl(item) ?? MEOW_FANS_BANNER}
+                  alt={`asset_${getKey(item)}`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  width={300}
+                  height={400}
+                  unoptimized={true}
+                />
+              )
+            ) : isVideo(getImageUrl(item)) ? (
+              <video
+                muted
+                controls
+                src={getImageUrl(item)}
+                className="h-full w-full object-cover z-50"
+                controlsList="nodownload noremoteplayback"
               />
             ) : (
               <Image

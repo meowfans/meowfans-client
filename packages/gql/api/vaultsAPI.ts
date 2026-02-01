@@ -172,6 +172,7 @@ export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
       isPurchased
       isLiked
       unlockPrice
+      vaultId
     }
   }
 `);

@@ -38,7 +38,6 @@ export const CreatorGalleryItem = <T,>({
 
   const content = (
     <>
-      {/* Index Badge */}
       <Badge
         className="
           absolute z-20
@@ -51,12 +50,10 @@ export const CreatorGalleryItem = <T,>({
         #{index + 1}
       </Badge>
 
-      {/* Media */}
       {isImage ? (
         <div className="relative aspect-3/4 w-full overflow-hidden rounded-xs">
           <img src={url} alt={`asset_${key}`} className="h-full w-full object-cover" loading="lazy" />
 
-          {/* Image-only visual overlay (never blocks interaction) */}
           <div
             className="
               pointer-events-none
@@ -71,7 +68,6 @@ export const CreatorGalleryItem = <T,>({
         <video src={url} className="h-full w-full object-cover" muted controls />
       )}
 
-      {/* Custom Overlay (always rendered, but never blocks video controls) */}
       {renderOverlay && (
         <div
           className={`

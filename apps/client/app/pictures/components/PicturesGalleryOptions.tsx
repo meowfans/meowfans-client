@@ -3,6 +3,8 @@ import { PurchaseSheet } from '@/components/modals/PurchaseSheet';
 import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicVaultObjectsOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { FullScreenButton } from '@workspace/ui/globals/FullScreenButton';
+import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface PicturesGalleryProps {
@@ -39,7 +41,10 @@ export const PicturesGalleryOptions: React.FC<PicturesGalleryProps> = ({ vaultOb
       )}
       <div className="flex flex-col justify-end h-full">
         <div className="flex justify-end place-content-end w-full p-2 bg-linear-to-t from-black/70 via-black/30 to-transparent">
-          <div className="flex flex-row justify-between space-x-1">
+          <div className="flex flex-row justify-between space-x-1 items-center">
+            <Link href={`/vaults/${vaultObject.vaultId}`}>
+              <ArrowUpRight className="w-5 h-5" />
+            </Link>
             {vaultObject.isPurchased && (
               <LikeButton
                 className="hover:text-red-500 rounded-xl transition z-10"
