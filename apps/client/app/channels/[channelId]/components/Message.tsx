@@ -31,7 +31,7 @@ export const Message = () => {
     const container = scrollRef.current;
     if (!container) return;
 
-    container.scrollTop = container.scrollHeight;
+    container.scrollTop = 0;
   }, []);
 
   const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
