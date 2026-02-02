@@ -32,6 +32,7 @@ export const appBottomNavButtonOptions = [
   { icon: Video, title: 'Shorts', path: '/shorts' },
   { icon: LucideImage, title: 'Pictures', path: '/pictures' },
   { icon: GalleryVerticalEnd, title: 'Vaults', path: '/vaults' },
+  { icon: Mails, title: 'Channels', path: '/channels' },
   { icon: GalleryHorizontal, title: 'Posts', path: '/posts' },
   { icon: CircleUserRound, title: 'Creators', path: '/creators' },
   { icon: Home, title: 'Dashboard', path: '/dashboard' }
@@ -73,7 +74,7 @@ export const appSideBarButtonOptions = {
         // { label: 'Watch History', url: '/history', emoji: '', icon: History, badge: '10' },
         // { label: 'Messages', url: '/message', emoji: '', icon: MessageCircleCode },
         { label: 'Shorts', url: '/shorts', emoji: '', icon: Video },
-        // { label: 'Messages', url: '/channels', emoji: '', icon: Mails },
+        { label: 'Messages', url: '/channels', emoji: '', icon: Mails },
         { label: 'Following', url: '/following', emoji: '', icon: Group },
         { label: 'Posts', url: '/posts', emoji: '', icon: GalleryHorizontal },
         { label: 'Creators', url: '/creators', emoji: '', icon: BadgeCheck },

@@ -5,7 +5,7 @@ import { useCreator } from '@/hooks/context/useCreator';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessageUIStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
-import { FileType } from '@workspace/gql/generated/graphql';
+import { FileType, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { BadgeDollarSign, ImagePlus, Reply, Send, SquarePen, X } from 'lucide-react';
@@ -72,7 +72,7 @@ export const MessageInput = () => {
     const payload = {
       content: content.trim(),
       senderId: creator.user.id,
-      recipientUserId: channel.fanProfile.user.id,
+      recipientUserId: channel.fanId,
       assetIds: attachments.map((ca) => ca.assetId),
       isExclusive,
       unlockAmount
@@ -175,7 +175,12 @@ export const MessageInput = () => {
               </Button>
             )}
 
-            <Button variant="ghost" size="icon" onClick={() => setOpenAssets(true)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={channel.status !== MessageChannelStatus.Accepted}
+              onClick={() => setOpenAssets(true)}
+            >
               <ImagePlus className="h-5 w-5 text-muted-foreground" />
             </Button>
 
@@ -184,11 +189,18 @@ export const MessageInput = () => {
               onChange={(e) => setContent(e.target.value)}
               className="border-0 focus-visible:ring-0"
               value={content}
+              disabled={channel.status !== MessageChannelStatus.Accepted}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
 
-          <Button type="button" size="icon" variant="outline" onClick={handleSend} disabled={loading}>
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            onClick={handleSend}
+            disabled={loading || channel.status !== MessageChannelStatus.Accepted}
+          >
             {resolveSendButton()}
           </Button>
         </div>

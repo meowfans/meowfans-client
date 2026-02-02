@@ -1,5 +1,4 @@
 import { useChannels } from '@/hooks/useChannels';
-import { MessageChannelParticipantsEntity } from '@workspace/gql/generated/graphql';
 import { normalizePath } from '@workspace/ui/lib/helpers';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -42,17 +41,14 @@ export const ChannelList = () => {
       />
       {loading && <p className="text-sm text-muted-foreground">Loading channels...</p>}
       {channels.map((channel, idx) => {
-        const { creatorProfile, participants, lastMessage } = channel;
-        const creator = participants.find(({ userId }) => userId === channel.creatorId);
-        const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
+        const { lastMessage } = channel;
+        const timestamp = new Date(Number(channel?.creatorLastSeenAt)).getTime();
         const hasSeen = timestamp >= Math.max(new Date(lastMessage?.createdAt).getTime(), new Date(lastMessage?.updatedAt).getTime());
 
         return (
           <ChannelListExpanded
             key={idx}
             channel={channel}
-            creatorParticipant={creator as MessageChannelParticipantsEntity}
-            creatorProfile={creatorProfile}
             hasSeenLastMessage={hasSeen}
             lastMessage={channel?.lastMessage}
             onRowClick={(id) => handleRowClick(id)}

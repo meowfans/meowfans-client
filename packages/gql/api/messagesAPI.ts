@@ -1,98 +1,53 @@
 import { graphql } from '../generated';
 
-export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
-  query GetChannelMessages($input: PaginationInput!) {
-    getChannelMessages(input: $input) {
+export const GET_SINGLE_CHANNEL_QUERY = graphql(`
+  query GetSingleChannel($input: PaginationInput!) {
+    getSingleChannel(input: $input) {
       id
       creatorId
+      creatorAvatarUrl
+      creatorFullname
+      creatorLastSeenAt
+      isCreatorOnline
       fanId
+      fanAvatarUrl
+      fanFullname
+      fanLastSeenAt
+      isFanOnline
+      lastMessageId
       isPinned
       label
       isMuted
       isRestricted
-      isMessagingBlocked
-      isCreatorOnline
+      initiatedByUserId
+      status
       isFanOnline
-      totalEarning
-      participants {
-        id
-        messageChannelId
-        userId
-        role
-        lastSeenAt
-        lastSentAt
-      }
-      creatorProfile {
-        user {
-          avatarUrl
-          bannerUrl
-          firstName
-          id
-          lastLoginAt
-          roles
-          username
-          lastName
-          isOnline
-        }
-        isFollowing
-        creatorId
-        bio
-        allowsMessaging
-      }
-      fanProfile {
-        fanId
-        isBanned
-        user {
-          avatarUrl
-          bannerUrl
-          id
-          firstName
-          lastLoginAt
-          lastName
-          roles
-          username
-          isOnline
-        }
-      }
+      isCreatorOnline
+      isMessagingBlocked
       messages {
-        channelId
-        content
-        createdAt
-        deletedAt
-        hasAccess
         id
-        hasSeen
-        isExclusive
-        recipientUserId
+        content
         senderId
+        recipientUserId
+        channelId
         unlockPrice
+        isExclusive
+        hasAccess
+        repliedToId
+        hasSeen
         unlockedAt
+        createdAt
         updatedAt
         repliedTo {
-          channelId
-          content
-          createdAt
-          deletedAt
-          hasAccess
           id
-          isExclusive
-          recipientUserId
-          senderId
-          unlockPrice
-          unlockedAt
-          updatedAt
+          content
         }
         messageAssets {
-          assetId
-          asset {
-            createdAt
-            fileType
-            id
-            mediaType
-            mimeType
-            rawUrl
-            updatedAt
-          }
+          createdAt
+          fileType
+          id
+          mediaType
+          rawUrl
         }
       }
     }
@@ -102,29 +57,25 @@ export const GET_CHANNEL_MESSAGES_QUERY = graphql(`
 export const SEND_MESSAGE_FROM_CREATOR_MUTATION = graphql(`
   mutation SendMessageFromCreator($input: SendMessageFromCreatorInput!) {
     sendMessageFromCreator(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
+      content
       senderId
+      recipientUserId
+      channelId
       unlockPrice
+      isExclusive
+      hasAccess
+      repliedToId
+      hasSeen
       unlockedAt
+      createdAt
       updatedAt
       messageAssets {
-        assetId
-        asset {
-          createdAt
-          fileType
-          id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-        }
+        createdAt
+        fileType
+        id
+        mediaType
+        rawUrl
       }
     }
   }
@@ -133,17 +84,18 @@ export const SEND_MESSAGE_FROM_CREATOR_MUTATION = graphql(`
 export const SEND_MESSAGE_FROM_FAN_MUTATION = graphql(`
   mutation SendMessageFromFan($input: SendMessageFromFanInput!) {
     sendMessageFromFan(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
+      content
       senderId
+      recipientUserId
+      channelId
       unlockPrice
+      isExclusive
+      hasAccess
+      repliedToId
+      hasSeen
       unlockedAt
+      createdAt
       updatedAt
     }
   }
@@ -152,43 +104,29 @@ export const SEND_MESSAGE_FROM_FAN_MUTATION = graphql(`
 export const SEND_REPLY_FROM_CREATOR_MUTATION = graphql(`
   mutation SendReplyFromCreator($input: SendMessageFromCreatorInput!) {
     sendReplyFromCreator(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
+      content
       senderId
+      recipientUserId
+      channelId
       unlockPrice
+      isExclusive
+      hasAccess
+      repliedToId
+      hasSeen
       unlockedAt
+      createdAt
       updatedAt
       repliedTo {
-        channelId
-        content
-        createdAt
-        deletedAt
-        hasAccess
         id
-        isExclusive
-        recipientUserId
-        senderId
-        unlockPrice
-        unlockedAt
-        updatedAt
+        content
       }
       messageAssets {
-        assetId
-        asset {
-          createdAt
-          fileType
-          id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-        }
+        createdAt
+        fileType
+        id
+        mediaType
+        rawUrl
       }
     }
   }
@@ -197,31 +135,22 @@ export const SEND_REPLY_FROM_CREATOR_MUTATION = graphql(`
 export const SEND_REPLY_FROM_FAN_MUTATION = graphql(`
   mutation SendReplyFromFan($input: SendMessageFromFanInput!) {
     sendReplyFromFan(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
+      content
       senderId
+      recipientUserId
+      channelId
       unlockPrice
+      isExclusive
+      hasAccess
+      repliedToId
+      hasSeen
       unlockedAt
+      createdAt
       updatedAt
       repliedTo {
-        channelId
-        content
-        createdAt
-        deletedAt
-        hasAccess
         id
-        isExclusive
-        recipientUserId
-        senderId
-        unlockPrice
-        unlockedAt
-        updatedAt
+        content
       }
     }
   }
@@ -230,17 +159,18 @@ export const SEND_REPLY_FROM_FAN_MUTATION = graphql(`
 export const UPDATE_MESSAGE_MUTATION = graphql(`
   mutation UpdateMessage($input: UpdateMessageInput!) {
     updateMessage(input: $input) {
-      channelId
-      content
-      createdAt
-      deletedAt
-      hasAccess
       id
-      isExclusive
-      recipientUserId
+      content
       senderId
+      recipientUserId
+      channelId
       unlockPrice
+      isExclusive
+      hasAccess
+      repliedToId
+      hasSeen
       unlockedAt
+      createdAt
       updatedAt
     }
   }

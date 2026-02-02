@@ -4,6 +4,7 @@ import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useMessageInputStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
+import { MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Reply, Send, SquarePen, X } from 'lucide-react';
@@ -35,7 +36,7 @@ export const MessageInput = () => {
     const payload = {
       content: content.trim(),
       senderId: fan?.fanId,
-      recipientUserId: channel.creatorProfile.creatorId
+      recipientUserId: channel.creatorId
     };
 
     if (replyMessageId) await sendReply({ ...payload, messageId: replyMessageId });
@@ -88,11 +89,18 @@ export const MessageInput = () => {
               onChange={(e) => setContent(e.target.value)}
               className="border-0 focus-visible:ring-0"
               value={content}
+              disabled={channel.status !== MessageChannelStatus.Accepted}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
 
-          <Button type="button" size="icon" variant="outline" onClick={handleSend} disabled={loading}>
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            onClick={handleSend}
+            disabled={loading || channel.status !== MessageChannelStatus.Accepted}
+          >
             {resolveSendButton()}
           </Button>
         </div>

@@ -1,11 +1,11 @@
-import { CreatorAssetsEntity, MessagesEntity } from '@workspace/gql/generated/graphql';
+import { CreatorAssetsEntity, MessagesOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type MessageUIStore = {
-  setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
+  setSelectedMessage: (selectedMessage: MessagesOutput | null) => void;
   setUnlockAmount: (unlockAmount: number | null) => void;
   attachments: Array<CreatorAssetsEntity>;
-  selectedMessage: MessagesEntity | null;
+  selectedMessage: MessagesOutput | null;
   setContent: (content: string) => void;
   isEditing: boolean;
   content: string;
@@ -21,7 +21,7 @@ type MessageUIStore = {
 };
 
 export const useMessageUIStore = create<MessageUIStore>()((set) => ({
-  setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
+  setSelectedMessage: (selectedMessage: MessagesOutput | null) => set({ selectedMessage }),
   setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
   setUnlockAmount: (unlockAmount) => set({ unlockAmount }),
   selectedMessage: null,

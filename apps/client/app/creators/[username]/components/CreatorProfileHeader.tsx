@@ -2,7 +2,8 @@
 
 import { AuthAwareButton } from '@/components/AuthAwareButton';
 import { useCreator } from '@/hooks/context/CreatorContextWrapper';
-import { UserContext } from '@/hooks/context/UserContextWrapper';
+import { useFan } from '@/hooks/context/UserContextWrapper';
+import { useCreateChannel } from '@/hooks/useChannels';
 import { useFollowingMutations } from '@/hooks/useFollow';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
@@ -10,13 +11,14 @@ import { formatText } from '@workspace/ui/lib/helpers';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { BlocksIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 
 export const CreatorProfileHeader = () => {
+  const { fan } = useFan();
   const { creator, setCreator } = useCreator();
-  const [fan] = useContext(UserContext);
-  const [unfollowModal, setUnfollowModal] = useState(false);
   const { followCreator } = useFollowingMutations();
+  const { createChannel, loading } = useCreateChannel();
+  const [unfollowModal, setUnfollowModal] = useState(false);
 
   const handleFollowCreator = async () => {
     await followCreator(creator.creatorId);
@@ -50,12 +52,10 @@ export const CreatorProfileHeader = () => {
 
             <div className="pb-1">
               <p className="text-lg font-semibold leading-tight">{creator.fullName}</p>
-
               <p className="text-xs text-muted-foreground">@{creator.username}</p>
+              {creator?.bio && <p className="mt-1 max-w-md text-sm leading-snug text-muted-foreground">{creator.bio}</p>}
 
-              {creator.bio && <p className="mt-1 max-w-md text-sm leading-snug text-muted-foreground">{creator.bio}</p>}
-
-              <div className="mt-3">
+              <div className="mt-3 space-x-1.5">
                 {creator.isFollowing && fan ? (
                   <TriggerModal
                     applyTooltip={{ title: 'Unfollow creator' }}
@@ -68,10 +68,27 @@ export const CreatorProfileHeader = () => {
                   <AuthAwareButton
                     onClick={handleFollowCreator}
                     title="Follow"
+                    size="sm"
                     variant="secondary"
-                    className="rounded-full px-6 py-2 text-sm bg-linear-to-r from-pink-500 via-fuchsia-500 to-yellow-400 hover:opacity-90 text-white font-semibold shadow-md transition-transform hover:scale-[1.03]"
+                    className="rounded-full text-sm bg-linear-to-r
+                     from-pink-500 via-fuchsia-500 to-yellow-400 hover:opacity-90
+                      text-white font-semibold shadow-md transition-transform hover:scale-[1.03]"
                   >
                     Follow
+                  </AuthAwareButton>
+                )}
+                {!creator.isImported && (
+                  <AuthAwareButton
+                    onClick={() => createChannel(creator.creatorId)}
+                    title="Connect"
+                    disabled={loading}
+                    size="sm"
+                    variant="secondary"
+                    className="rounded-full text-sm bg-linear-to-r
+                  from-pink-500 via-fuchsia-500 to-yellow-400 hover:opacity-90
+                  text-white font-semibold shadow-md transition-transform hover:scale-[1.03]"
+                  >
+                    Connect
                   </AuthAwareButton>
                 )}
               </div>
@@ -81,8 +98,8 @@ export const CreatorProfileHeader = () => {
           <div className="grid grid-cols-4 gap-4 rounded-xl border bg-background/80 px-5 py-3 text-center backdrop-blur-sm">
             <StatItem value={creator.totalPost} label="Post" />
             <StatItem value={creator.followersCount} label="Follower" />
-            <StatItem value={creator.assetCount ?? 0} label="Asset" />
-            <StatItem value={creator.vaultCount ?? 0} label="Vault" />
+            <StatItem value={creator.assetCount} label="Asset" />
+            <StatItem value={creator.vaultCount} label="Vault" />
           </div>
         </div>
       </CardContent>

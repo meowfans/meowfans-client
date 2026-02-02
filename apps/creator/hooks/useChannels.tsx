@@ -2,9 +2,10 @@
 
 import { useChannelsActions } from '@workspace/gql/actions';
 import {
+  AcceptChannelRequestInput,
+  ChannelsOutput,
   CreateChannelInput,
-  GetChannelInput,
-  MessageChannelsEntity,
+  MessageChannelStatus,
   PaginationInput,
   UpdateChannelInput
 } from '@workspace/gql/generated/graphql';
@@ -27,7 +28,7 @@ export const useChannels = (input: PaginationInput) => {
 
     try {
       const { data } = await getChannelsQuery({ ...input, skip });
-      const fetchedChannels = (data?.getChannels ?? []) as MessageChannelsEntity[];
+      const fetchedChannels = (data?.getChannels ?? []) as ChannelsOutput[];
 
       const take = input.take ?? fetchedChannels.length;
       setHasMore(fetchedChannels.length === take);
@@ -68,7 +69,7 @@ export const useUpdateChannel = () => {
     setLoading(true);
     try {
       const { data } = await updateChannelMutation(input);
-      const updatedChannel = data?.updateChannel as MessageChannelsEntity;
+      const updatedChannel = data?.updateChannel as ChannelsOutput;
       if (!updatedChannel) return;
 
       setChannels(channels.map((c) => (c.id === updatedChannel.id ? { ...c, ...updatedChannel } : c)));
@@ -84,19 +85,22 @@ export const useUpdateChannel = () => {
   return { loading, updateChannel };
 };
 
-export const useSingleChannel = (input: GetChannelInput) => {
-  const [loading, setLoading] = useState<boolean>(false);
+export const useUpdateChannelStatus = () => {
   const { errorHandler } = useErrorHandler();
-  const { getChannelQuery } = useChannelsActions();
-  const { setChannel, channel } = useChannelsStore();
+  const { successHandler } = useSuccessHandler();
+  const { setChannel } = useChannelsStore();
+  const { updateChannelStatusMutation } = useChannelsActions();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const loadChannel = async () => {
+  const updateChannelStatus = async (input: AcceptChannelRequestInput) => {
     setLoading(true);
     try {
-      const { data } = await getChannelQuery(input);
-      const fetchedChannel = data?.getChannel as MessageChannelsEntity;
-
-      setChannel(fetchedChannel);
+      const { data } = await updateChannelStatusMutation(input);
+      const status = data?.updateChannelStatus as MessageChannelStatus;
+      if (status) {
+        setChannel((prev) => ({ ...prev, status }));
+        successHandler({ message: 'Permission changed', description: status });
+      }
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -104,20 +108,13 @@ export const useSingleChannel = (input: GetChannelInput) => {
     }
   };
 
-  useEffect(() => {
-    loadChannel();
-  }, [input.channelId]); //eslint-disable-line
-
-  return {
-    loading,
-    channel
-  };
+  return { updateChannelStatus, loading };
 };
 
 export const useChannelMutations = () => {
   const router = useRouter();
-  const { setChannel } = useChannelsStore();
   const { errorHandler } = useErrorHandler();
+  const { successHandler } = useSuccessHandler();
   const { createChannelMutation } = useChannelsActions();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -125,11 +122,11 @@ export const useChannelMutations = () => {
     setLoading(true);
     try {
       const { data } = await createChannelMutation(input);
-      const newOrExistingChannel = data?.createChannel as MessageChannelsEntity;
+      const newOrExistingChannelId = data?.createChannel as string;
 
-      if (newOrExistingChannel) {
-        setChannel(newOrExistingChannel);
-        router.push(`/channels/${newOrExistingChannel.id}`);
+      if (newOrExistingChannelId) {
+        router.push(`/channels/${newOrExistingChannelId}`);
+        successHandler({ message: 'New channel created' });
       }
     } catch (error) {
       errorHandler({ error });
