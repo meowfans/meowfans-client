@@ -1,20 +1,19 @@
 'use client';
 
-import { CreatorProfilesEntity } from '@workspace/gql/generated/graphql';
+import { GetPublicCreatorProfileOutput } from '@workspace/gql/generated/graphql';
 import { createContext, useContext, useState } from 'react';
 
-export const CreatorContext = createContext<[CreatorProfilesEntity, React.Dispatch<React.SetStateAction<CreatorProfilesEntity>>]>([
-  {} as CreatorProfilesEntity,
-  () => null
-]);
+export const CreatorContext = createContext<
+  [GetPublicCreatorProfileOutput, React.Dispatch<React.SetStateAction<GetPublicCreatorProfileOutput>>]
+>([{} as GetPublicCreatorProfileOutput, () => null]);
 
 interface Props {
   children: React.ReactNode;
-  creator: CreatorProfilesEntity;
+  creator: GetPublicCreatorProfileOutput;
 }
 
 export function CreatorContextWrapper({ children, creator }: Props) {
-  const [creatorInfo, setCreatorInfo] = useState<CreatorProfilesEntity>(creator);
+  const [creatorInfo, setCreatorInfo] = useState<GetPublicCreatorProfileOutput>(creator);
 
   return <CreatorContext.Provider value={[creatorInfo, setCreatorInfo]}>{children}</CreatorContext.Provider>;
 }

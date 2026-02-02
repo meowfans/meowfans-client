@@ -106,37 +106,18 @@ export const UPDATE_CREATOR_PROFILE_MUTATION = graphql(`
 export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
   query GetPublicCreatorProfile($input: PaginationInput!) {
     getPublicCreatorProfile(input: $input) {
-      allowsComment
-      allowsMessaging
-      bio
       creatorId
-      displayOnlineStatus
-      displayTotalPost
-      displayTotalSubscriber
-      themeColor
-      totalExclusivePost
+      bannerUrl
+      avatarUrl
+      fullName
+      username
+      bio
+      isFollowing
       totalPost
-      totalPublicPost
-      totalSubscriber
       followersCount
       assetCount
       vaultCount
-      viewCount
-      creatorType
-      isFollowing
-      user {
-        avatarUrl
-        bannerUrl
-        createdAt
-        deletedAt
-        firstName
-        id
-        lastLoginAt
-        lastName
-        roles
-        updatedAt
-        username
-      }
+      isImported
     }
   }
 `);

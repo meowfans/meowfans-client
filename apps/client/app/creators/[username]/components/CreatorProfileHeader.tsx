@@ -23,14 +23,14 @@ export const CreatorProfileHeader = () => {
     setCreator((prev) => (prev ? { ...prev, isFollowing: true } : prev));
   };
 
-  if (!creator?.user) return null;
+  if (!creator) return null;
 
   return (
     <Card className="overflow-hidden">
       <div className="relative h-36 sm:h-52 w-full bg-muted">
-        {creator.user.bannerUrl ? (
+        {creator.bannerUrl ? (
           <Image
-            src={creator.user.bannerUrl}
+            src={creator.bannerUrl}
             alt="Profile banner"
             className="h-full w-full object-cover"
             loading="lazy"
@@ -46,14 +46,12 @@ export const CreatorProfileHeader = () => {
       <CardContent className="relative px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="-mt-6 flex items-end gap-4">
-            <SAvatar className="size-24 border bg-background shadow-md" url={creator.user.avatarUrl} />
+            <SAvatar className="size-24 border bg-background shadow-md" url={creator.avatarUrl} />
 
             <div className="pb-1">
-              <p className="text-lg font-semibold leading-tight">
-                {creator.user.firstName} {creator.user?.lastName}
-              </p>
+              <p className="text-lg font-semibold leading-tight">{creator.fullName}</p>
 
-              {creator.user.username && <p className="text-xs text-muted-foreground">@{creator.user.username}</p>}
+              <p className="text-xs text-muted-foreground">@{creator.username}</p>
 
               {creator.bio && <p className="mt-1 max-w-md text-sm leading-snug text-muted-foreground">{creator.bio}</p>}
 

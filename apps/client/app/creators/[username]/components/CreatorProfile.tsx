@@ -1,7 +1,6 @@
 'use client';
 
 import { CreatorContext } from '@/hooks/context/CreatorContextWrapper';
-import { CreatorType } from '@workspace/gql/generated/graphql';
 import { Tabs, TabsContent } from '@workspace/ui/components/tabs';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -20,7 +19,7 @@ export const CreatorProfile = () => {
   const [currentTab, setCurrentTab] = useState<TabProps>(() => {
     const paramTab = searchParams.get('tab') as TabProps | null;
     if (paramTab) return paramTab;
-    return creator?.creatorType.includes(CreatorType.NewUser) ? 'posts' : 'vaults';
+    return !creator?.isImported ? 'posts' : 'vaults';
   });
 
   const handleTabChange = (tab: TabProps) => {
@@ -39,11 +38,11 @@ export const CreatorProfile = () => {
     <PageManager>
       <Tabs value={currentTab} onValueChange={(val) => handleTabChange(val as TabProps)}>
         <TabsContent value="posts">
-          <CreatorProfilePosts username={creator.user.username} />
+          <CreatorProfilePosts username={creator.username} />
         </TabsContent>
 
         <TabsContent value="vaults">
-          <CreatorProfileVaults username={creator.user.username} />
+          <CreatorProfileVaults username={creator.username} />
         </TabsContent>
       </Tabs>
     </PageManager>
