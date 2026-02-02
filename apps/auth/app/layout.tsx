@@ -5,18 +5,14 @@ import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headerList = headers();
-  const pathname = (await headerList).get('x-pathname') ?? '';
-
   const metadata = {
     metadataBase: new URL(AppConfig.siteUrl),
     title: {
       template: AppConfig.template,
-      default: `${AppConfig.title} | ${pathname?.substring(1)}`
+      default: AppConfig.title
     },
     alternates: {
       canonical: AppConfig.canonical
@@ -31,6 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: AppConfig.type as 'website',
       locale: AppConfig.locale,
       url: AppConfig.siteUrl
+    },
+    robots: {
+      index: true,
+      follow: true
     },
     generator: 'Next.js',
     keywords: AppConfig.keywords,

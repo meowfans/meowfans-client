@@ -16,18 +16,16 @@ import { cn } from '@workspace/ui/lib/utils';
 import { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
-  const pathname = (await headersList).get('x-pathname') ?? '';
   const metadata = {
     metadataBase: new URL(AppConfig.siteUrl),
     title: {
       template: AppConfig.template,
-      default: `${AppConfig.title} | ${pathname.substring(1)}`
+      default: AppConfig.title
     },
     alternates: {
       canonical: AppConfig.canonical
@@ -42,6 +40,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: AppConfig.type as 'website',
       locale: AppConfig.locale,
       url: AppConfig.siteUrl
+    },
+    robots: {
+      index: true,
+      follow: true
     },
     generator: 'Next.js',
     keywords: AppConfig.keywords,
