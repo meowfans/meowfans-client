@@ -1,13 +1,12 @@
 'use client';
 
 import { GalleryManager } from '@/components/GalleryManager';
-
 import { VaultsGalleryOptions } from '@/components/VaultsGalleryOptions';
 import { useVaults } from '@/hooks/useVaults';
+import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { CreatorProfileHeader } from './CreatorProfileHeader';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 
 interface Props {
   username: string;
