@@ -82,4 +82,4 @@ We encourage the use of [Conventional Commits](https://www.conventionalcommits.o
 
 ## Join The Project Team
 
-If you are interested in becoming a long-term maintainer, please [reach](https://discord.gg/KBVk543u) out to us!
+If you are interested in becoming a long-term maintainer, please [reach](https://discord.gg/MVwr47AVDr) out to us!
