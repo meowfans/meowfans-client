@@ -4,7 +4,7 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   DELETE_MESSAGE_MUTATION,
   DELETE_MESSAGES_MUTATION,
-  GET_CHANNEL_MESSAGES_QUERY,
+  GET_SINGLE_CHANNEL_QUERY,
   SEND_MESSAGE_FROM_CREATOR_MUTATION,
   SEND_MESSAGE_FROM_FAN_MUTATION,
   SEND_REPLY_FROM_CREATOR_MUTATION,
@@ -21,7 +21,7 @@ import {
 } from '../generated/graphql';
 
 export const useMessagesActions = () => {
-  const [getChannelMessages] = useLazyQuery(GET_CHANNEL_MESSAGES_QUERY);
+  const [getSingleChannel] = useLazyQuery(GET_SINGLE_CHANNEL_QUERY);
   const [sendMessageFromCreator] = useMutation(SEND_MESSAGE_FROM_CREATOR_MUTATION);
   const [sendMessageFromFan] = useMutation(SEND_MESSAGE_FROM_FAN_MUTATION);
   const [sendReplyFromCreator] = useMutation(SEND_REPLY_FROM_CREATOR_MUTATION);
@@ -30,8 +30,8 @@ export const useMessagesActions = () => {
   const [deleteMessage] = useMutation(DELETE_MESSAGE_MUTATION);
   const [deleteMessages] = useMutation(DELETE_MESSAGES_MUTATION);
 
-  const getChannelMessagesQuery = (input: PaginationInput) => {
-    return getChannelMessages({ variables: { input } });
+  const getSingleChannelQuery = (input: PaginationInput) => {
+    return getSingleChannel({ variables: { input } });
   };
 
   const sendMessageFromCreatorMutation = (input: SendMessageFromCreatorInput) => {
@@ -63,7 +63,7 @@ export const useMessagesActions = () => {
   };
 
   return {
-    getChannelMessagesQuery,
+    getSingleChannelQuery,
     sendMessageFromCreatorMutation,
     sendMessageFromFanMutation,
     sendReplyFromCreatorMutation,

@@ -5,14 +5,15 @@ import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useChannelMessages } from '@/hooks/useMessages';
 import { useQuery } from '@apollo/client/react';
 import { UPDATE_LAST_SEEN_QUERY } from '@workspace/gql/api';
-import { SortOrder } from '@workspace/gql/generated/graphql';
+import { MessageChannelStatus, SortOrder } from '@workspace/gql/generated/graphql';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Toggle } from '@workspace/ui/globals/Toggle';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { MessageHeader } from './MessageHeader';
+import { ChannelAcceptancePreview } from './ChannelAcceptancePreview';
 import { MessageInput } from './Input';
+import { MessageHeader } from './MessageHeader';
 import { MessageThread } from './MessageThread';
 import { MultiSelectButtons } from './MultiSelectButtons';
 
@@ -90,7 +91,15 @@ export const Message = () => {
           </div>
         </InfiniteScrollManager>
       </div>
-      {openMultiSelect ? <MultiSelectButtons /> : <MessageInput />}
+      {channel.status === MessageChannelStatus.Accepted ? (
+        openMultiSelect ? (
+          <MultiSelectButtons />
+        ) : (
+          <MessageInput />
+        )
+      ) : (
+        <ChannelAcceptancePreview channel={channel} />
+      )}
     </div>
   );
 };

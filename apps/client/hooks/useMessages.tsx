@@ -2,10 +2,10 @@
 
 import { useMessagesActions } from '@workspace/gql/actions';
 import {
+  ChannelsOutput,
   DeleteMessageInput,
   DeleteMessagesInput,
-  MessageChannelsEntity,
-  MessagesEntity,
+  MessagesOutput,
   PaginationInput,
   SendMessageFromFanInput,
   UpdateMessageInput
@@ -20,7 +20,7 @@ export const useChannelMessages = (input: PaginationInput) => {
   const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { channel, setChannel } = useChannelsStore();
-  const { getChannelMessagesQuery } = useMessagesActions();
+  const { getSingleChannelQuery } = useMessagesActions();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
@@ -29,9 +29,9 @@ export const useChannelMessages = (input: PaginationInput) => {
     setLoading(channel.messages?.length === 0);
 
     try {
-      const { data } = await getChannelMessagesQuery({ ...input, skip });
-      const fetchedChannel = data?.getChannelMessages as MessageChannelsEntity;
-      const fetchedMessages = fetchedChannel.messages ?? [];
+      const { data } = await getSingleChannelQuery({ ...input, skip });
+      const fetchedChannel = data?.getSingleChannel as ChannelsOutput;
+      const fetchedMessages = (fetchedChannel.messages as MessagesOutput[]) ?? [];
 
       const take = input.take ?? fetchedMessages.length;
       setHasMore(fetchedMessages.length === take);
@@ -53,7 +53,7 @@ export const useChannelMessages = (input: PaginationInput) => {
   };
 
   const handleRefresh = () => {
-    setChannel({} as MessageChannelsEntity);
+    setChannel({} as ChannelsOutput);
     loadMessages(true);
   };
 
@@ -66,7 +66,7 @@ export const useChannelMessages = (input: PaginationInput) => {
       loading: false,
       hasMore: false,
       handleLoadMore: () => null,
-      channel: {} as MessageChannelsEntity
+      channel: {} as ChannelsOutput
     };
 
   return { channel, loading, hasMore, handleLoadMore, handleRefresh };
@@ -84,7 +84,7 @@ export const useMessageMutations = () => {
     setLoading(true);
     try {
       const { data } = await sendMessageFromFanMutation(input);
-      const newMessage = data?.sendMessageFromFan as MessagesEntity;
+      const newMessage = data?.sendMessageFromFan as MessagesOutput;
       if (newMessage) {
         setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
@@ -120,7 +120,7 @@ export const useMessageMutations = () => {
     setLoading(true);
     try {
       const { data } = await sendReplyFromFanMutation(input);
-      const newMessage = data?.sendReplyFromFan as MessagesEntity;
+      const newMessage = data?.sendReplyFromFan as MessagesOutput;
       if (newMessage) {
         setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
         setChannels((prev) =>
@@ -139,7 +139,7 @@ export const useMessageMutations = () => {
     setLoading(true);
     try {
       const { data } = await updateMessageMutation(input);
-      const updated = data?.updateMessage as MessagesEntity;
+      const updated = data?.updateMessage as MessagesOutput;
       if (updated) {
         setChannel((prev) => ({ ...prev, messages: prev.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) }));
         setChannels((prev) => prev.map((channel) => (channel.id === updated.channelId ? { ...channel, lastMessage: updated } : channel)));

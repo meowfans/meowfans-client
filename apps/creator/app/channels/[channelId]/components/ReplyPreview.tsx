@@ -1,9 +1,9 @@
-import { MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesOutput } from '@workspace/gql/generated/graphql';
 import { cn } from '@workspace/ui/lib/utils';
 import { Reply } from 'lucide-react';
 
 interface ReplyPreviewProps {
-  repliedTo: MessagesEntity;
+  repliedTo: MessagesOutput;
   isSender: boolean;
   onScroll: (id: string) => unknown;
 }

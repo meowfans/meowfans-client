@@ -1,6 +1,6 @@
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useUpdateChannel } from '@/hooks/useChannels';
-import { MessageChannelsEntity, UpdateChannelInput } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput, UpdateChannelInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface MessageHeaderProps {
-  channel: MessageChannelsEntity;
+  channel: ChannelsOutput;
 }
 
 export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
@@ -45,13 +45,11 @@ export const MessageHeader: React.FC<MessageHeaderProps> = ({ channel }) => {
           <ArrowBigLeftDash />
         </Button>
         <div className="cursor-pointer">
-          <OnlinePreview avatarUrl={channel?.fanProfile?.user?.avatarUrl as string} isOnline={channel.isFanOnline} />
+          <OnlinePreview avatarUrl={channel.fanAvatarUrl as string} isOnline={channel.isFanOnline} />
         </div>
         <div className="flex flex-col">
-          <p className="font-bold">
-            {channel.fanProfile?.user?.firstName} {channel.fanProfile?.user?.lastName}
-          </p>
-          <p className="font-semibold text-xs">{moment(channel.fanProfile?.user?.lastLoginAt).format('hh:mm')}</p>
+          <p className="font-bold">{channel.fanFullname}</p>
+          {channel?.fanLastSeenAt && <p className="font-semibold text-xs">{moment(channel.fanLastSeenAt).format('hh:mm')}</p>}
         </div>
       </div>
       <div className="flex flex-row items-center space-x-3">

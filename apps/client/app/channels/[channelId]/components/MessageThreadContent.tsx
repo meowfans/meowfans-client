@@ -1,5 +1,5 @@
 import { useChannelsStore } from '@/hooks/store/channels.store';
-import { MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesOutput } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
 import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { cn } from '@workspace/ui/lib/utils';
@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { ReplyPreview } from './ReplyPreview';
 
 interface MessageThreadContentProps {
-  message: MessagesEntity;
+  message: MessagesOutput;
   isSender: boolean;
 }
 
@@ -16,8 +16,7 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
   const { channel } = useChannelsStore();
 
   const hasSeen = useMemo(() => {
-    const creator = channel.participants.find(({ userId }) => userId !== channel.fanId);
-    const timestamp = creator ? new Date(Number(creator.lastSeenAt)).getTime() : new Date(0).getTime();
+    const timestamp = new Date(Number(channel?.creatorLastSeenAt)).getTime();
     return timestamp >= Math.max(new Date(message.createdAt).getTime(), new Date(message.updatedAt).getTime());
   }, [channel, message]);
 
@@ -43,10 +42,10 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
         <div className="w-50">
           <Carousel
             items={message.messageAssets}
-            getKey={({ asset }) => asset.id}
-            getUrl={({ asset }) => asset.rawUrl}
-            getFileType={({ asset }) => asset.fileType}
-            urls={message.messageAssets.map(({ asset }) => asset.rawUrl)}
+            getKey={({ id }) => id}
+            getUrl={({ rawUrl }) => rawUrl}
+            getFileType={({ fileType }) => fileType}
+            urls={message.messageAssets.map(({ rawUrl }) => rawUrl)}
           />
         </div>
       )}

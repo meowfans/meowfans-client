@@ -1,22 +1,22 @@
-import { MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type MessageInputStore = {
-  selectedMessage: MessagesEntity | null;
+  selectedMessage: MessagesOutput | null;
   isEditing: boolean;
   content: string;
   replyMessageId: string | null;
   setContent: (content: string) => void;
   setIsEditing: (isEditing: boolean) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
-  setSelectedMessage: (selectedMessage: MessagesEntity | null) => void;
+  setSelectedMessage: (selectedMessage: MessagesOutput | null) => void;
 };
 
 export const useMessageInputStore = create<MessageInputStore>()((set) => ({
   setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
   selectedMessage: null,
   isEditing: false,
-  setSelectedMessage: (selectedMessage: MessagesEntity | null) => set({ selectedMessage }),
+  setSelectedMessage: (selectedMessage: MessagesOutput | null) => set({ selectedMessage }),
   content: '',
   replyMessageId: null,
   setContent: (content) => set({ content }),

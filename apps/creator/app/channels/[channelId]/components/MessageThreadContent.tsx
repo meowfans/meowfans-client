@@ -1,6 +1,5 @@
-import { useCreator } from '@/hooks/context/useCreator';
 import { useChannelsStore } from '@/hooks/store/channels.store';
-import { MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesOutput } from '@workspace/gql/generated/graphql';
 import { Carousel } from '@workspace/ui/globals/Carousel';
 import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { formatDate } from '@workspace/ui/lib/formatters';
@@ -9,19 +8,17 @@ import { useMemo } from 'react';
 import { ReplyPreview } from './ReplyPreview';
 
 interface MessageThreadContentProps {
-  message: MessagesEntity;
+  message: MessagesOutput;
   isSender: boolean;
 }
 
 export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ message, isSender }) => {
   const { channel } = useChannelsStore();
-  const { creator } = useCreator();
 
   const hasSeen = useMemo(() => {
-    const fan = channel.participants.find(({ userId }) => userId !== creator.creatorId);
-    const timestamp = fan ? new Date(Number(fan.lastSeenAt)).getTime() : new Date(0).getTime();
+    const timestamp = new Date(Number(channel?.fanLastSeenAt)).getTime();
     return timestamp >= Math.max(new Date(message.createdAt).getTime(), new Date(message.updatedAt).getTime());
-  }, [channel, message, creator]);
+  }, [channel, message]);
 
   const handleScrollToRepliedMessage = (messageId: string) => {
     const element = document.getElementById(`msg-${messageId}`);
@@ -45,10 +42,10 @@ export const MessageThreadContent: React.FC<MessageThreadContentProps> = ({ mess
         <div className="w-50">
           <Carousel
             items={message.messageAssets}
-            getKey={({ asset }) => asset.id}
-            getUrl={({ asset }) => asset.rawUrl}
-            getFileType={({ asset }) => asset.fileType}
-            urls={message.messageAssets.map(({ asset }) => asset.rawUrl)}
+            getKey={({ id }) => id}
+            getUrl={({ rawUrl }) => rawUrl}
+            getFileType={({ fileType }) => fileType}
+            urls={message.messageAssets.map(({ rawUrl }) => rawUrl)}
           />
         </div>
       )}

@@ -1,9 +1,4 @@
-import {
-  FanProfilesEntity,
-  MessageChannelParticipantsEntity,
-  MessageChannelsEntity,
-  MessagesEntity
-} from '@workspace/gql/generated/graphql';
+import { ChannelsOutput, MessagesOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import {
   DropdownMenu,
@@ -20,21 +15,12 @@ import moment from 'moment';
 
 interface ChannelListExpandedProps {
   onRowClick: (id: string) => unknown;
-  channel: MessageChannelsEntity;
-  fanProfile: FanProfilesEntity;
-  lastMessage?: MessagesEntity | null;
+  channel: ChannelsOutput;
+  lastMessage?: MessagesOutput | null;
   hasSeenLastMessage: boolean;
-  fanParticipant: MessageChannelParticipantsEntity;
 }
 
-export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
-  onRowClick,
-  channel,
-  fanProfile,
-  lastMessage,
-  fanParticipant,
-  hasSeenLastMessage
-}) => {
+export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({ onRowClick, channel, lastMessage, hasSeenLastMessage }) => {
   return (
     <div
       role="button"
@@ -49,18 +35,15 @@ export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
       )}
     >
       <div className="flex min-w-0 items-center gap-3">
-        <OnlinePreview avatarUrl={fanProfile?.user?.avatarUrl as string} isOnline={channel?.isFanOnline} />
+        <OnlinePreview avatarUrl={channel.fanAvatarUrl as string} isOnline={channel?.isFanOnline} />
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-medium">
-            {fanProfile?.user?.firstName} {fanProfile?.user?.lastName}
-          </p>
+          <p className="truncate text-xs font-medium">{channel.fanFullname}</p>
 
           <div className="mt-0.5 flex items-center gap-2">
-            <SeenPreview isSender={fanParticipant?.userId === lastMessage?.recipientUserId} seen={hasSeenLastMessage} />
-
+            <SeenPreview isSender={channel.fanId === lastMessage?.recipientUserId} seen={hasSeenLastMessage} />
             <p className={cn('min-w-0 flex-1 truncate text-xs', hasSeenLastMessage ? 'text-muted-foreground' : 'text-primary font-medium')}>
-              {lastMessage?.content ?? 'Last message is erased'}
+              {lastMessage?.content ?? ''}
             </p>
 
             <span className="shrink-0 text-[11px] text-muted-foreground">
@@ -78,7 +61,7 @@ export const ChannelListExpanded: React.FC<ChannelListExpandedProps> = ({
               size="icon"
               className="h-8 w-8 opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
               onClick={(e) => e.stopPropagation()}
-              aria-label={`Options for ${fanProfile?.user?.username}`}
+              aria-label={`Options for`}
             >
               <EllipsisVertical className="h-4 w-4" />
             </Button>

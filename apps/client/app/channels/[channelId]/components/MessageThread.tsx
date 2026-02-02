@@ -1,6 +1,6 @@
 import { useMessageInputStore } from '@/hooks/store/message.store';
 import { useMessageMutations } from '@/hooks/useMessages';
-import { MessagesEntity } from '@workspace/gql/generated/graphql';
+import { MessagesEntity, MessagesOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
@@ -8,7 +8,7 @@ import { ChevronDown, Delete, Edit, Flag, Reply } from 'lucide-react';
 import { MessageThreadContent } from './MessageThreadContent';
 
 interface Props {
-  message: MessagesEntity;
+  message: MessagesOutput;
   isSender?: boolean;
 }
 

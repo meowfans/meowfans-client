@@ -1,4 +1,4 @@
-import { MessageChannelsEntity } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -14,7 +14,7 @@ import { EllipsisVertical } from 'lucide-react';
 interface ChannelSelectionDropdownProps {
   multiSelect: boolean;
   selectedCount: number;
-  channels: MessageChannelsEntity[];
+  channels: ChannelsOutput[];
   onSelect: () => unknown;
   setSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
