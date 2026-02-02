@@ -55,7 +55,7 @@ export const Events = () => {
     setChannel((prev) => {
       return {
         ...prev,
-        creatorLastSeenAt: prev.creatorId === senderId ? seenAt : prev.creatorLastSeenAt
+        creatorLastSeenAt: prev.creatorId === senderId && prev.id === channelId ? seenAt : prev.creatorLastSeenAt
       };
     });
 
@@ -63,7 +63,7 @@ export const Events = () => {
       prev?.map((channel) => {
         return {
           ...channel,
-          creatorLastSeenAt: channel.creatorId === senderId ? seenAt : channel.creatorLastSeenAt
+          creatorLastSeenAt: channel.creatorId === senderId && channel.id === channelId ? seenAt : channel.creatorLastSeenAt
         };
       })
     );

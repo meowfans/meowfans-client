@@ -23,7 +23,7 @@ export const Events = () => {
     setChannel((prev) => {
       return {
         ...prev,
-        fanLastSeenAt: prev.fanId === senderId ? seenAt : prev.fanLastSeenAt
+        fanLastSeenAt: prev.fanId === senderId && channelId === prev.id ? seenAt : prev.fanLastSeenAt
       };
     });
 
@@ -31,7 +31,7 @@ export const Events = () => {
       prev?.map((channel) => {
         return {
           ...channel,
-          fanLastSeenAt: channel.fanId === senderId ? seenAt : channel.fanLastSeenAt
+          fanLastSeenAt: channel.fanId === senderId && channelId === channel.id ? seenAt : channel.fanLastSeenAt
         };
       })
     );
