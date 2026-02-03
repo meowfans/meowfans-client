@@ -1,6 +1,6 @@
 'use client';
 
-import Loading from '@/app/loading';
+import Loading from '@/app/@v1/loading';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';
 import React from 'react';
 import { ExoAdProvider, ExoAdZoneTypes, GalleryZoneIds } from './ExoAdProvider';

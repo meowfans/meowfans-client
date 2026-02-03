@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-params', `${pathname}${search}`);
   requestHeaders.set('x-pathname', pathname);
