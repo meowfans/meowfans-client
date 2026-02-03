@@ -5,6 +5,7 @@ import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { CreatorSignupInput } from '@workspace/ui/lib/types';
+import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { Header } from './Header';
@@ -21,8 +22,7 @@ const emptyInput: CreatorSignupInput = {
   username: ''
 };
 
-const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp }) => {
-  const [isDisabled] = useState<boolean>(false);
+const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
   const [activeTab, setActiveTab] = useState<string>('account');
   const [input, setInput] = useState<CreatorSignupInput>(emptyInput);
   const [initialInput, setInitialInput] = useState<CreatorSignupInput>(emptyInput);
@@ -113,7 +113,8 @@ const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp }) => {
               {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
             </div>
 
-            <Button type="submit" className="w-full z-50" disabled={isDisabled}>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading && <Loader2Icon className="animate-spin mr-2" />}
               Signup
             </Button>
           </TabsContent>

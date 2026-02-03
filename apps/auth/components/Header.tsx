@@ -1,4 +1,3 @@
-import { Icons } from '@/lib/icons/Icons';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { AuthPaths } from '@workspace/ui/lib/enums';
 import { usePathname } from 'next/navigation';
@@ -11,7 +10,6 @@ export const Header = () => {
         <div className="flex flex-col">
           <div className="flex flex-row justify-between">
             <ReturnToPreviousPage className="md:hidden" />
-            <div>{Icons.appIcon()}</div>
           </div>
           <div className="flex flex-col items-center text-center">
             <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -25,7 +23,6 @@ export const Header = () => {
         <div className="flex flex-col">
           <div className="flex flex-row justify-between">
             <ReturnToPreviousPage className="md:hidden" />
-            <div>{Icons.appIcon()}</div>
           </div>
           <div className="flex flex-col items-center text-center">
             <h1 className="text-2xl font-bold">Hi new user!</h1>
@@ -39,7 +36,6 @@ export const Header = () => {
         <div className="flex flex-col">
           <div className="flex flex-row justify-between">
             <ReturnToPreviousPage className="md:hidden" />
-            <div>{Icons.appIcon()}</div>
           </div>
           <div className="flex flex-col items-center text-center">
             <h1 className="text-2xl font-bold">Forgot your password!</h1>
@@ -55,7 +51,6 @@ export const Header = () => {
         <div className="flex flex-col">
           <div className="flex flex-row justify-between">
             <ReturnToPreviousPage className="md:hidden" />
-            <div>{Icons.appIcon()}</div>
           </div>
           <div className="flex flex-col items-center text-center">
             <h1 className="text-2xl font-bold">Start your journey being a creator!</h1>

@@ -173,6 +173,7 @@ export const GET_CREATOR_PROFILE_QUERY = graphql(`
       followersCount
       assetCount
       viewCount
+      status
       user {
         avatarUrl
         bannerUrl

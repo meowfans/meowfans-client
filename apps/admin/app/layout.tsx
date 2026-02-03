@@ -46,11 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true
     },
     generator: 'Next.js',
-    keywords: AppConfig.keywords,
-    icons: [
-      { rel: 'apple-touch-icon', url: '/icons/logo_256.png' },
-      { rel: 'icon', url: '/icons/logo_256.png' }
-    ]
+    keywords: AppConfig.keywords
   } satisfies Metadata;
   return metadata;
 }
@@ -111,8 +107,6 @@ export default async function RootLayout({ children }: Props) {
         <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
         <meta name="classification" content="Adult" />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="icon" href="/icons/logo_192.png" />
-        <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
 
       <body className={cn(inter.variable, 'overscroll-none')}>

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@workspace/ui/components/button';
-import { Icons } from '@/lib/icons/Icons';
 
 const OtherLogin = () => {
   return (
@@ -11,15 +10,12 @@ const OtherLogin = () => {
       </div>
       <div className="grid grid-cols-3 gap-4">
         <Button variant="outline" type="button" className="w-full">
-          {Icons.appleIcon()}
           <span className="sr-only">Login with Apple</span>
         </Button>
         <Button variant="outline" type="button" className="w-full">
-          {Icons.googleIcon()}
           <span className="sr-only">Login with Google</span>
         </Button>
         <Button variant="outline" type="button" className="w-full">
-          {Icons.metaIcon()}
           <span className="sr-only">Login with Meta</span>
         </Button>
       </div>

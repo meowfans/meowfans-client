@@ -1,7 +1,6 @@
 'use client';
 import { useZonesStore } from '@/hooks/store/zones.store';
 import { legalAndAppPaths } from '@/lib/constants';
-import { Icons } from '@/lib/icons/Icons';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
@@ -42,7 +41,6 @@ const AppHeader: React.FC = () => {
               onClick={() => router.push('/')}
             >
               <ReturnToPreviousPage applyReturn />
-              {Icons.appIcon()}
             </div>
 
             {!legalAndAppPaths.includes(pathname) && <LightHouse variant={isMobile ? 'mobile' : 'desktop'} />}
