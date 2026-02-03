@@ -1,6 +1,6 @@
 'use client';
 
-import Loading from '@/app/loading';
+import Loading from '@/app/@v1/loading';
 import { Badge } from '@workspace/ui/components/badge';
 import { ScrollArea } from '@workspace/ui/components/scroll-area';
 import { EmptyElement } from '@workspace/ui/globals/EmptyElement';

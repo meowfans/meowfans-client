@@ -1,6 +1,3 @@
-import { AgeConfirmation } from '@/app/(legal)/components/AgeConfirmation';
-import { CookieBanner } from '@/app/(legal)/components/CookieBanner';
-import { AppSidebar } from '@/components/AppSideBar';
 import { Events } from '@/components/Events';
 import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
@@ -11,13 +8,10 @@ import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { FanProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
-import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
-import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { AuthUserRoles, buildSafeUrl, decodeJwtToken, fanCookieKey, FetchMethods } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
-import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -110,8 +104,14 @@ const handleValidateAuth = async () => {
   }
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+interface RootLayoutProps {
+  v1: React.ReactNode;
+  v2: React.ReactNode;
+}
+
+export default async function RootLayout({ v1, v2 }: RootLayoutProps) {
   const fan = await handleValidateAuth();
+  const version = configService.NEXT_PUBLIC_APP_VERSION;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -140,21 +140,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Fan}>
           <UserContextWrapper fan={fan}>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <AgeConfirmation />
-              <SidebarProvider>
-                <div className="flex w-full min-h-screen overflow-hidden">
-                  <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-h-screen">
-                    <Toaster position="top-center" closeButton richColors theme="system" />
-                    <EventsProvider />
-                    <Events />
-                    <main className="flex-1 w-full overflow-x-hidden">{children}</main>
-                  </SidebarInset>
-                </div>
-              </SidebarProvider>
-              <CookieBanner />
-            </ThemeProvider>
+            <EventsProvider />
+            <Events />
+            {version === 'v2' ? v2 : v1}
           </UserContextWrapper>
         </ApolloWrapper>
       </body>
