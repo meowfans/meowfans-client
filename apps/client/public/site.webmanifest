@@ -1,7 +1,7 @@
 {
   "name": "Fan",
   "description": "Become a meowfans member",
-  "short_name": "MeowFans",
+  "short_name": "Fan",
   "start_url": "/",
   "background_color": "#FFFFFF",
   "theme_color": "#FFFFFF",
