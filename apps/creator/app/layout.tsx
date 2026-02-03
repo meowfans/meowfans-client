@@ -1,5 +1,6 @@
 import { AppBottomNav } from '@/components/AppBottomNav';
 import { AppSidebar } from '@/components/AppSideBar';
+import { CreatorStatusLayout } from '@/components/CreatorStatusLayout';
 import { Events } from '@/components/Events';
 import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { CreatorContextWrapper } from '@/hooks/context/useCreator';
@@ -9,7 +10,7 @@ import { configService } from '@/util/config';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { GET_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI';
-import { CreatorProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
+import { CreatorApprovalStatus, CreatorProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
 import '@workspace/ui/globals.css';
 import { AuthUserRoles, buildSafeUrl, creatorCookieKey, decodeJwtToken, FetchMethods } from '@workspace/ui/lib';
@@ -49,11 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true
     },
     generator: 'Next.js',
-    keywords: AppConfig.keywords,
-    icons: [
-      { rel: 'apple-touch-icon', url: '/icons/logo_256.png' },
-      { rel: 'icon', url: '/icons/logo_256.png' }
-    ]
+    keywords: AppConfig.keywords
   } satisfies Metadata;
   return metadata;
 }
@@ -100,11 +97,11 @@ const validateCreatorSession = cache(async () => {
   return getCreatorProfile();
 });
 
-interface Props {
+interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function RootLayout({ children }: Props) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   const creator = await validateCreatorSession();
 
   return (
@@ -114,9 +111,6 @@ export default async function RootLayout({ children }: Props) {
         <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
         <meta name="classification" content="Adult" />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="icon" href="/icons/logo_192.png" />
-        <link rel="icon" href="/icons/32.png" />
-        <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
       <body className={cn(inter.variable, 'overscroll-none ')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Creator}>
@@ -129,18 +123,21 @@ export default async function RootLayout({ children }: Props) {
               value={{ light: 'light', dark: 'dark' }}
             >
               <Toaster richColors position="top-center" closeButton theme={'system'} />
-              <SidebarProvider>
-                <div className="flex h-screen w-full overflow-hidden">
-                  <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-w-0">
-                    <Toaster position="top-center" closeButton richColors theme="system" />
-                    <EventsProvider />
-                    <Events />
-                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
-                  </SidebarInset>
-                </div>
-              </SidebarProvider>
-              <AppBottomNav />
+              {creator.status === CreatorApprovalStatus.Accepted ? (
+                <SidebarProvider>
+                  <div className="flex h-screen w-full overflow-hidden">
+                    <AppSidebar />
+                    <SidebarInset className="flex flex-1 flex-col min-w-0">
+                      <EventsProvider />
+                      <Events />
+                      <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
+                    </SidebarInset>
+                  </div>
+                  <AppBottomNav />
+                </SidebarProvider>
+              ) : (
+                <CreatorStatusLayout status={creator.status} />
+              )}
             </ThemeProvider>
           </CreatorContextWrapper>
         </ApolloWrapper>

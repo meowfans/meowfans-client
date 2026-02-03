@@ -1,4 +1,5 @@
 import { AppConfig } from '@/lib/app.config';
+import { configService } from '@/util/config';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { cn } from '@workspace/ui/lib/utils';
@@ -33,11 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true
     },
     generator: 'Next.js',
-    keywords: AppConfig.keywords,
-    icons: [
-      { rel: 'apple-touch-icon', url: '/icons/logo_256.png' },
-      { rel: 'icon', url: '/icons/logo_256.png' }
-    ]
+    keywords: AppConfig.keywords
   } satisfies Metadata;
   return metadata;
 }
@@ -53,10 +50,12 @@ export const viewport: Viewport = {
 };
 
 interface Props {
-  children: React.ReactNode;
+  v1: React.ReactNode;
+  v2: React.ReactNode;
 }
 
-export default async function RootLayout({ children }: Props) {
+export default async function RootLayout({ v1, v2 }: Props) {
+  const VERSION = configService.NEXT_PUBLIC_APP_VERSION;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -64,9 +63,6 @@ export default async function RootLayout({ children }: Props) {
         <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
         <meta name="classification" content="Adult" />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="icon" href="/icons/logo_192.png" />
-        <link rel="icon" href="/icons/32.png" />
-        <link rel="apple-touch-icon" href="/icons/logo_512.png" />
       </head>
       <body className={cn(inter.variable, 'overscroll-none')}>
         <Toaster position="top-center" richColors />
@@ -77,7 +73,7 @@ export default async function RootLayout({ children }: Props) {
           disableTransitionOnChange
           value={{ light: 'light', dark: 'dark' }}
         >
-          <main className="w-full">{children}</main>
+          {VERSION === 'v1' ? v1 : v2}
         </ThemeProvider>
       </body>
     </html>

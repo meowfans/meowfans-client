@@ -1,0 +1,72 @@
+import { ImageResponse } from 'next/og';
+
+export const runtime = 'edge';
+
+export const size = {
+  width: 180,
+  height: 180
+};
+export const contentType = 'image/png';
+
+export default function Icon() {
+  return new ImageResponse(
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'transparent'
+      }}
+    >
+      <svg width="180" height="180" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ec4899" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+          </linearGradient>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        <rect width="100" height="100" rx="20" fill="#09090b" />
+
+        <g filter="url(#glow)">
+          <path
+            d="M20 70 V 35 L 50 65 L 80 35 V 70"
+            stroke="url(#g)"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          <path d="M20 35 L 20 20 L 40 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M80 35 L 80 20 L 60 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+
+        {/* Fan Subscript with 'F' */}
+        <g>
+          {/* Heart/Shield shape for Fan */}
+          <path
+            d="M82 68 C 82 68 68 76 68 84 C 68 89 71 94 75 94 C 78 94 82 91 82 91 C 82 91 86 94 89 94 C 93 94 96 89 96 84 C 96 76 82 68 82 68 Z"
+            fill="#09090b"
+            stroke="#09090b"
+            strokeWidth="6"
+          />
+          <path
+            d="M82 68 C 82 68 68 76 68 84 C 68 89 71 94 75 94 C 78 94 82 91 82 91 C 82 91 86 94 89 94 C 93 94 96 89 96 84 C 96 76 82 68 82 68 Z"
+            fill="url(#g)"
+          />
+          {/* 'F' Letter */}
+          <path d="M80 77 H 86 M 80 82 H 85 M 80 75 V 88" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+      </svg>
+    </div>,
+    {
+      ...size
+    }
+  );
+}

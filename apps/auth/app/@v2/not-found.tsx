@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@workspace/ui/components/button';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ export default function NotFound() {
       <div className="fixed z-50 top-0 left-0  right-0 flex flex-row bg-white dark:bg-black items-center justify-between border-b bg-linear-to-bl px-2  h-16">
         <div className="flex flex-row items-center gap-2">
           <ReturnToPreviousPage />
-          <p className="font-semibold text-xl animate-pulse">{'MeowFans'}</p>
+          <p className="font-semibold text-xl animate-pulse">{'Meow'}</p>
         </div>
       </div>
       <div className="w-full h-full flex flex-col items-center justify-center">
