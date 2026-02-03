@@ -82,7 +82,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
-      <header className="flex-none z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="flex-none z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container flex h-14 items-center px-4 md:px-8">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -98,7 +98,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="px-7 py-4">
                 <Link href="/" className="flex items-center space-x-2 font-bold" onClick={() => setIsOpen(false)}>
-                  <span className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">MeowFans</span>
+                  <span className="text-xl bg-clip-text text-transparent bg-linear-to-r from-indigo-400 to-purple-400">MeowFans</span>
                 </Link>
               </div>
               <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
@@ -108,14 +108,14 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           </Sheet>
           <div className="mr-4 hidden lg:flex">
             <Link href="/" className="mr-6 flex items-center space-x-2 font-bold">
-              <span className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">MeowFans</span>
+              <span className="text-xl bg-clip-text text-transparent bg-linear-to-r from-indigo-400 to-purple-400">MeowFans</span>
             </Link>
           </div>
         </div>
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        <aside className="hidden w-[240px] flex-col border-r border-border lg:flex lg:w-[280px]">
+        <aside className="hidden w-60 flex-col border-r border-border lg:flex lg:w-70">
           <ScrollArea className="flex-1 py-6 pl-8 pr-4">
             <h4 className="mb-4 text-sm font-semibold tracking-tight text-muted-foreground uppercase">Legal Center</h4>
             <SidebarNav items={sidebarItems} />
