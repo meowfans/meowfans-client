@@ -39,9 +39,7 @@ export default function Icon() {
         <path d="M20 35 L 20 20 L 40 35" stroke="url(#g)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M80 35 L 80 20 L 60 35" stroke="url(#g)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
 
-        {/* Fan Subscript with 'F' */}
         <g>
-          {/* Heart/Shield shape for Fan */}
           <path
             d="M82 68 C 82 68 68 76 68 84 C 68 89 71 94 75 94 C 78 94 82 91 82 91 C 82 91 86 94 89 94 C 93 94 96 89 96 84 C 96 76 82 68 82 68 Z"
             fill="#000"
@@ -52,7 +50,6 @@ export default function Icon() {
             d="M82 68 C 82 68 68 76 68 84 C 68 89 71 94 75 94 C 78 94 82 91 82 91 C 82 91 86 94 89 94 C 93 94 96 89 96 84 C 96 76 82 68 82 68 Z"
             fill="url(#g)"
           />
-          {/* 'F' Letter */}
           <path d="M80 77 H 86 M 80 82 H 85 M 80 75 V 88" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
         </g>
       </svg>
