@@ -47,7 +47,7 @@ const CreatorTerms = () => {
         <section id="licensing-creators">
           <h2>4. Licensing, Distribution & Promotional Use</h2>
           <p>
-            Creators retain ownership of their content but grant MeowFans a license (non-exclusive, worldwide, sublicensable, royalty-free)
+            Creators retain ownership of their content but grant MeowFans a license (non-exclusive, worldwide, sub-licensable, royalty-free)
             to host, stream, reproduce, and promote the content on the Platform and affiliates. This license is necessary to provide
             services, caching, and cross-device streaming.
           </p>
@@ -57,7 +57,7 @@ const CreatorTerms = () => {
           <h2>5. Payments, Fees, Payouts & Holds</h2>
           <p>
             Creators receive payments via supported payout methods. The Platform charges fees and commissions as disclosed in account
-            settings. Payments are subject to verification and may be placed on hold for chargebacks, disputes, suspected fraud, or legal
+            settings. Payments are subject to verification and may be placed on hold for charge-backs, disputes, suspected fraud, or legal
             requests.
           </p>
           <p>
@@ -70,7 +70,7 @@ const CreatorTerms = () => {
           <h2>6. Copyright, DMCA & Takedown Procedures</h2>
           <p>
             Creators should not upload copyrighted material without authorization. If a copyright owner notifies MeowFans of infringement,
-            we will follow statutory procedures including removal of the contested content. Creators may submit counternotices where legally
+            we will follow statutory procedures including removal of the contested content. Creators may submit counter-notices where legally
             permitted.
           </p>
         </section>
