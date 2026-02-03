@@ -12,6 +12,7 @@ import { TriggerModal } from '@workspace/ui/modals/TriggerModal';
 import { BlocksIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export const CreatorProfileHeader = () => {
   const { fan } = useFan();
@@ -79,7 +80,7 @@ export const CreatorProfileHeader = () => {
                 )}
                 {!creator.isImported && (
                   <AuthAwareButton
-                    onClick={() => createChannel(creator.creatorId)}
+                    onClick={() => toast.warning("This feature is not yet enabled")}
                     title="Connect"
                     disabled={loading}
                     size="sm"

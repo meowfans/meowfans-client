@@ -19,7 +19,7 @@ export const CreatorProfile = () => {
   const [currentTab, setCurrentTab] = useState<TabProps>(() => {
     const paramTab = searchParams.get('tab') as TabProps | null;
     if (paramTab) return paramTab;
-    return !creator?.isImported ? 'posts' : 'vaults';
+    return creator?.isImported ? 'vaults' : 'posts';
   });
 
   const handleTabChange = (tab: TabProps) => {
