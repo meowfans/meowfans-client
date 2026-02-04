@@ -39,8 +39,8 @@ export default function Image() {
         <svg width="128" height="128" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FF3131" />
-              <stop offset="100%" stopColor="#FF3131" />
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#3b82f6" />
             </linearGradient>
           </defs>
           <path
@@ -53,6 +53,16 @@ export default function Image() {
           />
           <path d="M20 35 L 20 20 L 40 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M80 35 L 80 20 L 60 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+          <g>
+            <path
+              d="M82 66 L 96 71 V 83 C 96 91 82 98 82 98 C 82 98 68 91 68 83 V 71 L 82 66 Z"
+              fill="#050505"
+              stroke="#050505"
+              strokeWidth="6"
+            />
+            <path d="M82 66 L 96 71 V 83 C 96 91 82 98 82 98 C 82 98 68 91 68 83 V 71 L 82 66 Z" fill="url(#g)" />
+            <path d="M82 72 L 87 88 H 85 L 83.5 83 H 80.5 L 79 88 H 77 L 82 72 Z M 82 76 L 80.8 80.5 H 83.2 L 82 76 Z" fill="white" />
+          </g>
         </svg>
       </div>
       <div

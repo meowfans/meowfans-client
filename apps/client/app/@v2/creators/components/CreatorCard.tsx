@@ -1,22 +1,17 @@
-'use client';
-
-import { useCreators } from '@/hooks/useCreators';
-import { useFollowingMutations } from '@/hooks/useFollow';
-import { GetDefaultCreatorsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
-import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
-import { Button } from '@workspace/ui/components/button';
-import { Card } from '@workspace/ui/components/card';
-import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { AnimatePresence, motion } from 'framer-motion';
-import { BadgeCheck, Heart, Loader2, Plus, User } from 'lucide-react';
-import Link from 'next/link';
+import { useFollowingMutations } from "@/hooks/useFollow";
+import { GetDefaultCreatorsOutput } from "@workspace/gql/generated/graphql";
+import { Avatar, AvatarImage, AvatarFallback } from "@workspace/ui/components/avatar";
+import { Button } from "@workspace/ui/components/button";
+import { Card } from "@workspace/ui/components/card";
+import { motion } from "framer-motion";
+import { Link, User, BadgeCheck, Heart, Plus } from "lucide-react";
 
 interface CreatorCardProps {
   creator: GetDefaultCreatorsOutput;
   index: number;
 }
 
-const CreatorCard = ({ creator, index }: CreatorCardProps) => {
+export const CreatorCard = ({ creator, index }: CreatorCardProps) => {
   const { followCreator } = useFollowingMutations();
 
   return (
@@ -75,61 +70,5 @@ const CreatorCard = ({ creator, index }: CreatorCardProps) => {
         </div>
       </Card>
     </motion.div>
-  );
-};
-
-export const Creators = () => {
-  const { creators, loadMore, hasMore, loading, refresh } = useCreators({
-    sortBy: SortBy.CreatorViewCount,
-    orderBy: SortOrder.Desc,
-    take: 40
-  });
-
-  return (
-    <div id="creators-scroll" className="flex-1 overflow-y-auto no-scrollbar bg-background pb-20 md:pb-10">
-      <div className="relative overflow-hidden border-b border-border py-8 md:py-20">
-        <div className="absolute inset-0" />
-        <div className="container relative z-10 px-4 md:px-8">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text"
-          >
-            Trending Creators
-          </motion.h1>
-          <p className="mt-4 max-w-150 md:text-xl">Meet the most popular personalities in the community.</p>
-        </div>
-      </div>
-
-      <div className="container px-4 md:px-8 py-8">
-        <InfiniteScrollManager
-          LoadingComponent={
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
-            </div>
-          }
-          dataLength={creators.length}
-          onLoadMore={loadMore}
-          hasMore={hasMore}
-          loading={loading}
-          scrollableDiv="creators-scroll"
-        >
-          {creators.length === 0 && !loading ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center text-zinc-500">
-              <User className="h-12 w-12 mb-4 opacity-50" />
-              <p>No creators found.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              <AnimatePresence>
-                {creators.map((creator, i) => (
-                  <CreatorCard key={creator.id} creator={creator} index={i} />
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
-        </InfiniteScrollManager>
-      </div>
-    </div>
   );
 };

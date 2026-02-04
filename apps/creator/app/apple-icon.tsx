@@ -46,27 +46,6 @@ export default function Icon() {
           <path d="M20 35 L 20 20 L 40 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M80 35 L 80 20 L 60 35" stroke="url(#g)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
         </g>
-
-        {/* Creator Subscript with 'C' */}
-        <g>
-          {/* Star/Badge shape for Creator */}
-          <path
-            d="M82 66 L 94 73 L 91 86 L 73 86 L 70 73 L 82 66 Z"
-            fill="#09090b"
-            stroke="#09090b"
-            strokeWidth="6"
-            transform="rotate(18 82 82)"
-          />
-          <path d="M82 66 L 94 73 L 91 86 L 73 86 L 70 73 L 82 66 Z" fill="url(#g)" transform="rotate(18 82 82)" />
-          {/* 'C' Letter */}
-          <path
-            d="M86 76 C 86 76 84 74 81 74 C 77 74 76 77.5 76 81.5 C 76 85.5 77 89 81 89 C 84 89 86 87 86 87"
-            stroke="white"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            fill="none"
-          />
-        </g>
       </svg>
     </div>,
     {

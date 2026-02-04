@@ -12,7 +12,6 @@ interface AppLogoProps {
 export function AppLogo({ className, variant = 'default', size = 40 }: AppLogoProps) {
   const isCreator = variant === 'creator';
 
-  // Gradients matching the platform themes
   const gradientId = isCreator ? 'logo-gradient-creator' : 'logo-gradient-default';
   const startColor = isCreator ? '#f97316' : '#6366f1'; // Orange-500 : Indigo-500
   const endColor = isCreator ? '#fbbf24' : '#d946ef'; // Amber-400 : Fuchsia-500
@@ -31,13 +30,11 @@ export function AppLogo({ className, variant = 'default', size = 40 }: AppLogoPr
           </filter>
         </defs>
 
-        {/* Abstract "M" / Cat shape constructed from geometric primitives */}
         <motion.g
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration: 1.5, ease: 'easeInOut' }}
         >
-          {/* Left Ear / M stroke */}
           <path
             d="M20 70 V 35 L 50 65 L 80 35 V 70"
             stroke={`url(#${gradientId})`}
@@ -47,7 +44,6 @@ export function AppLogo({ className, variant = 'default', size = 40 }: AppLogoPr
             fill="none"
           />
 
-          {/* Cat Ears accent - overlaid on top points of M */}
           <path
             d="M20 35 L 20 20 L 40 35"
             stroke={`url(#${gradientId})`}
@@ -66,7 +62,6 @@ export function AppLogo({ className, variant = 'default', size = 40 }: AppLogoPr
           />
         </motion.g>
 
-        {/* Center dot/nose */}
         <motion.circle
           cx="50"
           cy="50"

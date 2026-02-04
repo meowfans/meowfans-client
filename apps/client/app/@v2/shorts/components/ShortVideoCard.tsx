@@ -107,15 +107,12 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
         await navigator.clipboard.writeText(window.location.href);
         toast.success('Link copied to clipboard');
       }
-    } catch (error) {
-      console.error('Share failed:', error);
-    }
+    } catch {}
   };
 
   return (
     <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
-      {/* Centered Video Container */}
-      <div className="relative h-full w-full md:max-w-[450px] bg-zinc-900 shadow-2xl overflow-hidden flex items-center justify-center">
+      <div className="relative h-full w-full md:max-w-112.5 bg-zinc-900 shadow-2xl overflow-hidden flex items-center justify-center">
         <video
           ref={videoRef}
           src={short.rawUrl}
@@ -128,7 +125,6 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
           onDoubleClick={handleDoubleClick}
         />
 
-        {/* Like Animation Overlay */}
         <AnimatePresence>
           {showHeart && (
             <motion.div
@@ -142,7 +138,6 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
           )}
         </AnimatePresence>
 
-        {/* Play/Pause Overlay Icon */}
         {!isPlaying && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10 cursor-pointer" onClick={handleTogglePlay}>
             <motion.div
@@ -155,7 +150,6 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
           </div>
         )}
 
-        {/* Right Interaction Sidebar */}
         <div className="absolute right-2 bottom-20 flex flex-col gap-4 z-30">
           <div className="flex flex-col items-center gap-1">
             <motion.button
@@ -207,8 +201,7 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
           </div>
         </div>
 
-        {/* Bottom Information Section */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 pb-10 pt-20 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 pb-10 pt-20 bg-linear-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
           <div className="flex flex-col gap-2.5 pointer-events-auto">
             <Link href={`/creators/${short.creatorUsername}`} className="flex items-center gap-2 group/author w-fit">
               <span className="text-base font-bold text-white hover:underline drop-shadow-md">@{short.creatorUsername}</span>
@@ -243,13 +236,11 @@ export const ShortVideoCard: React.FC<Props> = ({ short, globalMute, onToggleMut
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
           <motion.div className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style={{ width: `${progress}%` }} />
         </div>
 
-        {/* Top Header Actions */}
-        <div className="absolute top-0 left-0 right-0 z-30 p-4 flex justify-between items-center bg-gradient-to-b from-black/60 via-black/20 to-transparent">
+        <div className="absolute top-0 left-0 right-0 z-30 p-4 flex justify-between items-center bg-linear-to-b from-black/60 via-black/20 to-transparent">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-[10px] font-black text-white/80 tracking-[0.2em] uppercase">Shorts</span>
