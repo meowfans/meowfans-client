@@ -97,6 +97,7 @@ export function LoginForm() {
             id="login-password"
             type="password"
             placeholder="••••••••"
+            autoComplete="new-password"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 h-12 pl-10 transition-all"
             value={input.password}
             onChange={(e) => {
