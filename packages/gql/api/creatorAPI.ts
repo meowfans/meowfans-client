@@ -212,6 +212,12 @@ export const GET_BLOCKED_USERS_QUERY = graphql(`
   }
 `);
 
+export const SUBMIT_CREATOR_VERIFICATION_DETAILS_MUTATION = graphql(`
+  mutation SubmitCreatorVerificationDetails($input: CreatorVerificationInput!) {
+    submitCreatorVerificationDetails(input: $input)
+  }
+`);
+
 export const BLOCK_FAN_MUTATION = graphql(`
   mutation BlockFan($input: BlockFanInput!) {
     blockFan(input: $input)

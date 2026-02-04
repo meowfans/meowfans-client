@@ -101,7 +101,7 @@ export default function Auth() {
                   return <ForgotPassword />;
 
                 case AuthPaths.CREATOR_SIGNUP:
-                  return <CreatorSignup handleCreatorSignUp={handleCreatorSignup} loading={loading} />;
+                  return <CreatorSignup loading={loading} handleCreatorSignUp={handleCreatorSignup} />;
               }
             })()}
           </CardContent>

@@ -1,10 +1,13 @@
 'use client';
+
 import { useUtilsStore } from '@/hooks/store/utils.store';
+import { useCreatorMutations } from '@/hooks/useCreatorMutations';
 import { configService } from '@/util/config';
 import { CreatorApprovalStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { cn } from '@workspace/ui/lib/utils';
 import { CheckCircle2, Clock, ExternalLink, LogOut, Mail, Search, ShieldAlert, XCircle } from 'lucide-react';
+import { CreatorApplicationForm } from './CreatorApplicationForm';
 import { LogoutModal } from './modals/LogoutModal';
 
 interface Props {
@@ -13,6 +16,11 @@ interface Props {
 
 export const CreatorStatusLayout = ({ status }: Props) => {
   const { setOpenLogoutModal } = useUtilsStore();
+  const { submitCreatorVerificationDetails } = useCreatorMutations();
+
+  if (status === CreatorApprovalStatus.Review) {
+    return <CreatorApplicationForm />;
+  }
 
   const STATUS_CONFIG = {
     [CreatorApprovalStatus.Requested]: {
@@ -69,7 +77,6 @@ export const CreatorStatusLayout = ({ status }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-background selection:bg-primary/20">
-      {/* Dynamic Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div
           className={cn(
@@ -81,7 +88,6 @@ export const CreatorStatusLayout = ({ status }: Props) => {
       </div>
 
       <div className="w-full max-w-md flex flex-col items-center">
-        {/* Status Header Section */}
         <div className="flex flex-col items-center text-center space-y-4 mb-8">
           <div
             className={cn(
@@ -106,7 +112,6 @@ export const CreatorStatusLayout = ({ status }: Props) => {
           </p>
         </div>
 
-        {/* Details Checklist */}
         {config.details.length > 0 && (
           <div className="w-full max-w-xs grid gap-3 mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700 delay-400">
             {config.details.map((detail, idx) => (
@@ -118,7 +123,6 @@ export const CreatorStatusLayout = ({ status }: Props) => {
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex flex-col gap-2 w-full max-w-xs animate-in fade-in slide-in-from-bottom-2 duration-700 delay-500">
           <Button
             size="lg"
@@ -140,7 +144,6 @@ export const CreatorStatusLayout = ({ status }: Props) => {
           </Button>
         </div>
 
-        {/* Footer info */}
         <div className="mt-10 flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground animate-in fade-in duration-1000 delay-700">
           <span className="uppercase tracking-widest opacity-60">Need assistance?</span>
           <a
