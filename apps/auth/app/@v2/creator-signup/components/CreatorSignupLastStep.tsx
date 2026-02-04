@@ -10,9 +10,8 @@ interface CreatorSignupLastStepProps {
   errors: Partial<Record<keyof CreatorSignupInput, string>>;
   setInput: React.Dispatch<React.SetStateAction<CreatorSignupInput>>;
   setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof CreatorSignupInput, string>>>>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   loading: boolean;
-  setStep: React.Dispatch<React.SetStateAction<1 | 2>>;
+  setStep: React.Dispatch<React.SetStateAction<1 | 2 | 3>>;
 }
 
 export const CreatorSignupLastStep = ({
@@ -20,7 +19,6 @@ export const CreatorSignupLastStep = ({
   errors,
   setInput,
   setErrors,
-  handleSubmit,
   loading,
   setStep
 }: CreatorSignupLastStepProps) => {

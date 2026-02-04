@@ -75,6 +75,32 @@ const useAPI = () => {
     return data;
   };
 
+  const validateOtp = async (params: { email: string; otp: string }) => {
+    const data = await fetchRequest({
+      fetchMethod: FetchMethods.POST,
+      pathName: `/auth/validate-otp/${params.email}/${params.otp}`,
+      init: {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+    return data;
+  };
+
+  const generateOtp = async (params: { email: string }) => {
+    const data = await fetchRequest({
+      fetchMethod: FetchMethods.POST,
+      pathName: `/auth/generate-otp/${params.email}`,
+      init: {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+    return data;
+  };
+
   const signup = async (input: SignupInput) => {
     const data = await fetchRequest({
       fetchMethod: FetchMethods.POST,
@@ -113,6 +139,8 @@ const useAPI = () => {
   return {
     login,
     signup,
+    validateOtp,
+    generateOtp,
     creatorSignup
   };
 };
