@@ -42,6 +42,7 @@ export const CreatorSignupLastStep = ({
           <Input
             id="username"
             placeholder="yourname"
+            autoComplete='username'
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 h-12 pl-10 focus-visible:ring-orange-500/50"
             value={input.username}
             onChange={(e) => {
@@ -65,6 +66,7 @@ export const CreatorSignupLastStep = ({
             id="password"
             type="password"
             placeholder="••••••••"
+            autoComplete="new-password"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 h-12 pl-10 focus-visible:ring-orange-500/50"
             value={input.password}
             onChange={(e) => {
