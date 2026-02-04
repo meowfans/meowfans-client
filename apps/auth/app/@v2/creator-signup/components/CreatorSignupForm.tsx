@@ -7,6 +7,7 @@ import { FormEvent, useState } from 'react';
 import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
+import { useAuthActions } from '@workspace/gql/actions/auth.actions';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
@@ -37,7 +38,8 @@ export function CreatorSignupForm() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const { successHandler } = useSuccessHandler();
   const [loading, setLoading] = useState<boolean>(false);
-  const { creatorSignup, generateOtp, validateOtp } = useAPI();
+  const { creatorSignup } = useAPI();
+  const { generateOtpMutation, validateOtpMutation } = useAuthActions();
   const [input, setInput] = useState<CreatorSignupInput>(emptyInput);
 
   const [errors, setErrors] = useState<Partial<Record<keyof CreatorSignupInput, string>>>({});
@@ -66,7 +68,7 @@ export function CreatorSignupForm() {
 
   const handleResendOtp = async () => {
     try {
-      await generateOtp({ email: input.email });
+      await generateOtpMutation(input.email);
       successHandler({ message: 'Verification code resent' });
     } catch (error) {
       errorHandler({ error });
@@ -76,7 +78,7 @@ export function CreatorSignupForm() {
   const handleVerify = async () => {
     setLoading(true);
     try {
-      const isValid = await validateOtp({ email: input.email, otp });
+      const isValid = await validateOtpMutation({ email: input.email, otp });
 
       if (isValid) {
         await creatorSignup(input);
@@ -98,7 +100,7 @@ export function CreatorSignupForm() {
 
     setLoading(true);
     try {
-      await generateOtp({ email: input.email });
+      await generateOtpMutation(input.email);
       setStep(3);
       successHandler({ message: 'Verification code sent to your email' });
     } catch (error) {

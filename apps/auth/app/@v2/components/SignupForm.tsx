@@ -3,6 +3,7 @@
 import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
+import { useAuthActions } from '@workspace/gql/actions/auth.actions';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AuthUserRoles, SignupInput } from '@workspace/ui/lib/enums';
@@ -24,7 +25,8 @@ export function SignupForm() {
   const { errorHandler } = useErrorHandler();
   const [otp, setOtp] = useState<string>('');
   const { successHandler } = useSuccessHandler();
-  const { signup, generateOtp, validateOtp } = useAPI();
+  const { signup } = useAPI();
+  const { generateOtpMutation, validateOtpMutation } = useAuthActions();
   const [loading, setLoading] = useState<boolean>(false);
   const [step, setStep] = useState<'FORM' | 'OTP'>('FORM');
   const [errors, setErrors] = useState<Partial<Record<keyof SignupInput, string>>>({});
@@ -41,7 +43,7 @@ export function SignupForm() {
 
   const handleResendOtp = async () => {
     try {
-      await generateOtp({ email: input.email });
+      await generateOtpMutation(input.email);
       successHandler({ message: 'Verification code resent' });
     } catch (error) {
       errorHandler({ error });
@@ -51,7 +53,7 @@ export function SignupForm() {
   const handleVerify = async () => {
     setLoading(true);
     try {
-      const isValid = await validateOtp({ email: input.email, otp });
+      const isValid = await validateOtpMutation({ email: input.email, otp });
       if (isValid) {
         await signup(input);
         successHandler({ message: 'Account created! Welcome to MeowFans.' });
@@ -72,7 +74,7 @@ export function SignupForm() {
     setLoading(true);
 
     try {
-      await generateOtp({ email: input.email });
+      await generateOtpMutation(input.email);
       setStep('OTP');
       successHandler({ message: 'Verification code sent to your email' });
     } catch (error) {
