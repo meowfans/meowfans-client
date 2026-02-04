@@ -106,7 +106,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className={cn(inter.variable, 'overscroll-none ')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Creator}>
-          <CreatorContextWrapper creator={creator} children={children} />
+          <CreatorContextWrapper creator={creator}>{children}</CreatorContextWrapper>
         </ApolloWrapper>
       </body>
     </html>
