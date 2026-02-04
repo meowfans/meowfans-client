@@ -32,7 +32,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   return scrollableDiv ? (
     <InfiniteScroll
       inverse={inverse}
-      loader={null}
+      loader={LoadingComponent ?? null}
       hasMore={hasMore}
       scrollThreshold={scrollThreshold}
       next={onLoadMore}
@@ -44,7 +44,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   ) : (
     <div id="scrollableDiv" className={cn('overflow-y-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
       <InfiniteScroll
-        loader={null}
+        loader={LoadingComponent ?? null}
         inverse={inverse}
         hasMore={hasMore}
         scrollThreshold={0.7}

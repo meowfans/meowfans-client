@@ -8,7 +8,7 @@ export default function NotFound() {
   const router = useRouter();
   return (
     <>
-      <div className="fixed z-50 top-0 left-0 right-0 flex flex-row items-center justify-between border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2 h-16">
+      <div className="fixed z-50 top-0 left-0 right-0 flex flex-row items-center justify-between border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 px-2 h-16">
         <div className="flex flex-row items-center gap-2">
           <ReturnToPreviousPage />
           <p className="font-semibold text-xl animate-pulse">{'Meow'}</p>
