@@ -1,10 +1,5 @@
 'use client';
 
-import { Loader2Icon, Lock, LogIn, Mail } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import { toast } from 'sonner';
 import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
@@ -12,8 +7,13 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AuthUserRoles, LoginInput } from '@workspace/ui/lib/enums';
 import { isValidEmail, isValidPassword } from '@workspace/ui/lib/validators';
+import { Loader2Icon, Lock, LogIn, Mail } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 
 const redirectUrlMap = {
   [AuthUserRoles.CREATOR]: buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/studio' }),
@@ -24,8 +24,9 @@ const redirectUrlMap = {
 
 export function LoginForm() {
   const router = useRouter();
-  const { errorHandler } = useErrorHandler();
   const { login } = useAPI();
+  const { errorHandler } = useErrorHandler();
+  const { successHandler } = useSuccessHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const [input, setInput] = useState<LoginInput>({ email: '', password: '' });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -46,7 +47,8 @@ export function LoginForm() {
     try {
       const { roles } = await login(input);
       const role = roles?.at(0) as AuthUserRoles;
-      toast.success('Welcome back!');
+
+      successHandler({ message: 'Welcome back!' });
       return router.push(redirectUrlMap[role] || '/');
     } catch (error) {
       errorHandler({ error });
@@ -68,6 +70,7 @@ export function LoginForm() {
           <Input
             id="login-email"
             type="email"
+            autoComplete="email"
             placeholder="you@example.com"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 h-12 pl-10 transition-all"
             value={input.email}
@@ -96,8 +99,8 @@ export function LoginForm() {
           <Input
             id="login-password"
             type="password"
+            autoComplete="current-password"
             placeholder="••••••••"
-            autoComplete="new-password"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 h-12 pl-10 transition-all"
             value={input.password}
             onChange={(e) => {

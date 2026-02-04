@@ -1,18 +1,16 @@
 'use client';
 
-import { ArrowRight, Loader2Icon, Lock, Mail, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import { toast } from 'sonner';
 import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
-import { Button } from '@workspace/ui/components/button';
-import { Input } from '@workspace/ui/components/input';
-import { Label } from '@workspace/ui/components/label';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
+import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AuthUserRoles, SignupInput } from '@workspace/ui/lib/enums';
 import { isValidEmail, isValidPassword } from '@workspace/ui/lib/validators';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import { SignupStepForm } from './SignupStepForm';
+import { SignupStepOtp } from './SignupStepOtp';
 
 const redirectUrlMap = {
   [AuthUserRoles.CREATOR]: buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/studio' }),
@@ -24,10 +22,13 @@ const redirectUrlMap = {
 export function SignupForm() {
   const router = useRouter();
   const { errorHandler } = useErrorHandler();
-  const { signup } = useAPI();
+  const [otp, setOtp] = useState<string>('');
+  const { successHandler } = useSuccessHandler();
+  const { signup, generateOtp, validateOtp } = useAPI();
   const [loading, setLoading] = useState<boolean>(false);
-  const [input, setInput] = useState<SignupInput>({ email: '', fullName: '', password: '' });
+  const [step, setStep] = useState<'FORM' | 'OTP'>('FORM');
   const [errors, setErrors] = useState<Partial<Record<keyof SignupInput, string>>>({});
+  const [input, setInput] = useState<SignupInput>({ email: '', fullName: '', password: '' });
 
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof SignupInput, string>> = {};
@@ -38,15 +39,42 @@ export function SignupForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleResendOtp = async () => {
+    try {
+      await generateOtp({ email: input.email });
+      successHandler({ message: 'Verification code resent' });
+    } catch (error) {
+      errorHandler({ error });
+    }
+  };
+
+  const handleVerify = async () => {
+    setLoading(true);
+    try {
+      const isValid = await validateOtp({ email: input.email, otp });
+      if (isValid) {
+        await signup(input);
+        successHandler({ message: 'Account created! Welcome to MeowFans.' });
+        return router.push(redirectUrlMap[AuthUserRoles.FAN]);
+      } else {
+        errorHandler({ msg: 'Invalid verification code' });
+      }
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
     try {
-      await signup(input);
-      toast.success('Account created! Welcome to MeowFans.');
-      return router.push(redirectUrlMap[AuthUserRoles.FAN]);
+      await generateOtp({ email: input.email });
+      setStep('OTP');
+      successHandler({ message: 'Verification code sent to your email' });
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -56,88 +84,19 @@ export function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="signup-name" className="text-zinc-400 text-xs font-semibold uppercase tracking-wider">
-          Full Name
-        </Label>
-        <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-pink-400 transition-colors">
-            <User className="w-4 h-4" />
-          </div>
-          <Input
-            id="signup-name"
-            placeholder="John Doe"
-            className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
-            value={input.fullName}
-            onChange={(e) => {
-              setInput((prev) => ({ ...prev, fullName: e.target.value }));
-              setErrors((prev) => ({ ...prev, fullName: undefined }));
-            }}
-          />
-        </div>
-        {errors.fullName && <p className="text-xs text-red-500 font-medium">{errors.fullName}</p>}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="signup-email" className="text-zinc-400 text-xs font-semibold uppercase tracking-wider">
-          Email Address
-        </Label>
-        <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-pink-400 transition-colors">
-            <Mail className="w-4 h-4" />
-          </div>
-          <Input
-            id="signup-email"
-            type="email"
-            placeholder="you@example.com"
-            className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
-            value={input.email}
-            onChange={(e) => {
-              setInput((prev) => ({ ...prev, email: e.target.value.trim() }));
-              setErrors((prev) => ({ ...prev, email: undefined }));
-            }}
-          />
-        </div>
-        {errors.email && <p className="text-xs text-red-500 font-medium">{errors.email}</p>}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="signup-password" className="text-zinc-400 text-xs font-semibold uppercase tracking-wider">
-          Password
-        </Label>
-        <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-pink-400 transition-colors">
-            <Lock className="w-4 h-4" />
-          </div>
-          <Input
-            id="signup-password"
-            type="password"
-            placeholder="••••••••"
-            autoComplete="new-password"
-            className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
-            value={input.password}
-            onChange={(e) => {
-              setInput((prev) => ({ ...prev, password: e.target.value.trim() }));
-              setErrors((prev) => ({ ...prev, password: undefined }));
-            }}
-          />
-        </div>
-        {errors.password && <p className="text-xs text-red-500 font-medium">{errors.password}</p>}
-      </div>
-
-      <Button
-        type="submit"
-        className="w-full bg-linear-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold h-12 rounded-xl transition-all duration-300 shadow-xl shadow-pink-600/20 active:scale-[0.98] disabled:opacity-70"
-        disabled={loading}
-      >
-        {loading ? (
-          <Loader2Icon className="h-5 w-5 animate-spin" />
-        ) : (
-          <span className="flex items-center gap-2">
-            Create Account <ArrowRight className="w-4 h-4" />
-          </span>
-        )}
-      </Button>
+      {step === 'FORM' ? (
+        <SignupStepForm input={input} setErrors={setErrors} setInput={setInput} loading={loading} errors={errors} />
+      ) : (
+        <SignupStepOtp
+          input={input}
+          setStep={setStep}
+          loading={loading}
+          otp={otp}
+          setOtp={setOtp}
+          handleVerify={handleVerify}
+          handleResendOtp={handleResendOtp}
+        />
+      )}
     </form>
   );
 }
