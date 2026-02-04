@@ -2,7 +2,7 @@
 
 import { useCreator } from '@/hooks/context/useCreator';
 import useAPI from '@/hooks/useAPI';
-import { useCreatorMutation } from '@/hooks/useCreatorMutation';
+import { useCreatorMutations } from '@/hooks/useCreatorMutations';
 import { AssetType, UpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
@@ -23,7 +23,7 @@ const normalize = (v?: string | null) => v?.trim() ?? '';
 export const Edit = () => {
   const { upload } = useAPI();
   const { creator } = useCreator();
-  const { loading, updateCreator } = useCreatorMutation();
+  const { loading, updateCreator } = useCreatorMutations();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [disabled, setDisabled] = useState(true);

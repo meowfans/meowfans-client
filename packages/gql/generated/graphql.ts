@@ -16,6 +16,8 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: { input: any; output: any; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: { input: any; output: any; }
 };
 
 export type AcceptChannelRequestInput = {
@@ -207,7 +209,8 @@ export type CreateTransactionInput = {
 export enum CreatorApprovalStatus {
   Accepted = 'ACCEPTED',
   Rejected = 'REJECTED',
-  Requested = 'REQUESTED'
+  Requested = 'REQUESTED',
+  Review = 'REVIEW'
 }
 
 export type CreatorAssetsEntity = {
@@ -304,6 +307,7 @@ export type CreatorProfilesEntity = {
   processingObjectCount: Scalars['Float']['output'];
   rejectedAt?: Maybe<Scalars['DateTime']['output']>;
   rejectedObjectCount: Scalars['Float']['output'];
+  rejectionReason?: Maybe<Scalars['String']['output']>;
   socialAccount: Array<SocialAccountsEntity>;
   status: CreatorApprovalStatus;
   themeColor: Scalars['String']['output'];
@@ -341,6 +345,10 @@ export enum CreatorType {
   NewAiUser = 'NEW_AI_USER',
   NewUser = 'NEW_USER'
 }
+
+export type CreatorVerificationInput = {
+  answers: Scalars['JSON']['input'];
+};
 
 export type CreatorViewAnalyticsOutput = {
   __typename?: 'CreatorViewAnalyticsOutput';
@@ -969,6 +977,7 @@ export type Mutation = {
   sendReplyFromCreator: MessagesOutput;
   sendReplyFromFan: MessagesOutput;
   sharePost: PostSharesEntity;
+  submitCreatorVerificationDetails: CreatorApprovalStatus;
   terminate: Scalars['Boolean']['output'];
   terminateDownloading: Scalars['String']['output'];
   unBlockFan: Scalars['Boolean']['output'];
@@ -1155,6 +1164,11 @@ export type MutationSendReplyFromFanArgs = {
 
 export type MutationSharePostArgs = {
   input: LikePostInput;
+};
+
+
+export type MutationSubmitCreatorVerificationDetailsArgs = {
+  input: CreatorVerificationInput;
 };
 
 
@@ -2243,6 +2257,13 @@ export type GetBlockedUsersQueryVariables = Exact<{
 
 export type GetBlockedUsersQuery = { __typename?: 'Query', getBlockedUsers: Array<{ __typename?: 'CreatorBlocksEntity', blockedAt: any, creatorId: string, fanId: string, id: string, unBlockedAt?: any | null, fanProfile: { __typename?: 'FanProfilesEntity', fanId: string, user: { __typename?: 'UsersEntity', avatarUrl?: string | null, firstName: string, lastName: string, username: string } } }> };
 
+export type SubmitCreatorVerificationDetailsMutationVariables = Exact<{
+  input: CreatorVerificationInput;
+}>;
+
+
+export type SubmitCreatorVerificationDetailsMutation = { __typename?: 'Mutation', submitCreatorVerificationDetails: CreatorApprovalStatus };
+
 export type BlockFanMutationVariables = Exact<{
   input: BlockFanInput;
 }>;
@@ -2683,6 +2704,7 @@ export const GetDefaultCreatorsDocument = {"kind":"Document","definitions":[{"ki
 export const GetFollowersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFollowers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getFollowers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"followedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"unFollowedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"lastLoginAt"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"bannerUrl"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetFollowersQuery, GetFollowersQueryVariables>;
 export const GetCreatorProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCreatorProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCreatorProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allowsComment"}},{"kind":"Field","name":{"kind":"Name","value":"allowsMessaging"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"displayOnlineStatus"}},{"kind":"Field","name":{"kind":"Name","value":"displayTotalPost"}},{"kind":"Field","name":{"kind":"Name","value":"displayTotalSubscriber"}},{"kind":"Field","name":{"kind":"Name","value":"themeColor"}},{"kind":"Field","name":{"kind":"Name","value":"totalExclusivePost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPublicPost"}},{"kind":"Field","name":{"kind":"Name","value":"totalSubscriber"}},{"kind":"Field","name":{"kind":"Name","value":"followersCount"}},{"kind":"Field","name":{"kind":"Name","value":"assetCount"}},{"kind":"Field","name":{"kind":"Name","value":"viewCount"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"bannerUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastLoginAt"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]} as unknown as DocumentNode<GetCreatorProfileQuery, GetCreatorProfileQueryVariables>;
 export const GetBlockedUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBlockedUsers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBlockedUsers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blockedAt"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"unBlockedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBlockedUsersQuery, GetBlockedUsersQueryVariables>;
+export const SubmitCreatorVerificationDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitCreatorVerificationDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatorVerificationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitCreatorVerificationDetails"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SubmitCreatorVerificationDetailsMutation, SubmitCreatorVerificationDetailsMutationVariables>;
 export const BlockFanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"BlockFan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BlockFanInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blockFan"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<BlockFanMutation, BlockFanMutationVariables>;
 export const UnBlockFanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnBlockFan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BlockFanInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blockFan"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UnBlockFanMutation, UnBlockFanMutationVariables>;
 export const RestrictFanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RestrictFan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RestrictFanInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"restrictFan"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<RestrictFanMutation, RestrictFanMutationVariables>;
