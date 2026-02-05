@@ -37,32 +37,32 @@ export const CreatorProfiles = () => {
 
   return (
     <PageManager>
-      {allCreators.length ? (
-        <InfiniteScrollManager
-          dataLength={allCreators.length}
-          hasMore={!!hasNext}
-          onLoadMore={() => setPageNumber((p) => p + 1)}
-          loading={loading}
-        >
-          <div ref={topRef} />
-          <Table>
-            <TableHeader className="z-30 bg-muted/50 backdrop-blur">
-              <TableRow>
-                <TableHead className="sticky left-0 z-20 bg-card min-w-20">User</TableHead>
-                <TableHead className="text-center min-w-27.5">Assets</TableHead>
-                <TableHead className="text-center min-w-27.5">Vaults</TableHead>
-                <TableHead className="text-center min-w-27.5">Posts</TableHead>
-                <TableHead className="text-center min-w-27.5">Exclusive</TableHead>
-                <TableHead className="text-center min-w-27.5">Public</TableHead>
-                <TableHead className="text-center min-w-27.5">Subscribers</TableHead>
-                <TableHead className="text-center min-w-27.5">Pending</TableHead>
-                <TableHead className="text-center min-w-27.5">Processing</TableHead>
-                <TableHead className="text-center min-w-27.5">Rejected</TableHead>
-                <TableHead className="text-center min-w-27.5">Fulfilled</TableHead>
-                <TableHead className="text-center bg-card">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-
+      <div ref={topRef} />
+      <Table>
+        <TableHeader className="z-30 bg-muted/50 backdrop-blur" id='table-head'>
+          <TableRow>
+            <TableHead className="sticky left-0 z-20 bg-card min-w-20">User</TableHead>
+            <TableHead className="text-center min-w-27.5">Assets</TableHead>
+            <TableHead className="text-center min-w-27.5">Vaults</TableHead>
+            <TableHead className="text-center min-w-27.5">Posts</TableHead>
+            <TableHead className="text-center min-w-27.5">Exclusive</TableHead>
+            <TableHead className="text-center min-w-27.5">Public</TableHead>
+            <TableHead className="text-center min-w-27.5">Subscribers</TableHead>
+            <TableHead className="text-center min-w-27.5">Pending</TableHead>
+            <TableHead className="text-center min-w-27.5">Processing</TableHead>
+            <TableHead className="text-center min-w-27.5">Rejected</TableHead>
+            <TableHead className="text-center min-w-27.5">Fulfilled</TableHead>
+            <TableHead className="text-center bg-card">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        {allCreators.length ? (
+          <InfiniteScrollManager
+            dataLength={allCreators.length}
+            hasMore={!!hasNext}
+            onLoadMore={() => setPageNumber((p) => p + 1)}
+            loading={loading}
+            scrollableDiv='table-head'
+          >
             <TableBody>
               {allCreators.map((creator) => (
                 <TableRow key={creator.id} className={cn('hover:bg-muted/30 transition-colors')}>
@@ -125,11 +125,11 @@ export const CreatorProfiles = () => {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
-        </InfiniteScrollManager>
-      ) : (
-        <div className="flex h-[50vh] items-center justify-center text-muted-foreground">No creators found</div>
-      )}
+          </InfiniteScrollManager>
+        ) : (
+          <div className="flex h-[50vh] items-center justify-center text-muted-foreground">No creators found</div>
+        )}
+      </Table>
     </PageManager>
   );
 };

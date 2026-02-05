@@ -6,6 +6,7 @@ import { CreatorApprovalStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { cn } from '@workspace/ui/lib/utils';
 import { CheckCircle2, Clock, ExternalLink, LogOut, Mail, Search, ShieldAlert, XCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { CreatorApplicationForm } from './CreatorApplicationForm';
 import { LogoutModal } from './modals/LogoutModal';
 
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const CreatorStatusLayout = ({ status }: Props) => {
+  const router = useRouter();
   const { setOpenLogoutModal } = useUtilsStore();
 
   if (status === CreatorApprovalStatus.Review) {
@@ -70,7 +72,7 @@ export const CreatorStatusLayout = ({ status }: Props) => {
   const Icon = config.icon;
 
   const handleGoToFanApp = () => {
-    window.location.href = configService.NEXT_PUBLIC_FAN_URL || 'https://meowfans.app';
+    router.push(configService.NEXT_PUBLIC_FAN_URL);
   };
 
   return (

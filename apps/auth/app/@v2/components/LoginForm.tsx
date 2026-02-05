@@ -3,14 +3,14 @@
 import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
-import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
+import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AuthUserRoles, LoginInput } from '@workspace/ui/lib/enums';
 import { isValidEmail, isValidPassword } from '@workspace/ui/lib/validators';
-import { Loader2Icon, Lock, LogIn, Mail } from 'lucide-react';
+import { Lock, LogIn, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -70,6 +70,7 @@ export function LoginForm() {
           <Input
             id="login-email"
             type="email"
+            name="email"
             autoComplete="email"
             placeholder="you@example.com"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 h-12 pl-10 transition-all"
@@ -99,6 +100,7 @@ export function LoginForm() {
           <Input
             id="login-password"
             type="password"
+            name="password"
             autoComplete="current-password"
             placeholder="••••••••"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 h-12 pl-10 transition-all"
@@ -112,19 +114,18 @@ export function LoginForm() {
         {errors.password && <p className="text-xs text-red-500 font-medium">{errors.password}</p>}
       </div>
 
-      <Button
+      <LoadingButtonV2
         type="submit"
-        className="w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold h-12 rounded-xl transition-all duration-300 shadow-xl shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-70"
+        className="w-full bg-linear-to-r from-indigo-600 to-purple-600
+        hover:from-indigo-500 hover:to-purple-500 text-white font-bold
+        h-12 rounded-xl transition-all duration-300 shadow-xl shadow-indigo-600/20
+        active:scale-[0.98] disabled:opacity-70"
         disabled={loading}
       >
-        {loading ? (
-          <Loader2Icon className="h-5 w-5 animate-spin" />
-        ) : (
-          <span className="flex items-center gap-2">
-            Sign In <LogIn className="w-4 h-4" />
-          </span>
-        )}
-      </Button>
+        <span className="flex items-center gap-2">
+          Sign In <LogIn className="w-4 h-4" />
+        </span>
+      </LoadingButtonV2>
     </form>
   );
 }

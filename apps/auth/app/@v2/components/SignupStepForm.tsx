@@ -1,8 +1,8 @@
-import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
+import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
 import { SignupInput } from '@workspace/ui/lib/enums';
-import { ArrowRight, Loader2Icon, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Lock, Mail, User } from 'lucide-react';
 
 interface SignupStepFormProps {
   input: SignupInput;
@@ -25,6 +25,8 @@ export function SignupStepForm({ input, setErrors, setInput, loading, errors }: 
           </div>
           <Input
             id="signup-name"
+            name="name"
+            autoComplete="name"
             placeholder="John Doe"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
             value={input.fullName}
@@ -48,6 +50,7 @@ export function SignupStepForm({ input, setErrors, setInput, loading, errors }: 
           <Input
             id="signup-email"
             type="email"
+            name="email"
             autoComplete="email"
             placeholder="you@example.com"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
@@ -72,6 +75,7 @@ export function SignupStepForm({ input, setErrors, setInput, loading, errors }: 
           <Input
             id="signup-password"
             type="password"
+            name="password"
             placeholder="••••••••"
             autoComplete="current-password"
             className="bg-zinc-900/40 border-zinc-800 text-white placeholder:text-zinc-700 focus-visible:ring-pink-500/50 focus-visible:border-pink-500/50 h-12 pl-10 transition-all"
@@ -85,19 +89,18 @@ export function SignupStepForm({ input, setErrors, setInput, loading, errors }: 
         {errors.password && <p className="text-xs text-red-500 font-medium">{errors.password}</p>}
       </div>
 
-      <Button
+      <LoadingButtonV2
         type="submit"
-        className="w-full bg-linear-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold h-12 rounded-xl transition-all duration-300 shadow-xl shadow-pink-600/20 active:scale-[0.98] disabled:opacity-70"
-        disabled={loading}
+        loading={loading}
+        className="w-full bg-linear-to-r from-pink-600 to-rose-600
+             hover:from-pink-500 hover:to-rose-500
+             text-white font-bold h-12 rounded-xl
+             shadow-xl shadow-pink-600/20"
       >
-        {loading ? (
-          <Loader2Icon className="h-5 w-5 animate-spin" />
-        ) : (
-          <span className="flex items-center gap-2">
-            Create Account <ArrowRight className="w-4 h-4" />
-          </span>
-        )}
-      </Button>
+        <span className="flex items-center gap-2">
+          Create Account <ArrowRight className="w-4 h-4" />
+        </span>
+      </LoadingButtonV2>
     </div>
   );
 }
