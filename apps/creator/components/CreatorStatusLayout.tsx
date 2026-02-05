@@ -1,7 +1,6 @@
 'use client';
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useCreatorMutations } from '@/hooks/useCreatorMutations';
 import { configService } from '@/util/config';
 import { CreatorApprovalStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -16,7 +15,6 @@ interface Props {
 
 export const CreatorStatusLayout = ({ status }: Props) => {
   const { setOpenLogoutModal } = useUtilsStore();
-  const { submitCreatorVerificationDetails } = useCreatorMutations();
 
   if (status === CreatorApprovalStatus.Review) {
     return <CreatorApplicationForm />;

@@ -7,8 +7,8 @@ export const ISSUE_IMPERSONATE_TOKEN_MUTATION = graphql(`
 `);
 
 export const GENERATE_OTP_MUTATION = graphql(`
-  mutation GenerateOtpMutation($email: String!) {
-    generateOtp(email: $email)
+  mutation GenerateOtpMutation($input: GenerateOtpInput!) {
+    generateOtp(input: $input)
   }
 `);
 

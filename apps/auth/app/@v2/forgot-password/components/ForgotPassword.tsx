@@ -1,4 +1,5 @@
 import { useAuthActions } from '@workspace/gql/actions/auth.actions';
+import { EmailType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Input } from '@workspace/ui/components/input';
@@ -25,8 +26,8 @@ export const ForgotPassword = () => {
 
   const handleResendOtp = async () => {
     try {
-      await generateOtpMutation(email);
-      successHandler({ message: 'Verification code resent' });
+      const { data } = await generateOtpMutation({ email, emailType: EmailType.EmailVerification });
+      successHandler({ message: data?.generateOtp as string });
     } catch (error) {
       errorHandler({ error });
     }
@@ -71,8 +72,8 @@ export const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      await generateOtpMutation(email);
-      successHandler({ message: 'Verification code sent to your email' });
+      const { data } = await generateOtpMutation({ email, emailType: EmailType.EmailVerification });
+      successHandler({ message: data?.generateOtp as string });
       setStep('VERIFY');
     } catch (error) {
       errorHandler({ error });

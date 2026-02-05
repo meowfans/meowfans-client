@@ -16,7 +16,6 @@ import { toast } from 'sonner';
 const Login = dynamic(() => import('@/components/Login'), { ssr: false });
 const Footer = dynamic(() => import('@/components/Footer'), { ssr: false });
 const Signup = dynamic(() => import('@/components/Signup'), { ssr: false });
-const ForgotPassword = dynamic(() => import('@/components/ForgotPassword'), { ssr: false });
 const CreatorSignup = dynamic(() => import('@/components/CreatorSignup'), { ssr: false });
 
 export default function Auth() {
@@ -96,9 +95,6 @@ export default function Auth() {
 
                 case AuthPaths.LOGIN:
                   return <Login loading={loading} handleLogin={handleLogin} />;
-
-                case AuthPaths.FORGOT_PASSWORD:
-                  return <ForgotPassword />;
 
                 case AuthPaths.CREATOR_SIGNUP:
                   return <CreatorSignup loading={loading} handleCreatorSignUp={handleCreatorSignup} />;
