@@ -6,7 +6,7 @@ import { AppLogo } from './AppLogo';
 
 export function AuthHero() {
   const stats = [
-    { icon: <Users className="w-4 h-4" />, label: '10k+ Creators', sublabel: 'Joined this week' },
+    { icon: <Users className="w-4 h-4" />, label: '5k+ Creators', sublabel: 'Joined this week' },
     { icon: <Camera className="w-4 h-4" />, label: '800k+', sublabel: 'Exclusive Photos' },
     { icon: <Zap className="w-4 h-4" />, label: '99.9%', sublabel: 'Uptime' }
   ];

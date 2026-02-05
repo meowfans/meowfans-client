@@ -16,7 +16,7 @@ interface CreatorSignupOtpStepProps {
 }
 
 export const CreatorSignupOtpStep = ({ email, otp, setOtp, handleVerify, loading, onBack, onResend }: CreatorSignupOtpStepProps) => {
-  const [timer, setTimer] = useState<number>(30);
+  const [timer, setTimer] = useState<number>(120);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -31,7 +31,7 @@ export const CreatorSignupOtpStep = ({ email, otp, setOtp, handleVerify, loading
   const handleResendClick = () => {
     if (timer === 0) {
       onResend();
-      setTimer(30);
+      setTimer(120);
     }
   };
 

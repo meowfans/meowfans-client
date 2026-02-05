@@ -8,6 +8,7 @@ import useAPI from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { buildSafeUrl } from '@/util/helpers';
 import { useAuthActions } from '@workspace/gql/actions/auth.actions';
+import { EmailType } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
@@ -68,8 +69,8 @@ export function CreatorSignupForm() {
 
   const handleResendOtp = async () => {
     try {
-      await generateOtpMutation(input.email);
-      successHandler({ message: 'Verification code resent' });
+      const { data } = await generateOtpMutation({ email: input.email, emailType: EmailType.EmailVerification });
+      successHandler({ message: data?.generateOtp as string });
     } catch (error) {
       errorHandler({ error });
     }
@@ -100,9 +101,9 @@ export function CreatorSignupForm() {
 
     setLoading(true);
     try {
-      await generateOtpMutation(input.email);
+      const { data } = await generateOtpMutation({ email: input.email, emailType: EmailType.EmailVerification });
       setStep(3);
-      successHandler({ message: 'Verification code sent to your email' });
+      successHandler({ message: data?.generateOtp as string });
     } catch (error) {
       errorHandler({ error });
     } finally {

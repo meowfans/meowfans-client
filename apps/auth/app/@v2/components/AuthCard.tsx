@@ -1,7 +1,9 @@
 'use client';
 
+import { configService } from '@/util/config';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
+import { buildSafeUrl } from '@workspace/ui/lib/helpers';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -54,7 +56,7 @@ export function AuthCard() {
             <p className="text-sm text-zinc-500">
               By continuing, you agree to our{' '}
               <Link
-                href="/terms"
+                href={buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL, pathname: '/terms' })}
                 className="text-zinc-400 underline decoration-zinc-800 underline-offset-4 hover:text-white transition-colors"
                 target="_blank"
               >
@@ -62,7 +64,7 @@ export function AuthCard() {
               </Link>{' '}
               and{' '}
               <Link
-                href="/privacy"
+                href={buildSafeUrl({ host: configService.NEXT_PUBLIC_APP_URL, pathname: '/privacy' })}
                 className="text-zinc-400 underline decoration-zinc-800 underline-offset-4 hover:text-white transition-colors"
                 target="_blank"
               >

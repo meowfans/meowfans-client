@@ -23,7 +23,7 @@ type Documents = {
     "\n  mutation DeleteAllAssets {\n    deleteAllAssets\n  }\n": typeof types.DeleteAllAssetsDocument,
     "\n  mutation UpdateAssets($input: UpdateAssetsInput!) {\n    updateAssets(input: $input) {\n      assetId\n      createdAt\n      creatorId\n      deletedAt\n      id\n      type\n      asset {\n        createdAt\n        creatorId\n        fileType\n        id\n        mediaType\n        mimeType\n        rawUrl\n        updatedAt\n      }\n    }\n  }\n": typeof types.UpdateAssetsDocument,
     "\n  mutation IssueImpersonationTokenMutation($creatorId: String!) {\n    issueImpersonationToken(creatorId: $creatorId)\n  }\n": typeof types.IssueImpersonationTokenMutationDocument,
-    "\n  mutation GenerateOtpMutation($email: String!) {\n    generateOtp(email: $email)\n  }\n": typeof types.GenerateOtpMutationDocument,
+    "\n  mutation GenerateOtpMutation($input: GenerateOtpInput!) {\n    generateOtp(input: $input)\n  }\n": typeof types.GenerateOtpMutationDocument,
     "\n  query ValidateOtpQuery($input: ValidateOtpInput!) {\n    validateOtp(input: $input)\n  }\n": typeof types.ValidateOtpQueryDocument,
     "\n  mutation ForgotAndResetPasswordMutation($input: LoginInput!) {\n    forgotAndResetPassword(input: $input)\n  }\n": typeof types.ForgotAndResetPasswordMutationDocument,
     "\n  mutation CreateChannel($input: CreateChannelInput!) {\n    createChannel(input: $input)\n  }\n": typeof types.CreateChannelDocument,
@@ -118,7 +118,7 @@ const documents: Documents = {
     "\n  mutation DeleteAllAssets {\n    deleteAllAssets\n  }\n": types.DeleteAllAssetsDocument,
     "\n  mutation UpdateAssets($input: UpdateAssetsInput!) {\n    updateAssets(input: $input) {\n      assetId\n      createdAt\n      creatorId\n      deletedAt\n      id\n      type\n      asset {\n        createdAt\n        creatorId\n        fileType\n        id\n        mediaType\n        mimeType\n        rawUrl\n        updatedAt\n      }\n    }\n  }\n": types.UpdateAssetsDocument,
     "\n  mutation IssueImpersonationTokenMutation($creatorId: String!) {\n    issueImpersonationToken(creatorId: $creatorId)\n  }\n": types.IssueImpersonationTokenMutationDocument,
-    "\n  mutation GenerateOtpMutation($email: String!) {\n    generateOtp(email: $email)\n  }\n": types.GenerateOtpMutationDocument,
+    "\n  mutation GenerateOtpMutation($input: GenerateOtpInput!) {\n    generateOtp(input: $input)\n  }\n": types.GenerateOtpMutationDocument,
     "\n  query ValidateOtpQuery($input: ValidateOtpInput!) {\n    validateOtp(input: $input)\n  }\n": types.ValidateOtpQueryDocument,
     "\n  mutation ForgotAndResetPasswordMutation($input: LoginInput!) {\n    forgotAndResetPassword(input: $input)\n  }\n": types.ForgotAndResetPasswordMutationDocument,
     "\n  mutation CreateChannel($input: CreateChannelInput!) {\n    createChannel(input: $input)\n  }\n": types.CreateChannelDocument,
@@ -257,7 +257,7 @@ export function graphql(source: "\n  mutation IssueImpersonationTokenMutation($c
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation GenerateOtpMutation($email: String!) {\n    generateOtp(email: $email)\n  }\n"): (typeof documents)["\n  mutation GenerateOtpMutation($email: String!) {\n    generateOtp(email: $email)\n  }\n"];
+export function graphql(source: "\n  mutation GenerateOtpMutation($input: GenerateOtpInput!) {\n    generateOtp(input: $input)\n  }\n"): (typeof documents)["\n  mutation GenerateOtpMutation($input: GenerateOtpInput!) {\n    generateOtp(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

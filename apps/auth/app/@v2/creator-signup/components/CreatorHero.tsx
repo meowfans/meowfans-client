@@ -8,7 +8,7 @@ export function CreatorHero() {
   const benefits = [
     {
       icon: <DollarSign className="w-5 h-5" />,
-      title: '$45M+ Paid',
+      title: '',
       desc: 'Transparent payouts every week.',
       color: 'text-orange-400'
     },
