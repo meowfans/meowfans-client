@@ -33,6 +33,7 @@ export const CreatorApplicationForm = () => {
   const { setOpenLogoutModal } = useUtilsStore();
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [formData, setFormData] = useState(emptyFormData);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -105,6 +106,31 @@ export const CreatorApplicationForm = () => {
     setSelectedFile(null);
   };
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.4; // optional
+    audio.loop = true;
+
+    const playAudio = async () => {
+      try {
+        await audio.play();
+      } catch {
+        const resumeOnInteraction = () => {
+          audio.play().catch(() => {});
+          window.removeEventListener('click', resumeOnInteraction);
+          window.removeEventListener('keydown', resumeOnInteraction);
+        };
+
+        window.addEventListener('click', resumeOnInteraction);
+        window.addEventListener('keydown', resumeOnInteraction);
+      }
+    };
+
+    playAudio();
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background selection:bg-primary/20">
       <motion.div
@@ -124,20 +150,10 @@ export const CreatorApplicationForm = () => {
             Sign Out
           </Button>
         </div>
-        <audio
-          ref={(el) => {
-            if (el) {
-              el.volume = 0.2;
-              el.play().catch(() => console.log('Autoplay blocked'));
-            }
-          }}
-          loop
-          autoPlay
-          src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112762.mp3"
-        />
+        <audio ref={audioRef} src="/creator_application.mp3" />
         <Card className="relative overflow-hidden border-muted/40 bg-background/60 backdrop-blur-xl shadow-2xl">
           <CardHeader className="text-center pb-2">
-            <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
+            <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-linear-to-br from-foreground to-foreground/70">
               Creator Application
             </CardTitle>
             <CardDescription className="text-base text-muted-foreground/80">Tell us a bit about yourself to get started</CardDescription>
@@ -226,7 +242,7 @@ export const CreatorApplicationForm = () => {
                       placeholder="Tell us about your content and goals..."
                       value={formData.motivation}
                       onChange={(e) => setFormData((prev) => ({ ...prev, motivation: e.target.value }))}
-                      className="bg-muted/30 border-muted-foreground/20 focus:border-purple-500/50 transition-all min-h-[80px] resize-none"
+                      className="bg-muted/30 border-muted-foreground/20 focus:border-purple-500/50 transition-all min-h-20 resize-none"
                       required
                     />
                   </div>
@@ -314,7 +330,7 @@ export const CreatorApplicationForm = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-[2] bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/20"
+                      className="flex-2 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/20"
                       disabled={loading || uploading || !selectedFile}
                     >
                       {loading || uploading ? (
