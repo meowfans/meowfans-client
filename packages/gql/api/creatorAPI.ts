@@ -41,9 +41,22 @@ export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
           processingObjectCount
           rejectedObjectCount
           status
+          verification {
+            creatorId
+            passed
+            score
+            answers
+            createdAt
+          }
         }
       }
     }
+  }
+`);
+
+export const UPDATE_CREATOR_APPROVAL_STATUS_MUTATION = graphql(`
+  mutation UpdateCreatorApprovalStatus($input: UpdateCreatorApprovalStatusInput!) {
+    updateCreatorApprovalStatus(input: $input)
   }
 `);
 
