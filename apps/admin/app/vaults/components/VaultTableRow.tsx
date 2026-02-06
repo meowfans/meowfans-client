@@ -1,8 +1,4 @@
-import { ImpersonateCreatorTrigger } from '@/components/ImpersonateTrigger';
-import { DownloadCreatorsAllVaultsModal } from '@/components/modals/DownloadCreatorsAllVaultsModal';
-import { useMutation } from '@apollo/client/react';
-import { CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION } from '@workspace/gql/api/vaultsAPI';
-import { CleanUpVaultOutput, DownloadStates, UsersEntity } from '@workspace/gql/generated/graphql';
+import { DownloadStates, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Checkbox } from '@workspace/ui/components/checkbox';
 import { TableCell, TableRow } from '@workspace/ui/components/table';
@@ -10,12 +6,12 @@ import { ApplyButtonTooltip } from '@workspace/ui/globals/ApplyTooltip';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import { ArrowUpRight, Copy, CopyCheck, Download, Redo } from 'lucide-react';
+import { Copy, CopyCheck } from 'lucide-react';
 import moment from 'moment';
-import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { statusButtons } from './VaultsHeader';
+import { VaultsTableRowOptions } from './VaultsTableRowOptions';
 
 interface Props {
   idx: number;
@@ -31,34 +27,7 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
   const { errorHandler } = useErrorHandler();
   const [usernameCopied, setUsernameCopied] = useState<string | null>(null);
   const [userIdCopied, setUserIdCopied] = useState<string | null>(null);
-  const [downloadAllCreatorVaultsModal, setDownloadAllCreatorVaultsModal] = useState<boolean>(false);
-  const [cleanUpVaultObjects] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
   const creatorProfile = user.creatorProfile;
-  const canNotDownloadAllVaultObjects =
-    !creatorProfile.pendingObjectCount && !creatorProfile.rejectedObjectCount && !creatorProfile.processingObjectCount;
-
-  const handleCleanUpVaultObjects = async (creatorId: string) => {
-    try {
-      const { data } = await cleanUpVaultObjects({ variables: { input: { creatorId } } });
-      const { affected, fulfilledObjectCount, pendingObjectCount, processingObjectCount, rejectedObjectCount } =
-        data?.cleanUpVaultObjectsOfACreator as CleanUpVaultOutput;
-      toast.success('Reverted objects to rejected state', {
-        description: affected
-      });
-      onUpdateCreator({
-        ...user,
-        creatorProfile: {
-          ...creatorProfile,
-          rejectedObjectCount,
-          processingObjectCount,
-          pendingObjectCount,
-          fulfilledObjectCount
-        }
-      });
-    } catch {
-      toast.error('Something wrong happened!');
-    }
-  };
 
   const handleCopy = async (url: string, type: 'id' | 'username') => {
     try {
@@ -121,48 +90,14 @@ export const VaultTableRow: React.FC<Props> = ({ idx, user, onJobAdded, onUpdate
         <span className="text-xs">{moment(user.createdAt).format('LT L')}</span>
       </TableCell>
       <TableCell className="table-cell">
-        <div className="flex items-center space-x-2">
-          <ImpersonateCreatorTrigger creator={user} />
-
-          <ApplyButtonTooltip
-            buttonProps={{ icon: userIdCopied ? CopyCheck : Copy, variant: 'ghost', size: 'icon' }}
-            tootTipTitle="Copy userId"
-            onClick={() => handleCopy(user.id, 'id')}
-          />
-
-          <Link href={`/vaults/${user.username}?status=${DownloadStates.Pending}`}>
-            <ApplyButtonTooltip buttonProps={{ icon: ArrowUpRight, variant: 'ghost', size: 'icon' }} tootTipTitle="Visit" />
-          </Link>
-
-          <ApplyButtonTooltip
-            buttonProps={{ icon: Redo, variant: 'ghost', size: 'icon' }}
-            tootTipTitle="Revert processing"
-            onClick={() =>
-              toast('Clean up processing objects', {
-                description: 'Be aware of this as this is not reversible!',
-                action: {
-                  label: 'Yes',
-                  onClick: () => handleCleanUpVaultObjects(user.id)
-                }
-              })
-            }
-          />
-
-          <ApplyButtonTooltip
-            buttonProps={{ icon: Download, variant: 'ghost', size: 'icon' }}
-            tootTipTitle="Download all"
-            disabled={canNotDownloadAllVaultObjects}
-            onClick={() => setDownloadAllCreatorVaultsModal(true)}
-          />
-        </div>
+        <VaultsTableRowOptions
+          onJobAdded={onJobAdded}
+          user={user}
+          onCopy={handleCopy}
+          onUpdateCreator={onUpdateCreator}
+          userIdCopied={userIdCopied}
+        />
       </TableCell>
-      <DownloadCreatorsAllVaultsModal
-        user={user}
-        isOpen={downloadAllCreatorVaultsModal}
-        setOpen={setDownloadAllCreatorVaultsModal}
-        onJobAdded={onJobAdded}
-        onCancel={() => setDownloadAllCreatorVaultsModal(false)}
-      />
     </TableRow>
   );
 };

@@ -15,6 +15,7 @@ interface InfiniteScrollManagerProps {
   LoadingComponent?: React.ReactNode;
   scrollThreshold?: number;
   inverse?: boolean;
+  useWindowScroll?: boolean;
 }
 
 export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
@@ -26,8 +27,24 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   inverse,
   scrollThreshold = 0.7,
   customHeight = 'h-[100vh]',
-  LoadingComponent
+  LoadingComponent,
+  useWindowScroll
 }) => {
+  if (useWindowScroll) {
+    return (
+      <InfiniteScroll
+        inverse={inverse}
+        loader={LoadingComponent ?? null}
+        hasMore={hasMore}
+        scrollThreshold={scrollThreshold}
+        next={onLoadMore}
+        dataLength={dataLength}
+      >
+        {children}
+      </InfiniteScroll>
+    );
+  }
+
   return scrollableDiv ? (
     <InfiniteScroll
       inverse={inverse}

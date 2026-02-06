@@ -1,4 +1,4 @@
-import { DownloadStates } from '@workspace/gql/generated/graphql';
+import { CreatorApprovalStatus, DownloadStates } from '@workspace/gql/generated/graphql';
 import {
   AudioWaveform,
   CircleUserRound,
@@ -18,6 +18,13 @@ export const statusLabels: Record<DownloadStates, string> = {
   [DownloadStates.Pending]: 'Total pending objects',
   [DownloadStates.Processing]: 'Total processing objects',
   [DownloadStates.Rejected]: 'Total rejected objects'
+};
+
+export const approvalStatusMap: Record<CreatorApprovalStatus, string> = {
+  [CreatorApprovalStatus.Accepted]: 'bg-green-500',
+  [CreatorApprovalStatus.Rejected]: 'bg-red-500',
+  [CreatorApprovalStatus.Requested]: 'bg-yellow-500',
+  [CreatorApprovalStatus.Review]: 'bg-blue-500'
 };
 
 export enum ProfileCharts {
