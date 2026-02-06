@@ -8,10 +8,11 @@ import {
   HomeIcon,
   LayoutDashboard,
   Settings,
-  Settings2
+  Settings2,
+  ShieldAlert
 } from 'lucide-react';
 
-export const authenticatedPaths = ['/home', '/assets', '/profiles', '/more', '/vaults'];
+export const authenticatedPaths = ['/home', '/assets', '/profiles', '/more', '/vaults', '/approvals'];
 
 export const statusLabels: Record<DownloadStates, string> = {
   [DownloadStates.Fulfilled]: 'Total downloaded objects',
@@ -39,7 +40,8 @@ export const appBottomNavButtonOptions = [
   { icon: GalleryVerticalEnd, title: 'Assets', path: '/assets' },
   { icon: Home, title: 'Vaults', path: '/vaults' },
   { icon: CircleUserRound, title: 'Profiles', path: '/profiles' },
-  { icon: HomeIcon, title: 'Subscriptions', path: '/home' }
+  { icon: HomeIcon, title: 'Subscriptions', path: '/home' },
+  { icon: ShieldAlert, title: 'Approvals', path: '/approvals' }
 ];
 
 export const appSideBarButtonOptions = {
@@ -49,8 +51,9 @@ export const appSideBarButtonOptions = {
     { name: 'Fan', logo: Command, plan: 'Free' }
   ],
   navMain: [
-    { title: 'Home', url: '/home', icon: LayoutDashboard },
     { title: 'Vaults', url: '/vaults', icon: Home },
+    { title: 'Home', url: '/home', icon: LayoutDashboard },
+    { title: 'Approvals', url: '/approvals', icon: ShieldAlert },
     { title: 'Profiles', url: '/profiles', icon: CircleUserRound },
     { title: 'Assets', url: '/assets', icon: GalleryVerticalEnd },
     { title: 'More', url: '/more', icon: Settings, badge: '10' }

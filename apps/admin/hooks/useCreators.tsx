@@ -55,7 +55,7 @@ export const useCreators = (params: PaginationInput) => {
 
   useEffect(() => {
     loadAllCreators(true);
-  }, [params.sortBy, params.orderBy]); //eslint-disable-line
+  }, [params.sortBy, params.orderBy, params.creatorApprovalStatus]); //eslint-disable-line
 
   return {
     creators,
