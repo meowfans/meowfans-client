@@ -14,9 +14,9 @@ export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
   query GetCreatorsByAdmin($input: PaginationInput!) {
     getCreatorsByAdmin(input: $input) {
       count
-      totalPages
       hasNext
       hasPrev
+      totalPages
       creators {
         avatarUrl
         bannerUrl
@@ -40,6 +40,7 @@ export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
           pendingObjectCount
           processingObjectCount
           rejectedObjectCount
+          status
         }
       }
     }

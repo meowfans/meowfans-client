@@ -17,14 +17,18 @@ export const useCreators = (params: PaginationInput) => {
     totalPages: 0
   });
 
-  const loadAllCreators = async () => {
+  const loadAllCreators = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : creators.length;
     setLoading(creators.length === 0);
+
     try {
-      const { data } = await getCreatorsByAdminQuery({ ...params });
+      const { data } = await getCreatorsByAdminQuery({ ...params, take: 100, skip });
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
-      setHasMore(!!fetchedCreators.length);
-      setCreators(fetchedCreators);
+      setHasMore(fetchedCreators.length === 100);
+
+      if (initialLoad) setCreators(fetchedCreators);
+      else setCreators([...creators, ...fetchedCreators]);
 
       setMeta({
         count: data?.getCreatorsByAdmin.count ?? 0,
@@ -43,15 +47,26 @@ export const useCreators = (params: PaginationInput) => {
     loadAllCreators();
   };
 
+  const handlLoadMore = () => {
+    if (!loading && hasMore) {
+      loadAllCreators();
+    }
+  };
+
   useEffect(() => {
-    loadAllCreators();
-  }, []); //eslint-disable-line
+    loadAllCreators(true);
+  }, [params.sortBy, params.orderBy]); //eslint-disable-line
 
   return {
     creators,
     loading,
     hasMore,
-    ...meta,
-    handleRefetch
+    meta,
+    count: meta.count,
+    handleRefetch,
+    handlLoadMore,
+    hasNext: meta.hasNext,
+    hasPrev: meta.hasPrev,
+    totalPages: meta.totalPages
   };
 };

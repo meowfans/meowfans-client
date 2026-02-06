@@ -1,60 +1,31 @@
 'use client';
 
 import { useCreators } from '@/hooks/useCreators';
-import { SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { approvalStatusMap } from '@/lib/constants';
+import { SortBy } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
-import { Button } from '@workspace/ui/components/button';
+import { Badge } from '@workspace/ui/components/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
-import { Edit, GalleryThumbnailsIcon, GalleryVertical } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { AssetsEditOptions } from './AssetsEditOptions';
 
 export const Assets = () => {
-  const searchParams = useSearchParams();
-  const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
-  const topRef = useRef<HTMLDivElement>(null);
-  const [allCreators, setAllCreators] = useState<UsersEntity[]>([]);
-
-  const { creators, hasNext, loading } = useCreators({
-    pageNumber,
-    sortBy: SortBy.AssetCount
-  });
-
-  useEffect(() => {
-    if (!loading && creators.length > 0) {
-      if (pageNumber === 1) {
-        setAllCreators(creators);
-      } else {
-        setAllCreators((prev) => {
-          const newIds = new Set(creators.map((c) => c.id));
-          const existing = prev.filter((c) => !newIds.has(c.id));
-          return [...existing, ...creators];
-        });
-      }
-    }
-  }, [creators, loading, pageNumber]);
+  const { creators, hasMore, loading, handlLoadMore } = useCreators({ sortBy: SortBy.AssetCount });
 
   return (
     <PageManager>
       {creators.length ? (
-        <InfiniteScrollManager
-          dataLength={allCreators.length}
-          hasMore={!!hasNext}
-          onLoadMore={() => setPageNumber((prev) => prev + 1)}
-          loading={loading}
-        >
-          <div ref={topRef} />
+        <InfiniteScrollManager dataLength={creators.length} hasMore={hasMore} onLoadMore={handlLoadMore} loading={loading}>
           <Table>
-            <TableHeader className="bg-muted/50 sticky top-0 z-30 backdrop-blur-sm">
+            <TableHeader className="z-30 bg-muted/50 backdrop-blur-sm">
               <TableRow className="border-b border-border hover:bg-transparent">
-                <TableHead className="min-w-35 sm:min-w-62.5">User</TableHead>
-                <TableHead className="whitespace-nowrap min-w-37.5">Total Assets</TableHead>
-                <TableHead className="text-right right-0 z-30 bg-card/95 backdrop-blur hidden md:table-cell">Actions</TableHead>
-                <TableHead className="text-right md:hidden">Actions</TableHead>
+                <TableHead className="sticky left-0 top-0 z-40 bg-card min-w-35 sm:min-w-62.5">User</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card whitespace-nowrap min-w-37.5">Status</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card whitespace-nowrap min-w-37.5">Total Assets</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card text-right hidden md:table-cell">Actions</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card text-right md:hidden">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -76,49 +47,14 @@ export const Assets = () => {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell className="font-medium text-muted-foreground">
+                    <Badge variant="outline" className={approvalStatusMap[creator.creatorProfile.status]}>
+                      {creator.creatorProfile.status}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="font-medium text-muted-foreground">{creator.creatorProfile.assetCount ?? 0} Assets</TableCell>
                   <TableCell className="text-right p-2 sm:p-4">
-                    <div className="flex justify-end gap-2">
-                      <Link href={`/assets/${creator.username}?p=${pageNumber}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          <GalleryThumbnailsIcon className="w-3.5 h-3.5 sm:mr-1.5" />
-                          <span className="hidden sm:inline">Assets</span>
-                        </Button>
-                      </Link>
-
-                      <Link href={`/vaults/${creator.username}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          <GalleryThumbnailsIcon className="w-3.5 h-3.5 sm:mr-1.5" />
-                          <span className="hidden sm:inline">Vaults</span>
-                        </Button>
-                      </Link>
-                      <Link href={`/${creator.username}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          <GalleryVertical className="w-3.5 h-3.5 sm:mr-1.5" />
-                          <span className="hidden sm:inline">Posts</span>
-                        </Button>
-                      </Link>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 rounded-full hover:border-primary/50 hover:text-primary transition-colors text-xs sm:text-sm px-2 sm:px-3"
-                      >
-                        <Edit className="w-3.5 h-3.5 sm:mr-1.5" />
-                        <span className="hidden sm:inline">Edit</span>
-                      </Button>
-                    </div>
+                    <AssetsEditOptions creator={creator} />
                   </TableCell>
                 </TableRow>
               ))}

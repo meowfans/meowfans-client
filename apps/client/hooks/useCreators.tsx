@@ -5,11 +5,11 @@ import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useCreators = ({ sortBy = SortBy.UserCreatedAt, take = 40, orderBy = SortOrder.Desc }: PaginationInput) => {
-  const { publicGetDefaultCreatorsQuery } = useCreatorsActions();
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(false);
+  const { publicGetDefaultCreatorsQuery } = useCreatorsActions();
 
   const loadCreators = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : creators.length;

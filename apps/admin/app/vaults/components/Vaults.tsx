@@ -5,7 +5,7 @@ import { TerminateImportingJobsModal } from '@/components/modals/TerminateImport
 import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreators } from '@/hooks/useCreators';
 import { handleScrollToTheEnd, handleScrollToTheTop } from '@/util/helpers';
-import { DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
+import { DataFetchType, DownloadStates, SortBy, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table';
 import { PageManager } from '@workspace/ui/globals/PageManager';
 import { Paginate } from '@workspace/ui/globals/Paginate';
@@ -26,7 +26,11 @@ export const Vaults = () => {
   const [selectedCreatorIds, setSelectedCreatorIds] = useState<string[]>([]);
   const [filterBy, setFilterBy] = useState<DownloadStates>(DownloadStates.Pending);
   const [pageNumber, setPageNumber] = useState<number>(Number(searchParams.get('p') || 1));
-  const { creators, count, handleRefetch, hasNext, hasPrev, totalPages } = useCreators({ pageNumber, sortBy });
+  const { creators, count, handleRefetch, hasNext, hasPrev, totalPages } = useCreators({
+    pageNumber,
+    sortBy,
+    dataFetchType: DataFetchType.Pagination
+  });
 
   const toggleCreatorSelection = (creatorId: string) => {
     setSelectedCreatorIds((prev) => (prev.includes(creatorId) ? prev.filter((id) => id !== creatorId) : [...prev, creatorId]));
