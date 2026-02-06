@@ -186,7 +186,7 @@ export const Approvals = () => {
               </Avatar>
               <div>
                 <SheetTitle className="text-xl">Application Details</SheetTitle>
-                <SheetDescription>Reviewing {selectedCreator?.username}'s application</SheetDescription>
+                <SheetDescription>Reviewing {selectedCreator?.username}&apos;s application</SheetDescription>
               </div>
             </div>
           </SheetHeader>
