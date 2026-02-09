@@ -3,9 +3,10 @@
 import { BlurImage } from '@/components/BlurImage';
 import { InteractionButton } from '@/components/InteractionButton';
 import { PaymentModal } from '@/components/PaymentModal';
+import { ReportModal } from '@/components/ReportModal';
 import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { useSinglePost } from '@/hooks/usePosts';
-import { PurchaseType } from '@workspace/gql/generated/graphql';
+import { EntityType, PurchaseType } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
@@ -30,6 +31,7 @@ export function PostDetailView({ id }: PostDetailViewProps) {
   const { post, loading } = useSinglePost({ postId: id });
   const { likePost } = useLikeMutations();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   if (loading) {
     return (
@@ -114,6 +116,7 @@ export function PostDetailView({ id }: PostDetailViewProps) {
                 variant="ghost"
                 size="icon"
                 className="h-10 w-10 md:h-12 md:w-12 rounded-[1rem] md:rounded-[1.25rem] bg-secondary/20 hover:bg-secondary/40 border border-white/5 shadow-xl transition-all"
+                onClick={() => setIsReportModalOpen(true)}
               >
                 <MoreVertical className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
@@ -204,35 +207,55 @@ export function PostDetailView({ id }: PostDetailViewProps) {
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between pt-6 md:pt-8 border-t border-white/5">
                   <div className="flex items-center gap-4 md:gap-6">
                     <button
-                      onClick={handleLike}
-                      className="flex items-center gap-2 md:gap-3 group transition-transform active:scale-90 text-left"
+                      onClick={(e) => {
+                        if (post.unlockPrice && !post.isPurchased) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          return;
+                        }
+                        handleLike(e);
+                      }}
+                      className={`flex items-center gap-2 md:gap-3 group transition-transform active:scale-90 text-left ${post.unlockPrice && !post.isPurchased ? 'cursor-not-allowed opacity-40' : ''}`}
                     >
                       <div
                         className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-[0.75rem] md:rounded-[1.25rem] border border-white/5 transition-all ${post.isLiked ? 'bg-red-500/10 border-red-500/20' : 'bg-secondary/20 group-hover:bg-secondary/40'}`}
                       >
-                        <Heart
-                          className={`h-4 w-4 md:h-6 md:w-6 transition-all ${post.isLiked ? 'fill-red-500 text-red-500' : 'text-muted-foreground/60 group-hover:text-foreground'}`}
-                        />
+                        {post.unlockPrice && !post.isPurchased ? (
+                          <Lock className="h-4 w-4 md:h-6 md:w-6 text-muted-foreground/60" />
+                        ) : (
+                          <Heart
+                            className={`h-4 w-4 md:h-6 md:w-6 transition-all ${post.isLiked ? 'fill-red-500 text-red-500' : 'text-muted-foreground/60 group-hover:text-foreground'}`}
+                          />
+                        )}
                       </div>
                       <div className="flex flex-col">
                         <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
                           Appreciation
                         </span>
                         <span className="text-xs md:text-sm font-black italic tracking-tighter uppercase">
-                          {post.isLiked ? 'Loved' : 'Love'}
+                          {post.unlockPrice && !post.isPurchased ? 'Locked' : post.isLiked ? 'Loved' : 'Love'}
                         </span>
                       </div>
                     </button>
 
-                    <button className="flex items-center gap-2 md:gap-3 group transition-transform active:scale-90 text-left">
+                    <button
+                      className={`flex items-center gap-2 md:gap-3 group transition-transform active:scale-90 text-left ${post.unlockPrice && !post.isPurchased ? 'cursor-not-allowed opacity-40' : ''}`}
+                      disabled={!!(post.unlockPrice && !post.isPurchased)}
+                    >
                       <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-[0.75rem] md:rounded-[1.25rem] border border-white/5 bg-secondary/20 group-hover:bg-secondary/40 transition-all">
-                        <MessageSquare className="h-4 w-4 md:h-6 md:w-6 text-muted-foreground/60 group-hover:text-foreground" />
+                        {post.unlockPrice && !post.isPurchased ? (
+                          <Lock className="h-4 w-4 md:h-6 md:w-6 text-muted-foreground/60" />
+                        ) : (
+                          <MessageSquare className="h-4 w-4 md:h-6 md:w-6 text-muted-foreground/60 group-hover:text-foreground" />
+                        )}
                       </div>
                       <div className="flex flex-col">
                         <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
                           Join Chat
                         </span>
-                        <span className="text-xs md:text-sm font-black italic tracking-tighter uppercase">Discuss</span>
+                        <span className="text-xs md:text-sm font-black italic tracking-tighter uppercase">
+                          {post.unlockPrice && !post.isPurchased ? 'Locked' : 'Discuss'}
+                        </span>
                       </div>
                     </button>
                   </div>
@@ -259,7 +282,7 @@ export function PostDetailView({ id }: PostDetailViewProps) {
           </motion.div>
 
           {/* Comments Section */}
-          <PostComments postId={id} />
+          <PostComments postId={id} isLocked={!!(post.unlockPrice && !post.isPurchased)} />
         </div>
       </div>
       <PaymentModal
@@ -272,6 +295,7 @@ export function PostDetailView({ id }: PostDetailViewProps) {
         title="Unlock Premium Post"
         description="Get instant access to this exclusive drop from the creator."
       />
+      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} entityId={id} entityType={EntityType.Post} />
     </div>
   );
 }

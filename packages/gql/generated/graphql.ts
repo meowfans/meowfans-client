@@ -199,6 +199,12 @@ export type CreatePurchasePostInput = {
   postId: Scalars['String']['input'];
 };
 
+export type CreateReportInput = {
+  entityId: Scalars['String']['input'];
+  entityType: EntityType;
+  reason: Scalars['String']['input'];
+};
+
 export type CreateTransactionInput = {
   creatorId: Scalars['String']['input'];
   entityId: Scalars['String']['input'];
@@ -470,6 +476,16 @@ export enum EmailType {
   ForgotPassword = 'ForgotPassword',
   PasswordChanged = 'PasswordChanged',
   UserBanned = 'UserBanned'
+}
+
+export enum EntityType {
+  Comment = 'COMMENT',
+  Creator = 'CREATOR',
+  Fan = 'FAN',
+  Message = 'MESSAGE',
+  Post = 'POST',
+  Vault = 'VAULT',
+  VaultObject = 'VAULT_OBJECT'
 }
 
 export type FanAssetsEntity = {
@@ -747,6 +763,11 @@ export type GetPublicVaultsOutput = {
   unlockPrice?: Maybe<Scalars['Float']['output']>;
 };
 
+export type GetRecommendationsInput = {
+  entityType?: InputMaybe<EntityType>;
+  limit?: Scalars['Int']['input'];
+};
+
 export type GetZonePlansOutput = {
   __typename?: 'GetZonePlansOutput';
   id: Scalars['String']['output'];
@@ -872,6 +893,7 @@ export type MessageChannelParticipantsEntity = {
 
 export enum MessageChannelStatus {
   Accepted = 'ACCEPTED',
+  Blocked = 'BLOCKED',
   Rejected = 'REJECTED',
   Requested = 'REQUESTED'
 }
@@ -986,6 +1008,7 @@ export type Mutation = {
   createChannel: Scalars['String']['output'];
   createComment: PostCommentsEntity;
   createPost: PostsEntity;
+  createReport: ReportsEntity;
   createTransaction: TransactionOutput;
   deleteAllAssets: Scalars['Boolean']['output'];
   deleteComment: Scalars['Boolean']['output'];
@@ -1009,6 +1032,7 @@ export type Mutation = {
   likeVault?: Maybe<GetLikedVaultsOutput>;
   likeVaultObject?: Maybe<GetLikedVaultObjectsOutput>;
   purchasePost: PostPurchasesEntity;
+  resolveReport: ReportsEntity;
   restrictFan: Scalars['Boolean']['output'];
   savePost: PostsEntity;
   sendMessageFromCreator: MessagesOutput;
@@ -1070,6 +1094,11 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
+};
+
+
+export type MutationCreateReportArgs = {
+  input: CreateReportInput;
 };
 
 
@@ -1175,6 +1204,11 @@ export type MutationLikeVaultObjectArgs = {
 
 export type MutationPurchasePostArgs = {
   input: CreatePurchasePostInput;
+};
+
+
+export type MutationResolveReportArgs = {
+  input: ResolveReportInput;
 };
 
 
@@ -1306,6 +1340,7 @@ export type PaginationInput = {
   postTypes?: InputMaybe<Array<PostTypes>>;
   relatedEntityId?: InputMaybe<Scalars['ID']['input']>;
   relatedUserId?: InputMaybe<Scalars['String']['input']>;
+  reportStatus?: InputMaybe<ReportStatus>;
   role?: InputMaybe<UserRoles>;
   searchTerm?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -1474,6 +1509,7 @@ export type PostsEntity = {
   preview: Scalars['String']['output'];
   saveCount: Scalars['Float']['output'];
   shareCount: Scalars['Float']['output'];
+  tags?: Maybe<Array<Scalars['String']['output']>>;
   totalEarning: Scalars['Float']['output'];
   types: Array<PostTypes>;
   unlockPrice?: Maybe<Scalars['Int']['output']>;
@@ -1539,9 +1575,15 @@ export type Query = {
   getPublicTags: Array<TagsEntity>;
   getPublicVaultObjects: Array<GetPublicVaultObjectsOutput>;
   getPublicVaults: Array<GetPublicVaultsOutput>;
+  getRecommendedCreators: Array<CreatorProfilesEntity>;
+  getRecommendedPosts: Array<PostsEntity>;
+  getRecommendedVaultObjects: Array<VaultObjectsEntity>;
+  getRecommendedVaults: Array<VaultsEntity>;
+  getReports: Array<ReportsEntity>;
   getRestrictedUsers: Array<CreatorRestrictsEntity>;
   getSingleChannel: ChannelsOutput;
   getSinglePost: PostsEntity;
+  getSingleReport: ReportsEntity;
   getTotalObjectsAsType: Scalars['Int']['output'];
   getUser: UsersEntity;
   getVaultsAnalytics: Array<VaultStatsAnalyticsOutput>;
@@ -1717,6 +1759,31 @@ export type QueryGetPublicVaultsArgs = {
 };
 
 
+export type QueryGetRecommendedCreatorsArgs = {
+  input: GetRecommendationsInput;
+};
+
+
+export type QueryGetRecommendedPostsArgs = {
+  input: GetRecommendationsInput;
+};
+
+
+export type QueryGetRecommendedVaultObjectsArgs = {
+  input: GetRecommendationsInput;
+};
+
+
+export type QueryGetRecommendedVaultsArgs = {
+  input: GetRecommendationsInput;
+};
+
+
+export type QueryGetReportsArgs = {
+  input: PaginationInput;
+};
+
+
 export type QueryGetRestrictedUsersArgs = {
   input: PaginationInput;
 };
@@ -1729,6 +1796,11 @@ export type QueryGetSingleChannelArgs = {
 
 export type QueryGetSinglePostArgs = {
   input: PaginationInput;
+};
+
+
+export type QueryGetSingleReportArgs = {
+  reportId: Scalars['String']['input'];
 };
 
 
@@ -1759,6 +1831,29 @@ export type QueryUpdateLastSeenArgs = {
 
 export type QueryValidateOtpArgs = {
   input: ValidateOtpInput;
+};
+
+export enum ReportStatus {
+  Pending = 'PENDING',
+  Resolved = 'RESOLVED'
+}
+
+export type ReportsEntity = {
+  __typename?: 'ReportsEntity';
+  createdAt: Scalars['String']['output'];
+  entityId: Scalars['String']['output'];
+  entityType: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  reason: Scalars['String']['output'];
+  reportingUserId: Scalars['String']['output'];
+  resolveMessage?: Maybe<Scalars['String']['output']>;
+  resolvedAt: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+};
+
+export type ResolveReportInput = {
+  reportId: Scalars['String']['input'];
+  resolveMessage: Scalars['String']['input'];
 };
 
 export type RestrictFanInput = {
@@ -2625,6 +2720,34 @@ export type GetPostAnalyticsQueryVariables = Exact<{
 
 export type GetPostAnalyticsQuery = { __typename?: 'Query', getPostAnalytics: Array<{ __typename?: 'PostStatAnalyticsOutput', commentCount?: number | null, timestamp: any, id?: string | null, likeCount?: number | null, saveCount?: number | null, shareCount?: number | null, totalEarning?: number | null, unlockPrice?: number | null, viewCount?: number | null }> };
 
+export type CreateReportMutationVariables = Exact<{
+  input: CreateReportInput;
+}>;
+
+
+export type CreateReportMutation = { __typename?: 'Mutation', createReport: { __typename?: 'ReportsEntity', id: string, reason: string, status: string, createdAt: string } };
+
+export type ResolveReportMutationVariables = Exact<{
+  input: ResolveReportInput;
+}>;
+
+
+export type ResolveReportMutation = { __typename?: 'Mutation', resolveReport: { __typename?: 'ReportsEntity', id: string, resolveMessage?: string | null, status: string, resolvedAt: string } };
+
+export type GetReportsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+
+export type GetReportsQuery = { __typename?: 'Query', getReports: Array<{ __typename?: 'ReportsEntity', id: string, reason: string, status: string, resolveMessage?: string | null, createdAt: string, resolvedAt: string }> };
+
+export type GetReportQueryVariables = Exact<{
+  reportId: Scalars['String']['input'];
+}>;
+
+
+export type GetReportQuery = { __typename?: 'Query', getSingleReport: { __typename?: 'ReportsEntity', id: string, reason: string, status: string, resolveMessage?: string | null, createdAt: string, resolvedAt: string } };
+
 export type GetPublicTagsQueryVariables = Exact<{
   input: PaginationInput;
 }>;
@@ -2848,6 +2971,10 @@ export const GetPostAssetsDocument = {"kind":"Document","definitions":[{"kind":"
 export const GetSinglePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSinglePost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSinglePost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"commentCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"isPurchased"}},{"kind":"Field","name":{"kind":"Name","value":"lastCommentId"}},{"kind":"Field","name":{"kind":"Name","value":"likeCount"}},{"kind":"Field","name":{"kind":"Name","value":"objectCount"}},{"kind":"Field","name":{"kind":"Name","value":"preview"}},{"kind":"Field","name":{"kind":"Name","value":"saveCount"}},{"kind":"Field","name":{"kind":"Name","value":"shareCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalEarning"}},{"kind":"Field","name":{"kind":"Name","value":"types"}},{"kind":"Field","name":{"kind":"Name","value":"unlockPrice"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"viewCount"}},{"kind":"Field","name":{"kind":"Name","value":"postAssets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"asset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isPosted"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"mimeType"}},{"kind":"Field","name":{"kind":"Name","value":"rawUrl"}},{"kind":"Field","name":{"kind":"Name","value":"viewCount"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileType"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"latestComment"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"postId"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSinglePostQuery, GetSinglePostQueryVariables>;
 export const GetPublicSinglePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPublicSinglePost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"GetPostInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPublicSinglePost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"preview"}},{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isPurchased"}},{"kind":"Field","name":{"kind":"Name","value":"isLiked"}},{"kind":"Field","name":{"kind":"Name","value":"unlockPrice"}},{"kind":"Field","name":{"kind":"Name","value":"objectCount"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"isSaved"}},{"kind":"Field","name":{"kind":"Name","value":"likeCount"}},{"kind":"Field","name":{"kind":"Name","value":"viewCount"}},{"kind":"Field","name":{"kind":"Name","value":"saveCount"}},{"kind":"Field","name":{"kind":"Name","value":"shareCount"}},{"kind":"Field","name":{"kind":"Name","value":"commentCount"}},{"kind":"Field","name":{"kind":"Name","value":"creatorAvatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"creatorFullname"}},{"kind":"Field","name":{"kind":"Name","value":"creatorUsername"}},{"kind":"Field","name":{"kind":"Name","value":"postType"}},{"kind":"Field","name":{"kind":"Name","value":"postAssets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"rawUrl"}},{"kind":"Field","name":{"kind":"Name","value":"fileType"}}]}}]}}]}}]} as unknown as DocumentNode<GetPublicSinglePostQuery, GetPublicSinglePostQueryVariables>;
 export const GetPostAnalyticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPostAnalytics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PostStatsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostAnalytics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commentCount"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"likeCount"}},{"kind":"Field","name":{"kind":"Name","value":"saveCount"}},{"kind":"Field","name":{"kind":"Name","value":"shareCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalEarning"}},{"kind":"Field","name":{"kind":"Name","value":"unlockPrice"}},{"kind":"Field","name":{"kind":"Name","value":"viewCount"}}]}}]}}]} as unknown as DocumentNode<GetPostAnalyticsQuery, GetPostAnalyticsQueryVariables>;
+export const CreateReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateReportInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"reason"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<CreateReportMutation, CreateReportMutationVariables>;
+export const ResolveReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResolveReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ResolveReportInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resolveReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"resolveMessage"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"resolvedAt"}}]}}]}}]} as unknown as DocumentNode<ResolveReportMutation, ResolveReportMutationVariables>;
+export const GetReportsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetReports"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getReports"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"reason"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"resolveMessage"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"resolvedAt"}}]}}]}}]} as unknown as DocumentNode<GetReportsQuery, GetReportsQueryVariables>;
+export const GetReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reportId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSingleReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"reportId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reportId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"reason"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"resolveMessage"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"resolvedAt"}}]}}]}}]} as unknown as DocumentNode<GetReportQuery, GetReportQueryVariables>;
 export const GetPublicTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPublicTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPublicTags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]} as unknown as DocumentNode<GetPublicTagsQuery, GetPublicTagsQueryVariables>;
 export const SearchTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SearchTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchTags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]} as unknown as DocumentNode<SearchTagsQuery, SearchTagsQueryVariables>;
 export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUser"}}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;

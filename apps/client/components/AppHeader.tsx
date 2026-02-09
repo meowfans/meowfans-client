@@ -9,7 +9,7 @@ import { Button } from '@workspace/ui/components/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@workspace/ui/components/sheet';
 import { SidebarTrigger } from '@workspace/ui/components/sidebar';
 import { buildSafeUrl } from '@workspace/ui/lib/helpers';
-import { ArrowLeft, Bell, CreditCard, HardHat, LogOut, Settings, User } from 'lucide-react';
+import { ArrowLeft, Bell, CreditCard, HardHat, LogOut, Settings, ShieldAlert, User } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LogoutModal } from './LogoutModal';
@@ -114,6 +114,14 @@ export function AppHeader() {
                 >
                   <CreditCard className="h-5 w-5 text-primary" />
                   <span>Billing & Payments</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start h-12 rounded-2xl gap-3 font-bold"
+                  onClick={() => handleNavigate('/reports')}
+                >
+                  <ShieldAlert className="h-5 w-5 text-primary" />
+                  <span>Your Reports</span>
                 </Button>
               </div>
 

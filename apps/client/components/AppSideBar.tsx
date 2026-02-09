@@ -54,6 +54,7 @@ import {
   Mails,
   Scale,
   Send,
+  ShieldAlert,
   Sparkles,
   Trash2,
   Trophy,
@@ -241,6 +242,13 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link href="/legal">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={Scale} label="Legal" />
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                  <Link href="/reports">
+                    <div className="flex items-center justify-between w-full">
+                      <IconLabel icon={ShieldAlert} label="Reports" />
                     </div>
                   </Link>
                 </DropdownMenuItem>

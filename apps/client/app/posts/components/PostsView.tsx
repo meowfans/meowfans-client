@@ -2,10 +2,11 @@
 
 import { PostComments } from '@/app/posts/[id]/components/PostComments';
 import { BlurImage } from '@/components/BlurImage';
+import { ReportModal } from '@/components/ReportModal';
 import { useContentBlur } from '@/hooks/useContentBlur';
 import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { usePosts } from '@/hooks/usePosts';
-import { PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { EntityType, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
@@ -19,7 +20,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle,
   Filter,
-  Flag,
   Heart,
   LayoutGrid,
   List,
@@ -40,6 +40,7 @@ export function PostsView() {
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
   const { isBlurEnabled } = useContentBlur();
   const { likePost } = useLikeMutations();
+  const [reportPostId, setReportPostId] = useState<string | null>(null);
 
   const { posts, handleLoadMore, hasMore, loading, handleRefresh } = usePosts({
     sortBy: SortBy.PostCreatedAt,
@@ -388,18 +389,40 @@ export function PostsView() {
                                   variant="ghost"
                                   size="icon"
                                   className={`h-9 w-9 rounded-full transition-all ${expandedPostId === post.id ? 'bg-primary/20 text-primary' : 'hover:bg-secondary/40 text-muted-foreground/60'}`}
-                                  onClick={(e) => toggleComments(e, post.id)}
+                                  onClick={(e) => {
+                                    if (post.unlockPrice && !post.isPurchased) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      return;
+                                    }
+                                    toggleComments(e, post.id);
+                                  }}
                                 >
-                                  <MessageSquare className={`h-4 w-4 ${expandedPostId === post.id ? 'fill-primary text-primary' : ''}`} />
+                                  {post.unlockPrice && !post.isPurchased ? (
+                                    <Lock className="h-4 w-4 opacity-40" />
+                                  ) : (
+                                    <MessageSquare className={`h-4 w-4 ${expandedPostId === post.id ? 'fill-primary text-primary' : ''}`} />
+                                  )}
                                 </Button>
 
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className={`h-9 w-9 rounded-full transition-all ${post.isLiked ? 'bg-red-500/10 text-red-500' : 'hover:bg-secondary/40 text-muted-foreground/60'}`}
-                                  onClick={(e) => handleLike(e, post.id)}
+                                  onClick={(e) => {
+                                    if (post.unlockPrice && !post.isPurchased) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      return;
+                                    }
+                                    handleLike(e, post.id);
+                                  }}
                                 >
-                                  <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+                                  {post.unlockPrice && !post.isPurchased ? (
+                                    <Lock className="h-4 w-4 opacity-40" />
+                                  ) : (
+                                    <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+                                  )}
                                 </Button>
 
                                 <DropdownMenu>
@@ -424,11 +447,10 @@ export function PostsView() {
                                       e.stopPropagation();
                                     }}
                                   >
-                                    <DropdownMenuItem className="gap-2 cursor-pointer focus:bg-destructive/10 focus:text-destructive">
-                                      <Flag className="h-4 w-4" />
-                                      <span>Flag</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="gap-2 cursor-pointer focus:bg-destructive/10 focus:text-destructive">
+                                    <DropdownMenuItem
+                                      className="gap-2 cursor-pointer focus:bg-destructive/10 focus:text-destructive"
+                                      onClick={() => setReportPostId(post.id)}
+                                    >
                                       <AlertTriangle className="h-4 w-4" />
                                       <span>Report</span>
                                     </DropdownMenuItem>
@@ -475,6 +497,12 @@ export function PostsView() {
           )}
         </InfiniteScrollManager>
       </div>
+      <ReportModal
+        isOpen={!!reportPostId}
+        onClose={() => setReportPostId(null)}
+        entityId={reportPostId || ''}
+        entityType={EntityType.Post}
+      />
     </div>
   );
 }

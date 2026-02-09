@@ -1,7 +1,9 @@
 'use client';
 
+import { ReportModal } from '@/components/ReportModal';
 import { useCommentMutations } from '@/hooks/useCommentMutations';
 import { usePostComments } from '@/hooks/usePostComments';
+import { EntityType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover';
@@ -9,7 +11,7 @@ import { Spinner } from '@workspace/ui/components/spinner';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageSquare, Send, Smile, Sparkles } from 'lucide-react';
+import { Lock as LucideLock, MessageSquare, Send, ShieldAlert, Smile, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 const QUICK_EMOJIS = ['🔥', '❤️', '😍', '🙌', '👏', '✨', '💯', '😂'];
@@ -42,11 +44,13 @@ const EXTENDED_EMOJIS = [
 
 interface PostCommentsProps {
   postId: string;
+  isLocked?: boolean;
 }
 
-export function PostComments({ postId }: PostCommentsProps) {
+export function PostComments({ postId, isLocked }: PostCommentsProps) {
   const [commentText, setCommentText] = useState<string>('');
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState<boolean>(false);
+  const [reportCommentId, setReportCommentId] = useState<string | null>(null);
 
   const { postComments, loading, hasMore, handleLoadMore } = usePostComments({
     take: 20,
@@ -135,18 +139,24 @@ export function PostComments({ postId }: PostCommentsProps) {
               <Input
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Spill your thoughts..."
+                placeholder={isLocked ? 'Locked Content' : 'Spill your thoughts...'}
                 className="bg-transparent border-none focus-visible:ring-0 placeholder:text-muted-foreground/30 font-bold italic tracking-tight h-10 md:h-12 text-sm md:text-base"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLocked}
               />
             </div>
             <Button
-              disabled={!commentText.trim() || isSubmitting}
+              disabled={!commentText.trim() || isSubmitting || isLocked}
               size="icon"
               onClick={handleSubmit}
               className="h-10 w-10 md:h-12 md:w-12 rounded-[1rem] md:rounded-[1.25rem] bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex-shrink-0"
             >
-              {isSubmitting ? <Spinner className="h-4 w-4" /> : <Send className="h-4 w-4 md:h-5 md:w-5" />}
+              {isLocked ? (
+                <LucideLock className="h-4 w-4" />
+              ) : isSubmitting ? (
+                <Spinner className="h-4 w-4" />
+              ) : (
+                <Send className="h-4 w-4 md:h-5 md:w-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -188,13 +198,25 @@ export function PostComments({ postId }: PostCommentsProps) {
                         {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                       </span>
                     </div>
-                    <div className="relative px-4 md:px-5 py-3 md:py-4 rounded-2xl md:rounded-[1.5rem] bg-secondary/10 border border-white/5 group-hover:border-white/10 transition-colors">
+                    <div className="relative px-4 md:px-5 py-3 md:py-4 rounded-2xl md:rounded-[1.5rem] bg-secondary/10 border border-white/5 group-hover:border-white/10 transition-colors flex items-start justify-between gap-4">
                       <p className="text-sm md:text-base font-medium leading-relaxed text-foreground/70">{comment.comment}</p>
+                      <button
+                        onClick={() => setReportCommentId(comment.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/5 rounded-lg text-muted-foreground/30 hover:text-destructive"
+                      >
+                        <ShieldAlert className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
+            <ReportModal
+              isOpen={!!reportCommentId}
+              onClose={() => setReportCommentId(null)}
+              entityId={reportCommentId || ''}
+              entityType={EntityType.Comment}
+            />
 
             {hasMore && (
               <div className="pt-4 flex justify-center">

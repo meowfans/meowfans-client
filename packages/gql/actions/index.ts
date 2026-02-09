@@ -12,3 +12,4 @@ export * from './tags.actions';
 export * from './user.actions';
 export * from './vaults.actions';
 export * from './zones.actions';
+export * from './reports.actions';
