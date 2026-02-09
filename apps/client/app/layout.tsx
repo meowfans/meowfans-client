@@ -1,6 +1,6 @@
 import { AgeGate } from '@/components/AgeGate';
 import { AppHeader } from '@/components/AppHeader';
-import { AppSidebar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSidebar';
 import { CookieConsent } from '@/components/CookieConsent';
 import { FeatureGate } from '@/components/FeatureGate';
 import { RTAFooter } from '@/components/RTAFooter';
@@ -148,7 +148,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               value={{ light: 'light', dark: 'dark' }}
             >
               <SidebarProvider>
-                <AppSidebar />
+                <AppSideBar />
                 <SidebarInset>
                   <AppHeader />
                   <div className="flex flex-1 flex-col overflow-y-auto">

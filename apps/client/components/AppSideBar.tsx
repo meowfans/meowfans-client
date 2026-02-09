@@ -64,7 +64,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { fan } = useFan();
   const { openMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();

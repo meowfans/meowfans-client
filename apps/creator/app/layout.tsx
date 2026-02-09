@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
-import { AppSidebar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSidebar';
 import { CreatorStatusGuard } from '@/components/status/CreatorStatusGuard';
 import { CreatorContextWrapper } from '@/hooks/context/useCreator';
 import { fetchRequest } from '@/hooks/useAPI';
@@ -122,7 +122,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             >
               <CreatorStatusGuard>
                 <SidebarProvider>
-                  <AppSidebar />
+                  <AppSideBar />
                   <SidebarInset>
                     <AppHeader />
                     {children}

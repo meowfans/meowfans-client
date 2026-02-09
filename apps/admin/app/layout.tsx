@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
-import { AppSidebar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSidebar';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -114,7 +114,7 @@ export default async function RootLayout({ children }: Props) {
             <Toaster position="top-center" richColors />
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <SidebarProvider defaultOpen>
-                <AppSidebar />
+                <AppSideBar />
                 <SidebarInset>
                   <AppHeader />
                   {children}
