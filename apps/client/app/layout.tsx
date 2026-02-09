@@ -1,6 +1,6 @@
 import { AgeGate } from '@/components/AgeGate';
 import { AppHeader } from '@/components/AppHeader';
-import { AppSideBar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSideBar';
 import { CookieConsent } from '@/components/CookieConsent';
 import { FeatureGate } from '@/components/FeatureGate';
 import { RTAFooter } from '@/components/RTAFooter';

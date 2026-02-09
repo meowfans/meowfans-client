@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
-import { AppSideBar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSideBar';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';

@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
-import { AppSideBar } from '@/components/AppSidebar';
+import { AppSideBar } from '@/components/AppSideBar';
 import { CreatorStatusGuard } from '@/components/status/CreatorStatusGuard';
 import { CreatorContextWrapper } from '@/hooks/context/useCreator';
 import { fetchRequest } from '@/hooks/useAPI';
