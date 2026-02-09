@@ -12,7 +12,7 @@ export const useFeaturePath = () => {
 
   const featureKey = Object.values(APP_PATHS).includes(_pathname) ? _pathname : null;
 
-  const isUnderConstruction = featureKey ? FEATURE_FLAGS[featureKey] : false;
+  const isUnderConstruction = featureKey ? FEATURE_FLAGS[featureKey] : true;
   const isEnabled = configService.NEXT_PUBLIC_IS_PRODUCTION ? isUnderConstruction : true;
 
   return { isEnabled, pathname, router, isUnderConstruction };
