@@ -1,7 +1,5 @@
-'use client';
+import { ProfileEditView } from './components/ProfileEditView';
 
-import { Edit } from './components/Edit';
-
-export default function EditPage() {
-  return <Edit />;
+export default function EditProfilePage() {
+  return <ProfileEditView />;
 }

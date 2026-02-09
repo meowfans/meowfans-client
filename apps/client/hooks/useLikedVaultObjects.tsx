@@ -1,11 +1,11 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
-import { GetLikedVaultObjectsOutput, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetLikedVaultObjectsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export const useLikedVaultObjects = () => {
+export const useLikedVaultObjects = (input:PaginationInput) => {
   const { fan } = useFan();
   const { getLikedVaultObjectsQuery } = useLikesActions();
   const { vaultObjectLikes, setVaultObjectLikes, appendVaultObjectLikes } = useLikesStore();
@@ -20,13 +20,13 @@ export const useLikedVaultObjects = () => {
 
     try {
       const { data } = await getLikedVaultObjectsQuery({
-        take: 30,
+        ...input,
         skip,
         orderBy: SortOrder.Desc
       });
 
       const fetched = (data?.getLikedVaultObjects ?? []) as GetLikedVaultObjectsOutput[];
-      setHasMore(fetched.length === 30);
+      setHasMore(fetched.length === input.take);
 
       if (initial) setVaultObjectLikes(fetched);
       else appendVaultObjectLikes(fetched);

@@ -2,6 +2,7 @@
 
 import { cn } from '@workspace/ui/lib/utils';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Loading } from './Loading';
 
 interface InfiniteScrollManagerProps {
   dataLength: number;
@@ -12,11 +13,19 @@ interface InfiniteScrollManagerProps {
   children?: React.ReactNode;
   customHeight?: string;
   scrollableDiv?: string;
-  LoadingComponent?: React.ReactNode;
   scrollThreshold?: number;
   inverse?: boolean;
   useWindowScroll?: boolean;
 }
+
+const LoadingComponent = () => {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <Loading />
+      <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Developing Masterpieces</p>
+    </div>
+  );
+};
 
 export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   dataLength,
@@ -26,15 +35,14 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   scrollableDiv,
   inverse,
   scrollThreshold = 0.7,
-  customHeight = 'h-[100vh]',
-  LoadingComponent,
+  customHeight = 'h-full',
   useWindowScroll
 }) => {
   if (useWindowScroll) {
     return (
       <InfiniteScroll
         inverse={inverse}
-        loader={LoadingComponent ?? null}
+        loader={<LoadingComponent />}
         hasMore={hasMore}
         scrollThreshold={scrollThreshold}
         next={onLoadMore}
@@ -48,7 +56,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   return scrollableDiv ? (
     <InfiniteScroll
       inverse={inverse}
-      loader={LoadingComponent ?? null}
+      loader={<LoadingComponent />}
       hasMore={hasMore}
       scrollThreshold={scrollThreshold}
       next={onLoadMore}
@@ -58,9 +66,9 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
       {children}
     </InfiniteScroll>
   ) : (
-    <div id="scrollableDiv" className={cn('overflow-y-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div id="scrollableDiv" className={cn('overflow-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
       <InfiniteScroll
-        loader={LoadingComponent ?? null}
+        loader={<LoadingComponent />}
         inverse={inverse}
         hasMore={hasMore}
         scrollThreshold={0.7}

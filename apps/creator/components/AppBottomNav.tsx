@@ -1,47 +1,45 @@
 'use client';
 
-import { useCreator } from '@/hooks/context/useCreator';
-import { useNormalizePath } from '@/hooks/useNormalizePath';
-import { appBottomNavButtonOptions } from '@/lib/constants';
 import { Button } from '@workspace/ui/components/button';
-import { SAvatar } from '@workspace/ui/globals/SAvatar';
 import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
+import { BarChart, Home, Lock, MessageCircle, Palette } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
-export const AppBottomNav = () => {
-  const router = useRouter();
+const navItems = [
+  { label: 'Dashboard', url: '/dashboard', icon: Home },
+  { label: 'Posts', url: '/posts-studio', icon: Palette },
+  { label: 'Vaults', url: '/vaults-studio', icon: Lock },
+  { label: 'Messages', url: '/channels', icon: MessageCircle },
+  { label: 'Analytics', url: '/analytics', icon: BarChart }
+];
+
+export function AppBottomNav() {
   const pathname = usePathname();
-  const { creator } = useCreator();
-  const username = creator.user.username;
-  const { isMobilePath } = useNormalizePath();
+  const router = useRouter();
 
-  const navigationItems = appBottomNavButtonOptions.map((item) => {
-    if (item.path === '/profile') {
-      return {
-        ...item,
-        path: `/${username}`,
-        title: 'Profile',
-        url: creator.user.avatarUrl
-      };
-    }
-    return item;
-  });
+  
+  if (pathname.startsWith('/channels/')) return null;
+  if (pathname.startsWith('/playground')) return null;
 
-  return isMobilePath ? (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-2">
-        {navigationItems.map((item, idx) => (
-          <Button
-            key={idx}
-            size="icon"
-            className="rounded-xl"
-            variant={PathNormalizer.resolve({ username, pathname }) === item.path ? 'secondary' : 'ghost'}
-            onClick={() => router.push(item.path)}
-          >
-            {item.url ? <SAvatar url={item.url} className="w-5 h-5" /> : <item.icon />}
-          </Button>
-        ))}
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 w-full border-t border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 md:hidden pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto grid h-16 max-w-3xl grid-cols-5 items-center justify-items-center px-2">
+        {navItems.map((item, idx) => {
+          const isActive = PathNormalizer.resolve({ pathname }) === item.url;
+          return (
+            <Button
+              key={idx}
+              variant={isActive ? 'secondary' : 'ghost'}
+              size="icon"
+              className="rounded-xl h-11 w-11 shrink-0 relative"
+              onClick={() => router.push(item.url)}
+            >
+              <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+              {isActive && <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />}
+            </Button>
+          );
+        })}
       </div>
     </div>
-  ) : null;
-};
+  );
+}

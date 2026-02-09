@@ -1,7 +1,10 @@
-'use client';
+import { ApprovalsView } from './components/ApprovalsView';
 
-import { Approvals } from './components/Approvals';
+export const metadata = {
+  title: 'Approvals | Admin Dashboard',
+  description: 'Review and approve new creator applications'
+};
 
 export default function ApprovalsPage() {
-  return <Approvals />;
+  return <ApprovalsView />;
 }

@@ -3,6 +3,7 @@ export * from './authAPI';
 export * from './channelsAPI';
 export * from './commentsAPI';
 export * from './creatorAPI';
+export * from './downloadAPI';
 export * from './fanAPI';
 export * from './importAPI';
 export * from './paymentsAPI';

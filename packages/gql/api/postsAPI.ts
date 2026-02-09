@@ -11,6 +11,9 @@ export const GET_PUBLIC_POSTS_QUERY = graphql(`
       objectCount
       isPurchased
       unlockPrice
+      creatorAvatarUrl
+      creatorFullname
+      creatorUsername
     }
   }
 `);
@@ -85,6 +88,7 @@ export const GET_LIKED_POSTS_QUERY = graphql(`
       id
       isLiked
       preview
+      fileType
     }
   }
 `);
@@ -293,6 +297,9 @@ export const GET_PUBLIC_SINGLE_POST_QUERY = graphql(`
       saveCount
       shareCount
       commentCount
+      creatorAvatarUrl
+      creatorFullname
+      creatorUsername
       postType
       postAssets {
         assetId

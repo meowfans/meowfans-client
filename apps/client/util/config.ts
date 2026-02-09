@@ -31,5 +31,8 @@ export const configService = {
   },
   get NEXT_PUBLIC_APP_VERSION() {
     return (process.env.NEXT_PUBLIC_APP_VERSION as 'v1' | 'v2') || 'v1';
+  },
+  get NEXT_PUBLIC_IS_PRODUCTION() {
+    return this.NEXT_PUBLIC_NODE_ENV === 'production';
   }
 };

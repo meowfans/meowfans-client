@@ -1,8 +1,8 @@
 import { useFollowsActions } from '@workspace/gql/actions';
+import { CreatorFollowsEntity, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useFollowerStore } from './store/followers.store';
-import { CreatorFollowsEntity, PaginationInput } from '@workspace/gql/generated/graphql';
 
 export const useFollowers = (input: PaginationInput) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,7 +35,7 @@ export const useFollowers = (input: PaginationInput) => {
 
   useEffect(() => {
     loadFollowers(true);
-  }, [input.take, input.skip, input.orderBy]);
+  }, [input.take, input.skip, input.orderBy, input.searchTerm]);
 
   return { loading, hasMore, handleLoadMore, followers };
 };

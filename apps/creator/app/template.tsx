@@ -1,29 +1,22 @@
 'use client';
 
-import { AppHeader } from '@/components/AppHeader';
-import { ImpersonationCountdown } from '@/components/ImpersonationCountdown';
-import { useNormalizePath } from '@/hooks/useNormalizePath';
-import { useBackground } from '@workspace/ui/hooks/useBackground';
+import { AppBottomNav } from '@/components/AppBottomNav';
+import { LogoutModal } from '@/components/LogoutModal';
+import { usePathname } from 'next/navigation';
 
-interface Props {
+interface TemplateProps {
   children: React.ReactNode;
 }
 
-export default function RootTemplate({ children }: Props) {
-  const { bgColor } = useBackground();
-  const { isAuthenticatedPath } = useNormalizePath();
+export default function Template({ children }: TemplateProps) {
+  const pathname = usePathname();
+  const isChannelsPath = pathname.startsWith('/channels');
 
   return (
-    <div>
-      {!isAuthenticatedPath ? (
-        <div>{children}</div>
-      ) : (
-        <div className={bgColor}>
-          <ImpersonationCountdown />
-          <AppHeader />
-          {children}
-        </div>
-      )}
+    <div className={isChannelsPath ? 'flex flex-1 flex-col' : 'flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4'}>
+      {children}
+      <AppBottomNav />
+      <LogoutModal />
     </div>
   );
 }

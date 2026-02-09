@@ -2,8 +2,9 @@ import React from 'react';
 import { writeFile } from 'fs/promises';
 import { ImageResponse } from 'next/og';
 import { join } from 'path';
+import { Logo } from '@workspace/ui/globals/Logo';
 
-async function generateIcon(width: number, height: number, name: string) {
+async function generateIcon(width: number, height: number, name: string, subPath: string) {
   const res = new ImageResponse(
     <div
       style={{
@@ -15,41 +16,25 @@ async function generateIcon(width: number, height: number, name: string) {
         background: 'transparent'
       }}
     >
-      <svg width={width} height={height} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="#3b82f6" />
-          </linearGradient>
-        </defs>
-
-        <path
-          d="M20 70 V 35 L 50 65 L 80 35 V 70"
-          stroke="url(#g)"
-          strokeWidth="10"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-
-        <path d="M20 35 L 20 20 L 40 35" stroke="url(#g)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-
-        <path d="M80 35 L 80 20 L 60 35" stroke="url(#g)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+    <Logo width={width} height={height} />
     </div>,
     { width, height }
   );
 
   const buffer = Buffer.from(await res.arrayBuffer());
-  const outPath = join(process.cwd(), 'public', 'screenshots', name);
+  const outPath = join(process.cwd(), 'public', subPath, name);
 
   await writeFile(outPath, buffer);
   console.log(`✔ Generated ${name}`);
 }
 
 async function run() {
-  await generateIcon(1080, 1920, 'mobile.png');
-  await generateIcon(1920, 1080, 'desktop.png');
+  await generateIcon(1080, 1920, 'mobile.png', 'screenshots');
+  await generateIcon(1920, 1080, 'desktop.png', 'screenshots');
+  await generateIcon(180, 180, 'apple-icon-180.png', 'icons');
+  await generateIcon(192, 192, 'icon-192.png', 'icons');
+  await generateIcon(512, 512, 'icon-512.png', 'icons');
+
 }
 
 run();

@@ -1,5 +1,5 @@
-import { Message } from './components/Message';
+import { ChatView } from '../components/ChatView';
 
-export default function MessagePage() {
-  return <Message />;
+export default function ChatPage() {
+  return <ChatView />;
 }

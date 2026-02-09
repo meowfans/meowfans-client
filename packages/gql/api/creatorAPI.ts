@@ -36,6 +36,10 @@ export const GET_CREATORS_BY_ADMIN_QUERY = graphql(`
           creatorId
           assetCount
           vaultCount
+          totalPost
+          totalExclusivePost
+          totalPublicPost
+          totalSubscriber
           fulfilledObjectCount
           pendingObjectCount
           processingObjectCount

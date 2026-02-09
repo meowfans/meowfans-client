@@ -97,6 +97,8 @@ export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
       id
       isLiked
       preview
+      vaultId
+      fileType
     }
   }
 `);

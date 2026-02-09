@@ -23,13 +23,13 @@ export const useChannelMessages = (input: PaginationInput) => {
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadMessages = async (initialLoad = false) => {
-    const skip = initialLoad ? 0 : channel.messages.length;
-    setLoading(channel.messages?.length === 0);
+    const skip = initialLoad ? 0 : (channel.messages?.length ?? 0);
+    setLoading((channel.messages?.length ?? 0) === 0);
 
     try {
       const { data } = await getSingleChannelQuery({ ...input, skip });
       const fetchedChannel = data?.getSingleChannel as ChannelsOutput;
-      const fetchedMessages = (fetchedChannel.messages as MessagesOutput[]) ?? [];
+      const fetchedMessages = (fetchedChannel?.messages as MessagesOutput[]) ?? [];
 
       const take = input.take ?? fetchedMessages.length;
       setHasMore(fetchedMessages.length === take);
@@ -37,7 +37,7 @@ export const useChannelMessages = (input: PaginationInput) => {
       setChannel((prev) =>
         initialLoad
           ? { ...fetchedChannel, messages: fetchedMessages }
-          : { ...fetchedChannel, messages: [...prev?.messages, ...fetchedMessages] }
+          : { ...fetchedChannel, messages: [...(prev?.messages ?? []), ...fetchedMessages] }
       );
     } catch (error) {
       errorHandler({ error });
@@ -81,7 +81,7 @@ export const useMessageMutations = () => {
       const { data } = await sendMessageFromCreatorMutation(input);
       const newMessage = data?.sendMessageFromCreator as MessagesOutput;
       if (newMessage) {
-        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...(prev?.messages ?? [])] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -101,7 +101,7 @@ export const useMessageMutations = () => {
       const deleted = data?.deleteMessages;
 
       if (deleted) {
-        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => !input.messageIds.includes(m.id)) }));
+        setChannel((prev) => ({ ...prev, messages: (prev?.messages ?? []).filter((m) => !input.messageIds.includes(m.id)) }));
         successHandler({ message: 'Deleted messages' });
       }
     } catch (error) {
@@ -117,7 +117,7 @@ export const useMessageMutations = () => {
       const { data } = await sendReplyFromCreatorMutation(input);
       const newMessage = data?.sendReplyFromCreator as MessagesOutput;
       if (newMessage) {
-        setChannel((prev) => ({ ...prev, messages: [newMessage, ...prev.messages] }));
+        setChannel((prev) => ({ ...prev, messages: [newMessage, ...(prev?.messages ?? [])] }));
         setChannels((prev) =>
           prev.map((channel) => (channel.id === newMessage.channelId ? { ...channel, lastMessage: newMessage } : channel))
         );
@@ -136,7 +136,7 @@ export const useMessageMutations = () => {
       const { data } = await updateMessageMutation(input);
       const updated = data?.updateMessage as MessagesOutput;
       if (updated) {
-        setChannel((prev) => ({ ...prev, messages: prev.messages.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) }));
+        setChannel((prev) => ({ ...prev, messages: (prev?.messages ?? []).map((m) => (m.id === updated.id ? { ...m, ...updated } : m)) }));
         setChannels((prev) => prev.map((channel) => (channel.id === updated.channelId ? { ...channel, lastMessage: updated } : channel)));
         successHandler({ message: 'Message updated' });
       }
@@ -152,7 +152,7 @@ export const useMessageMutations = () => {
     try {
       const { data } = await deleteMessageMutation(input);
       if (data?.deleteMessage) {
-        setChannel((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.id !== input.messageId) }));
+        setChannel((prev) => ({ ...prev, messages: (prev?.messages ?? []).filter((m) => m.id !== input.messageId) }));
         successHandler({ message: 'Message deleted' });
       }
     } catch (error) {

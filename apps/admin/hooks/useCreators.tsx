@@ -1,6 +1,6 @@
 import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreatorsActions } from '@workspace/gql/actions';
-import { GetAllCreatorsOutput, PaginationInput, UsersEntity } from '@workspace/gql/generated/graphql';
+import { DataFetchType, GetAllCreatorsOutput, PaginationInput, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +22,7 @@ export const useCreators = (params: PaginationInput) => {
     setLoading(creators.length === 0);
 
     try {
-      const { data } = await getCreatorsByAdminQuery({ ...params, take: 100, skip });
+      const { data } = await getCreatorsByAdminQuery({ ...params, take: 100, skip, });
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
       setHasMore(fetchedCreators.length === 100);
@@ -47,7 +47,7 @@ export const useCreators = (params: PaginationInput) => {
     loadAllCreators();
   };
 
-  const handlLoadMore = () => {
+  const handleLoadMore = () => {
     if (!loading && hasMore) {
       loadAllCreators();
     }
@@ -64,7 +64,7 @@ export const useCreators = (params: PaginationInput) => {
     meta,
     count: meta.count,
     handleRefetch,
-    handlLoadMore,
+    handleLoadMore,
     hasNext: meta.hasNext,
     hasPrev: meta.hasPrev,
     totalPages: meta.totalPages

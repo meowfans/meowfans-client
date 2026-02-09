@@ -1,50 +1,58 @@
 'use client';
 
 import { Button } from '@workspace/ui/components/button';
-import { ButtonSize, ButtonVariant, handleFullScreen } from '@workspace/ui/lib';
-import { MEOW_FANS_BANNER } from '@workspace/ui/lib/constants';
-import { Fullscreen } from 'lucide-react';
-import { ButtonHTMLAttributes } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { Maximize2 } from 'lucide-react';
+import { ButtonHTMLAttributes, useState } from 'react';
+import { FullscreenViewer } from './FullscreenViewer';
 
 export interface FullScreenButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  currentUrl?: string;
   currentIdx: number;
   urls: string[];
   className?: string;
-  size?: ButtonSize;
-  filetype?: 'img' | 'video';
-  variant?: ButtonVariant;
+  size?: 'default' | 'sm' | 'lg' | 'icon';
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 }
 
 export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
   currentIdx,
-  currentUrl = MEOW_FANS_BANNER,
   urls,
-  className = 'hover:text-red-500 rounded-xl hidden md:flex',
+  className = 'hover:text-primary rounded-xl hidden md:flex',
   size = 'icon',
-  variant = 'secondary',
+  variant = 'default',
   title = 'Full Screen',
-  filetype = 'img',
   ...props
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Filter out any undefined or empty URLs and map to the format FullscreenViewer expects
+  const validItems = urls
+    .filter((url): url is string => !!url)
+    .map((url) => ({
+      url,
+      type: url.endsWith('.mp4') ? 'VIDEO' : 'IMAGE' // Basic detection, can be refined
+    }));
+
   return (
-    <Button
-      asChild
-      className={className}
-      size={size}
-      variant={variant}
-      title={title}
-      onClick={() => {
-        handleFullScreen(
-          currentUrl,
-          currentIdx,
-          urls.filter((url): url is string => !!url),
-          filetype
-        );
-      }}
-      {...props}
-    >
-      <Fullscreen className="w-6 h-6 cursor-pointer" />
-    </Button>
+    <>
+      <Button
+        className={className}
+        size={size}
+        variant={variant}
+        title={title}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen(true);
+        }}
+        {...props}
+      >
+        <Maximize2 className="w-5 h-5 cursor-pointer" />
+      </Button>
+
+      <AnimatePresence>
+        {isOpen && <FullscreenViewer isOpen={isOpen} onClose={() => setIsOpen(false)} items={validItems} initialIndex={currentIdx} />}
+      </AnimatePresence>
+    </>
   );
 };

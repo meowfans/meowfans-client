@@ -1,5 +1,9 @@
-import { Events } from '@/components/Events';
-import { EventsProvider } from '@/hooks/context/EventsProvider';
+import { AgeGate } from '@/components/AgeGate';
+import { AppHeader } from '@/components/AppHeader';
+import { AppSidebar } from '@/components/AppSidebar';
+import { CookieConsent } from '@/components/CookieConsent';
+import { FeatureGate } from '@/components/FeatureGate';
+import { RTAFooter } from '@/components/RTAFooter';
 import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -8,14 +12,16 @@ import { GET_FAN_PROFILE_QUERY } from '@workspace/gql/api';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { FanProfilesEntity, UserRoles } from '@workspace/gql/generated/graphql';
+import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar';
+import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { AuthUserRoles, buildSafeUrl, decodeJwtToken, fanCookieKey, FetchMethods } from '@workspace/ui/lib';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
+import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = {
@@ -101,13 +107,11 @@ const handleValidateAuth = async () => {
 };
 
 interface RootLayoutProps {
-  v1: React.ReactNode;
-  v2: React.ReactNode;
+  children: React.ReactNode;
 }
 
-export default async function RootLayout({ v1, v2 }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   const fan = await handleValidateAuth();
-  const version = configService.NEXT_PUBLIC_APP_VERSION;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -133,9 +137,27 @@ export default async function RootLayout({ v1, v2 }: RootLayoutProps) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Fan}>
           <UserContextWrapper fan={fan}>
-            <EventsProvider />
-            <Events />
-            {version === 'v2' ? v2 : v1}
+            <AgeGate />
+            <CookieConsent />
+            <Toaster position="top-center" richColors />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              value={{ light: 'light', dark: 'dark' }}
+            >
+              <SidebarProvider>
+                <AppSidebar />
+                <SidebarInset>
+                  <AppHeader />
+                  <div className="flex flex-1 flex-col overflow-y-auto">
+                    <FeatureGate>{children}</FeatureGate>
+                    <RTAFooter />
+                  </div>
+                </SidebarInset>
+              </SidebarProvider>
+            </ThemeProvider>
           </UserContextWrapper>
         </ApolloWrapper>
       </body>

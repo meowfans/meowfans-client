@@ -1,4 +1,4 @@
-import { useCreatorsActions } from '@workspace/gql/actions';
+import { useCreatorsActions, useUserActions } from '@workspace/gql/actions';
 import {
   CreatorApprovalStatus,
   CreatorProfilesEntity,
@@ -14,6 +14,7 @@ export const useCreatorMutations = () => {
   const { creator, setCreator } = useCreator();
   const { errorHandler } = useErrorHandler();
   const { updateCreatorProfileMutation, submitCreatorVerificationDetailsMutation } = useCreatorsActions();
+  const { deleteUserMutation } = useUserActions();
   const [loading, setLoading] = useState<boolean>(false);
 
   const updateCreator = async (input: UpdateCreatorProfileInput) => {
@@ -50,5 +51,17 @@ export const useCreatorMutations = () => {
     }
   };
 
-  return { updateCreator, loading, submitCreatorVerificationDetails };
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      await deleteUserMutation();
+      toast.success('Your account has been deleted');
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { updateCreator, loading, submitCreatorVerificationDetails, deleteAccount };
 };

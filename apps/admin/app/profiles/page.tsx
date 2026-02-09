@@ -1,5 +1,10 @@
-import { CreatorProfiles } from './components/CreatorProfiles';
+import { ProfilesView } from './components/ProfilesView';
 
-export default function CreatorProfilePage() {
-  return <CreatorProfiles />;
+export const metadata = {
+  title: 'Profiles | Admin Dashboard',
+  description: 'Manage creator profiles and identities'
+};
+
+export default function ProfilesPage() {
+  return <ProfilesView />;
 }

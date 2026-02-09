@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
       {
         hostname: 'randomuser.me',
         protocol: 'https'
+      },
+      {
+        hostname: 'www.rtalabel.org',
+        protocol: 'https'
+      },
+      {
+        hostname: 'images.unsplash.com',
+        protocol: 'https'
       }
     ]
   }

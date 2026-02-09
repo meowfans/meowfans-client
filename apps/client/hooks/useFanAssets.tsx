@@ -2,18 +2,12 @@
 
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
-import { FanAssetsEntity, GetFanAssetsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetFanAssetsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useFan } from './context/UserContextWrapper';
 
-interface UseFanAssetsProps {
-  orderBy?: SortOrder;
-  take?: number;
-  sortBy?: SortBy;
-}
-
-export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: UseFanAssetsProps) => {
+export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: PaginationInput) => {
   const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { fanAssets, setFanAssets } = useAssetsStore();
@@ -22,16 +16,15 @@ export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: 
   const { privateGetFanAssetsQuery } = useAssetsActions();
 
   const loadFanAssets = async (initialLoad = false) => {
-    if (!fan) return;
     const skip = initialLoad ? 0 : fanAssets.length;
     setLoading(fanAssets.length === 0);
 
     try {
-      const { data } = await privateGetFanAssetsQuery({ skip, take, orderBy });
+      const { data } = await privateGetFanAssetsQuery({ ...params, skip, take, orderBy });
       const fetchedFanAssets = (data?.getFanAssets ?? []) as GetFanAssetsOutput[];
+
       setHasMore(fetchedFanAssets.length === take);
-      if (initialLoad) setFanAssets(fetchedFanAssets);
-      else setFanAssets([...fanAssets, ...fetchedFanAssets]);
+      setFanAssets((prev) => (initialLoad ? fetchedFanAssets : [...prev, ...fetchedFanAssets]));
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -50,11 +43,11 @@ export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: 
 
   useEffect(() => {
     if (fan) loadFanAssets(true);
-  }, [fan, orderBy, take, params.sortBy]);
+  }, [fan, orderBy, take, params.sortBy]); // eslint-disable-line
 
   return {
     fanAssets,
-    loading: fan ? loading : false,
+    loading,
     hasMore,
     handleLoadMore,
     handleRefresh

@@ -17,8 +17,6 @@ export const useFollowings = () => {
   const LIMIT = 30;
 
   const loadFollowings = async (initialLoad = false) => {
-    if (!fan) return;
-
     const skip = initialLoad ? 0 : followings.length;
     setLoading(followings.length === 0);
 
@@ -48,7 +46,7 @@ export const useFollowings = () => {
 
   return {
     followings,
-    loading,
+    loading: fan ? loading : false,
     hasMore,
     loadMore,
     refresh
@@ -59,7 +57,7 @@ export const useFollowingMutations = () => {
   const { successHandler } = useSuccessHandler();
   const { errorHandler } = useErrorHandler();
   const { creators, setCreators } = useCreatorsStore();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const { followings, setFollowings } = useFollowingStore();
   const { followCreatorMutation, unFollowCreatorMutation } = useFollowsActions();
 

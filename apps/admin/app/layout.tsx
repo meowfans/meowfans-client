@@ -1,5 +1,5 @@
-import { AppBottomNav } from '@/components/AppBottomNav';
-import { AppSidebar } from '@/components/AppSideBar';
+import { AppHeader } from '@/components/AppHeader';
+import { AppSidebar } from '@/components/AppSidebar';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -18,7 +18,6 @@ import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = {
@@ -112,17 +111,15 @@ export default async function RootLayout({ children }: Props) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Admin}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
+            <Toaster position="top-center" richColors />
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <SidebarProvider defaultOpen>
-                <div className="flex h-screen w-full overflow-hidden">
-                  <AppSidebar />
-                  <SidebarInset className="flex flex-1 flex-col min-w-0">
-                    <Toaster position="top-center" closeButton richColors theme="system" />
-                    <main className="relative flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
-                  </SidebarInset>
-                </div>
+                <AppSidebar />
+                <SidebarInset>
+                  <AppHeader />
+                  {children}
+                </SidebarInset>
               </SidebarProvider>
-              <AppBottomNav />
             </ThemeProvider>
           </AdminContextWrapper>
         </ApolloWrapper>

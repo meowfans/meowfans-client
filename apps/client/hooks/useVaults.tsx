@@ -29,8 +29,7 @@ export const useVaults = (params: PaginationInput) => {
 
       const fetched = (data?.getPublicVaults ?? []) as GetPublicVaultsOutput[];
       setHasMore(fetched.length === (params.take ?? 40));
-      if (initialLoad) setVaults(fetched);
-      else setVaults((prev) => [...prev, ...fetched]);
+      setVaults((prev) => (initialLoad ? fetched : [...prev, ...fetched]));
     } catch (error) {
       errorHandler({ error });
     } finally {

@@ -1,7 +1,16 @@
 import { configService } from '@/util/config';
 import { AssetType } from '@workspace/gql/generated/graphql';
-import { creatorCookieKey, FetchMethods, FileType, MediaType, UploadMediaOutput } from '@workspace/ui/lib';
-import { getCookie } from 'cookies-next';
+import {
+  authCookieKey,
+  authRefreshCookieKey,
+  creatorCookieKey,
+  creatorRefreshCookieKey,
+  FetchMethods,
+  FileType,
+  MediaType,
+  UploadMediaOutput
+} from '@workspace/ui/lib';
+import { deleteCookie, getCookie } from 'cookies-next';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
@@ -33,6 +42,13 @@ const useAPI = () => {
     return data;
   };
 
+  const logout = () => {
+    deleteCookie(creatorCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(creatorRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  };
+
   const upload = async (params: { mediaType: MediaType; formData: FormData; fileType: FileType; assetType: AssetType }) => {
     const accessToken = getCookie(creatorCookieKey);
     params.formData.append('mediaType', params.mediaType);
@@ -54,7 +70,8 @@ const useAPI = () => {
 
   return {
     upload,
-    verifyJwt
+    verifyJwt,
+    logout
   };
 };
 
