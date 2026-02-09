@@ -6,14 +6,7 @@ import { useFeaturePath } from '@/hooks/useFeaturePath';
 import { configService } from '@/util/config';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@workspace/ui/components/dropdown-menu';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@workspace/ui/components/sheet';
 import { SidebarTrigger } from '@workspace/ui/components/sidebar';
 import { buildSafeUrl } from '@workspace/ui/lib/helpers';
 import { ArrowLeft, Bell, CreditCard, HardHat, LogOut, Settings, User } from 'lucide-react';
@@ -29,6 +22,7 @@ export function AppHeader() {
   const { isUnderConstruction } = useFeaturePath();
   const { setOpenLogoutModal } = useUtilsStore();
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -36,6 +30,11 @@ export function AppHeader() {
 
   const handleBack = () => {
     router.back();
+  };
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
+    setIsSheetOpen(false);
   };
 
   if (pathname.startsWith('/channels/')) return null;
@@ -63,8 +62,8 @@ export function AppHeader() {
         </Button>
 
         {mounted && fan ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={fan.user?.avatarUrl || undefined} alt={fan.user?.username || 'User'} />
@@ -73,34 +72,66 @@ export function AppHeader() {
                   </AvatarFallback>
                 </Avatar>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">@{fan.user?.username}</p>
-                  <p className="text-xs leading-none text-muted-foreground">Fan Account</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/profile')}>
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/settings?tab=display')}>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/billing')}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                <span>Billing</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setOpenLogoutModal(true)}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SheetTrigger>
+            <SheetContent side="right" className="flex flex-col gap-6 p-6">
+              <SheetHeader className="text-left">
+                <SheetTitle className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={fan.user?.avatarUrl || undefined} alt={fan.user?.username || 'User'} />
+                    <AvatarFallback className="bg-primary/10 text-lg font-bold text-primary">
+                      {fan.user?.username?.slice(0, 2).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-lg font-black tracking-tight">@{fan.user?.username}</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">Fan Account</span>
+                  </div>
+                </SheetTitle>
+                <SheetDescription className="sr-only">Account management and settings</SheetDescription>
+              </SheetHeader>
+
+              <div className="flex flex-col gap-2 pt-4">
+                <Button
+                  variant="ghost"
+                  className="justify-start h-12 rounded-2xl gap-3 font-bold"
+                  onClick={() => handleNavigate('/profile')}
+                >
+                  <User className="h-5 w-5 text-primary" />
+                  <span>Your Profile</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start h-12 rounded-2xl gap-3 font-bold"
+                  onClick={() => handleNavigate('/settings?tab=display')}
+                >
+                  <Settings className="h-5 w-5 text-primary" />
+                  <span>Settings</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="justify-start h-12 rounded-2xl gap-3 font-bold"
+                  onClick={() => handleNavigate('/billing')}
+                >
+                  <CreditCard className="h-5 w-5 text-primary" />
+                  <span>Billing & Payments</span>
+                </Button>
+              </div>
+
+              <div className="mt-auto pb-4">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start h-12 rounded-2xl gap-3 font-bold text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                  onClick={() => {
+                    setOpenLogoutModal(true);
+                    setIsSheetOpen(false);
+                  }}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Log out</span>
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
         ) : mounted ? (
           <Button
             variant="default"

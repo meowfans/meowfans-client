@@ -130,6 +130,12 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ]
   };
 
+  const handleCloseSideBarOnMobile = () => {
+    if (openMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -147,7 +153,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
-                  <SidebarMenuItem key={item.label} onClick={() => openMobile && setOpenMobile(false)}>
+                  <SidebarMenuItem key={item.label} onClick={handleCloseSideBarOnMobile}>
                     <SidebarMenuButton asChild isActive={pathname === item.url} tooltip={item.label}>
                       <Link href={item.url}>
                         {item.icon && <item.icon />}
@@ -200,14 +206,14 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
                     <Link href="/upgrade">
                       <IconLabel icon={Sparkles} label="Upgrade to Pro" />
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
                   <Link href="/support">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={LifeBuoy} label="Support" />
@@ -215,7 +221,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
                   <Link href="/feedback">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={Send} label="Feedback" />
@@ -223,7 +229,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
                   <Link href="/tutorials">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={GraduationCap} label="Academy" />
@@ -231,7 +237,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
                   <Link href="/legal">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={Scale} label="Legal" />

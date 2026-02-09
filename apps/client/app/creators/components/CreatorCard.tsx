@@ -54,7 +54,7 @@ export function CreatorCard({ creator }: CreatorCardProps) {
             onClick={handleFollow}
             isLoading={loading}
             actionName="follow this creator"
-            loadingText={creator.isFollowing ? 'Unfollowing...' : 'Following...'}
+            loadingText={creator.isFollowing ? 'Un-following...' : 'Following...'}
           >
             {creator.isFollowing ? <IconLabel icon={Check} label="Following" /> : <IconLabel icon={UserPlus} label="Follow" />}
           </InteractionButton>

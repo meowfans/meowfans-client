@@ -14,17 +14,21 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Heart, Image as ImageIcon, MessageSquare, ShoppingCart, Sparkles, Star, TrendingUp, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { CreatorCard } from '../../creators/components/CreatorCard';
+import { GetDefaultCreatorsOutput } from '@workspace/gql/generated/graphql';
 
 export function DashboardView() {
   const { fan } = useFan();
   const { followings, loading: followingsLoading } = useFollowings();
   const { fanAssets, loading: assetsLoading } = useFanAssets({ take: 5 });
-  const { creators: allCreators, loading: creatorsLoading } = useCreators({});
+  const { creators: allCreators, loading: creatorsLoading } = useCreators({ take: 10 });
   const { channels, loading: channelsLoading } = useChannels({ take: 5, skip: 0 });
 
   // Filter recommendations: creators the user isn't following yet
-  const recommendedCreators = allCreators.filter((c) => !followings.some((f) => f.id === c.id)).slice(0, 5);
+  const recommendedCreators = useMemo<GetDefaultCreatorsOutput[]>(() => {
+    return allCreators.filter((c) => !followings.some((f) => f.id === c.id)).slice(0, 5);
+  }, [allCreators, followings]);
 
   const stats = [
     {
@@ -158,11 +162,7 @@ export function DashboardView() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {creatorsLoading ? (
-                <Loading />
-              ) : (
-                recommendedCreators.slice(0, 2).map((creator) => <CreatorCard key={creator.id} creator={creator} />)
-              )}
+              {creatorsLoading ? <Loading /> : recommendedCreators.map((creator) => <CreatorCard key={creator.id} creator={creator} />)}
             </div>
           </section>
         </div>

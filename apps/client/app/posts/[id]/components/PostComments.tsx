@@ -45,8 +45,8 @@ interface PostCommentsProps {
 }
 
 export function PostComments({ postId }: PostCommentsProps) {
-  const [commentText, setCommentText] = useState('');
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [commentText, setCommentText] = useState<string>('');
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState<boolean>(false);
 
   const { postComments, loading, hasMore, handleLoadMore } = usePostComments({
     take: 20,
@@ -54,8 +54,12 @@ export function PostComments({ postId }: PostCommentsProps) {
   });
   const { createComment, loading: isSubmitting } = useCommentMutations();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  console.log(commentText);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    e.stopPropagation();
+
     if (!commentText.trim() || isSubmitting) return;
 
     await createComment(postId, commentText.trim());
@@ -103,7 +107,10 @@ export function PostComments({ postId }: PostCommentsProps) {
                 <Smile className="h-4 w-4" />
               </button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" className="w-64 p-3 bg-background/90 backdrop-blur-3xl border-white/10 rounded-[1.5rem] shadow-2xl">
+            <PopoverContent
+              side="bottom"
+              className="w-64 p-3 bg-background/90 backdrop-blur-3xl border-white/10 rounded-[1.5rem] shadow-2xl"
+            >
               <div className="grid grid-cols-6 gap-2">
                 {[...QUICK_EMOJIS, ...EXTENDED_EMOJIS].map((emoji, idx) => (
                   <button
@@ -123,10 +130,7 @@ export function PostComments({ postId }: PostCommentsProps) {
         </div>
 
         <div className="relative group">
-          <form
-            onSubmit={handleSubmit}
-            className="flex items-center gap-3 p-2 md:p-3 rounded-[1.5rem] md:rounded-[2rem] bg-secondary/10 border border-white/5 focus-within:border-primary/30 transition-all backdrop-blur-3xl shadow-xl shadow-black/20"
-          >
+          <div className="flex items-center gap-3 p-2 md:p-3 rounded-[1.5rem] md:rounded-[2rem] bg-secondary/10 border border-white/5 focus-within:border-primary/30 transition-all backdrop-blur-3xl shadow-xl shadow-black/20">
             <div className="flex-1 flex items-center gap-3 px-2 md:px-4">
               <Input
                 value={commentText}
@@ -137,14 +141,14 @@ export function PostComments({ postId }: PostCommentsProps) {
               />
             </div>
             <Button
-              type="submit"
               disabled={!commentText.trim() || isSubmitting}
               size="icon"
+              onClick={handleSubmit}
               className="h-10 w-10 md:h-12 md:w-12 rounded-[1rem] md:rounded-[1.25rem] bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex-shrink-0"
             >
               {isSubmitting ? <Spinner className="h-4 w-4" /> : <Send className="h-4 w-4 md:h-5 md:w-5" />}
             </Button>
-          </form>
+          </div>
         </div>
       </div>
 

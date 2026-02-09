@@ -31,7 +31,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export function PostsView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,7 +48,9 @@ export function PostsView() {
     postTypes
   });
 
-  const filteredPosts = posts.filter((post) => post.caption.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => post.caption.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [posts, searchTerm]);
 
   const toggleComments = (e: React.MouseEvent, postId: string) => {
     e.preventDefault();

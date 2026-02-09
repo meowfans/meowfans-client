@@ -7,21 +7,24 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { Loading } from '@workspace/ui/globals/Loading';
 import { Users } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { CreatorCard } from '../../creators/components/CreatorCard';
 
 export function FollowingView() {
   const { followings, loading, hasMore, loadMore } = useFollowings();
 
   // Map FollowingOutput to DefaultCreatorsOutput for compatibility with CreatorCard
-  const creators = followings.map(
-    (f) =>
-      ({
-        id: f.id,
-        username: f.username,
-        avatarUrl: f.avatarUrl,
-        isFollowing: true
-      }) as GetDefaultCreatorsOutput
-  );
+  const creators = useMemo<GetDefaultCreatorsOutput[]>(() => {
+    return followings.map(
+      (f) =>
+        ({
+          id: f.id,
+          username: f.username,
+          avatarUrl: f.avatarUrl,
+          isFollowing: true
+        }) as GetDefaultCreatorsOutput
+    );
+  }, [followings]);
 
   if (loading) {
     return (
