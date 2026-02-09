@@ -15,6 +15,7 @@ export const useAssets = (params: PaginationInput) => {
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadCreatorAssets = async (initialLoad = false) => {
+    setLoading(assets.length === 0);
     const skip = initialLoad ? 0 : assets.length;
     try {
       const { data } = await getCreatorAssetsQuery({ ...params, take: 30, skip });
@@ -41,7 +42,7 @@ export const useAssets = (params: PaginationInput) => {
 
   useEffect(() => {
     loadCreatorAssets(true);
-  }, [params.assetType, params.orderBy, params.fileType]); //eslint-disable-line
+  }, [params.assetType, params.orderBy, params.fileType, params.searchTerm]); //eslint-disable-line
 
   return { handleLoadMore, hasMore, loading, assets, handleRefetch };
 };
@@ -54,6 +55,7 @@ export const usePostAssets = (params: PaginationInput) => {
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   const handleLoadMoreAssets = async (initialLoad = false) => {
+    setLoading(postAssets.length === 0);
     const skip = initialLoad ? 0 : postAssets.length;
     try {
       const { data } = await getCreatorAssets({

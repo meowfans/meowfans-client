@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 
 export function useLikeMutations() {
   const { errorHandler } = useErrorHandler();
-  const { posts, setPosts } = usePostsStore();
-  const { vaults, setVaults, vaultObjects, setVaultObjects } = useVaultsStore();
+  const { posts, setPosts, setPost } = usePostsStore();
+  const { vaults, setVaults, vaultObjects, setVaultObjects, setVault } = useVaultsStore();
   const { likePostMutation, likeVaultMutation, likeVaultObjectMutation } = useLikesActions();
   const { vaultLikes, setVaultLikes, vaultObjectLikes, setVaultObjectLikes, postLikes, setPostLikes } = useLikesStore();
 
@@ -21,8 +21,9 @@ export function useLikeMutations() {
 
       setVaultLikes(isLiked ? [isLiked, ...vaultLikes] : vaultLikes.filter((v) => v.id !== vaultId));
       setVaults(vaults.map((v) => (v.id === vaultId ? { ...v, isLiked: !!isLiked } : v)));
+      setVault((prev) => (prev?.id === vaultId ? { ...prev, isLiked: !!isLiked } : prev));
 
-      toast[isLiked ? 'success' : 'info'](isLiked ? 'The album is saved ❤️' : 'The album is removed 💔');
+      toast[isLiked ? 'success' : 'warning'](isLiked ? 'The album is saved ❤️' : 'The album is removed 💔');
       return isLiked;
     } catch (error) {
       errorHandler({ error });
@@ -40,7 +41,7 @@ export function useLikeMutations() {
 
       setVaultObjects(vaultObjects.map((v) => (v.id === id ? { ...v, isLiked: !!isLiked } : v)));
 
-      toast[isLiked ? 'success' : 'info'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
+      toast[isLiked ? 'success' : 'warning'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
       return isLiked;
     } catch (error) {
       errorHandler({ error });
@@ -56,8 +57,9 @@ export function useLikeMutations() {
 
       setPostLikes(isLiked ? [isLiked, ...postLikes] : postLikes.filter((p) => p.id !== postId));
       setPosts(posts.map((p) => (p.id === postId ? { ...p, isLiked: !!isLiked } : p)));
+      setPost((prev) => (prev?.id === postId ? { ...prev, isLiked: !!isLiked } : prev));
 
-      toast[isLiked ? 'success' : 'info'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
+      toast[isLiked ? 'success' : 'warning'](isLiked ? 'Post is saved ❤️' : 'Post is removed 💔');
       return isLiked;
     } catch (error) {
       errorHandler({ error });

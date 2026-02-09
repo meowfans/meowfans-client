@@ -14,6 +14,8 @@ export const creatorCookieKey = '_cat';
 export const creatorRefreshCookieKey = '_crt';
 
 export const THEME = '_theme';
+export const ageConfirmationCookieKey = '_age_confirmed';
+export const cookieConsentCookieKey = '_cookie_consent';
 
 export const OK_URI = 'https://ok.xxx/albums';
 

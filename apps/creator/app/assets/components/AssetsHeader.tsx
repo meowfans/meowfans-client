@@ -1,46 +1,45 @@
-import { SectionHeader } from '@/components/SectionHeader';
-import { AssetType, FileType, SortOrder } from '@workspace/gql/generated/graphql';
-import { Dropdown } from '@workspace/ui/globals/Dropdown';
-import { MultiEnumDropdown } from '@workspace/ui/globals/MultiEnumDropdown';
-import { File, GalleryVerticalEnd, Sparkles, Star } from 'lucide-react';
+'use client';
 
-interface Props {
-  assetType: AssetType;
-  orderBy: SortOrder;
-  fileType: FileType[];
-  setFileType: React.Dispatch<React.SetStateAction<FileType[]>>;
-  setOrderBy: React.Dispatch<React.SetStateAction<SortOrder>>;
-  setAssetType: React.Dispatch<React.SetStateAction<AssetType>>;
+import { Button } from '@workspace/ui/components/button';
+import { motion } from 'framer-motion';
+import { Image as ImageIcon, Plus } from 'lucide-react';
+
+interface AssetsHeaderProps {
+  onUpload: () => void;
+  isUploading: boolean;
+  selectedCount: number;
+  onBulkDelete: () => void;
 }
 
-export const AssetsHeader: React.FC<Props> = ({ setAssetType, assetType, orderBy, setOrderBy, fileType, setFileType }) => {
+export function AssetsHeader({ onUpload, isUploading, selectedCount, onBulkDelete }: AssetsHeaderProps) {
   return (
-    <SectionHeader
-      title="Assets Gallery"
-      description="Your personal creative collection"
-      icon={Sparkles}
-      actions={
-        <div className="flex flex-row space-x-1">
-          <Dropdown
-            enumValue={AssetType}
-            label="Asset types"
-            title="Select your preferred assets"
-            filterBy={assetType}
-            trigger={{ icon: GalleryVerticalEnd }}
-            onFilterBy={(val) => setAssetType(val)}
-          />
-          <Dropdown
-            enumValue={SortOrder}
-            label="Order"
-            title="Change order"
-            filterBy={orderBy}
-            trigger={{ icon: Star }}
-            onFilterBy={(val) => setOrderBy(val)}
-          />
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+    >
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-2">
+          <ImageIcon className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+          Assets Library
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage all your uploaded media</p>
+      </div>
 
-          <MultiEnumDropdown enumValue={FileType} value={fileType} onChange={setFileType} trigger={{ icon: File }} label="File Type" />
+      <div className="flex gap-2 w-full sm:w-auto">
+        {selectedCount > 0 && (
+          <Button variant="destructive" onClick={onBulkDelete} className="flex-1 sm:flex-none">
+            Delete ({selectedCount})
+          </Button>
+        )}
+
+        <div className="relative flex-1 sm:flex-none">
+          <Button onClick={onUpload} disabled={isUploading} className="w-full">
+            <Plus className="mr-2 h-4 w-4" />
+            Upload New
+          </Button>
         </div>
-      }
-    />
+      </div>
+    </motion.div>
   );
-};
+}

@@ -48,7 +48,7 @@ export const useChannels = (input: PaginationInput) => {
   useEffect(() => {
     loadChannels(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input.take]);
+  }, [input.take, input.orderBy, input.sortBy, input.status, input.searchTerm, input.assetType, input.fileType]);
 
   return {
     loading,

@@ -1,11 +1,12 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { FORGOT_AND_RESET_PASSWORD_MUTATION, GENERATE_OTP_MUTATION, VALIDATE_OTP_QUERY } from '../api';
+import { FORGOT_AND_RESET_PASSWORD_MUTATION, GENERATE_OTP_MUTATION, ISSUE_IMPERSONATE_TOKEN_MUTATION, VALIDATE_OTP_QUERY } from '../api';
 import { GenerateOtpInput, LoginInput, ValidateOtpInput } from '../generated/graphql';
 
 export const useAuthActions = () => {
   const [generateOtp] = useMutation(GENERATE_OTP_MUTATION);
   const [validateOtp] = useLazyQuery(VALIDATE_OTP_QUERY);
   const [forgotAndResetPassword] = useMutation(FORGOT_AND_RESET_PASSWORD_MUTATION);
+  const [issueImpersonationToken] = useMutation(ISSUE_IMPERSONATE_TOKEN_MUTATION);
 
   const generateOtpMutation = (input: GenerateOtpInput) => {
     return generateOtp({ variables: { input } });
@@ -19,9 +20,14 @@ export const useAuthActions = () => {
     return forgotAndResetPassword({ variables: { input } });
   };
 
+  const issueImpersonationTokenMutation = (creatorId: string) => {
+    return issueImpersonationToken({ variables: { creatorId } });
+  };
+
   return {
     generateOtpMutation,
     validateOtpMutation,
-    forgotAndResetPasswordMutation
+    forgotAndResetPasswordMutation,
+    issueImpersonationTokenMutation
   };
 };

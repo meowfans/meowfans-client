@@ -1,8 +1,7 @@
 import { configService } from '@/util/config';
 import { AssetType } from '@workspace/gql/generated/graphql';
-import { adminCookieKey, FetchMethods, MediaType } from '@workspace/ui/lib';
-import { error } from 'console';
-import { getCookie } from 'cookies-next';
+import { adminCookieKey, adminRefreshCookieKey, authCookieKey, authRefreshCookieKey, FetchMethods, MediaType } from '@workspace/ui/lib';
+import { deleteCookie, getCookie } from 'cookies-next';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
@@ -18,9 +17,16 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
     if (!res.ok) throw new Error(data.message);
 
     return data;
-  } catch {
+  } catch (error) {
     console.log(error);
   }
+};
+
+const logout = () => {
+  deleteCookie(adminCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(adminRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
 };
 
 const useAPI = () => {
@@ -58,7 +64,8 @@ const useAPI = () => {
 
   return {
     upload,
-    verifyJwt
+    verifyJwt,
+    logout
   };
 };
 

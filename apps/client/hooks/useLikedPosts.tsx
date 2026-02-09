@@ -1,11 +1,11 @@
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
-import { GetLikedPostsOutput, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetLikedPostsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export const useLikedPosts = () => {
+export const useLikedPosts = (input:PaginationInput) => {
   const { fan } = useFan();
   const { getLikedPostsQuery } = useLikesActions();
   const { postLikes, setPostLikes } = useLikesStore();
@@ -20,13 +20,13 @@ export const useLikedPosts = () => {
 
     try {
       const { data } = await getLikedPostsQuery({
-        take: 30,
+        ...input,
         skip,
         orderBy: SortOrder.Desc
       });
 
       const fetched = (data?.getLikedPosts ?? []) as GetLikedPostsOutput[];
-      setHasMore(fetched.length === 30);
+      setHasMore(fetched.length === input.take);
 
       if (initial) setPostLikes(fetched);
       else setPostLikes([...postLikes, ...fetched]);

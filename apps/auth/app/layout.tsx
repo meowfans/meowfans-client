@@ -1,12 +1,12 @@
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
+import { ApolloWrapper } from '@workspace/gql/ApolloWrapper';
 import { Toaster } from '@workspace/ui/components/sonner';
 import '@workspace/ui/globals.css';
 import { cn } from '@workspace/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
-import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = {
@@ -50,12 +50,10 @@ export const viewport: Viewport = {
 };
 
 interface Props {
-  v1: React.ReactNode;
-  v2: React.ReactNode;
+  children: React.ReactNode;
 }
 
-export default async function RootLayout({ v1, v2 }: Props) {
-  const VERSION = configService.NEXT_PUBLIC_APP_VERSION;
+export default async function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -66,15 +64,17 @@ export default async function RootLayout({ v1, v2 }: Props) {
       </head>
       <body className={cn(inter.variable, 'overscroll-none')}>
         <Toaster position="top-center" richColors />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          value={{ light: 'light', dark: 'dark' }}
-        >
-          {VERSION === 'v1' ? v1 : v2}
-        </ThemeProvider>
+        <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+            value={{ light: 'light', dark: 'dark' }}
+          >
+            {children}
+          </ThemeProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

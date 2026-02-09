@@ -1,29 +1,23 @@
 'use client';
 
-import { AppHeader } from '@/components/AppHeader';
-import { Impersonate } from '@/components/Impersonate';
-import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useNormalizePath } from '@/hooks/useNormalizePath';
+import { AppBottomNav } from '@/components/AppBottomNav';
+import { ImpersonationModal } from '@/components/ImpersonationModal';
+import { LogoutModal } from '@/components/LogoutModal';
+import { usePathname } from 'next/navigation';
 
-interface RootTemplateProps {
+interface TemplateProps {
   children: React.ReactNode;
 }
 
-export default function RootTemplate({ children }: RootTemplateProps) {
-  const { isAuthenticatedPath } = useNormalizePath();
-  const { switchContext } = useUtilsStore();
+export default function Template({ children }: TemplateProps) {
+  const pathname = usePathname();
 
   return (
-    <div>
-      {!isAuthenticatedPath ? (
-        <div>{children}</div>
-      ) : (
-        <div>
-          <AppHeader />
-          {children}
-          <Impersonate creator={switchContext} />
-        </div>
-      )}
+    <div className="flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4">
+      {children}
+      <AppBottomNav />
+      <LogoutModal />
+      <ImpersonationModal />
     </div>
   );
 }

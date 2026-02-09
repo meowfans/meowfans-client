@@ -1,6 +1,15 @@
 import { configService } from '@/util/config';
 import { AssetType, UserRoles } from '@workspace/gql/generated/graphql';
-import { BearerAccessToken, FetchMethods, MediaType } from '@workspace/ui/lib';
+import {
+  authCookieKey,
+  authRefreshCookieKey,
+  BearerAccessToken,
+  fanCookieKey,
+  fanRefreshCookieKey,
+  FetchMethods,
+  MediaType
+} from '@workspace/ui/lib';
+import { deleteCookie } from 'cookies-next';
 
 export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
@@ -14,6 +23,13 @@ export const fetchRequest = async (input: { init: RequestInit; fetchMethod: Fetc
     },
     method: fetchMethod
   });
+};
+
+const logout = () => {
+  deleteCookie(fanCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(fanRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
 };
 
 export const useAPI = () => {
@@ -65,6 +81,7 @@ export const useAPI = () => {
 
   return {
     getStatus,
-    upload
+    upload,
+    logout
   };
 };

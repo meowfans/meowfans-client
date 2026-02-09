@@ -1,21 +1,41 @@
 {
   "id": "meowfans-admin",
-  "name": "Admin",
-  "description": "Become a meowfans member",
+  "name": "MeowFans Admin",
+  "description": "Administrative dashboard for MeowFans",
   "short_name": "Admin",
-  "start_url": "/",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FFFFFF",
+  "start_url": "/vaults",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
   "display": "standalone",
   "display_override": ["standalone"],
-
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icons/apple-icon-180.png", "sizes": "180x180", "type": "image/png" }
+    {
+      "src": "/icon",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ],
   "screenshots": [
-    { "src": "/screenshots/mobile.png", "sizes": "1080x1920", "type": "image/png" },
-    { "src": "/screenshots/desktop.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide" }
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
   ]
 }

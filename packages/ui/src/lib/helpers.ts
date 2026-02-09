@@ -5,11 +5,14 @@ import { adminCookieKey, authCookieKey, creatorCookieKey, fanCookieKey } from '.
 import { FileType } from './enums';
 import { JwtUser } from './types';
 
-export const handlePathName = (pathname: string) => {
+export const resolvePathName = (pathname: string) => {
   if (pathname.startsWith('/vaults')) return '/vaults';
   else if (pathname.startsWith('/profiles')) return '/profiles';
   else if (pathname.startsWith('/dashboard')) return '/dashboard';
   else if (pathname.startsWith('/creators')) return '/creators';
+  else if (pathname.startsWith('/settings')) return '/settings';
+  else if (pathname.startsWith('/channels')) return '/channels';
+  else if (pathname.startsWith('/posts')) return '/posts';
   else return pathname;
 };
 
@@ -31,8 +34,8 @@ export const BearerAccessToken = (role: UserRoles) => {
   return `Bearer ${getCookie(tokenMap[role])}`;
 };
 
-export const formatText = (value: number, text: string) => {
-  return value > 1 ? text.concat('s') : text;
+export const pluralizeByCount = (count: number, text: string) => {
+  return count > 1 ? `${text}s` : text;
 };
 
 export const normalizePath = (...parts: Array<string>) => {

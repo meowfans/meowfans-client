@@ -1,13 +1,6 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
-import {
-  DataFetchType,
-  GetPublicSingleVaultOutput,
-  GetPublicVaultObjectsOutput,
-  PaginationInput,
-  SortBy,
-  SortOrder
-} from '@workspace/gql/generated/graphql';
+import { DataFetchType, GetPublicSingleVaultOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -66,8 +59,13 @@ export const useSingleVault = (params: PaginationInput) => {
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.relatedEntityId, params.sortBy, params.orderBy, params.take]);
+    return () => {
+      setVault({
+        ...vault,
+        vaultObjects: []
+      });
+    };
+  }, [params.relatedEntityId, params.sortBy, params.orderBy, params.take]); //eslint-disable-line
 
   return {
     vault,
@@ -81,9 +79,9 @@ export const useSingleVault = (params: PaginationInput) => {
 export const useVaultObjects = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { getPublicVaultObjectsQuery } = useVaultsActions();
-  const { setVaultObjects, vaultObjects } = useVaultsStore();
-  const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(false);
+  const { vaultObjects, setVaultObjects } = useVaultsStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   const loadVaultObjects = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : vaultObjects.length;
@@ -94,40 +92,39 @@ export const useVaultObjects = (params: PaginationInput) => {
         ...params,
         skip,
         take: params.take ?? 30,
-        relatedEntityId: params.relatedEntityId,
         orderBy: params.orderBy ?? SortOrder.Asc,
         sortBy: params.sortBy ?? SortBy.VaultObjectSuffix
       });
 
-      const fetched = data?.getPublicVaultObjects as GetPublicVaultObjectsOutput[];
-      setHasMore(fetched.length === (params.take ?? 30));
+      const fetched = data?.getPublicVaultObjects ?? [];
 
+      setHasMore(fetched.length === (params.take ?? 30));
       setVaultObjects((prev) => (initialLoad ? fetched : [...prev, ...fetched]));
+
+      setLoading(false);
     } catch (error) {
       errorHandler({ error });
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const loadMore = () => {
-    if (!loading && hasMore) loadVaultObjects();
-  };
-
-  const refresh = () => {
-    setVaultObjects([]);
-    loadVaultObjects(true);
   };
 
   useEffect(() => {
     loadVaultObjects(true);
-  }, [params.relatedEntityId, params.sortBy, params.orderBy]); // eslint-disable-line
+
+    return () => {
+      console.log('clearing vault objects');
+      setVaultObjects([]);
+    };
+  }, [params.relatedEntityId, params.sortBy, params.orderBy, params.take]); // eslint-disable-line
+
+  const loadMore = () => {
+    if (!loading && hasMore) loadVaultObjects();
+  };
 
   return {
     vaultObjects,
     loading,
     hasMore,
     loadMore,
-    refresh
+    isEmpty: !vaultObjects.length && !loading
   };
 };

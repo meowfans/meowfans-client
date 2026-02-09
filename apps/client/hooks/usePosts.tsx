@@ -1,17 +1,17 @@
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { usePostsActions } from '@workspace/gql/actions/posts.actions';
-import { GetPostInput, GetPublicPostsOutput, GetPublicSinglePostOutput, PostsEntity, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import {
+  GetPostInput,
+  GetPublicPostsOutput,
+  GetPublicSinglePostOutput,
+  PaginationInput,
+  SortBy,
+  SortOrder
+} from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-interface UsePostsProps {
-  username?: string;
-  sortBy?: SortBy;
-  orderBy?: SortOrder;
-  take?: number;
-}
-
-export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30 }: UsePostsProps = {}) => {
+export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30, postTypes }: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { getPublicPostsQuery } = usePostsActions();
@@ -28,7 +28,8 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
         skip,
         username,
         orderBy,
-        sortBy
+        sortBy,
+        postTypes
       });
 
       const fetchedPosts = (data?.getPublicPosts ?? []) as GetPublicPostsOutput[];
@@ -54,13 +55,13 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
 
   useEffect(() => {
     loadPosts(true);
-  }, [username, sortBy, orderBy, take]); // eslint-disable-line
+  }, [username, sortBy, orderBy, take, postTypes]); // eslint-disable-line
 
   return { posts, loading, hasMore, loadPosts, handleLoadMore, handleRefresh };
 };
 
 export const useSinglePost = (input: GetPostInput) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { errorHandler } = useErrorHandler();
   const { getPublicSinglePostQuery } = usePostsActions();
   const { post, setPost } = usePostsStore();

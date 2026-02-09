@@ -1,37 +1,41 @@
 'use client';
 
-import { appBottomNavButtonOptions } from '@/lib/constants';
 import { Button } from '@workspace/ui/components/button';
-import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
+import { BadgeCheck, GalleryHorizontal, GalleryVerticalEnd, Home, Mails, Video } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 
-export const AppBottomNav = () => {
-  const { channelId } = useParams<{ channelId: string }>();
-  const isMobile = useIsMobile();
+const navItems = [
+  { label: 'Home', url: '/dashboard', icon: Home },
+  { label: 'Posts', url: '/posts', icon: GalleryHorizontal },
+  { label: 'Shorts', url: '/shorts', icon: Video },
+  { label: 'Vaults', url: '/vaults', icon: GalleryVerticalEnd },
+  { label: 'Messages', url: '/channels', icon: Mails, badge: '3' },
+  { label: 'Creators', url: '/creators', icon: BadgeCheck }
+];
+
+export function AppBottomNav() {
   const pathname = usePathname();
-  const isMobilePath = isMobile && (pathname === '/shorts' || !pathname.startsWith(`/channels/${channelId}`));
+  const router = useRouter();
 
-  if (!isMobilePath) return null;
+  if (pathname.startsWith('/channels/')) return null;
+  if (pathname.startsWith('/shorts')) return null;
 
   return (
-    <div className="w-full bg-white dark:bg-black fixed bottom-0 h-16 z-50">
-      <div className="flex flex-row justify-between items-center content-center p-1">
-        {appBottomNavButtonOptions.map((button, idx) => (
-          <Link href={button.path} key={idx} className="flex flex-row justify-between">
-            <div className="flex flex-col justify-center content-center items-center">
-              <Button
-                size={'icon'}
-                className="flex flex-col items-center content-center rounded-xl shadow-accent-foreground"
-                variant={'outline'}
-              >
-                <button.icon />
-              </Button>
-              <span className="text-xs">{button.title}</span>
-            </div>
-          </Link>
+    <div className="fixed bottom-0 left-0 right-0 z-50 w-full border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto grid h-16 max-w-3xl grid-cols-6 items-center justify-items-center px-1">
+        {navItems.map((item, idx) => (
+          <Button
+            key={idx}
+            variant={PathNormalizer.resolve({ pathname }) === item.url ? 'secondary' : 'ghost'}
+            size="icon"
+            className="rounded-xl h-10 w-10 shrink-0"
+            onClick={() => router.push(item.url)}
+          >
+            <item.icon className="h-5 w-5" />
+          </Button>
         ))}
       </div>
     </div>
   );
-};
+}
