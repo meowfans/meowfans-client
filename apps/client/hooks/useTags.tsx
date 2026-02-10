@@ -51,7 +51,7 @@ export const useTags = ({ limit = 300 }: UseTagsProps) => {
     loadTags(true);
   }, [limit]); // eslint-disable-line
 
-  return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh };
+  return { tags, loading, hasMore, loadTags, handleLoadMore, handleRefresh, isEmpty: tags.length === 0 };
 };
 
 export const useSearchTags = () => {
