@@ -149,12 +149,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             >
               <SidebarProvider>
                 <AppSideBar />
-                <SidebarInset>
+                <SidebarInset className="h-svh overflow-hidden">
                   <AppHeader />
                   <div className="flex flex-1 flex-col overflow-y-auto">
                     <FeatureGate>{children}</FeatureGate>
-                    <RTAFooter />
                   </div>
+                  <RTAFooter />
                 </SidebarInset>
               </SidebarProvider>
             </ThemeProvider>

@@ -17,8 +17,8 @@ export function RTAFooter() {
   ];
 
   return (
-    <footer className="w-full bg-background border-t border-white/5 py-12 px-6 mt-auto pb-32 md:pb-12">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <footer className="w-full bg-background border-t border-white/5 py-6 px-6 pb-24 md:pb-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Top Section: RTA Info */}
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 text-center md:text-left">
           <div className="space-y-6 max-w-xl">
@@ -54,7 +54,7 @@ export function RTAFooter() {
         </div>
 
         {/* Middle Section: Links */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-6 pt-12 border-t border-white/5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-4 gap-x-6 pt-8 border-t border-white/5">
           {legalLinks.map((link) => (
             <Link
               key={link.href}
@@ -67,7 +67,7 @@ export function RTAFooter() {
         </div>
 
         {/* Bottom Section: Copyright */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-12 border-t border-white/5">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-white/5">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20">
             ©2025-{currentYear} MeowFans. All Rights Reserved.
           </p>
