@@ -60,5 +60,5 @@ export const useCreators = ({
     }
   }, [sortBy, orderBy, enabled, params.searchTerm]); //eslint-disable-line
 
-  return { creators, loading, hasMore, loadMore, refresh };
+  return { creators, loading, hasMore, loadMore, refresh, isEmpty: creators.length === 0 };
 };

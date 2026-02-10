@@ -11,16 +11,17 @@ interface PageHandlerProps {
   children: React.ReactNode;
   isLoading: boolean;
   isEmpty: boolean;
+  path?: APP_PATHS;
 }
 
-export const PageHandler = ({ children, isLoading, isEmpty }: PageHandlerProps) => {
+export const PageHandler = ({ children, isLoading, isEmpty, path }: PageHandlerProps) => {
   const pathname = usePathname();
   if (isLoading) {
-    return <LoadingComponent loadingText={LOADING_TEXTS[resolvePathName(pathname) as APP_PATHS]} />;
+    return <LoadingComponent loadingText={LOADING_TEXTS[path || resolvePathName(pathname) as APP_PATHS]} />;
   }
 
   if (isEmpty) {
-    return <EmptyComponent path={resolvePathName(pathname) as APP_PATHS} />;
+    return <EmptyComponent path={path || resolvePathName(pathname) as APP_PATHS} />;
   }
   return <>{children}</>;
 };

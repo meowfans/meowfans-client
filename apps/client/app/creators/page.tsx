@@ -1,9 +1,9 @@
-import { CreatorsView } from './components/CreatorsView';
+import { Creators } from './components/Creators';
 
 export const metadata = {
-  title: 'Creators',
+  title: 'Creators'
 };
 
 export default function CreatorsPage() {
-  return <CreatorsView />;
+  return <Creators />;
 }
