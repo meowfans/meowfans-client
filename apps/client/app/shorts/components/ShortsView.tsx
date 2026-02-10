@@ -36,7 +36,7 @@ export function ShortsView() {
 
   if (!isMounted) return null;
 
-  if (loading && publicShorts.length === 0) {
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-120px)] gap-4">
         <Loading />
