@@ -79,16 +79,18 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="default"
-              className="rounded-full font-medium"
-              onClick={() => profile && !profile.isImported && createChannel(profile.creatorId)}
-              disabled={creatingChannel}
-            >
-              <IconLabel icon={MessageCircle} label="Message" />
-            </Button>
-
+            {!profile.isImported && (
+              <Button
+                variant="outline"
+                size="default"
+                className="rounded-full font-medium"
+                onClick={() => profile && !profile.isImported && createChannel(profile.creatorId)}
+                disabled={creatingChannel}
+              >
+                <IconLabel icon={MessageCircle} label="Message" />
+              </Button>
+            )}
+ 
             <InteractionButton
               variant={profile.isFollowing ? 'outline' : 'default'}
               size="default"
