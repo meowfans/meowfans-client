@@ -1,4 +1,4 @@
-import { DashboardView } from './components/DashboardView';
+import { Dashboard } from './components/Dashboard';
 
 export const metadata = {
   title: 'Dashboard',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function DashboardPage() {
-  return <DashboardView />;
+  return <Dashboard />;
 }

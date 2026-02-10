@@ -59,7 +59,8 @@ export const useChannels = (input: PaginationInput) => {
     loading,
     hasMore,
     handleLoadMore,
-    channels
+    channels,
+    isEmpty: channels.length === 0
   };
 };
 
