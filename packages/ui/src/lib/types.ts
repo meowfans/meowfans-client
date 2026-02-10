@@ -59,6 +59,7 @@ export interface CreatorSignupInput {
   password: string;
   fullName: string;
   username: string;
+  otp: string;
 }
 
 export interface HeaderProps {

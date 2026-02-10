@@ -7,6 +7,7 @@ export interface SignupInput {
   email: string;
   password: string;
   fullName: string;
+  otp: string;
 }
 
 export enum FeedbackType {

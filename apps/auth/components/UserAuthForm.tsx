@@ -31,7 +31,7 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
   const [step, setStep] = useState<1 | 2>(1);
 
   const { login, signup } = useAPI();
-  const { generateOtpMutation, validateOtpMutation } = useAuthActions();
+  const { generateOtpMutation } = useAuthActions();
   const router = useRouter();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
@@ -66,14 +66,9 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
           successHandler({ message: data?.generateOtp as string });
           setStep(2);
         } else {
-          const { data: validateData } = await validateOtpMutation({ email, otp });
-          if (validateData?.validateOtp) {
-            await signup({ email, password, fullName });
-            successHandler({ message: 'Account created successfully', isEnabledConfetti: true });
-            router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL }));
-          } else {
-            errorHandler({ msg: 'Invalid OTP. Please try again.' });
-          }
+          await signup({ email, password, fullName, otp });
+          successHandler({ message: 'Account created successfully', isEnabledConfetti: true });
+          router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL }));
         }
       }
     } catch (error) {

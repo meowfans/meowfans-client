@@ -27,7 +27,7 @@ export function CreatorAuthForm({ className, ...props }: React.HTMLAttributes<HT
   const [step, setStep] = useState<1 | 2>(1);
 
   const { creatorSignup } = useAPI();
-  const { generateOtpMutation, validateOtpMutation } = useAuthActions();
+  const { generateOtpMutation } = useAuthActions();
   const router = useRouter();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
@@ -42,14 +42,9 @@ export function CreatorAuthForm({ className, ...props }: React.HTMLAttributes<HT
         successHandler({ message: data?.generateOtp as string });
         setStep(2);
       } else {
-        const { data: validateData } = await validateOtpMutation({ email, otp });
-        if (validateData?.validateOtp) {
-          await creatorSignup({ email, password, fullName, username });
-          successHandler({ message: 'Creator account created successfully' });
-          router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/dashboard' }));
-        } else {
-          errorHandler({ msg: 'Invalid OTP. Please try again.' });
-        }
+        await creatorSignup({ email, password, fullName, username, otp });
+        successHandler({ message: 'Creator account created successfully' });
+        router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/dashboard' }));
       }
     } catch (error) {
       errorHandler({ error });
