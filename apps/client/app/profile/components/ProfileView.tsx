@@ -20,6 +20,11 @@ export function ProfileView() {
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [bannerUrl, setBannerUrl] = useState<string>('');
   const { updateProfile, loading: updating } = useFanProfile();
+  const [disabled, setIsDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsDisabled(username.trim() === fan?.user.username && avatarUrl === fan?.user.avatarUrl && bannerUrl === fan?.user.bannerUrl);
+  }, [username, avatarUrl, bannerUrl, fan]);
 
   const AVATAR_OPTIONS = [
     'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random1.svg',
@@ -238,7 +243,7 @@ export function ProfileView() {
           <Button
             type="submit"
             className="w-full md:w-auto rounded-full px-12 h-14 gap-3 shadow-[0_20px_50px_rgba(var(--primary-rgb),0.2)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.4)] transition-all active:scale-95 text-lg font-black group overflow-hidden relative"
-            disabled={updating}
+            disabled={disabled}
           >
             {updating ? (
               <Loader2 className="h-6 w-6 animate-spin" />
