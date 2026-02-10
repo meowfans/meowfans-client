@@ -8,39 +8,13 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover';
 import { Spinner } from '@workspace/ui/components/spinner';
+import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
 import { SAvatar } from '@workspace/ui/globals/SAvatar';
+import { EXTENDED_EMOJIS, QUICK_EMOJIS } from '@workspace/ui/lib/constants';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Lock as LucideLock, MessageSquare, Send, ShieldAlert, Smile, Sparkles } from 'lucide-react';
+import { Lock as LucideLock, MessageSquare, Send, ShieldAlert, Smile } from 'lucide-react';
 import { useState } from 'react';
-
-const QUICK_EMOJIS = ['🔥', '❤️', '😍', '🙌', '👏', '✨', '💯', '😂'];
-const EXTENDED_EMOJIS = [
-  '😊',
-  '😇',
-  '🫡',
-  '🤔',
-  '🤫',
-  '🫠',
-  '🥺',
-  '🥳',
-  '🚀',
-  '💎',
-  '🌈',
-  '🎉',
-  '💥',
-  '🎈',
-  '⭐',
-  '🍀',
-  '👀',
-  '👅',
-  '🍑',
-  '🍆',
-  '💦',
-  '🔞',
-  '🔥',
-  '💀'
-];
 
 interface PostCommentsProps {
   postId: string;
@@ -144,92 +118,72 @@ export function PostComments({ postId, isLocked }: PostCommentsProps) {
                 disabled={isSubmitting || isLocked}
               />
             </div>
-            <Button
+            <LoadingButtonV2
               disabled={!commentText.trim() || isSubmitting || isLocked}
               size="icon"
               onClick={handleSubmit}
+              loading={isSubmitting}
               className="h-10 w-10 md:h-12 md:w-12 rounded-[1rem] md:rounded-[1.25rem] bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex-shrink-0"
             >
-              {isLocked ? (
-                <LucideLock className="h-4 w-4" />
-              ) : isSubmitting ? (
-                <Spinner className="h-4 w-4" />
-              ) : (
-                <Send className="h-4 w-4 md:h-5 md:w-5" />
-              )}
-            </Button>
+              {isLocked ? <LucideLock className="h-4 w-4" /> : <Send className="h-4 w-4 md:h-5 md:w-5" />}
+            </LoadingButtonV2>
           </div>
         </div>
       </div>
 
       {/* Comments List */}
       <div className="space-y-4 md:space-y-6">
-        {loading && postComments.length === 0 ? (
-          <div className="py-12 flex justify-center">
-            <Spinner />
-          </div>
-        ) : postComments.length === 0 ? (
-          <div className="py-16 md:py-24 text-center border border-dashed border-white/5 rounded-[2rem] md:rounded-[3rem] bg-secondary/[0.02]">
-            <Sparkles className="mx-auto h-8 w-8 text-muted-foreground/20 mb-4" />
-            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/30">
-              Silence is golden. Be the first to break it.
-            </p>
-          </div>
-        ) : (
-          <>
-            <AnimatePresence mode="popLayout">
-              {postComments.map((comment, idx) => (
-                <motion.div
-                  key={comment.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(idx * 0.05, 0.5) }}
-                  className="flex gap-4 md:gap-5 group"
-                >
-                  <div className="flex-shrink-0">
-                    <div className="p-0.5 rounded-full border border-white/5 bg-secondary/10">
-                      <SAvatar url={comment.fanProfile?.user?.avatarUrl} className="h-8 w-8 md:h-10 md:w-10" />
-                    </div>
-                  </div>
-                  <div className="flex-1 flex flex-col gap-1 md:gap-2 pt-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs md:text-sm  text-foreground/80">{comment.fanProfile?.user?.username || 'Anonymous'}</span>
-                      <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30">
-                        {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                      </span>
-                    </div>
-                    <div className="relative px-4 md:px-5 py-3 md:py-4 rounded-2xl md:rounded-[1.5rem] bg-secondary/10 border border-white/5 group-hover:border-white/10 transition-colors flex items-start justify-between gap-4">
-                      <p className="text-sm md:text-base font-medium leading-relaxed text-foreground/70">{comment.comment}</p>
-                      <button
-                        onClick={() => setReportCommentId(comment.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/5 rounded-lg text-muted-foreground/30 hover:text-destructive"
-                      >
-                        <ShieldAlert className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            <ReportModal
-              isOpen={!!reportCommentId}
-              onClose={() => setReportCommentId(null)}
-              entityId={reportCommentId || ''}
-              entityType={EntityType.Comment}
-            />
-
-            {hasMore && (
-              <div className="pt-4 flex justify-center">
-                <Button
-                  onClick={handleLoadMore}
-                  variant="ghost"
-                  className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary hover:bg-transparent transition-colors"
-                >
-                  {loading ? <Spinner className="mr-2" /> : 'Load More Experiences'}
-                </Button>
+        <AnimatePresence mode="popLayout">
+          {postComments.map((comment, idx) => (
+            <motion.div
+              key={comment.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: Math.min(idx * 0.05, 0.5) }}
+              className="flex gap-4 md:gap-5 group"
+            >
+              <div className="flex-shrink-0">
+                <div className="p-0.5 rounded-full border border-white/5 bg-secondary/10">
+                  <SAvatar url={comment.fanProfile?.user?.avatarUrl} className="h-8 w-8 md:h-10 md:w-10" />
+                </div>
               </div>
-            )}
-          </>
+              <div className="flex-1 flex flex-col gap-1 md:gap-2 pt-1">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs md:text-sm  text-foreground/80">{comment.fanProfile?.user?.username || 'Anonymous'}</span>
+                  <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30">
+                    {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                  </span>
+                </div>
+                <div className="relative px-4 md:px-5 py-3 md:py-4 rounded-2xl md:rounded-[1.5rem] bg-secondary/10 border border-white/5 group-hover:border-white/10 transition-colors flex items-start justify-between gap-4">
+                  <p className="text-sm md:text-base font-medium leading-relaxed text-foreground/70">{comment.comment}</p>
+                  <button
+                    onClick={() => setReportCommentId(comment.id)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/5 rounded-lg text-muted-foreground/30 hover:text-destructive"
+                  >
+                    <ShieldAlert className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        <ReportModal
+          isOpen={!!reportCommentId}
+          onClose={() => setReportCommentId(null)}
+          entityId={reportCommentId || ''}
+          entityType={EntityType.Comment}
+        />
+
+        {hasMore && (
+          <div className="pt-4 flex justify-center">
+            <Button
+              onClick={handleLoadMore}
+              variant="ghost"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary hover:bg-transparent transition-colors"
+            >
+              {loading ? <Spinner className="mr-2" /> : 'Load More Experiences'}
+            </Button>
+          </div>
         )}
       </div>
     </div>

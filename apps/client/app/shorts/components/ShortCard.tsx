@@ -1,6 +1,6 @@
 'use client';
 
-import { ContentSafetyDialog } from '@/components/ContentSafetyDialog';
+import { BlurVideo } from '@/components/BlurVideo';
 import { useContentBlur } from '@/hooks/useContentBlur';
 import { useLikeMutations } from '@/hooks/useLikeMutations';
 import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/av
 import { Button } from '@workspace/ui/components/button';
 import { cn } from '@workspace/ui/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Eye, Heart, MessageCircle, Play, Share2, Volume2, VolumeX } from 'lucide-react';
+import { Heart, MessageCircle, Play, Share2, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface ShortCardProps {
@@ -27,7 +27,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
 
   // Content Blur Logic
   const { isBlurEnabled } = useContentBlur();
-  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -53,19 +52,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
     observer.observe(video);
     return () => observer.disconnect();
   }, [isBlurEnabled]); // Re-run intersection logic when blur state changes
-
-  const handleTogglePlay = () => {
-    const vid = videoRef.current;
-    if (!vid) return;
-
-    if (isPlaying) {
-      vid.pause();
-      setIsPlaying(false);
-    } else {
-      vid.play();
-      setIsPlaying(true);
-    }
-  };
 
   const handleToggleMute = () => {
     const vid = videoRef.current;
@@ -99,42 +85,18 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
     }
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowDialog(true);
-  };
-
   return (
     <>
       <div className="relative h-full w-full snap-start overflow-hidden flex items-center justify-center">
-        <video
+        <BlurVideo
           ref={videoRef}
-          src={short.rawUrl}
-          className={cn(
-            'h-full w-full object-cover transition-all duration-500',
-            isBlurEnabled && 'blur-2xl scale-110 saturate-50 brightness-75'
-          )}
+          src={short.rawUrl as string}
+          className="h-full w-full"
           loop
           playsInline
           onClick={togglePlay}
           onDoubleClick={handleDoubleClick}
         />
-
-        {/* Content Blur Overlay */}
-        {isBlurEnabled && (
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-black/10 backdrop-blur-[2px] transition-all duration-300 group cursor-pointer"
-            onClick={handleOverlayClick}
-          >
-            <div className="h-16 w-16 rounded-full bg-black/40 border border-white/20 backdrop-blur-md flex items-center justify-center hover:bg-black/60 transition-transform hover:scale-110 active:scale-95 group/btn">
-              <Eye className="h-6 w-6 text-white/90 group-hover/btn:text-white" />
-            </div>
-            <p className="mt-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
-              Sensitive Content
-            </p>
-          </div>
-        )}
 
         {/* Play/Pause Indicator Overlay */}
         <AnimatePresence>
@@ -260,8 +222,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           <span className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">Shorts Feed</span>
         </div>
       </div>
-
-      <ContentSafetyDialog open={showDialog} onOpenChange={setShowDialog} />
     </>
   );
 }

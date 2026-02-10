@@ -42,7 +42,6 @@ export function SingleCreatorProfile({ username, profile }: SingleCreatorProfile
         <div className="flex-none">
           <CreatorProfileHeader profile={profile} />
         </div>
-
         <SingleCreatorProfileTabs currentTab={currentTab} onTabChange={handleTabChange} username={username} />
       </div>
     </PageHandler>

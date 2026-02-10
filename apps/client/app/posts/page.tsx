@@ -1,9 +1,11 @@
-import { PostsView } from './components/PostsView';
+import { ROUTE_METADATA } from '@/lib/metadata-config';
+import { Metadata } from 'next';
+import { Posts } from './components/Posts';
 
-export const metadata = {
-  title: 'Posts Feed'
+export const metadata: Metadata = {
+  ...ROUTE_METADATA.posts
 };
 
 export default function PostsPage() {
-  return <PostsView />;
+  return <Posts />;
 }

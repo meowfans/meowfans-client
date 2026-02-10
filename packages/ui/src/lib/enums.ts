@@ -9,6 +9,13 @@ export interface SignupInput {
   fullName: string;
 }
 
+export enum FeedbackType {
+  General = 'general',
+  Bug = 'bug',
+  Feature = 'feature',
+  Compliment = 'compliment'
+}
+
 export enum EventTypes {
   Ping = 'ping',
   VaultDownload = 'vault_download',

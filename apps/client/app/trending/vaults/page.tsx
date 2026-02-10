@@ -1,9 +1,9 @@
-import { TrendingVaultsView } from './components/TrendingVaultsView';
+import { TrendingVaults } from './components/TrendingVaults';
 
 export const metadata = {
-  title: 'Trending Vaults',
+  title: 'Trending Vaults'
 };
 
 export default function TrendingVaultsPage() {
-  return <TrendingVaultsView />;
+  return <TrendingVaults />;
 }

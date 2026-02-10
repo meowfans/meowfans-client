@@ -1,9 +1,11 @@
-import { VaultsView } from './components/VaultsView';
+import { ROUTE_METADATA } from '@/lib/metadata-config';
+import { Metadata } from 'next';
+import { Vaults } from './components/Vaults';
 
-export const metadata = {
-  title: 'Vaults',
+export const metadata: Metadata = {
+  ...ROUTE_METADATA.vaults
 };
 
 export default function VaultsPage() {
-  return <VaultsView />;
+  return <Vaults />;
 }
