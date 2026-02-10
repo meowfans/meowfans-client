@@ -1,35 +1,33 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useAPI } from '@/hooks/useAPI';
 import { useFanProfile } from '@/hooks/useFanProfile';
-import { AssetType, UpdateUserProfileInput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { Loading } from '@workspace/ui/globals/Loading';
-import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { MediaType } from '@workspace/ui/lib/enums';
+import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Camera, Check, Image as ImageIcon, Link as LinkIcon, Loader2, Save, User as UserIcon } from 'lucide-react';
+import { Check, Image as ImageIcon, Link as LinkIcon, Loader2, Save, User as UserIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ProfileView() {
   const { fan } = useFan();
-  const { upload } = useAPI();
-  const { errorHandler } = useErrorHandler();
   const [username, setUsername] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [bannerUrl, setBannerUrl] = useState<string>('');
   const { updateProfile, loading: updating } = useFanProfile();
-  const [uploadingAvatar, setUploadingAvatar] = useState<boolean>(false);
-  const [uploadingBanner, setUploadingBanner] = useState<boolean>(false);
 
-  const avatarInputRef = useRef<HTMLInputElement>(null);
-  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const AVATAR_OPTIONS = [
+    'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random1.svg',
+    'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random2.svg',
+    'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random3.svg',
+    'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random4.svg',
+    'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random5.svg'
+  ];
 
   useEffect(() => {
     if (fan?.user) {
@@ -41,46 +39,7 @@ export function ProfileView() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const input: UpdateUserProfileInput = {
-      username,
-      avatarUrl,
-      bannerUrl
-    };
-    await updateProfile(input);
-  };
-
-  const handleImageUpload = async (file: File, type: 'avatar' | 'banner') => {
-    const isAvatar = type === 'avatar';
-    if (isAvatar) {
-      setUploadingAvatar(true);
-    } else {
-      setUploadingBanner(true);
-    }
-
-    try {
-      const formdata = new FormData();
-      formdata.append('file', file);
-      const res = await upload({
-        mediaType: MediaType.PROFILE_MEDIA,
-        assetType: AssetType.Private,
-        formdata
-      });
-      if (res?.rawUrl) {
-        if (isAvatar) {
-          setAvatarUrl(res.rawUrl);
-        } else {
-          setBannerUrl(res.rawUrl);
-        }
-      }
-    } catch (error) {
-      errorHandler({ error, msg: `Failed to upload ${type}` });
-    } finally {
-      if (isAvatar) {
-        setUploadingAvatar(false);
-      } else {
-        setUploadingBanner(false);
-      }
-    }
+    await updateProfile({ username, avatarUrl, bannerUrl });
   };
 
   if (!fan) return <Loading />;
@@ -114,26 +73,6 @@ export function ProfileView() {
                   <ImageIcon className="h-16 w-16" />
                 </div>
               )}
-
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="rounded-full gap-2 shadow-xl"
-                  onClick={() => bannerInputRef.current?.click()}
-                  disabled={uploadingBanner}
-                >
-                  {uploadingBanner ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                  {bannerUrl ? 'Change Banner' : 'Upload Banner'}
-                </Button>
-              </div>
-              <input
-                type="file"
-                ref={bannerInputRef}
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], 'banner')}
-              />
             </div>
 
             <div className="px-6 md:px-10 pb-10 relative">
@@ -146,22 +85,9 @@ export function ProfileView() {
                     </AvatarFallback>
                   </Avatar>
 
-                  <div
-                    className="absolute inset-0 rounded-full bg-black/50 backdrop-blur-[4px] opacity-0 group-hover/avatar:opacity-100 transition-all duration-300 flex items-center justify-center cursor-pointer overflow-hidden"
-                    onClick={() => avatarInputRef.current?.click()}
-                  >
-                    <div className="flex flex-col items-center gap-1 text-white">
-                      {uploadingAvatar ? <Loader2 className="h-6 w-6 animate-spin" /> : <Camera className="h-6 w-6" />}
-                      <span className="text-[10px] font-bold uppercase tracking-widest">Update</span>
-                    </div>
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/80">Avatar</span>
                   </div>
-                  <input
-                    type="file"
-                    ref={avatarInputRef}
-                    className="hidden"
-                    accept="image/*"
-                    onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], 'avatar')}
-                  />
                 </div>
 
                 <div className="flex-1 space-y-1 text-center md:text-left mb-2">
@@ -238,6 +164,44 @@ export function ProfileView() {
 
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
             <Card className="border-none bg-secondary/10 shadow-xl shadow-primary/5 backdrop-blur-md ring-1 ring-white/5 h-full rounded-[2rem] flex flex-col">
+              <CardHeader className="px-8 pt-8">
+                <CardTitle className="text-xl font-bold flex items-center gap-2">
+                  <UserIcon className="h-5 w-5 text-primary" />
+                  Select Avatar
+                </CardTitle>
+                <CardDescription>Choose from our exclusive SVG collection.</CardDescription>
+              </CardHeader>
+              <CardContent className="px-8 pb-8">
+                <div className="grid grid-cols-5 gap-4">
+                  {AVATAR_OPTIONS.map((url, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setAvatarUrl(url)}
+                      className={cn(
+                        'relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 hover:scale-110 active:scale-95 group',
+                        avatarUrl === url
+                          ? 'ring-4 ring-primary ring-offset-4 ring-offset-background'
+                          : 'hover:ring-2 hover:ring-primary/40'
+                      )}
+                    >
+                      <Image src={url} alt={`Avatar option ${index + 1}`} fill className="object-cover p-2" />
+                      {avatarUrl === url && (
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                          <Check className="h-6 w-6 text-primary" />
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <Card className="border-none bg-secondary/10 shadow-xl shadow-primary/5 backdrop-blur-md ring-1 ring-white/5 h-full rounded-[2rem] flex flex-col">
               <CardHeader className="px-8 pt-8 text-center md:text-left">
                 <CardTitle className="text-xl font-bold">Fan Status</CardTitle>
                 <CardDescription>Verified account privileges.</CardDescription>
@@ -274,7 +238,7 @@ export function ProfileView() {
           <Button
             type="submit"
             className="w-full md:w-auto rounded-full px-12 h-14 gap-3 shadow-[0_20px_50px_rgba(var(--primary-rgb),0.2)] hover:shadow-[0_20px_50px_rgba(var(--primary-rgb),0.4)] transition-all active:scale-95 text-lg font-black group overflow-hidden relative"
-            disabled={updating || uploadingAvatar || uploadingBanner}
+            disabled={updating}
           >
             {updating ? (
               <Loader2 className="h-6 w-6 animate-spin" />

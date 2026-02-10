@@ -1,6 +1,5 @@
 'use client';
 
-import { ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,66 +16,43 @@ export function RTAFooter() {
   ];
 
   return (
-    <footer className="w-full bg-background border-t border-white/5 py-6 px-6 pb-24 md:pb-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Top Section: RTA Info */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 text-center md:text-left">
-          <div className="space-y-6 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mx-auto md:mx-0">
-              <ShieldAlert className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">RTA Restricted</span>
+    <footer className="w-full bg-background border-t border-white/5 py-1 md:py-2 px-4 md:px-6 pb-20 md:pb-2 mt-auto">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+        {/* Left: RTA & Tagline */}
+        <div className="flex items-center gap-2 md:gap-6">
+          <div className="flex items-center gap-2">
+            <div className="px-1.5 py-0.5 rounded-[3px] bg-primary/10 border border-primary/20 shrink-0">
+              <span className="text-[7px] md:text-[9px] font-black text-primary leading-none">RTA</span>
             </div>
-            <div className="space-y-3">
-              <h3 className="text-2xl font-black uppercase italic tracking-tight leading-tight">Parental Control & Compliance</h3>
-              <p className="text-muted-foreground text-[11px] md:text-xs uppercase tracking-widest leading-relaxed">
-                MeowFans is restricted to adults aged 18 and older. We are RTA (Restricted to Adults) compliant. Our platform uses
-                sophisticated age verification and content monitoring to ensure a safe environment for creators and fans.
-              </p>
+            <div className="flex items-center opacity-30 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+              <Image src="/RTA88.gif" alt="RTA 88" width={44} height={22} className="h-4 md:h-5 w-auto" />
             </div>
           </div>
-
-          <div className="shrink-0">
-            <a href="https://www.rtalabel.org/" target="_blank" rel="noopener noreferrer" className="group block">
-              <div className="h-24 w-52 rounded-[2rem] bg-secondary/20 border border-white/10 flex items-center justify-center p-6 hover:bg-secondary/30 transition-all duration-300 group-hover:border-primary/50 relative overflow-hidden backdrop-blur-sm shadow-xl shadow-black/20">
-                <Image
-                  src="/120x60_RTA-5042-1996-1400-1577-RTA_d.gif"
-                  alt="RTA Restricted to Adults"
-                  width={120}
-                  height={60}
-                  className="h-full w-auto filter grayscale group-hover:grayscale-0 transition-all duration-500 opacity-60 group-hover:opacity-100 object-contain scale-110 group-hover:scale-125"
-                />
-              </div>
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 mt-4 text-center group-hover:text-primary transition-colors">
-                Verified Compliance
-              </p>
-            </a>
-          </div>
+          <p className="text-[7px] md:text-[9px] font-black uppercase tracking-tighter md:tracking-widest text-muted-foreground/30">
+            Verified & Compliant <span className="hidden sm:inline">Platform for Creators & Fans</span>
+          </p>
         </div>
 
-        {/* Middle Section: Links */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-4 gap-x-6 pt-8 border-t border-white/5">
+        {/* Center: Legal Links */}
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           {legalLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all hover:translate-x-1 md:hover:translate-x-0 md:hover:-translate-y-1 inline-block"
+              className="text-[7px] md:text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors"
             >
               {link.label}
             </Link>
           ))}
         </div>
 
-        {/* Bottom Section: Copyright */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-white/5">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20">
-            ©2025-{currentYear} MeowFans. All Rights Reserved.
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-6">
-            <span className="hidden md:block h-1.5 w-1.5 rounded-full bg-primary/20" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
-              Platform for Creators & Fans
-            </p>
+        {/* Right: Copyright & Security */}
+        <div className="flex items-center gap-3 md:gap-4">
+          <div className="flex items-center gap-1.5 opacity-20 hover:opacity-100 transition-opacity">
+            <div className="h-1 w-1 rounded-full bg-primary" />
+            <span className="text-[7px] md:text-[8px] font-black uppercase italic tracking-widest text-muted-foreground">Secure</span>
           </div>
+          <p className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground/10">©{currentYear} MeowFans</p>
         </div>
       </div>
     </footer>
