@@ -19,6 +19,14 @@ export const cookieConsentCookieKey = '_cookie_consent';
 
 export const OK_URI = 'https://ok.xxx/albums';
 
+export const AVATAR_OPTIONS = [
+  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random1.svg',
+  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random2.svg',
+  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random3.svg',
+  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random4.svg',
+  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random5.svg'
+];
+
 export const tailwindBgColors = [
   'bg-slate-500',
   'bg-gray-500',

@@ -1,4 +1,4 @@
-import { ProfileView } from './components/ProfileView';
+import { Profile } from './components/Profile';
 
 export const metadata = {
   title: 'Profile',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function ProfilePage() {
-  return <ProfileView />;
+  return <Profile />;
 }
