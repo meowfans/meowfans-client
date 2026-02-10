@@ -1,4 +1,4 @@
-import { VaultDetailView } from './components/VaultDetailView';
+import { SingleVault } from './components/SingleVault';
 
 interface VaultDetailPageProps {
   params: Promise<{ id: string }>;
@@ -10,5 +10,5 @@ export const metadata = {
 
 export default async function VaultDetailPage({ params }: VaultDetailPageProps) {
   const { id } = await params;
-  return <VaultDetailView vaultId={id} />;
+  return <SingleVault vaultId={id} />;
 }

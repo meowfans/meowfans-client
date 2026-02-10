@@ -22,18 +22,11 @@ export const AppConfig = {
   themeColor: '#FFFFFF',
   site_name: 'MeowFans',
   type: 'website',
-  images: '/icons/meowfans_avatar.png',
+  images: '/icons/icon-192.png',
   manifest: '/site.webmanifest',
   icons: [
-    {
-      src: '/icons/logo_192.png',
-      sizes: '192x192',
-      type: 'image/png'
-    },
-    {
-      src: '/icons/logo_512.png',
-      sizes: '512x512',
-      type: 'image/png'
-    }
+    { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+    { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    { src: '/icons/icon-180.png', sizes: '180x180', type: 'image/png' }
   ]
 };

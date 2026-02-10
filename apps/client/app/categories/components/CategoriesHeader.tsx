@@ -17,7 +17,6 @@ export const CategoriesHeader = ({ searchQuery, setSearchQuery, tags, filteredTa
         <p className="text-muted-foreground">Explore content by popular tags and categories</p>
       </div>
 
-      {/* Search Bar */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -29,7 +28,6 @@ export const CategoriesHeader = ({ searchQuery, setSearchQuery, tags, filteredTa
         />
       </div>
 
-      {/* Stats */}
       {tags.length > 0 && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <TrendingUp className="h-4 w-4" />

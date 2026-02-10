@@ -3,6 +3,7 @@
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { LOADING_TEXTS } from '@/lib/constants/loading-texts';
 import { resolvePathName } from '@workspace/ui/lib/helpers';
+import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { EmptyComponent } from './EmptyComponent';
 import { LoadingComponent } from './LoadingComponent';
@@ -16,12 +17,26 @@ interface PageHandlerProps {
 
 export const PageHandler = ({ children, isLoading, isEmpty, path }: PageHandlerProps) => {
   const pathname = usePathname();
-  if (isLoading) {
-    return <LoadingComponent loadingText={LOADING_TEXTS[path || resolvePathName(pathname) as APP_PATHS]} />;
-  }
+  const currentPath = path || (resolvePathName(pathname) as APP_PATHS);
 
-  if (isEmpty) {
-    return <EmptyComponent path={path || resolvePathName(pathname) as APP_PATHS} />;
-  }
-  return <>{children}</>;
+  return (
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <LoadingComponent key="loading" loadingText={LOADING_TEXTS[currentPath]} />
+      ) : isEmpty ? (
+        <EmptyComponent key="empty" path={currentPath} />
+      ) : (
+        <motion.div
+          key="content"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="h-full w-full"
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };

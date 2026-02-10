@@ -1,9 +1,9 @@
-import { SubscriptionsView } from './components/SubscriptionsView';
+import { Subscriptions } from './components/Subscriptions';
 
 export const metadata = {
-  title: 'Subscriptions',
+  title: 'Subscriptions'
 };
 
 export default function SubscriptionsPage() {
-  return <SubscriptionsView />;
+  return <Subscriptions />;
 }

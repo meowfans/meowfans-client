@@ -1,9 +1,9 @@
-import { TrendingCreatorsView } from './components/TrendingCreatorsView';
+import { TrendingCreators } from './components/TrendingCreators';
 
 export const metadata = {
-  title: 'Trending Creators',
+  title: 'Trending Creators'
 };
 
 export default function TrendingCreatorsPage() {
-  return <TrendingCreatorsView />;
+  return <TrendingCreators />;
 }

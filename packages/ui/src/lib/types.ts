@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { ButtonHTMLAttributes, ClassAttributes } from 'react';
-import { AuthUserRoles, FileType, MediaType, TokenType } from './enums';
+import { AuthUserRoles, FeedbackType, FileType, MediaType, TokenType } from './enums';
 
 export interface JwtUser {
   sub: string; // holds userId
@@ -15,6 +15,20 @@ export interface JwtUser {
   impersonating: boolean;
   userAgent: string;
   associated_access_token_jti: string;
+}
+
+export interface FeedbackFormData {
+  type: FeedbackType;
+  rating: string;
+  title: string;
+  message: string;
+}
+
+export interface FeedbackCategory {
+  id: FeedbackType;
+  label: string;
+  icon: LucideIcon;
+  color: string;
 }
 
 export type ButtonSize = 'default' | 'lg' | 'sm' | 'icon';

@@ -1,6 +1,6 @@
-import { ChannelDetailView } from './components/ChannelDetailView';
+import { SingleChannel } from './components/SingleChannel';
 
-interface ChannelDetailPageProps {
+interface SingleChannelProps {
   params: Promise<{ id: string }>;
 }
 
@@ -8,7 +8,7 @@ export const metadata = {
   title: 'Channel Messages'
 };
 
-export default async function ChannelDetailPage({ params }: ChannelDetailPageProps) {
+export default async function SingleChannelPage({ params }: SingleChannelProps) {
   const { id } = await params;
-  return <ChannelDetailView channelId={id} />;
+  return <SingleChannel channelId={id} />;
 }

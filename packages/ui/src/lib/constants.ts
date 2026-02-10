@@ -1,3 +1,7 @@
+import { Bug, Lightbulb, MessageSquare, Smile } from 'lucide-react';
+import { FeedbackType } from './enums';
+import { FeedbackCategory } from './types';
+
 export const MEOW_FANS_BANNER = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_banner.png';
 export const MEOW_FANS_AVATAR = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_avatar.png';
 
@@ -27,6 +31,34 @@ export const AVATAR_OPTIONS = [
   'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random5.svg'
 ];
 
+export const QUICK_EMOJIS = ['🔥', '❤️', '😍', '🙌', '👏', '✨', '💯', '😂'];
+export const EXTENDED_EMOJIS = [
+  '😊',
+  '😇',
+  '🫡',
+  '🤔',
+  '🤫',
+  '🫠',
+  '🥺',
+  '🥳',
+  '🚀',
+  '💎',
+  '🌈',
+  '🎉',
+  '💥',
+  '🎈',
+  '⭐',
+  '🍀',
+  '👀',
+  '👅',
+  '🍑',
+  '🍆',
+  '💦',
+  '🔞',
+  '🔥',
+  '💀'
+];
+
 export const tailwindBgColors = [
   'bg-slate-500',
   'bg-gray-500',
@@ -50,4 +82,11 @@ export const tailwindBgColors = [
   'bg-fuchsia-500',
   'bg-pink-500',
   'bg-rose-500'
+];
+
+export const feedbackCategories: FeedbackCategory[] = [
+  { id: FeedbackType.General, label: 'General Feedback', icon: MessageSquare, color: 'text-blue-500' },
+  { id: FeedbackType.Bug, label: 'Report a Bug', icon: Bug, color: 'text-red-500' },
+  { id: FeedbackType.Feature, label: 'Feature Request', icon: Lightbulb, color: 'text-yellow-500' },
+  { id: FeedbackType.Compliment, label: 'Compliment', icon: Smile, color: 'text-green-500' }
 ];

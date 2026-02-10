@@ -1,9 +1,9 @@
-import { TrendingPostsView } from './components/TrendingPostsView';
+import { TrendingPosts } from './components/TrendingPosts';
 
 export const metadata = {
-  title: 'Trending Posts',
+  title: 'Trending Posts'
 };
 
 export default function TrendingPostsPage() {
-  return <TrendingPostsView />;
+  return <TrendingPosts />;
 }

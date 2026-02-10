@@ -2,9 +2,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function RTAFooter() {
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname();
 
   const legalLinks = [
     { label: 'Terms of Service', href: '/legal/terms' },
@@ -14,6 +16,8 @@ export function RTAFooter() {
     { label: '2257 Compliance', href: '/legal/2257' },
     { label: 'General Terms', href: '/legal/general-terms' }
   ];
+
+  if (['channels', 'shorts'].includes(pathname.split('/')[1])) return null;
 
   return (
     <footer className="w-full bg-background border-t border-white/5 py-1 md:py-2 px-4 md:px-6 pb-20 md:pb-2 mt-auto">

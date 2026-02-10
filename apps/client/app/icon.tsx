@@ -8,7 +8,7 @@ export const size = {
   height: 192
 };
 export const contentType = 'image/png';
-export const alt = 'MeowFans';
+export const alt = 'MeowFans_fan';
 
 export default function Icon() {
   return new ImageResponse(

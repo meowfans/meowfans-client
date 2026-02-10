@@ -1,15 +1,16 @@
+import { ROUTE_METADATA } from '@/lib/metadata-config';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { SettingsView } from './components/SettingsView';
+import { Settings } from './components/Settings';
 
-export const metadata = {
-  title: 'Settings',
-  description: 'Manage your profile, account security, and preferences.'
+export const metadata: Metadata = {
+  ...ROUTE_METADATA.settings
 };
 
 export default function SettingsPage() {
   return (
     <Suspense>
-      <SettingsView />
+      <Settings />
     </Suspense>
   );
 }
