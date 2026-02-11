@@ -6,26 +6,33 @@ import { GetPublicCreatorProfileOutput, UserRoles } from '@workspace/gql/generat
 import { Metadata } from 'next';
 import { SingleCreatorProfile } from './components/SingleCreatorProfile';
 
-export async function generateMetadata({ params }: SingleCreatorProfilePageProps): Promise<Metadata> {
-  const { username } = await params;
-  try {
-    const client = await createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan).getClient();
-    const { data } = await client.query({ query: GET_PUBLIC_CREATOR_PROFILE_QUERY, variables: { username } });
-    const profile = data?.getPublicCreatorProfile as GetPublicCreatorProfileOutput;
+// export async function generateMetadata({ params }: SingleCreatorProfilePageProps): Promise<Metadata> {
+//   const { username } = await params;
+//   try {
+//     const client = await createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan).getClient();
+//     const { data } = await client.query({ query: GET_PUBLIC_CREATOR_PROFILE_QUERY, variables: { username } });
+//     const profile = data?.getPublicCreatorProfile as GetPublicCreatorProfileOutput;
 
-    if (!profile) return { title: ROUTE_METADATA.creators.title };
+//     if (!profile) return { title: ROUTE_METADATA.creators.title };
 
-    return {
-      title: `${profile.fullName} (@${username})`,
-      description: profile.bio || `View ${profile.fullName}'s exclusive content and posts on MeowFans.`,
-      openGraph: {
-        images: [profile.avatarUrl || '']
-      }
-    };
-  } catch {
-    return { title: ROUTE_METADATA.creators.title };
-  }
-}
+//     return {
+//       title: `${profile.fullName} (@${username})`,
+//       description: profile.bio || `View ${profile.fullName}'s exclusive content and posts on MeowFans.`,
+//       openGraph: {
+//         images: [
+//           {
+//             url: `/creators/${username}/opengraph-image`,
+//             width: 1200,
+//             height: 630,
+//             type: 'image/png'
+//           }
+//         ]
+//       }
+//     };
+//   } catch {
+//     return { title: ROUTE_METADATA.creators.title };
+//   }
+// }
 
 export const dynamic = 'force-dynamic';
 

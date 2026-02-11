@@ -38,20 +38,8 @@ export const useServerPublicCreatorPosts = (params: PaginationInput, initialPost
   useEffect(() => {
     if (initialPosts?.length > 0) {
       setPosts(initialPosts);
-      setSkip(initialPosts.length);
-      setHasMore(initialPosts.length === (params.take ?? 30));
-    } else {
-      setPosts([]);
-      setSkip(0);
-      setHasMore(true);
     }
-  }, [initialPosts, params.username, params.postTypes, params.sortBy, params.orderBy, params.take, setPosts]);
-
-  useEffect(() => {
-    if (initialPosts.length === 0 && posts.length === 0 && !loading && hasMore) {
-      loadMore();
-    }
-  }, [initialPosts.length, posts.length, loading, hasMore, loadMore]);
+  }, [initialPosts, setPosts]);
 
   return {
     posts,

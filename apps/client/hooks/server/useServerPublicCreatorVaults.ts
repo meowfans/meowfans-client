@@ -37,7 +37,6 @@ export const useServerPublicCreatorVaults = (params: PaginationInput, initialVau
   useEffect(() => {
     if (initialVaults?.length > 0) {
       setVaults(initialVaults);
-      setSkip(initialVaults.length);
     }
   }, [initialVaults, setVaults]);
 
