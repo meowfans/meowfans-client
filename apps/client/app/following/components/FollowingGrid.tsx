@@ -9,20 +9,14 @@ interface FollowingGridProps {
   loading: boolean;
   hasMore: boolean;
   loadMore: () => void;
+  initialCreators: GetDefaultCreatorsOutput[];
 }
 
-export const FollowingGrid = ({ creators, loading, hasMore, loadMore }: FollowingGridProps) => {
+export function FollowingGrid({ creators, loading, hasMore, loadMore, initialCreators }: FollowingGridProps) {
   return (
-    <PageHandler isEmpty={!creators.length} isLoading={loading}>
-      <div className="flex-1 min-h-0 overflow-y-scroll" id="following-scroll-wrapper">
-        <InfiniteScrollManager
-          dataLength={creators.length}
-          loading={loading}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          scrollableDiv="following-scroll-wrapper"
-          customHeight="h-full"
-        >
+    <PageHandler isEmpty={!creators.length} isLoading={loading && !initialCreators.length}>
+      <div>
+        <InfiniteScrollManager dataLength={creators.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore} useWindowScroll>
           <div className="grid grid-cols-1 gap-6 p-6 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {creators.map((creator) => (
               <CreatorCard key={creator.id} creator={creator} />

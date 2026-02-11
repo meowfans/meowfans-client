@@ -31,7 +31,6 @@ export function SingleVaultActionCard({
     <Card className="w-full border-2 md:w-80">
       <CardContent className="p-6">
         <div className="space-y-4">
-          {/* Price Display */}
           {hasPrice && !isPurchased && (
             <div className="text-center">
               <p className="text-sm text-muted-foreground">Unlock Price</p>
@@ -39,7 +38,6 @@ export function SingleVaultActionCard({
             </div>
           )}
 
-          {/* Purchase Button */}
           {!isPurchased && hasPrice ? (
             <>
               <div className="rounded-lg bg-muted/50 p-3">
@@ -66,7 +64,6 @@ export function SingleVaultActionCard({
             </InteractionButton>
           )}
 
-          {/* Stats */}
           <Separator />
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between">

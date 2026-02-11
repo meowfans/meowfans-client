@@ -22,7 +22,6 @@ const LoadingComponent = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <Loading />
-      <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Developing Masterpieces</p>
     </div>
   );
 };

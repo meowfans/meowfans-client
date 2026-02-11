@@ -2,10 +2,10 @@
 
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
-import { AssetsEntity, GetPublicShortsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetPublicShortsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { useFan } from './context/UserContextWrapper';
+import { useFan } from '../context/UserContextWrapper';
 
 interface UsePublicShortsProps {
   sortBy?: SortBy;

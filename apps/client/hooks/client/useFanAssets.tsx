@@ -5,7 +5,7 @@ import { useAssetsActions } from '@workspace/gql/actions/assets.actions';
 import { GetFanAssetsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { useFan } from './context/UserContextWrapper';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useFanAssets = ({ orderBy = SortOrder.Asc, take = 30, ...params }: PaginationInput) => {
   const { fan } = useFan();

@@ -12,6 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AlertTriangle, Heart, Lock, MessageSquare, MoreVertical, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface PostCardProps {
   post: GetPublicPostsOutput;
@@ -24,6 +25,7 @@ interface PostCardProps {
 }
 
 export const PostCard = ({ post, isBlurEnabled, isExpanded, onToggleComments, onLike, onReport, viewMode }: PostCardProps) => {
+  const router = useRouter();
   return (
     <motion.div layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <Link href={`/posts/${post.id}`}>
@@ -81,7 +83,14 @@ export const PostCard = ({ post, isBlurEnabled, isExpanded, onToggleComments, on
 
               <div className="flex items-center justify-between border-t border-white/5 pt-4">
                 <div className="flex items-center gap-2 min-w-0">
-                  <SAvatar url={post.creatorAvatarUrl} />
+                  <SAvatar
+                    url={post.creatorAvatarUrl}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push(`/creators/${post.creatorUsername}`);
+                    }}
+                  />
                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 truncate">
                     {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                   </span>

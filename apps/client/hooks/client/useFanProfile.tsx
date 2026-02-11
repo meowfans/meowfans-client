@@ -5,7 +5,7 @@ import { FanProfilesEntity, UpdateUserProfileInput } from '@workspace/gql/genera
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useState } from 'react';
-import { useFan } from './context/UserContextWrapper';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useFanProfile = () => {
   const { errorHandler } = useErrorHandler();

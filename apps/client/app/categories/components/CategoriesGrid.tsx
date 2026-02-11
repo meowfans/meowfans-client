@@ -3,7 +3,6 @@ import { TagsEntity } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { Hash, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
@@ -13,15 +12,16 @@ interface CategoriesGridProps {
   hasMore: boolean;
   handleLoadMore: () => void;
   searchQuery: string;
+  initialTags: TagsEntity[];
 }
 
-export const CategoriesGrid = ({ filteredTags, loading, hasMore, handleLoadMore, searchQuery }: CategoriesGridProps) => {
+export const CategoriesGrid = ({ filteredTags, loading, hasMore, handleLoadMore, searchQuery, initialTags }: CategoriesGridProps) => {
   return (
-    <PageHandler isLoading={loading} isEmpty={!filteredTags.length && !loading}>
+    <PageHandler isLoading={loading && !initialTags.length} isEmpty={!filteredTags.length}>
       <InfiniteScrollManager
         dataLength={filteredTags.length}
         loading={loading}
-        hasMore={hasMore && !searchQuery}
+        hasMore={hasMore}
         onLoadMore={handleLoadMore}
         useWindowScroll
       >
@@ -39,7 +39,6 @@ export const CategoriesGrid = ({ filteredTags, loading, hasMore, handleLoadMore,
 
                     <h3 className="line-clamp-2 text-sm font-semibold tracking-tight">{tag.label}</h3>
 
-                    {/* Trending Badge for first few items */}
                     {index < 6 && (
                       <Badge variant="secondary" className="mt-2 gap-1 text-[10px]">
                         <TrendingUp className="h-2.5 w-2.5" />
@@ -52,8 +51,6 @@ export const CategoriesGrid = ({ filteredTags, loading, hasMore, handleLoadMore,
             );
           })}
         </div>
-
-        {loading && !searchQuery && <Loading />}
       </InfiniteScrollManager>
     </PageHandler>
   );

@@ -4,7 +4,6 @@ import { PageHandler } from '@/components/PageHandler';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { GetPublicPostsOutput } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { PostCard } from './PostCard';
 
@@ -20,6 +19,7 @@ interface PostsListProps {
   onToggleComments: (postId: string) => void;
   onLike: (postId: string) => void;
   onReport: (postId: string) => void;
+  initialPosts: GetPublicPostsOutput[];
 }
 
 export const PostsList = ({
@@ -33,11 +33,24 @@ export const PostsList = ({
   expandedPostId,
   onToggleComments,
   onLike,
-  onReport
+  onReport,
+  initialPosts
 }: PostsListProps) => {
+  const handleToggleComments = (e: React.MouseEvent<Element, MouseEvent>, postId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleComments(postId);
+  };
+
+  const handleLike = (e: React.MouseEvent<Element, MouseEvent>, postId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onLike(postId);
+  };
+
   return (
-    <div className="flex-1 min-h-0 overflow-y-scroll px-4 md:px-8 custom-scrollbar pt-2">
-      <PageHandler isLoading={loading} isEmpty={!posts.length} path={APP_PATHS.POSTS}>
+    <div className="px-4 md:px-8 custom-scrollbar pt-2">
+      <PageHandler isLoading={loading && !initialPosts.length} isEmpty={!posts.length} path={APP_PATHS.POSTS}>
         <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={onLoadMore}>
           <div
             className={`grid gap-6 pb-24 ${
@@ -51,29 +64,14 @@ export const PostsList = ({
                   post={post}
                   isBlurEnabled={isBlurEnabled}
                   isExpanded={expandedPostId === post.id}
-                  onToggleComments={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onToggleComments(post.id);
-                  }}
-                  onLike={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onLike(post.id);
-                  }}
+                  onToggleComments={(e) => handleToggleComments(e, post.id)}
+                  onLike={(e) => handleLike(e, post.id)}
                   onReport={onReport}
                   viewMode={viewMode}
                 />
               ))}
             </AnimatePresence>
           </div>
-
-          {loading && (
-            <div className="py-20 flex flex-col items-center gap-4">
-              <Loading />
-              <p className="text-xs font-bold text-muted-foreground/30 uppercase tracking-[0.3em]">Curating your feed</p>
-            </div>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>

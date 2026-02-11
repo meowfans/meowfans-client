@@ -1,7 +1,6 @@
 'use client';
 
-import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useContentBlur } from '@/hooks/useContentBlur';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { Button } from '@workspace/ui/components/button';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -15,7 +14,6 @@ import { SettingsNotifications } from './SettingsNotifications';
 import { SettingsSidebar, type SettingsTab } from './SettingsSidebar';
 
 export function Settings() {
-  const { fan } = useFan();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

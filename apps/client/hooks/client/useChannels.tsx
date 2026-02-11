@@ -12,8 +12,8 @@ import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useFan } from './context/UserContextWrapper';
-import { useChannelsStore } from './store/channels.store';
+import { useFan } from '../context/UserContextWrapper';
+import { useChannelsStore } from '../store/channels.store';
 
 export const useChannels = (input: PaginationInput) => {
   const { fan } = useFan();

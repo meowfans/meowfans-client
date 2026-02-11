@@ -37,7 +37,7 @@ export function SingleCreatorProfile({ username, profile }: SingleCreatorProfile
   }, [profile]);
 
   return (
-    <PageHandler isEmpty={!profile} isLoading={loading}>
+    <PageHandler isEmpty={!profile} isLoading={loading && !profile}>
       <div className="flex h-full flex-1 flex-col overflow-hidden">
         <div className="flex-none">
           <CreatorProfileHeader profile={profile} />

@@ -1,8 +1,8 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { useVaults } from '@/hooks/useVaults';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useServerVaults } from '@/hooks/server/useServerVaults';
+import { GetPublicVaultsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
@@ -11,12 +11,19 @@ import { ArrowRight, Box, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { TrendingVaultCard } from './TrendingVaultCard';
 
-export function TrendingVaults() {
-  const { vaults, loadMore, hasMore, loading } = useVaults({
-    take: 30,
-    sortBy: SortBy.VaultViewCount,
-    orderBy: SortOrder.Desc
-  });
+interface TrendingVaultsProps {
+  initialVaults: GetPublicVaultsOutput[];
+}
+
+export function TrendingVaults({ initialVaults }: TrendingVaultsProps) {
+  const { vaults, loadMore, hasMore, loading } = useServerVaults(
+    {
+      take: 30,
+      sortBy: SortBy.VaultViewCount,
+      orderBy: SortOrder.Desc
+    },
+    initialVaults
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-8 p-3 md:p-12 pt-6 md:pt-0 max-w-7xl mx-auto w-full pb-20">
@@ -50,7 +57,7 @@ export function TrendingVaults() {
         </div>
       </div>
 
-      <PageHandler isEmpty={!vaults.length && !loading} isLoading={loading && !vaults.length}>
+      <PageHandler isEmpty={!vaults.length} isLoading={loading && !initialVaults.length}>
         <InfiniteScrollManager dataLength={vaults.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-1">
             <AnimatePresence mode="popLayout">

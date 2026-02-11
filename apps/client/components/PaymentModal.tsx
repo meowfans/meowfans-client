@@ -1,7 +1,7 @@
 'use client';
 
 import { Paypal } from '@/components/Paypal';
-import { CreateOrderInput } from '@/hooks/usePaypal';
+import { CreateOrderInput } from '@/hooks/client/usePaypal';
 import { Button } from '@workspace/ui/components/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
 import { ArrowLeft, CreditCard, Wallet } from 'lucide-react';

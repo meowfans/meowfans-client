@@ -1,22 +1,25 @@
 'use client';
 
-import { useSingleReport } from '@/hooks/useReports';
+import { useServerSingleReport } from '@/hooks/server/useServerSingleReport';
+import { ReportsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { motion } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ReportDetailHeader } from './ReportDetailHeader';
 import { ReportDetailIncident } from './ReportDetailIncident';
 import { ReportDetailMeta } from './ReportDetailMeta';
 import { ReportDetailStatus } from './ReportDetailStatus';
 
-export function ReportDetail() {
-  const params = useParams();
+interface ReportDetailProps {
+  initialReport: ReportsEntity | null;
+}
+
+export function ReportDetail({ initialReport }: ReportDetailProps) {
   const router = useRouter();
-  const id = params.id as string;
-  const { report, loading } = useSingleReport(id);
+  const { report, loading } = useServerSingleReport(initialReport?.id as string, initialReport);
 
   if (loading) {
     return (

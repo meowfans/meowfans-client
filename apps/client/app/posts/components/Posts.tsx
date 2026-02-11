@@ -1,15 +1,19 @@
 'use client';
 
 import { ReportModal } from '@/components/ReportModal';
-import { useContentBlur } from '@/hooks/useContentBlur';
-import { useLikeMutations } from '@/hooks/useLikeMutations';
-import { usePosts } from '@/hooks/usePosts';
-import { EntityType, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
+import { useLikeMutations } from '@/hooks/client/useLikeMutations';
+import { useServerPosts } from '@/hooks/server/useServerPosts';
+import { EntityType, GetPublicPostsOutput, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useMemo, useState } from 'react';
 import { PostsHeader } from './PostsHeader';
 import { PostsList } from './PostsList';
 
-export function Posts() {
+interface PostsProps {
+  initialPosts: GetPublicPostsOutput[];
+}
+
+export function Posts({ initialPosts }: PostsProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [postTypes, setPostTypes] = useState<PostTypes[]>(Object.values(PostTypes));
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
@@ -18,12 +22,15 @@ export function Posts() {
   const { likePost } = useLikeMutations();
   const [reportPostId, setReportPostId] = useState<string | null>(null);
 
-  const { posts, handleLoadMore, hasMore, loading, handleRefresh } = usePosts({
-    sortBy: SortBy.PostCreatedAt,
-    orderBy: SortOrder.Desc,
-    take: 20,
-    postTypes
-  });
+  const { posts, loadMore, hasMore, loading } = useServerPosts(
+    {
+      sortBy: SortBy.PostCreatedAt,
+      orderBy: SortOrder.Desc,
+      take: 20,
+      postTypes
+    },
+    initialPosts
+  );
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => post.caption.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -38,7 +45,7 @@ export function Posts() {
   };
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden bg-background">
+    <div className="bg-background">
       <PostsHeader
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -52,14 +59,15 @@ export function Posts() {
         posts={filteredPosts}
         loading={loading}
         hasMore={hasMore}
-        onLoadMore={handleLoadMore}
-        onRefresh={handleRefresh}
+        onLoadMore={loadMore}
+        onRefresh={() => window.location.reload()}
         isBlurEnabled={isBlurEnabled}
         viewMode={viewMode}
         expandedPostId={expandedPostId}
         onToggleComments={toggleComments}
         onLike={handleLike}
         onReport={setReportPostId}
+        initialPosts={initialPosts}
       />
 
       <ReportModal

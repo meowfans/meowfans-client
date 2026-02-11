@@ -1,12 +1,18 @@
 import { GetFollowingOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
+type FollowingsUpdater = GetFollowingOutput[] | ((prev: GetFollowingOutput[]) => GetFollowingOutput[]);
+
 type FollowsStore = {
   followings: GetFollowingOutput[];
-  setFollowings: (followings: GetFollowingOutput[]) => void;
+  setFollowings: (updater: FollowingsUpdater) => void;
 };
 
 export const useFollowingStore = create<FollowsStore>()((set) => ({
   followings: [],
-  setFollowings: (followings: GetFollowingOutput[]) => set({ followings })
+  setFollowings: (updater) =>
+    set((state) => ({
+      followings:
+        typeof updater === 'function' ? (updater as (prev: GetFollowingOutput[]) => GetFollowingOutput[])(state.followings) : updater
+    }))
 }));

@@ -2,9 +2,9 @@
 
 import { PaymentModal } from '@/components/PaymentModal';
 import { ReportModal } from '@/components/ReportModal';
-import { useLikeMutations } from '@/hooks/useLikeMutations';
-import { useSinglePost } from '@/hooks/usePosts';
-import { EntityType, PurchaseType } from '@workspace/gql/generated/graphql';
+import { useLikeMutations } from '@/hooks/client/useLikeMutations';
+import { useServerSinglePost } from '@/hooks/server/useServerSinglePost';
+import { EntityType, GetPublicSinglePostOutput, PurchaseType } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { motion } from 'framer-motion';
@@ -19,12 +19,12 @@ import { PostDetailHeader } from './PostDetailHeader';
 import { PostDetailMedia } from './PostDetailMedia';
 
 interface SinglePostProps {
-  id: string;
+  initialPost: GetPublicSinglePostOutput | null;
 }
 
-export function SinglePost({ id }: SinglePostProps) {
+export function SinglePost({ initialPost }: SinglePostProps) {
   const router = useRouter();
-  const { post, loading } = useSinglePost({ postId: id });
+  const { post, loading } = useServerSinglePost({ postId: initialPost?.id as string }, initialPost);
   const { likePost } = useLikeMutations();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -66,7 +66,7 @@ export function SinglePost({ id }: SinglePostProps) {
     e.preventDefault();
     e.stopPropagation();
     if (isLocked) return;
-    await likePost(id);
+    await likePost(post.id);
   };
 
   return (
@@ -131,7 +131,7 @@ export function SinglePost({ id }: SinglePostProps) {
           </motion.div>
 
           {/* Comments Section */}
-          <PostComments postId={id} isLocked={isLocked} />
+          <PostComments postId={post.id} isLocked={isLocked} />
         </div>
       </div>
 
@@ -139,14 +139,14 @@ export function SinglePost({ id }: SinglePostProps) {
         open={isPaymentModalOpen}
         onOpenChange={setIsPaymentModalOpen}
         amount={Number(post.unlockPrice || 0)}
-        entityId={id}
+        entityId={post.id}
         creatorId={post.creatorId || ''}
         purchaseType={PurchaseType.Post}
         title="Unlock Premium Post"
         description="Get instant access to this exclusive drop from the creator."
       />
 
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} entityId={id} entityType={EntityType.Post} />
+      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} entityId={post.id} entityType={EntityType.Post} />
     </div>
   );
 }

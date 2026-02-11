@@ -1,11 +1,11 @@
-import { useFollowingStore } from '@/hooks/store/follows.store';
 import { useCreatorsStore } from '@/hooks/store/users.store';
 import { useFollowsActions } from '@workspace/gql/actions/follows.actions';
 import { GetFollowingOutput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
-import { useFan } from './context/UserContextWrapper';
+import { useFan } from '../context/UserContextWrapper';
+import { useFollowingStore } from '../store/follows.store';
 
 export const useFollowings = () => {
   const { fan } = useFan();
@@ -69,8 +69,8 @@ export const useFollowingMutations = () => {
       const newFollowedCreator = data?.followCreator as GetFollowingOutput;
 
       if (newFollowedCreator) {
-        setFollowings([...followings, newFollowedCreator]);
-        setCreators(creators.map((c) => (c.id === creatorId ? { ...c, isFollowing: true } : c)));
+        setFollowings((prev) => [...prev, newFollowedCreator]);
+        setCreators((prev) => prev.map((c) => (c.id === creatorId ? { ...c, isFollowing: true } : c)));
       }
 
       successHandler({ message: 'You have followed a new creator 😄' });
@@ -89,8 +89,8 @@ export const useFollowingMutations = () => {
     try {
       const { data } = await unFollowCreatorMutation({ creatorId });
       if (data?.unFollowCreator) {
-        setFollowings(followings.filter((f) => f.id !== creatorId));
-        setCreators(creators.map((c) => (c.id === creatorId ? { ...c, isFollowing: false } : c)));
+        setFollowings((prev) => prev.filter((f) => f.id !== creatorId));
+        setCreators((prev) => prev.map((c) => (c.id === creatorId ? { ...c, isFollowing: false } : c)));
       }
 
       successHandler({ message: 'Successfully unfollowed!' });

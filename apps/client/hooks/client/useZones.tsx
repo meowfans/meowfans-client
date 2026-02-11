@@ -2,7 +2,7 @@ import { useZonesActions } from '@workspace/gql/actions';
 import { GetZonePlansOutput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
-import { useZonesStore } from './store/zones.store';
+import { useZonesStore } from '../store/zones.store';
 
 export const useZones = () => {
   const { errorHandler } = useErrorHandler();

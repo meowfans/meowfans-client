@@ -32,7 +32,7 @@ export const PageHandler = ({ children, isLoading, isEmpty, path }: PageHandlerP
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="h-full w-full"
+          className="w-full"
         >
           {children}
         </motion.div>

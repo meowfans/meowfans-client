@@ -5,7 +5,7 @@ import { CreateReportInput, PaginationInput, ReportsEntity, ResolveReportInput }
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
-import { useReportsStore } from './store/reports.store';
+import { useReportsStore } from '../store/reports.store';
 
 export const useReports = (input: PaginationInput) => {
   const { errorHandler } = useErrorHandler();

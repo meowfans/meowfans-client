@@ -1,8 +1,8 @@
 'use client';
 
 import { ReportModal } from '@/components/ReportModal';
-import { useCommentMutations } from '@/hooks/useCommentMutations';
-import { usePostComments } from '@/hooks/usePostComments';
+import { useCommentMutations } from '@/hooks/client/useCommentMutations';
+import { usePostComments } from '@/hooks/client/usePostComments';
 import { EntityType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
