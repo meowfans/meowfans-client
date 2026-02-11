@@ -36,23 +36,46 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: AppConfig.site_name,
       title: AppConfig.title,
       description: AppConfig.description,
-      type: AppConfig.type as 'website',
+      type: AppConfig.type,
       locale: AppConfig.locale,
-      url: AppConfig.siteUrl
+      url: AppConfig.siteUrl,
+      images: [
+        {
+          url: AppConfig.images.og,
+          width: 1200,
+          height: 630,
+          alt: AppConfig.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: AppConfig.title,
+      description: AppConfig.description,
+      images: [AppConfig.images.og]
     },
     robots: {
-      index: true,
-      follow: true
+      index: false,
+      follow: false
     },
     generator: 'Next.js',
-    keywords: AppConfig.keywords
+    keywords: AppConfig.keywords,
+    verification: {
+      other: {
+        '6a97888e-site-verification': AppConfig.verification.site
+      }
+    },
+    other: {
+      rating: AppConfig.rta.rating,
+      classification: AppConfig.rta.classification
+    }
   } satisfies Metadata;
   return metadata;
 }
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--primary-font', style: 'normal' });
 export const viewport: Viewport = {
-  themeColor: '#FFFFFF'
+  themeColor: AppConfig.themeColor
 };
 
 interface Props {
@@ -102,9 +125,7 @@ export default async function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="robots" content="index, follow" />
-        <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
-        <meta name="classification" content="Adult" />
+        <meta httpEquiv="Delegate-CH" content={AppConfig.delegateCh} />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
 

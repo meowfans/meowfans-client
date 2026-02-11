@@ -1,5 +1,6 @@
 'use client';
 
+import { AppConfig } from '@/lib/app.config';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -7,15 +8,6 @@ import { usePathname } from 'next/navigation';
 export function RTAFooter() {
   const currentYear = new Date().getFullYear();
   const pathname = usePathname();
-
-  const legalLinks = [
-    { label: 'Terms of Service', href: '/legal/terms' },
-    { label: 'Privacy Policy', href: '/legal/privacy' },
-    { label: 'Fan Terms', href: '/legal/fan-terms' },
-    { label: 'Creator Terms', href: '/legal/creator-terms' },
-    { label: '2257 Compliance', href: '/legal/2257' },
-    { label: 'General Terms', href: '/legal/general-terms' }
-  ];
 
   if (['channels', 'shorts'].includes(pathname.split('/')[1])) return null;
 
@@ -33,13 +25,13 @@ export function RTAFooter() {
             </div>
           </div>
           <p className="text-[7px] md:text-[9px] font-black uppercase tracking-tighter md:tracking-widest text-muted-foreground/30">
-            Verified & Compliant <span className="hidden sm:inline">Platform for Creators & Fans</span>
+            {AppConfig.tagline}
           </p>
         </div>
 
         {/* Center: Legal Links */}
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-          {legalLinks.map((link) => (
+          {AppConfig.legal.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -56,7 +48,9 @@ export function RTAFooter() {
             <div className="h-1 w-1 rounded-full bg-primary" />
             <span className="text-[7px] md:text-[8px] font-black uppercase italic tracking-widest text-muted-foreground">Secure</span>
           </div>
-          <p className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground/10">©{currentYear} MeowFans</p>
+          <p className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground/10">
+            ©{currentYear} {AppConfig.applicationName}
+          </p>
         </div>
       </div>
     </footer>

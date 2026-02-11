@@ -40,16 +40,39 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: AppConfig.site_name,
       title: AppConfig.title,
       description: AppConfig.description,
-      type: AppConfig.type as 'website',
+      type: AppConfig.type,
       locale: AppConfig.locale,
-      url: AppConfig.siteUrl
+      url: AppConfig.siteUrl,
+      images: [
+        {
+          url: AppConfig.images.og,
+          width: 1200,
+          height: 630,
+          alt: AppConfig.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: AppConfig.title,
+      description: AppConfig.description,
+      images: [AppConfig.images.og]
     },
     robots: {
       index: true,
       follow: true
     },
     generator: 'Next.js',
-    keywords: AppConfig.keywords
+    keywords: AppConfig.keywords,
+    verification: {
+      other: {
+        '6a97888e-site-verification': AppConfig.verification.site
+      }
+    },
+    other: {
+      rating: AppConfig.rta.rating,
+      classification: AppConfig.rta.classification
+    }
   } satisfies Metadata;
   return metadata;
 }
@@ -116,24 +139,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="robots" content="index, follow" />
-        <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
-        <meta name="classification" content="Adult" />
-        <meta name="6a97888e-site-verification" content="ac2d60d2db24c5a92f5d5c0f5e5ce6a7" />
-        <meta
-          httpEquiv="Delegate-CH"
-          content={`Sec-CH-UA https://s.magsrv.com;
-           Sec-CH-UA-Mobile https://s.magsrv.com;
-           Sec-CH-UA-Arch https://s.magsrv.com;
-           Sec-CH-UA-Model https://s.magsrv.com;
-           Sec-CH-UA-Platform https://s.magsrv.com;
-           Sec-CH-UA-Platform-Version https://s.magsrv.com;
-           Sec-CH-UA-Bitness https://s.magsrv.com;
-           Sec-CH-UA-Full-Version-List https://s.magsrv.com;
-           Sec-CH-UA-Full-Version https://s.magsrv.com;`}
-        />
+        <meta httpEquiv="Delegate-CH" content={AppConfig.delegateCh} />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
+
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Fan}>
           <UserContextWrapper fan={fan}>
