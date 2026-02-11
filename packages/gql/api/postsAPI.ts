@@ -18,6 +18,24 @@ export const GET_PUBLIC_POSTS_QUERY = graphql(`
   }
 `);
 
+export const GET_PUBLIC_CREATOR_POSTS_QUERY = graphql(`
+  query GetPublicCreatorPosts($input: PaginationInput!) {
+    getPublicCreatorPosts(input: $input) {
+      id
+      preview
+      caption
+      createdAt
+      isLiked
+      objectCount
+      isPurchased
+      unlockPrice
+      creatorAvatarUrl
+      creatorFullname
+      creatorUsername
+    }
+  }
+`);
+
 export const CREATE_COMMENT_MUTATION = graphql(`
   mutation CreateComment($input: CreateCommentInput!) {
     createComment(input: $input) {
@@ -75,7 +93,7 @@ export const SAVE_POST_MUTATION = graphql(`
       saveCount
       shareCount
       totalEarning
-      types
+      type
       unlockPrice
       updatedAt
     }
@@ -108,7 +126,7 @@ export const GET_POSTS_QUERY = graphql(`
       shareCount
       totalEarning
       viewCount
-      types
+      type
       preview
       unlockPrice
       updatedAt
@@ -157,7 +175,7 @@ export const CREATE_POST_MUTATION = graphql(`
       saveCount
       shareCount
       totalEarning
-      types
+      type
       unlockPrice
       updatedAt
     }
@@ -177,7 +195,7 @@ export const UPDATE_POST_MUTATION = graphql(`
       saveCount
       shareCount
       totalEarning
-      types
+      type
       unlockPrice
       updatedAt
     }
@@ -239,7 +257,7 @@ export const GET_SINGLE_POST_QUERY = graphql(`
       saveCount
       shareCount
       totalEarning
-      types
+      type
       unlockPrice
       updatedAt
       viewCount

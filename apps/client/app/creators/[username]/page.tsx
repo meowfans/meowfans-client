@@ -1,11 +1,10 @@
+import { ROUTE_METADATA } from '@/lib/metadata-config';
 import { configService } from '@/util/config';
 import { GET_PUBLIC_CREATOR_PROFILE_QUERY } from '@workspace/gql/api';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GetPublicCreatorProfileOutput, UserRoles } from '@workspace/gql/generated/graphql';
-import { SingleCreatorProfile } from './components/SingleCreatorProfile';
-
-import { ROUTE_METADATA } from '@/lib/metadata-config';
 import { Metadata } from 'next';
+import { SingleCreatorProfile } from './components/SingleCreatorProfile';
 
 export async function generateMetadata({ params }: SingleCreatorProfilePageProps): Promise<Metadata> {
   const { username } = await params;

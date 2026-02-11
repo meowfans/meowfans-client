@@ -10,6 +10,7 @@ import {
   GET_CREATOR_VAULTS_QUERY,
   GET_PUBLIC_SINGLE_VAULT_QUERY,
   GET_PUBLIC_VAULT_OBJECTS_QUERY,
+  GET_PUBLIC_VAULTS_BY_TAGS_QUERY,
   GET_PUBLIC_VAULTS_QUERY,
   GET_TOTAL_VAULT_OBJECTS_COUNT_BY_TYPE_QUERY,
   GET_VAULTS_ANALYTICS_QUERY,
@@ -38,6 +39,7 @@ export const useVaultsActions = () => {
   const [terminateAllJobs] = useMutation(TERMINATE_ALL_JOBS_MUTATION);
   const [cleanUpVaultObjectsOfACreator] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
   const [downloadCreatorObjectsAsBatch] = useMutation(DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION);
+  const [getPublicVaultsByTags] = useLazyQuery(GET_PUBLIC_VAULTS_BY_TAGS_QUERY);
 
   const getCreatorVaultsQuery = (input: PaginationInput) => {
     return getCreatorVaults({ variables: { input } });
@@ -57,6 +59,10 @@ export const useVaultsActions = () => {
 
   const getAllObjectsCountOfEachTypeQuery = () => {
     return getAllObjectsCountOfEachType();
+  };
+
+  const getPublicVaultsByTagsQuery = (input: PaginationInput) => {
+    return getPublicVaultsByTags({ variables: { input } });
   };
 
   const downloadAllCreatorObjectsMutation = (input: DownloadAllCreatorObjectsAsBatchInput) => {
@@ -99,6 +105,7 @@ export const useVaultsActions = () => {
     terminateDownloadingMutation,
     terminateAllJobsMutation,
     cleanUpVaultObjectsOfACreatorMutation,
-    downloadCreatorObjectsAsBatchMutation
+    downloadCreatorObjectsAsBatchMutation,
+    getPublicVaultsByTagsQuery
   };
 };

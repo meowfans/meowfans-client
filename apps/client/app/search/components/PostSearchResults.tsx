@@ -2,8 +2,7 @@
 
 import { BlurImage } from '@/components/BlurImage';
 import { PageHandler } from '@/components/PageHandler';
-import { useServerPublicCreatorPosts } from '@/hooks/server/useServerPublicCreatorPosts';
-import { APP_PATHS } from '@/lib/constants/feature-paths';
+import { usePosts } from '@/hooks/client/usePosts';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
@@ -12,19 +11,22 @@ import { formatDistanceToNow } from 'date-fns';
 import { Heart, Lock, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
-interface PostsTabProps {
-  username: string;
+interface PostSearchResultsProps {
+  query: string;
 }
 
-export function PostsTab({ username }: PostsTabProps) {
-  const { posts, loadMore, hasMore, loading } = useServerPublicCreatorPosts(
-    { take: 30, username, sortBy: SortBy.PostCreatedAt, orderBy: SortOrder.Desc },
-    []
-  );
+export function PostSearchResults({ query }: PostSearchResultsProps) {
+  const { posts, loading, hasMore, loadMore } = usePosts({
+    searchTerm: query,
+    take: 20,
+    sortBy: SortBy.PostCreatedAt,
+    orderBy: SortOrder.Desc
+  });
+
   return (
-    <PageHandler isLoading={loading} isEmpty={!posts.length} path={APP_PATHS.POSTS}>
-      <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore}>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <PageHandler isLoading={loading && !posts.length} isEmpty={!posts.length && !loading}>
+      <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore} useWindowScroll>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {posts.map((post) => (
             <Link key={post.id} href={`/posts/${post.id}`}>
               <Card className="group overflow-hidden border-none bg-secondary/20 shadow-none transition-all hover:bg-secondary/40 hover:shadow-lg hover:shadow-primary/5">
@@ -34,7 +36,6 @@ export function PostsTab({ username }: PostsTabProps) {
                     alt={post.caption}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-
                   <div className="absolute left-2 top-2 flex flex-wrap gap-2">
                     {post.unlockPrice && (
                       <Badge variant="secondary" className="gap-1 bg-background/80 backdrop-blur-sm">
@@ -48,21 +49,12 @@ export function PostsTab({ username }: PostsTabProps) {
                       </Badge>
                     )}
                   </div>
-
-                  {post.objectCount > 0 && (
-                    <div className="absolute bottom-2 right-2">
-                      <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                        {post.objectCount} {post.objectCount === 1 ? 'item' : 'items'}
-                      </Badge>
-                    </div>
-                  )}
                 </div>
-
                 <CardContent className="p-4">
-                  <p className="mb-2 line-clamp-2 text-sm text-foreground">{post.caption}</p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <p className="mb-2 line-clamp-2 text-xs font-medium text-foreground">{post.caption}</p>
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
                     <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
-                    {post.isLiked && <Heart className="h-4 w-4 fill-red-500 text-red-500" />}
+                    {post.isLiked && <Heart className="h-3 w-3 fill-red-500 text-red-500" />}
                   </div>
                 </CardContent>
               </Card>

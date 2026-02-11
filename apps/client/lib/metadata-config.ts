@@ -130,5 +130,10 @@ export const ROUTE_METADATA: Record<string, Metadata> = {
     title: 'Tutorials & Guides',
     description: 'Learn how to make the most of MeowFans with our comprehensive tutorials and user guides.',
     keywords: ['help', 'tutorials', 'guides', 'learning']
+  },
+  search: {
+    title: 'Search',
+    description: 'Search for fans, creators, and exclusive vaults on MeowFans.',
+    keywords: ['search', 'find creators', 'discover contents']
   }
 };

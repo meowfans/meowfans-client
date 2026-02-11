@@ -53,6 +53,7 @@ import {
   Image as LucideImage,
   Mails,
   Scale,
+  Search,
   Send,
   ShieldAlert,
   Sparkles,
@@ -81,6 +82,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: 'Main',
         items: [
           { label: 'Dashboard', url: '/dashboard', emoji: '', icon: Home, isEnabled: FEATURE_FLAGS['/dashboard'] },
+          { label: 'Search', url: '/search', emoji: '', icon: Search, isEnabled: true },
           { label: 'Messages', url: '/channels', emoji: '', icon: Mails, isEnabled: FEATURE_FLAGS['/channels'] },
           { label: 'Following', url: '/following', emoji: '', icon: Group, isEnabled: FEATURE_FLAGS['/following'] },
           {

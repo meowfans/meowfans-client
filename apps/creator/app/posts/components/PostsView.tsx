@@ -78,9 +78,9 @@ export function PostsView() {
     const matchesSearch = post.caption?.toLowerCase().includes(searchQuery.toLowerCase()) ?? true;
     const matchesTab =
       activeTab === 'all' ||
-      (activeTab === 'public' && post.types.includes(PostTypes.Public)) ||
-      (activeTab === 'exclusive' && post.types.includes(PostTypes.Exclusive)) ||
-      (activeTab === 'private' && post.types.includes(PostTypes.Private));
+      (activeTab === 'public' && post.type === PostTypes.Public) ||
+      (activeTab === 'exclusive' && post.type === PostTypes.Exclusive) ||
+      (activeTab === 'private' && post.type === PostTypes.Private);
     return matchesSearch && matchesTab;
   });
 
