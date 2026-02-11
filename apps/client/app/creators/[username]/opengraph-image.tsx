@@ -9,8 +9,8 @@ export const runtime = 'edge';
 export const alt = 'Creator Profile';
 
 export const size = {
-  width: 1200,
-  height: 630
+  width: 1024,
+  height: 1024
 };
 
 export const contentType = 'image/png';
@@ -22,21 +22,5 @@ export default async function Image({ params }: { params: Promise<{ username: st
   const { data } = await client.query({ query: GET_PUBLIC_CREATOR_PROFILE_QUERY, variables: { username } });
 
   const profile = data?.getPublicCreatorProfile;
-  return new ImageResponse(
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#fff'
-      }}
-    >
-      {profile?.avatarUrl && (
-        <img src={profile.avatarUrl} alt={profile.fullName} width={200} height={200} style={{ borderRadius: '50%' }} />
-      )}
-    </div>,
-    { ...size }
-  );
+  return new ImageResponse(<img src={profile?.avatarUrl} alt={profile?.fullName} width={1024} height={1024} />, { ...size });
 }
