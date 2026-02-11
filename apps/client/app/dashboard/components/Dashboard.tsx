@@ -5,7 +5,6 @@ import { useServerCreators } from '@/hooks/server/useServerCreators';
 import { useServerGetFollowings } from '@/hooks/server/useServerGetFollowings';
 import { useServerPurchased } from '@/hooks/server/useServerPurchased';
 import { ChannelsOutput, GetDefaultCreatorsOutput, GetFanAssetsOutput, GetFollowingOutput } from '@workspace/gql/generated/graphql';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { useMemo } from 'react';
 import { DashboardChannels } from './DashboardChannels';
 import { DashboardFanAssets } from './DashboardFanAssets';
@@ -22,7 +21,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ initialFollowings, initialFanAssets, initialCreators, initialChannels }: DashboardProps) {
-  const { followings, loading: followingsLoading } = useServerGetFollowings({ take: 30 }, initialFollowings);
+  const { followings } = useServerGetFollowings({ take: 30 }, initialFollowings);
   const { fanAssets, loading: assetsLoading } = useServerPurchased({ take: 5 }, initialFanAssets);
   const { creators, loading: creatorsLoading } = useServerCreators({ take: 10 }, initialCreators);
   const { channels, loading: channelsLoading } = useServerChannels({ take: 5, skip: 0 }, initialChannels);
@@ -30,10 +29,6 @@ export function Dashboard({ initialFollowings, initialFanAssets, initialCreators
   const recommendedCreators = useMemo<GetDefaultCreatorsOutput[]>(() => {
     return creators.filter((c) => !followings.some((f) => f.id === c.id)).slice(0, 5);
   }, [creators, followings]);
-
-  if (followings.length === 0 && followingsLoading) {
-    return <Loading />;
-  }
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-6 h-screen">

@@ -81,7 +81,7 @@ export const NoProfile = () => {
           <motion.div variants={itemVariants} className="pt-4 border-t border-border/20 w-full flex justify-center gap-6">
             <div className="flex flex-col items-center">
               <span className="text-2xl font-bold text-primary">2.5M+</span>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Community</span>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Assets</span>
             </div>
             <div className="w-[1px] bg-border/20 h-10" />
             <div className="flex flex-col items-center">

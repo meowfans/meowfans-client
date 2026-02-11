@@ -1,12 +1,14 @@
 'use client';
 
 import { getFollowings } from '@/app/server/getFollowings';
+import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useFollowingStore } from '@/hooks/store/follows.store';
 import { GetFollowingOutput, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useServerGetFollowings = (params: PaginationInput, initialFollowings: GetFollowingOutput[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { followings, setFollowings } = useFollowingStore();
   const [loading, setLoading] = useState<boolean>(initialFollowings.length === 0);
@@ -40,6 +42,14 @@ export const useServerGetFollowings = (params: PaginationInput, initialFollowing
       setSkip(initialFollowings.length);
     }
   }, [initialFollowings, setFollowings]);
+
+  if (!fan)
+    return {
+      followings: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
 
   return {
     followings,

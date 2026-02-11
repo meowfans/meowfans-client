@@ -8,7 +8,7 @@ import { ProfileFormFieldAvatar } from './ProfileFormFieldAvatar';
 import { ProfileFormFieldText } from './ProfileFormFieldText';
 import { ProfileHeader } from './ProfileHeader';
 import { ProfilePrivileges } from './ProfilePrivileges';
-import { NoProfile } from './NoProfile';
+import { NoProfile } from '../../../components/NoProfile';
 import { useFanProfile } from '@/hooks/client/useFanProfile';
 
 export function Profile() {

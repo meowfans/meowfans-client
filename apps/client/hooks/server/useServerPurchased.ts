@@ -1,12 +1,14 @@
 'use client';
 
 import { getFanAssets } from '@/app/server/getFanAssets';
+import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { GetFanAssetsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useServerPurchased = (params: PaginationInput, initialData: GetFanAssetsOutput[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { fanAssets, setFanAssets } = useAssetsStore();
   const [loading, setLoading] = useState<boolean>(initialData.length === 0);
@@ -41,6 +43,14 @@ export const useServerPurchased = (params: PaginationInput, initialData: GetFanA
       setSkip(initialData.length);
     }
   }, [initialData, setFanAssets]);
+
+  if (!fan)
+    return {
+      fanAssets: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
 
   return {
     fanAssets,

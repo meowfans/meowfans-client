@@ -1,12 +1,14 @@
 'use client';
 
 import { getChannels } from '@/app/server/getChannels';
+import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { ChannelsOutput, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
 export const useServerChannels = (params: PaginationInput, initialChannels: ChannelsOutput[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { channels, setChannels } = useChannelsStore();
   const [loading, setLoading] = useState<boolean>(initialChannels.length === 0);
@@ -38,6 +40,14 @@ export const useServerChannels = (params: PaginationInput, initialChannels: Chan
       setChannels(initialChannels);
     }
   }, [initialChannels, setChannels]);
+
+  if (!fan)
+    return {
+      channels: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
 
   return {
     channels,
