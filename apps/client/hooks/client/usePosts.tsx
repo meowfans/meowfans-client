@@ -11,7 +11,14 @@ import {
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = SortOrder.Desc, take = 30, postTypes }: PaginationInput) => {
+export const usePosts = ({
+  username,
+  sortBy = SortBy.PostCreatedAt,
+  orderBy = SortOrder.Desc,
+  take = 30,
+  postTypes,
+  searchTerm
+}: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { getPublicPostsQuery } = usePostsActions();
@@ -29,7 +36,8 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
         username,
         orderBy,
         sortBy,
-        postTypes
+        postTypes,
+        searchTerm
       });
 
       const fetchedPosts = (data?.getPublicPosts ?? []) as GetPublicPostsOutput[];
@@ -44,7 +52,7 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
     }
   };
 
-  const handleLoadMore = () => {
+  const loadMore = () => {
     if (!loading && hasMore) loadPosts();
   };
 
@@ -55,9 +63,9 @@ export const usePosts = ({ username, sortBy = SortBy.PostCreatedAt, orderBy = So
 
   useEffect(() => {
     loadPosts(true);
-  }, [username, sortBy, orderBy, take, postTypes]); // eslint-disable-line
+  }, [username, sortBy, orderBy, take, postTypes, searchTerm]); // eslint-disable-line
 
-  return { posts, loading, hasMore, loadPosts, handleLoadMore, handleRefresh };
+  return { posts, loading, hasMore, loadPosts, loadMore, handleRefresh };
 };
 
 export const useSinglePost = (input: GetPostInput) => {

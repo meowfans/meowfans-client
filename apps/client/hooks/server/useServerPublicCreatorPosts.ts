@@ -1,27 +1,27 @@
 'use client';
 
-import { getPosts } from '@/app/server/getPosts';
+import { getPublicCreatorPosts } from '@/app/server/getPublicCreatorPosts';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { GetPublicPostsOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicPostsOutput[]) => {
+export const useServerPublicCreatorPosts = (params: PaginationInput, initialPosts: GetPublicPostsOutput[]) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const [loading, setLoading] = useState<boolean>(initialPosts.length === 0);
-  const [hasMore, setHasMore] = useState<boolean>(initialPosts.length === (params.take ?? 30));
+  const [hasMore, setHasMore] = useState<boolean>(initialPosts.length > 0 ? initialPosts.length === (params.take ?? 30) : true);
   const [skip, setSkip] = useState<number>(initialPosts.length);
 
   const loadMore = useCallback(async () => {
     setLoading(true);
     try {
-      const fetched = await getPosts({
-        ...params,
+      const fetched = await getPublicCreatorPosts({
         take: params.take ?? 30,
         skip,
         sortBy: params.sortBy ?? SortBy.PostCreatedAt,
-        orderBy: params.orderBy ?? SortOrder.Desc
+        orderBy: params.orderBy ?? SortOrder.Desc,
+        ...params
       });
 
       const fetchedPosts = (fetched ?? []) as GetPublicPostsOutput[];
@@ -29,19 +29,24 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
       setPosts((prev) => [...prev, ...fetchedPosts]);
       setSkip((prev) => prev + (params.take ?? 30));
     } catch (error) {
-      errorHandler({ error, msg: 'Error loading posts! Try again later.' });
+      errorHandler({ error, msg: 'Error loading creator posts! Try again later.' });
     } finally {
       setLoading(false);
     }
   }, [params, skip, setPosts, errorHandler]);
 
   useEffect(() => {
-    if (initialPosts?.length > 0 && posts.length === 0) {
+    if (initialPosts?.length > 0) {
       setPosts(initialPosts);
+      setSkip(initialPosts.length);
+      setHasMore(initialPosts.length === (params.take ?? 30));
+    } else {
+      setPosts([]);
+      setSkip(0);
+      setHasMore(true);
     }
-  }, [initialPosts, setPosts, posts.length]);
+  }, [initialPosts, params.username, params.postTypes, params.sortBy, params.orderBy, params.take, setPosts]);
 
-  // Initial load for client-side cases (e.g. tabs)
   useEffect(() => {
     if (initialPosts.length === 0 && posts.length === 0 && !loading && hasMore) {
       loadMore();

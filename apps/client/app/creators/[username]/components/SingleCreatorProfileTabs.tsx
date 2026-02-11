@@ -4,14 +4,15 @@ import { PicturesTab } from './PicturesTab';
 import { PostsTab } from './PostsTab';
 import { VaultsTab } from './VaultsTab';
 import { TabProps } from './SingleCreatorProfile';
+import { GetPublicCreatorProfileOutput } from '@workspace/gql/generated/graphql';
 
 interface SingleCreatorProfileTabsProps {
-  username: string;
+  profile: GetPublicCreatorProfileOutput;
   onTabChange: (tab: TabProps) => void;
   currentTab: TabProps;
 }
 
-export const SingleCreatorProfileTabs = ({ username, onTabChange, currentTab }: SingleCreatorProfileTabsProps) => {
+export const SingleCreatorProfileTabs = ({ profile, onTabChange, currentTab }: SingleCreatorProfileTabsProps) => {
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <Tabs value={currentTab} onValueChange={(val) => onTabChange(val as TabProps)} className="w-full">
@@ -31,15 +32,15 @@ export const SingleCreatorProfileTabs = ({ username, onTabChange, currentTab }: 
         </TabsList>
 
         <TabsContent value="posts" className="mt-6">
-          <PostsTab username={username} />
+          <PostsTab username={profile.username} />
         </TabsContent>
 
         <TabsContent value="pictures" className="mt-6">
-          <PicturesTab username={username} />
+          <PicturesTab username={profile.username} />
         </TabsContent>
 
         <TabsContent value="vaults" className="mt-6">
-          <VaultsTab username={username} />
+          <VaultsTab username={profile.username} />
         </TabsContent>
       </Tabs>
     </div>

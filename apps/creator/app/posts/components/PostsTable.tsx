@@ -95,7 +95,7 @@ interface PostTableRowProps {
 
 function PostTableRow({ post, isSelected, onToggleSelect, onDelete, onShare, onToggleType, deleting, updating }: PostTableRowProps) {
   const previewAsset = post.postAssets?.[0];
-  const postType = post.types[0];
+  const postType = post.type;
 
   return (
     <TableRow className={isSelected ? 'bg-muted/50' : ''}>

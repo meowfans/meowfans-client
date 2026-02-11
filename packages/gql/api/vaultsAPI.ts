@@ -165,6 +165,34 @@ export const GET_PUBLIC_VAULTS_QUERY = graphql(`
   }
 `);
 
+export const GET_PUBLIC_CREATOR_VAULTS_QUERY = graphql(`
+  query GetPublicCreatorVaults($input: PaginationInput!) {
+    getPublicCreatorVaults(input: $input) {
+      id
+      preview
+      objectCount
+      isLiked
+      isPurchased
+      description
+      unlockPrice
+    }
+  }
+`);
+
+export const GET_PUBLIC_VAULTS_BY_TAGS_QUERY = graphql(`
+  query GetPublicVaultsByTags($input: PaginationInput!) {
+    getPublicVaultsByTags(input: $input) {
+      id
+      preview
+      objectCount
+      isLiked
+      isPurchased
+      description
+      unlockPrice
+    }
+  }
+`);
+
 export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
   query GetPublicVaultObjects($input: PaginationInput!) {
     getPublicVaultObjects(input: $input) {

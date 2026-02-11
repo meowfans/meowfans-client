@@ -2,7 +2,7 @@
 
 import { BlurImage } from '@/components/BlurImage';
 import { PageHandler } from '@/components/PageHandler';
-import { useServerVaults } from '@/hooks/server/useServerVaults';
+import { useServerPublicCreatorVaults } from '@/hooks/server/useServerPublicCreatorVaults';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -14,7 +14,7 @@ interface VaultsTabProps {
 }
 
 export function VaultsTab({ username }: VaultsTabProps) {
-  const { vaults, loadMore, hasMore, loading } = useServerVaults(
+  const { vaults, loadMore, hasMore, loading } = useServerPublicCreatorVaults(
     {
       username,
       take: 30,
