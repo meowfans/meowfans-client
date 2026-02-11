@@ -1,7 +1,7 @@
 'use client';
 
+import { useAPI } from '@/hooks/client/useAPI';
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useAPI } from '@/hooks/useAPI';
 import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';

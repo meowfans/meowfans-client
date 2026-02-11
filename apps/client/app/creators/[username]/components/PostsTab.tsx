@@ -2,13 +2,12 @@
 
 import { BlurImage } from '@/components/BlurImage';
 import { PageHandler } from '@/components/PageHandler';
-import { usePosts } from '@/hooks/usePosts';
+import { useServerPosts } from '@/hooks/server/useServerPosts';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetPublicPostsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart, Lock, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
@@ -18,15 +17,15 @@ interface PostsTabProps {
 }
 
 export function PostsTab({ username }: PostsTabProps) {
-  const { posts, handleLoadMore, hasMore, loading } = usePosts({
-    username,
-    sortBy: SortBy.PostCreatedAt,
-    orderBy: SortOrder.Desc
-  });
+  const initialPosts: GetPublicPostsOutput[] = [];
+  const { posts, loadMore, hasMore, loading } = useServerPosts(
+    { take: 30, username, sortBy: SortBy.PostCreatedAt, orderBy: SortOrder.Desc },
+    initialPosts
+  );
 
   return (
     <PageHandler isLoading={loading} isEmpty={posts.length === 0} path={APP_PATHS.POSTS}>
-      <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} onLoadMore={handleLoadMore}>
+      <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore}>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {posts.map((post) => (
             <Link key={post.id} href={`/posts/${post.id}`}>
@@ -72,8 +71,6 @@ export function PostsTab({ username }: PostsTabProps) {
             </Link>
           ))}
         </div>
-
-        {loading && <Loading />}
       </InfiniteScrollManager>
     </PageHandler>
   );

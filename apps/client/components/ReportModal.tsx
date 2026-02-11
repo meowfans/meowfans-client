@@ -1,7 +1,7 @@
 'use client';
 
+import { useReportMutations } from '@/hooks/client/useReports';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useReportMutations } from '@/hooks/useReports';
 import { EntityType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
@@ -27,8 +27,8 @@ const PRESET_REASONS = [
 
 export function ReportModal({ isOpen, onClose, entityId, entityType }: ReportModalProps) {
   const { fan } = useFan();
+  const [reason, setReason] = useState<string>('');
   const { createReport, loading } = useReportMutations();
-  const [reason, setReason] = useState('');
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
 
   const handleSubmit = async () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { InteractionButton } from '@/components/InteractionButton';
-import { useFollowingMutations } from '@/hooks/useFollow';
+import { useFollowingMutations } from '@/hooks/client/useFollow';
 import { GetDefaultCreatorsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Card, CardContent } from '@workspace/ui/components/card';

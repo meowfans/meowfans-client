@@ -1,8 +1,8 @@
 'use client';
 
 import { InteractionButton } from '@/components/InteractionButton';
-import { useCreateChannel } from '@/hooks/useChannels';
-import { useFollowingMutations } from '@/hooks/useFollow';
+import { useCreateChannel } from '@/hooks/client/useChannels';
+import { useFollowingMutations } from '@/hooks/client/useFollow';
 import { GetPublicCreatorProfileOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Badge } from '@workspace/ui/components/badge';
@@ -90,7 +90,7 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
                 <IconLabel icon={MessageCircle} label="Message" />
               </Button>
             )}
- 
+
             <InteractionButton
               variant={profile.isFollowing ? 'outline' : 'default'}
               size="default"

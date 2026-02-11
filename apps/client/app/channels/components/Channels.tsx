@@ -1,7 +1,8 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { useChannels } from '@/hooks/useChannels';
+import { useServerChannels } from '@/hooks/server/useServerChannels';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -13,12 +14,19 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { ChannelsHeader } from './ChannelsHeader';
 
-export function ChannelsView() {
+interface ChannelsProps {
+  initialChannels: ChannelsOutput[];
+}
+
+export function Channels({ initialChannels }: ChannelsProps) {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const { channels, loading, hasMore, handleLoadMore } = useChannels({
-    take: 20,
-    skip: 0
-  });
+  const { channels, loading, hasMore, loadMore } = useServerChannels(
+    {
+      take: 20,
+      skip: 0
+    },
+    initialChannels
+  );
 
   const filteredChannels = useMemo(() => {
     return channels.filter(
@@ -29,7 +37,7 @@ export function ChannelsView() {
   }, [channels, searchTerm]);
 
   return (
-    <PageHandler isLoading={loading} isEmpty={!filteredChannels.length && !loading}>
+    <PageHandler isLoading={loading && !initialChannels.length} isEmpty={!filteredChannels.length}>
       <div className="flex h-full flex-1 flex-col overflow-hidden bg-background/50 backdrop-blur-3xl">
         <ChannelsHeader channelsCount={filteredChannels.length} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
@@ -38,7 +46,7 @@ export function ChannelsView() {
             dataLength={channels.length}
             loading={loading}
             hasMore={hasMore}
-            onLoadMore={handleLoadMore}
+            onLoadMore={loadMore}
             scrollableDiv="channels-scroll-wrapper"
             customHeight="h-full"
           >

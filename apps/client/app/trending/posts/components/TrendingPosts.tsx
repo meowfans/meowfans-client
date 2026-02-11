@@ -1,20 +1,27 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { usePosts } from '@/hooks/usePosts';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useServerPosts } from '@/hooks/server/useServerPosts';
+import { GetPublicPostsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { TrendingPostCard } from './TrendingPostCard';
 
-export function TrendingPosts() {
-  const { posts, handleLoadMore, hasMore, loading } = usePosts({
-    sortBy: SortBy.PostCreatedAt,
-    orderBy: SortOrder.Desc,
-    take: 20
-  });
+interface TrendingPostsProps {
+  initialPosts: GetPublicPostsOutput[];
+}
+
+export function TrendingPosts({ initialPosts }: TrendingPostsProps) {
+  const { posts, loadMore, hasMore, loading } = useServerPosts(
+    {
+      sortBy: SortBy.PostCreatedAt,
+      orderBy: SortOrder.Desc,
+      take: 20
+    },
+    initialPosts
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-4xl mx-auto w-full pb-20">
@@ -42,8 +49,8 @@ export function TrendingPosts() {
           </div>
         </div>
       </div>
-      <PageHandler isEmpty={!posts.length && !loading} isLoading={loading && !posts.length}>
-        <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={handleLoadMore}>
+      <PageHandler isEmpty={!posts.length} isLoading={loading && !initialPosts.length}>
+        <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="space-y-4 md:space-y-6 px-1">
             <AnimatePresence mode="popLayout">
               {posts.map((post, index) => (

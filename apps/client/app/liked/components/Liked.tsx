@@ -1,17 +1,24 @@
 'use client';
 
-import { useLikedPosts } from '@/hooks/useLikedPosts';
-import { useLikedVaultObjects } from '@/hooks/useLikedVaultObjects';
-import { useLikedVaults } from '@/hooks/useLikedVaults';
+import { useServerLikedPosts } from '@/hooks/server/useServerLikedPosts';
+import { useServerLikedVaultObjects } from '@/hooks/server/useServerLikedVaultObjects';
+import { useServerLikedVaults } from '@/hooks/server/useServerLikedVaults';
+import { GetLikedPostsOutput, GetLikedVaultObjectsOutput, GetLikedVaultsOutput } from '@workspace/gql/generated/graphql';
 import { LikedHeader } from './LikedHeader';
 import { LikedPicturesSection } from './LikedPicturesSection';
 import { LikedPostsSection } from './LikedPostsSection';
 import { LikedVaultsSection } from './LikedVaultsSection';
 
-export function Liked() {
-  const { postLikes, loading: loadingPosts } = useLikedPosts({ take: 4 });
-  const { vaultObjectLikes, loading: loadingPictures } = useLikedVaultObjects({ take: 4 });
-  const { vaultLikes, loading: loadingVaults } = useLikedVaults({ take: 4 });
+interface LikedProps {
+  initialPostLikes: GetLikedPostsOutput[];
+  initialVaultObjectLikes: GetLikedVaultObjectsOutput[];
+  initialVaultLikes: GetLikedVaultsOutput[];
+}
+
+export function Liked({ initialPostLikes, initialVaultObjectLikes, initialVaultLikes }: LikedProps) {
+  const { postLikes } = useServerLikedPosts({ take: 4 }, initialPostLikes);
+  const { vaultObjectLikes } = useServerLikedVaultObjects({ take: 4 }, initialVaultObjectLikes);
+  const { vaultLikes } = useServerLikedVaults({ take: 4 }, initialVaultLikes);
 
   return (
     <div className="flex flex-1 flex-col gap-8 md:gap-12 p-4 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">

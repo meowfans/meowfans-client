@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useContentBlur } from '@/hooks/useContentBlur';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { cn } from '@workspace/ui/lib/utils';
 import { Eye } from 'lucide-react';
 import { useState } from 'react';

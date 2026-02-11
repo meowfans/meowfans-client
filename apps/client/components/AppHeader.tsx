@@ -1,8 +1,8 @@
 'use client';
 
+import { useFeaturePath } from '@/hooks/client/useFeaturePath';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { useFeaturePath } from '@/hooks/useFeaturePath';
 import { configService } from '@/util/config';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';

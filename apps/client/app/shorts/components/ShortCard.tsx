@@ -1,8 +1,8 @@
 'use client';
 
 import { BlurVideo } from '@/components/BlurVideo';
-import { useContentBlur } from '@/hooks/useContentBlur';
-import { useLikeMutations } from '@/hooks/useLikeMutations';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
+import { useLikeMutations } from '@/hooks/client/useLikeMutations';
 import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';

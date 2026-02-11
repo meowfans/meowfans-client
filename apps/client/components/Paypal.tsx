@@ -1,6 +1,6 @@
 'use client';
 
-import usePaypal, { CreateOrderInput } from '@/hooks/usePaypal';
+import usePaypal, { CreateOrderInput } from '@/hooks/client/usePaypal';
 import { configService } from '@/util/config';
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 

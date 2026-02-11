@@ -1,10 +1,10 @@
 'use client';
 
-import { useCommentsStore } from '@/hooks/store/comments.store';
 import { useCommentsActions } from '@workspace/gql/actions/comments.actions';
 import { PaginationInput, PostCommentsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useCommentsStore } from '../store/comments.store';
 
 export const usePostComments = ({ take, relatedEntityId }: PaginationInput) => {
   const { errorHandler } = useErrorHandler();

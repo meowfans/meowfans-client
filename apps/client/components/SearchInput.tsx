@@ -1,6 +1,6 @@
 'use client';
 
-import { useCreators } from '@/hooks/useCreators';
+import { useCreators } from '@/hooks/client/useCreators';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@workspace/ui/components/command';

@@ -36,7 +36,7 @@ export function SingleVaultContent({
       </div>
 
       {vaultObjects && vaultObjects.length > 0 ? (
-        <InfiniteScrollManager dataLength={vaultObjects.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore}>
+        <InfiniteScrollManager dataLength={vaultObjects.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {vaultObjects.map((obj, index) => (
               <SingleVaultObjectCard

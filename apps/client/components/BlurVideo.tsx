@@ -1,6 +1,6 @@
 'use client';
 
-import { useContentBlur } from '@/hooks/useContentBlur';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { cn } from '@workspace/ui/lib/utils';
 import { Eye } from 'lucide-react';
 import React, { forwardRef, useState } from 'react';
@@ -15,7 +15,7 @@ interface BlurVideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
  */
 export const BlurVideo = forwardRef<HTMLVideoElement, BlurVideoProps>(({ src, className, blur, ...props }, ref) => {
   const { isBlurEnabled } = useContentBlur();
-  const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const shouldBlur = blur !== undefined ? blur : isBlurEnabled;
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useFanProfile } from '@/hooks/useFanProfile';
 import React, { useEffect, useState } from 'react';
 import { ProfileBannerAndAvatarSection } from './ProfileBannerAndAvatarSection';
 import { ProfileFooter } from './ProfileFooter';
@@ -10,6 +9,7 @@ import { ProfileFormFieldText } from './ProfileFormFieldText';
 import { ProfileHeader } from './ProfileHeader';
 import { ProfilePrivileges } from './ProfilePrivileges';
 import { NoProfile } from './NoProfile';
+import { useFanProfile } from '@/hooks/client/useFanProfile';
 
 export function Profile() {
   const { fan } = useFan();

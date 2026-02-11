@@ -13,13 +13,14 @@ interface ReportsListProps {
   loading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
+  initialReports: ReportsEntity[];
 }
 
-export const ReportsList = ({ reports, loading, hasMore, onLoadMore }: ReportsListProps) => {
+export const ReportsList = ({ reports, loading, hasMore, onLoadMore, initialReports }: ReportsListProps) => {
   return (
     <div className="flex-1 min-h-0 overflow-y-scroll px-4 md:px-8 py-8 custom-scrollbar">
       <div className="max-w-[1200px] mx-auto">
-        <PageHandler isLoading={loading && !reports.length} isEmpty={!reports.length && !loading} path={APP_PATHS.REPORTS}>
+        <PageHandler isLoading={loading && !initialReports.length} isEmpty={!reports.length} path={APP_PATHS.REPORTS}>
           <InfiniteScrollManager
             dataLength={reports.length}
             loading={loading}

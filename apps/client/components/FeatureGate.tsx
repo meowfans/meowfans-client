@@ -1,12 +1,12 @@
 'use client';
 
+import { useFeaturePath } from '@/hooks/client/useFeaturePath';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
 import { ArrowLeft, Construction, Home } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useFeaturePath } from '../hooks/useFeaturePath';
 
 interface FeatureGateProps {
   children: React.ReactNode;

@@ -1,16 +1,20 @@
 'use client';
 
-import { usePublicShorts } from '@/hooks/usePublicShorts';
+import { useServerShorts } from '@/hooks/server/useServerShorts';
+import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ShortCard } from './ShortCard';
 import { ShortsEmptyState } from './ShortsEmptyState';
-import { ShortsLoading } from './ShortsLoading';
 import { ShortsOverlay } from './ShortsOverlay';
 
-export function Shorts() {
+interface ShortsProps {
+  initialShorts: GetPublicShortsOutput[];
+}
+
+export function Shorts({ initialShorts }: ShortsProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const { publicShorts, loading, handleLoadMore, hasMore, handleRefresh } = usePublicShorts({ take: 10 });
+  const { publicShorts, loading, loadMore, hasMore } = useServerShorts({ take: 10 }, initialShorts);
   const [globalMute, setGlobalMute] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,15 +34,11 @@ export function Shorts() {
 
     // Load more when reaching near the end
     if (scrollPos + itemHeight * 2 >= e.currentTarget.scrollHeight && hasMore && !loading) {
-      handleLoadMore();
+      loadMore();
     }
   };
 
   if (!isMounted) return null;
-
-  if (loading && publicShorts.length === 0) {
-    return <ShortsLoading fullScreen />;
-  }
 
   return (
     <div className="relative h-[calc(100svh-64px)] w-full overflow-hidden flex items-center justify-center">
@@ -50,7 +50,7 @@ export function Shorts() {
       >
         <AnimatePresence mode="popLayout">
           {publicShorts.length === 0 ? (
-            <ShortsEmptyState onRefresh={handleRefresh} />
+            <ShortsEmptyState onRefresh={() => window.location.reload()} />
           ) : (
             publicShorts.map((short, index) => (
               <div key={`${short.id}-${index}`} className="h-full w-full snap-start snap-always relative">
@@ -59,8 +59,6 @@ export function Shorts() {
             ))
           )}
         </AnimatePresence>
-
-        {loading && publicShorts.length > 0 && <ShortsLoading />}
       </div>
 
       {publicShorts.length > 0 && <ShortsOverlay activeIndex={activeIndex} totalShorts={publicShorts.length} />}

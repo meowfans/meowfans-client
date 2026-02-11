@@ -1,11 +1,11 @@
-import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useLikesStore } from '@/hooks/store/likes.store';
 import { useLikesActions } from '@workspace/gql/actions/likes.actions';
 import { GetLikedVaultObjectsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from '../context/UserContextWrapper';
+import { useLikesStore } from '../store/likes.store';
 
-export const useLikedVaultObjects = (input:PaginationInput) => {
+export const useLikedVaultObjects = (input: PaginationInput) => {
   const { fan } = useFan();
   const { getLikedVaultObjectsQuery } = useLikesActions();
   const { vaultObjectLikes, setVaultObjectLikes, appendVaultObjectLikes } = useLikesStore();

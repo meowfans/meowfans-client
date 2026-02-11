@@ -2,8 +2,8 @@
 
 import { BlurImage } from '@/components/BlurImage';
 import { PageHandler } from '@/components/PageHandler';
-import { useVaultObjects } from '@/hooks/useVaultObjects';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useServerVaultObjects } from '@/hooks/server/useServerVaultObjects';
+import { GetPublicVaultObjectsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
@@ -13,17 +13,24 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Download, Expand, Heart } from 'lucide-react';
 import { PicturesHeader } from './PicturesHeader';
 
-export function Pictures() {
-  const { vaultObjects, loadMore, hasMore, loading } = useVaultObjects({
-    take: 30,
-    sortBy: SortBy.VaultObjectLikeCount,
-    orderBy: SortOrder.Desc
-  });
+interface PicturesProps {
+  initialPictures: GetPublicVaultObjectsOutput[];
+}
+
+export function Pictures({ initialPictures }: PicturesProps) {
+  const { vaultObjects, loadMore, hasMore, loading } = useServerVaultObjects(
+    {
+      take: 30,
+      sortBy: SortBy.VaultObjectLikeCount,
+      orderBy: SortOrder.Desc
+    },
+    initialPictures
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">
       <PicturesHeader />
-      <PageHandler isLoading={loading && !vaultObjects.length} isEmpty={!vaultObjects.length && !loading}>
+      <PageHandler isLoading={loading && !initialPictures.length} isEmpty={!vaultObjects.length}>
         <InfiniteScrollManager dataLength={vaultObjects.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="grid grid-cols-1 min-[450px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 px-1">
             <AnimatePresence mode="popLayout">

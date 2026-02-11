@@ -2,9 +2,9 @@
 
 import { PageHandler } from '@/components/PageHandler';
 import { PaymentModal } from '@/components/PaymentModal';
-import { useLikeMutations } from '@/hooks/useLikeMutations';
-import { useSingleVault } from '@/hooks/useVaultObjects';
-import { PurchaseType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useLikeMutations } from '@/hooks/client/useLikeMutations';
+import { useServerSingleVault } from '@/hooks/server/useServerSingleVault';
+import { GetPublicSingleVaultOutput, PurchaseType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Separator } from '@workspace/ui/components/separator';
 import { useState } from 'react';
 import { SingleVaultActionCard } from './SingleVaultActionCard';
@@ -13,16 +13,20 @@ import { SingleVaultHeader } from './SingleVaultHeader';
 import { SingleVaultHero } from './SingleVaultHero';
 
 interface SingleVaultProps {
-  vaultId: string;
+  initialVault: GetPublicSingleVaultOutput | null;
 }
 
-export function SingleVault({ vaultId }: SingleVaultProps) {
-  const { vault, loading, hasMore, loadMore } = useSingleVault({
-    relatedEntityId: vaultId,
-    take: 30,
-    sortBy: SortBy.VaultObjectSuffix,
-    orderBy: SortOrder.Asc
-  });
+export function SingleVault({ initialVault }: SingleVaultProps) {
+  const { likeVault } = useLikeMutations();
+  const { vault, loading, hasMore, loadMore } = useServerSingleVault(
+    {
+      relatedEntityId: initialVault?.id,
+      take: 30,
+      sortBy: SortBy.VaultObjectSuffix,
+      orderBy: SortOrder.Asc
+    },
+    initialVault
+  );
 
   const [paymentData, setPaymentData] = useState<{
     open: boolean;
@@ -36,14 +40,12 @@ export function SingleVault({ vaultId }: SingleVaultProps) {
     purchaseType: PurchaseType.Vault
   });
 
-  const { likeVault } = useLikeMutations();
-
   const handlePurchase = async () => {
     if (!vault) return;
     setPaymentData({
       open: true,
       amount: vault.unlockPrice || 0,
-      entityId: vaultId,
+      entityId: vault.id,
       purchaseType: PurchaseType.Vault
     });
   };
@@ -58,8 +60,8 @@ export function SingleVault({ vaultId }: SingleVaultProps) {
   };
 
   const handleLike = async () => {
-    if (!vaultId) return;
-    await likeVault(vaultId);
+    if (!vault?.id) return;
+    await likeVault(vault.id);
   };
 
   const isPurchased = vault?.isPurchased || false;
@@ -76,7 +78,6 @@ export function SingleVault({ vaultId }: SingleVaultProps) {
           isPurchased={isPurchased}
         />
 
-        {/* Content Section */}
         <div className="mx-auto w-full max-w-7xl space-y-8 p-6">
           <div className="space-y-6">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">

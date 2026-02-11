@@ -1,7 +1,8 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { useChannelMessages } from '@/hooks/useMessages';
+import { useServerSingleChannel } from '@/hooks/server/useServerSingleChannel';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { useEffect, useRef } from 'react';
 import { SingleChannelHeader } from './SingleChannelHeader';
 import { SingleChannelInputArea } from './SingleChannelInputArea';
@@ -9,11 +10,12 @@ import { SingleChannelMessageThread } from './SingleChannelMessageThread';
 
 interface SingleChannelProps {
   channelId: string;
+  initialChannel: ChannelsOutput | null;
 }
 
-export function SingleChannel({ channelId }: SingleChannelProps) {
+export function SingleChannel({ channelId, initialChannel }: SingleChannelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { channel, loading, hasMore, handleLoadMore } = useChannelMessages({ relatedEntityId: channelId, take: 50 });
+  const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 50 }, initialChannel);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -22,7 +24,7 @@ export function SingleChannel({ channelId }: SingleChannelProps) {
   }, [channel?.messages]);
 
   return (
-    <PageHandler isEmpty={false} isLoading={loading && !channel?.id}>
+    <PageHandler isEmpty={!initialChannel} isLoading={loading && !channel?.id}>
       <div className="flex h-screen flex-col bg-background relative overflow-hidden">
         <SingleChannelHeader channel={channel} />
         <div className="flex-1 min-h-0 relative">
@@ -30,7 +32,7 @@ export function SingleChannel({ channelId }: SingleChannelProps) {
             channel={channel}
             scrollRef={scrollRef}
             hasMore={hasMore}
-            handleLoadMore={handleLoadMore}
+            handleLoadMore={loadMore}
             loading={loading}
           />
         </div>

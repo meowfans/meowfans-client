@@ -1,8 +1,8 @@
-import { useCreatorsStore } from '@/hooks/store/users.store';
 import { useCreatorsActions } from '@workspace/gql/actions/creators.actions';
 import { CreatorType, DataFetchType, GetDefaultCreatorsOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useCreatorsStore } from '../store/users.store';
 
 export const useCreators = ({
   sortBy = SortBy.UserCreatedAt,

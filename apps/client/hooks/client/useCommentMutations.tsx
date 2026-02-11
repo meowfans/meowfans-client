@@ -6,11 +6,11 @@ import { PostCommentsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useFan } from './context/UserContextWrapper';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useCommentMutations = () => {
   const { fan } = useFan();
-  const { postComments, setPostComments } = useCommentsStore();
+  const { setPostComments } = useCommentsStore();
   const { createCommentOnAPostMutation, updateCommentOfAPostMutation, deleteCommentOfAPostMutation } = useCommentsActions();
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export const useCommentMutations = () => {
       const { data } = await createCommentOnAPostMutation({ comment, postId });
       const newComment = data?.createComment as PostCommentsEntity;
 
-      setPostComments([
+      setPostComments((prev) => [
         {
           ...newComment,
           fanProfile: {
@@ -30,7 +30,7 @@ export const useCommentMutations = () => {
             user: fan!.user
           }
         },
-        ...postComments
+        ...prev
       ]);
 
       toast.success('Commented successfully!');
@@ -46,8 +46,8 @@ export const useCommentMutations = () => {
       const { data } = await updateCommentOfAPostMutation({ commentId, comment });
       const updatedComment = data?.updateComment as PostCommentsEntity;
 
-      setPostComments(
-        postComments.map((c) => (c.id === commentId ? { ...c, comment: updatedComment.comment, updatedAt: updatedComment.updatedAt } : c))
+      setPostComments((prev) =>
+        prev.map((c) => (c.id === commentId ? { ...c, comment: updatedComment.comment, updatedAt: updatedComment.updatedAt } : c))
       );
 
       toast.success('Successfully updated comment');
@@ -59,7 +59,7 @@ export const useCommentMutations = () => {
   const deleteComment = async (commentId: string) => {
     try {
       await deleteCommentOfAPostMutation({ commentId });
-      setPostComments(postComments.filter((c) => c.id !== commentId));
+      setPostComments((prev) => prev.filter((c) => c.id !== commentId));
       toast.success('Successfully deleted comment');
     } catch (error) {
       errorHandler({ error });

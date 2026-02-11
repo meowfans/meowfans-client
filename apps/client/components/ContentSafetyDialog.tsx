@@ -1,6 +1,6 @@
 'use client';
 
-import { useContentBlur } from '@/hooks/useContentBlur';
+import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { Button } from '@workspace/ui/components/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
 import { EyeOff, ShieldAlert } from 'lucide-react';

@@ -1,6 +1,6 @@
+import { useMessageMutations } from '@/hooks/client/useMessages';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useMessageInputStore } from '@/hooks/store/message.store';
-import { useMessageMutations } from '@/hooks/useMessages';
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';

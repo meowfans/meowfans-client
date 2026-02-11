@@ -45,8 +45,7 @@
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx",
     "../../packages/gql/**/*.ts",
-    "../../packages/gql/**/*.tsx",
-    "../admin/hooks/useAPI.ts"
+    "../../packages/gql/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

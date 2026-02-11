@@ -1,20 +1,27 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { useCreators } from '@/hooks/useCreators';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { useServerCreators } from '@/hooks/server/useServerCreators';
+import { GetDefaultCreatorsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { Crown } from 'lucide-react';
 import { TrendingCreatorCard } from './TrendingCreatorCard';
 
-export function TrendingCreators() {
-  const { creators, loadMore, hasMore, loading } = useCreators({
-    take: 40,
-    sortBy: SortBy.VaultCount,
-    orderBy: SortOrder.Desc
-  });
+interface TrendingCreatorsProps {
+  initialCreators: GetDefaultCreatorsOutput[];
+}
+
+export function TrendingCreators({ initialCreators }: TrendingCreatorsProps) {
+  const { creators, loadMore, hasMore, loading } = useServerCreators(
+    {
+      take: 40,
+      sortBy: SortBy.VaultCount,
+      orderBy: SortOrder.Desc
+    },
+    initialCreators
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-6xl mx-auto w-full pb-20">
@@ -32,7 +39,7 @@ export function TrendingCreators() {
           </div>
         </div>
       </div>
-      <PageHandler isEmpty={!creators.length && !loading} isLoading={loading && !creators.length}>
+      <PageHandler isEmpty={!creators.length} isLoading={loading && !initialCreators.length}>
         <InfiniteScrollManager dataLength={creators.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="grid grid-cols-1 gap-4">
             <AnimatePresence mode="popLayout">

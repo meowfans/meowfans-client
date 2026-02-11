@@ -1,3 +1,4 @@
+import { getSingleChannel } from '@/app/server/getSingleChannel';
 import { SingleChannel } from './components/SingleChannel';
 
 interface SingleChannelProps {
@@ -8,7 +9,10 @@ export const metadata = {
   title: 'Channel Messages'
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function SingleChannelPage({ params }: SingleChannelProps) {
   const { id } = await params;
-  return <SingleChannel channelId={id} />;
+  const channel = await getSingleChannel({ relatedEntityId: id, take: 20, skip: 0 });
+  return <SingleChannel initialChannel={channel} channelId={id} />;
 }

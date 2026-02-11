@@ -1,6 +1,6 @@
 'use client';
 
-import { useZones } from '@/hooks/useZones';
+import { useZones } from '@/hooks/client/useZones';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Separator } from '@workspace/ui/components/separator';

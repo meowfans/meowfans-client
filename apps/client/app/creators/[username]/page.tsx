@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: SingleCreatorProfilePageProps
   }
 }
 
+export const dynamic = 'force-dynamic';
+
 interface SingleCreatorProfilePageProps {
   params: Promise<{ username: string }>;
 }
