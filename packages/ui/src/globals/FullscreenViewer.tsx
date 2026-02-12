@@ -12,9 +12,13 @@ interface FullscreenViewerProps {
   onClose: () => void;
   items: Array<{ url: string; type: 'IMAGE' | 'VIDEO' | string }>;
   initialIndex: number;
+  setCurrentlyViewingIndex: React.Dispatch<React.SetStateAction<number>>;
+  loadMore?: () => void;
+  hasMore?: boolean;
+  loading?: boolean;
 }
 
-export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex }: FullscreenViewerProps) => {
+export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurrentlyViewingIndex }: FullscreenViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -35,16 +39,19 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex }: Fulls
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
+      setCurrentlyViewingIndex(initialIndex);
     }
-  }, [isOpen, initialIndex]);
+  }, [isOpen, initialIndex, setCurrentlyViewingIndex]);
 
   const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
-  }, [items.length]);
+    setCurrentlyViewingIndex((prev) => (prev + 1) % items.length);
+  }, [items.length, setCurrentlyViewingIndex]);
 
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-  }, [items.length]);
+    setCurrentlyViewingIndex((prev) => (prev - 1 + items.length) % items.length);
+  }, [items.length, setCurrentlyViewingIndex]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -221,6 +228,7 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex }: Fulls
               onClick={(e) => {
                 e.stopPropagation();
                 setCurrentIndex(idx);
+                setCurrentlyViewingIndex(idx);
               }}
               className={cn(
                 'relative h-14 w-14 md:h-16 md:w-16 rounded-2xl overflow-hidden transition-all duration-300 flex-shrink-0 border-2',

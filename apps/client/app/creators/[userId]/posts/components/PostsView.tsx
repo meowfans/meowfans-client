@@ -40,7 +40,22 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
   return (
     <div className="flex flex-1 flex-col">
       <PageHandler isLoading={loading && !initialPosts.length} isEmpty={!posts.length} path={APP_PATHS.POSTS}>
-        <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
+        <InfiniteScrollManager
+          dataLength={posts.length}
+          loading={loading}
+          hasMore={hasMore}
+          useWindowScroll
+          onLoadMore={loadMore}
+          endMessage={
+            posts.length > 0 && (
+              <div className="flex flex-col items-center gap-6 py-12">
+                <p className="text-center text-muted-foreground font-black uppercase tracking-widest text-[10px] opacity-40">
+                  You&apos;ve reached the end of the collection
+                </p>
+              </div>
+            )
+          }
+        >
           <div className="grid grid-cols-3 gap-[1px] md:gap-1">
             {posts.map((post) => (
               <Link href={`/posts/${post.id}`} key={post.id} className="relative aspect-square w-full overflow-hidden bg-muted/20">
@@ -51,7 +66,6 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
                   loading="lazy"
                 />
 
-                {/* Desktop Badges (Hidden on mobile) */}
                 <div className="hidden md:flex absolute left-2 top-2 flex-wrap gap-1 pointer-events-none">
                   {post.unlockPrice && post.unlockPrice > 0 && !post.isPurchased && (
                     <Badge className="bg-black/60 backdrop-blur-md border-none text-white h-6 px-2 rounded-sm font-bold text-[10px]">
@@ -60,7 +74,6 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
                   )}
                 </div>
 
-                {/* Mobile Lock Icon (Minimal) */}
                 {post.unlockPrice && post.unlockPrice > 0 && !post.isPurchased && (
                   <div className="md:hidden absolute top-2 left-2 pointer-events-none">
                     <div className="bg-black/40 backdrop-blur-sm p-1 rounded-sm">
@@ -69,7 +82,6 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
                   </div>
                 )}
 
-                {/* Media Type Icon (Tucked in corner like IG) */}
                 {post.objectCount > 1 && (
                   <div className="absolute top-2 right-2 md:top-3 md:right-3 pointer-events-none">
                     <div className="bg-black/40 backdrop-blur-sm p-1 rounded-sm">
@@ -85,7 +97,6 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
                   </div>
                 )}
 
-                {/* Hover States */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                   <div className="flex items-center gap-1 text-white font-bold text-xs md:text-sm">
                     <Heart className="h-4 w-4 fill-white" />
@@ -95,19 +106,6 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
               </Link>
             ))}
           </div>
-
-          {!hasMore && posts.length > 0 && (
-            <div className="flex flex-col items-center gap-6 py-12">
-              <p className="text-center text-muted-foreground font-black uppercase tracking-widest text-[10px] opacity-40">
-                You&apos;ve reached the end of the collection
-              </p>
-              <Link href={`/creators/${userId}/vaults`}>
-                <button className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-white transition-colors border border-white/10 px-6 py-2 rounded-full">
-                  View All Vaults
-                </button>
-              </Link>
-            </div>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
 

@@ -76,6 +76,10 @@ export function SingleVault({ initialVault }: SingleVaultProps) {
           objectCount={vault?.objectCount}
           likeCount={vault?.likeCount}
           isPurchased={isPurchased}
+          vaultObjects={vault?.vaultObjects || []}
+          loadMore={loadMore}
+          hasMore={hasMore}
+          loading={loading}
         />
 
         <div className="mx-auto w-full max-w-7xl space-y-8 p-6">

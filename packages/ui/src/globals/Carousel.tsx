@@ -14,7 +14,6 @@ export enum FileType {
   Image = 'IMAGE',
   Video = 'VIDEO'
 }
-
 interface CarouselProps<T> {
   items: T[];
   getKey: (item: T) => string | number;
@@ -23,9 +22,23 @@ interface CarouselProps<T> {
   urls?: string[];
   className?: string;
   aspectRatio?: 'square' | 'video' | 'auto';
+  loadMore?: () => void;
+  hasMore?: boolean;
+  loading?: boolean;
 }
 
-export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls, className, aspectRatio = 'square' }: CarouselProps<T>) => {
+export const Carousel = <T,>({
+  getUrl,
+  getKey,
+  items,
+  getFileType,
+  urls,
+  className,
+  aspectRatio = 'square',
+  loadMore,
+  hasMore,
+  loading
+}: CarouselProps<T>) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     axis: 'x',
@@ -45,6 +58,18 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls, classNa
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  // Sync Embla instance with external index changes (e.g., from FullscreenViewer)
+  useEffect(() => {
+    if (emblaApi && emblaApi.selectedScrollSnap() !== selectedIndex) {
+      emblaApi.scrollTo(selectedIndex);
+    }
+  }, [emblaApi, selectedIndex]);
+
+  useEffect(() => {
+    if (emblaApi && selectedIndex > items.length - 6 && hasMore && !loading) {
+      loadMore?.();
+    }
+  }, [emblaApi, selectedIndex, items.length, loadMore, hasMore, loading]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -132,6 +157,9 @@ export const Carousel = <T,>({ getUrl, getKey, items, getFileType, urls, classNa
                 <FullScreenButton
                   currentIdx={idx}
                   urls={urls || []}
+                  setCurrentlyViewingIndex={setSelectedIndex}
+                  loadMore={loadMore}
+                  hasMore={hasMore}
                   className="rounded-2xl border-white/10 bg-black/20 backdrop-blur-3xl hover:bg-black/40 transition-all"
                 />
               </div>

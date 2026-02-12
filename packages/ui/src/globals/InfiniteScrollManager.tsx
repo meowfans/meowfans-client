@@ -16,12 +16,24 @@ interface InfiniteScrollManagerProps {
   scrollThreshold?: number;
   inverse?: boolean;
   useWindowScroll?: boolean;
+  endMessage?: React.ReactNode;
 }
 
 const LoadingComponent = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+    <div className="flex flex-col items-center justify-center py-12 gap-4">
       <Loading />
+    </div>
+  );
+};
+
+const DefaultEndMessage = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-4">
+      <div className="h-[1px] w-12 bg-border/20 mb-6" />
+      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 text-center">
+        You&apos;ve reached the end of the collection
+      </p>
     </div>
   );
 };
@@ -35,7 +47,8 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   inverse,
   scrollThreshold = 0.7,
   customHeight = 'h-full',
-  useWindowScroll
+  useWindowScroll,
+  endMessage = <DefaultEndMessage />
 }) => {
   if (useWindowScroll) {
     return (
@@ -46,6 +59,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
         scrollThreshold={scrollThreshold}
         next={onLoadMore}
         dataLength={dataLength}
+        endMessage={endMessage}
       >
         {children}
       </InfiniteScroll>
@@ -61,6 +75,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
       next={onLoadMore}
       dataLength={dataLength}
       scrollableTarget={scrollableDiv}
+      endMessage={endMessage}
     >
       {children}
     </InfiniteScroll>
@@ -74,6 +89,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
         next={onLoadMore}
         dataLength={dataLength}
         scrollableTarget="scrollableDiv"
+        endMessage={endMessage}
       >
         {children}
       </InfiniteScroll>
