@@ -15,8 +15,8 @@ interface SingleVaultHeaderProps {
 export function SingleVaultHeader({ description, username, avatarUrl, keywords, creatorId }: SingleVaultHeaderProps) {
   return (
     <div className="flex-1 space-y-4">
-      {/* Title */}
-      <div>
+      {/* Title & Layout Switcher */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="line-clamp-2 text-3xl font-bold tracking-tight md:text-4xl">{description || 'Untitled Vault'}</h1>
       </div>
 

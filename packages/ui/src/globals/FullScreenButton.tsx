@@ -12,6 +12,10 @@ export interface FullScreenButtonProps extends ButtonHTMLAttributes<HTMLButtonEl
   className?: string;
   size?: 'default' | 'sm' | 'lg' | 'icon';
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  setCurrentlyViewingIndex: React.Dispatch<React.SetStateAction<number>>;
+  loadMore?: () => void;
+  hasMore?: boolean;
+  loading?: boolean;
 }
 
 export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
@@ -20,7 +24,10 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
   className = 'hover:text-primary rounded-xl hidden md:flex',
   size = 'icon',
   variant = 'default',
-  title = 'Full Screen',
+  loadMore,
+  hasMore,
+  loading,
+  setCurrentlyViewingIndex,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +46,7 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
         className={className}
         size={size}
         variant={variant}
-        title={title}
+        title="Full Screen"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -51,7 +58,18 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       </Button>
 
       <AnimatePresence>
-        {isOpen && <FullscreenViewer isOpen={isOpen} onClose={() => setIsOpen(false)} items={validItems} initialIndex={currentIdx} />}
+        {isOpen && (
+          <FullscreenViewer
+            setCurrentlyViewingIndex={setCurrentlyViewingIndex}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            items={validItems}
+            initialIndex={currentIdx}
+            loadMore={loadMore}
+            hasMore={hasMore}
+            loading={loading}
+          />
+        )}
       </AnimatePresence>
     </>
   );
