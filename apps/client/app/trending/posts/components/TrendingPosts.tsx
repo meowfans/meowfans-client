@@ -4,7 +4,6 @@ import { PageHandler } from '@/components/PageHandler';
 import { useServerPosts } from '@/hooks/server/useServerPosts';
 import { GetPublicPostsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { TrendingPostCard } from './TrendingPostCard';
@@ -25,7 +24,6 @@ export function TrendingPosts({ initialPosts }: TrendingPostsProps) {
 
   return (
     <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-4xl mx-auto w-full pb-20">
-      {/* Dynamic Header */}
       <div className="flex flex-col gap-6 px-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -58,12 +56,6 @@ export function TrendingPosts({ initialPosts }: TrendingPostsProps) {
               ))}
             </AnimatePresence>
           </div>
-
-          {loading && (
-            <div className="py-20 flex justify-center">
-              <Loading />
-            </div>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>

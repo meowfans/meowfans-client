@@ -4,7 +4,6 @@ import { PageHandler } from '@/components/PageHandler';
 import { useServerVaultObjects } from '@/hooks/server/useServerVaultObjects';
 import { GetPublicVaultObjectsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { Camera, Zap } from 'lucide-react';
 import { TrendingPictureCard } from './TrendingPictureCard';
@@ -25,7 +24,6 @@ export function TrendingPictures({ initialVaultObjects }: TrendingPicturesProps)
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-1">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="h-10 w-10 md:h-14 md:w-14 rounded-[0.75rem] md:rounded-[1.5rem] bg-blue-500/10 flex items-center justify-center border border-blue-500/20 rotate-3 flex-shrink-0">
@@ -52,12 +50,6 @@ export function TrendingPictures({ initialVaultObjects }: TrendingPicturesProps)
               ))}
             </AnimatePresence>
           </div>
-
-          {loading && (
-            <div className="flex items-center justify-center p-20">
-              <Loading />
-            </div>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>

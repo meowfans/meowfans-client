@@ -5,7 +5,6 @@ import { useServerVaults } from '@/hooks/server/useServerVaults';
 import { GetPublicVaultsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
 import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, Box, Trophy } from 'lucide-react';
 import Link from 'next/link';
@@ -27,7 +26,6 @@ export function TrendingVaults({ initialVaults }: TrendingVaultsProps) {
 
   return (
     <div className="flex flex-1 flex-col gap-8 p-3 md:p-12 pt-6 md:pt-0 max-w-7xl mx-auto w-full pb-20">
-      {/* Premium Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border/40 pb-8 md:pb-12 px-1">
         <div className="space-y-3 md:space-y-4">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-3 md:px-4 py-1 md:py-1.5 rounded-full border border-primary/20">
@@ -66,12 +64,6 @@ export function TrendingVaults({ initialVaults }: TrendingVaultsProps) {
               ))}
             </AnimatePresence>
           </div>
-
-          {loading && (
-            <div className="py-20 flex justify-center">
-              <Loading />
-            </div>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>
