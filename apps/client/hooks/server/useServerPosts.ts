@@ -18,8 +18,8 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
     try {
       const fetched = await getPosts({
         ...params,
-        take: params.take ?? 30,
         skip,
+        take: params.take ?? 30,
         sortBy: params.sortBy ?? SortBy.PostCreatedAt,
         orderBy: params.orderBy ?? SortOrder.Desc,
         postTypes: params.postTypes ?? Object.values(PostTypes)

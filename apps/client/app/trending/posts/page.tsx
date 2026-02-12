@@ -1,5 +1,5 @@
 import { getPosts } from '@/app/server/getPosts';
-import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { TrendingPosts } from './components/TrendingPosts';
 
 export const metadata = {
@@ -9,6 +9,6 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function TrendingPostsPage() {
-  const posts = await getPosts({ sortBy: SortBy.PostCreatedAt, orderBy: SortOrder.Desc, take: 20 });
+  const posts = await getPosts({ sortBy: SortBy.PostCreatedAt, orderBy: SortOrder.Asc, take: 20, postTypes: Object.values(PostTypes) });
   return <TrendingPosts initialPosts={posts} />;
 }

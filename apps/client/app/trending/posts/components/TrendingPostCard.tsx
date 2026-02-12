@@ -18,7 +18,7 @@ interface TrendingPostCardProps {
 
 export function TrendingPostCard({ post, index }: TrendingPostCardProps) {
   return (
-    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index * 0.1, 0.5) }}>
+    <motion.div key={`trending-post-motion-id${post.id}`} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index * 0.1, 0.5) }}>
       <Link href={`/posts/${post.id}`}>
         <Card className="overflow-hidden border-none bg-secondary/15 hover:bg-secondary/25 transition-all duration-300 rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 group cursor-pointer shadow-none hover:shadow-2xl hover:shadow-primary/5">
           <div className="flex flex-col md:flex-row gap-4 md:gap-6">
