@@ -5,7 +5,7 @@ import { PageHandler } from '@/components/PageHandler';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { GetPublicCreatorProfileOutput, GetPublicPostsOutput, GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
 import { motion } from 'framer-motion';
-import { Grid3x3, ImageIcon, Lock } from 'lucide-react';
+import { Grid3x3, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { TabProps } from './SingleCreatorProfile';
 
@@ -26,8 +26,7 @@ export const SingleCreatorProfileTabs = ({
 }: SingleCreatorProfileTabsProps) => {
   const tabs = [
     { id: 'posts', label: 'POSTS', icon: Grid3x3 },
-    { id: 'vaults', label: 'VAULTS', icon: Lock },
-    { id: 'pictures', label: 'PICS', icon: ImageIcon }
+    { id: 'vaults', label: 'VAULTS', icon: Lock }
   ];
 
   return (
@@ -55,7 +54,7 @@ export const SingleCreatorProfileTabs = ({
       <PageHandler
         isEmpty={currentTab === 'posts' ? !initialPosts.length : currentTab === 'vaults' ? !initialVaults.length : true}
         isLoading={false}
-        path={currentTab === 'posts' ? APP_PATHS.POSTS : currentTab === 'vaults' ? APP_PATHS.VAULTS : APP_PATHS.PICTURES}
+        path={currentTab === 'posts' ? APP_PATHS.POSTS : APP_PATHS.VAULTS}
       >
         <div className="w-full">
           {currentTab === 'posts' && (
@@ -121,21 +120,6 @@ export const SingleCreatorProfileTabs = ({
                   </Link>
                 </div>
               )}
-            </motion.div>
-          )}
-
-          {currentTab === 'pictures' && (
-            <motion.div
-              key="pictures"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex min-h-[300px] flex-col items-center justify-center p-8"
-            >
-              <div className="h-20 w-20 mb-4 flex items-center justify-center rounded-full border border-white/10">
-                <ImageIcon className="h-10 w-10 text-muted-foreground" />
-              </div>
-              <p className="text-muted-foreground text-sm">No photos yet</p>
             </motion.div>
           )}
         </div>

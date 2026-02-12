@@ -13,7 +13,7 @@ interface SingleCreatorProfileProps {
   initialVaults: GetPublicVaultsOutput[];
 }
 
-export type TabProps = 'pictures' | 'vaults' | 'posts';
+export type TabProps = 'vaults' | 'posts';
 
 export function SingleCreatorProfile({ profile, initialPosts, initialVaults }: SingleCreatorProfileProps) {
   const router = useRouter();

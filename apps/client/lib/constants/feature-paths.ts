@@ -10,7 +10,6 @@ export enum APP_PATHS {
   CHANNELS = '/channels',
   FOLLOWING = '/following',
   CATEGORIES = '/categories',
-  PICTURES = '/pictures',
   PURCHASED = '/purchased',
   TUTORIALS = '/tutorials',
   ACADEMY = '/academy',
@@ -19,7 +18,6 @@ export enum APP_PATHS {
   // Trending
   TRENDING = '/trending',
   TRENDING_CREATORS = '/trending/creators',
-  TRENDING_PICTURES = '/trending/pictures',
   TRENDING_VAULTS = '/trending/vaults',
   TRENDING_POSTS = '/trending/posts',
 
@@ -53,7 +51,6 @@ export const FEATURE_FLAGS: Record<APP_PATHS, boolean> = {
   [APP_PATHS.CHANNELS]: false,
   [APP_PATHS.FOLLOWING]: true,
   [APP_PATHS.CATEGORIES]: true,
-  [APP_PATHS.PICTURES]: true,
   [APP_PATHS.PURCHASED]: true,
   [APP_PATHS.TUTORIALS]: true,
 
@@ -63,7 +60,6 @@ export const FEATURE_FLAGS: Record<APP_PATHS, boolean> = {
   // Trending
   [APP_PATHS.TRENDING]: true,
   [APP_PATHS.TRENDING_CREATORS]: true,
-  [APP_PATHS.TRENDING_PICTURES]: true,
   [APP_PATHS.TRENDING_VAULTS]: true,
   [APP_PATHS.TRENDING_POSTS]: true,
 
