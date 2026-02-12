@@ -88,7 +88,7 @@ export const PostCard = ({ post, isBlurEnabled, isExpanded, onToggleComments, on
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      router.push(`/creators/${post.creatorUsername}`);
+                      router.push(`/creators/${post.creatorId}`);
                     }}
                   />
                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 truncate">

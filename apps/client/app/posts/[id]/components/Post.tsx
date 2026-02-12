@@ -101,6 +101,7 @@ export function SinglePost({ initialPost }: SinglePostProps) {
                 creatorUsername={post.creatorUsername}
                 creatorAvatarUrl={post.creatorAvatarUrl}
                 createdAt={post.createdAt}
+                creatorId={post.creatorId}
               />
 
               <PostDetailMedia

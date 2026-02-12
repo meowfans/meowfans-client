@@ -5,6 +5,8 @@ import { GET_PUBLIC_POST_COMMENTS_BY_POST_ID_QUERY } from '@workspace/gql/api';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getPostComments(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getPostComments(input: PaginationInput) {
     });
     return data?.getPublicPostCommentsByPostId || [];
   } catch (error) {
-    console.error('Error in getPostComments:', error);
+    serverErrorHandler({ error, context: 'GetPostComments' });
     return [];
   }
 }

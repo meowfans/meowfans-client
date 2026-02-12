@@ -2,9 +2,9 @@
 
 import { getPosts } from '@/app/server/getPosts';
 import { usePostsStore } from '@/hooks/store/posts.store';
-import { GetPublicPostsOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { GetPublicPostsOutput, PaginationInput, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicPostsOutput[]) => {
   const { errorHandler } = useErrorHandler();
@@ -13,7 +13,7 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
   const [hasMore, setHasMore] = useState<boolean>(initialPosts.length === (params.take ?? 30));
   const [skip, setSkip] = useState<number>(initialPosts.length);
 
-  const loadMore = useCallback(async () => {
+  const loadMore = async () => {
     setLoading(true);
     try {
       const fetched = await getPosts({
@@ -21,7 +21,8 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
         take: params.take ?? 30,
         skip,
         sortBy: params.sortBy ?? SortBy.PostCreatedAt,
-        orderBy: params.orderBy ?? SortOrder.Desc
+        orderBy: params.orderBy ?? SortOrder.Desc,
+        postTypes: params.postTypes ?? Object.values(PostTypes)
       });
 
       const fetchedPosts = (fetched ?? []) as GetPublicPostsOutput[];
@@ -33,20 +34,13 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
     } finally {
       setLoading(false);
     }
-  }, [params, skip, setPosts, errorHandler]);
+  };
 
   useEffect(() => {
-    if (initialPosts?.length > 0 && posts.length === 0) {
+    if (initialPosts?.length > 0) {
       setPosts(initialPosts);
     }
-  }, [initialPosts, setPosts, posts.length]);
-
-  // Initial load for client-side cases (e.g. tabs)
-  useEffect(() => {
-    if (initialPosts.length === 0 && posts.length === 0 && !loading && hasMore) {
-      loadMore();
-    }
-  }, [initialPosts.length, posts.length, loading, hasMore, loadMore]);
+  }, [initialPosts, setPosts]);
 
   return {
     posts,

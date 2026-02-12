@@ -2,6 +2,7 @@
 
 import { configService } from '@/util/config';
 import { UserRoles } from '@workspace/gql/generated/graphql';
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
 import { BearerAccessToken } from '@workspace/ui/lib';
 
 export async function getAuthStatus() {
@@ -22,7 +23,7 @@ export async function getAuthStatus() {
     if (!response.ok) return null;
     return await response.json();
   } catch (error) {
-    console.error('Error in getAuthStatus:', error);
+    serverErrorHandler({ error, context: 'GetAuthStatus' });
     return null;
   }
 }

@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_PUBLIC_VAULTS_QUERY } from '@workspace/gql/api/vaultsAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getVaults(input: PaginationInput) {
@@ -18,7 +20,7 @@ export async function getVaults(input: PaginationInput) {
 
     return data?.getPublicVaults || [];
   } catch (error) {
-    console.error('Error fetching vaults:', error);
+    serverErrorHandler({ error, context: 'GetVaults' });
     return [];
   }
 }

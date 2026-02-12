@@ -30,7 +30,7 @@ export function CreatorCard({ creator }: CreatorCardProps) {
   return (
     <motion.div whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
       <Card className="bg-secondary/20 hover:bg-secondary/40 hover:shadow-primary/5 h-full overflow-hidden border-none shadow-none transition-all hover:shadow-lg">
-        <Link href={`/creators/${creator.username}`} className="block">
+        <Link href={`/creators/${creator.id}`} className="block">
           <CardContent className="flex flex-col items-center p-6 pb-4 text-center">
             <Avatar className="mb-4 h-24 w-24 border-4 border-background shadow-xl">
               <AvatarImage src={creator.avatarUrl} alt={creator.username} className="object-cover" />

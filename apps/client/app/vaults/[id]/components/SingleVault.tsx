@@ -86,6 +86,7 @@ export function SingleVault({ initialVault }: SingleVaultProps) {
                 username={vault?.username}
                 avatarUrl={vault?.avatarUrl}
                 keywords={vault?.keywords}
+                creatorId={vault?.creatorId}
               />
 
               <SingleVaultActionCard

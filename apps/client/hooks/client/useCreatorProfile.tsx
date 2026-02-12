@@ -6,17 +6,17 @@ import { GetPublicCreatorProfileOutput } from '@workspace/gql/generated/graphql'
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
-export const useCreatorProfile = (username: string) => {
+export const useCreatorProfile = (userId: string) => {
   const { errorHandler } = useErrorHandler();
-  const [profile, setProfile] = useState<GetPublicCreatorProfileOutput | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [getCreatorProfile] = useLazyQuery(GET_PUBLIC_CREATOR_PROFILE_QUERY);
+  const [profile, setProfile] = useState<GetPublicCreatorProfileOutput | null>(null);
 
   const loadProfile = async () => {
-    if (!username) return;
+    if (!userId) return;
     setLoading(true);
     try {
-      const { data } = await getCreatorProfile({ variables: { username } });
+      const { data } = await getCreatorProfile({ variables: { input: { userId } } });
       if (data?.getPublicCreatorProfile) {
         setProfile(data.getPublicCreatorProfile as GetPublicCreatorProfileOutput);
       }
@@ -29,7 +29,7 @@ export const useCreatorProfile = (username: string) => {
 
   useEffect(() => {
     loadProfile();
-  }, [username]); //eslint-disable-line
+  }, [userId]); //eslint-disable-line
 
   return { profile, loading, refresh: loadProfile };
 };

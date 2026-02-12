@@ -9,9 +9,10 @@ interface SingleVaultHeaderProps {
   username?: string | null;
   avatarUrl?: string | null;
   keywords?: string[] | null;
+  creatorId?: string | null;
 }
 
-export function SingleVaultHeader({ description, username, avatarUrl, keywords }: SingleVaultHeaderProps) {
+export function SingleVaultHeader({ description, username, avatarUrl, keywords, creatorId }: SingleVaultHeaderProps) {
   return (
     <div className="flex-1 space-y-4">
       {/* Title */}
@@ -20,7 +21,7 @@ export function SingleVaultHeader({ description, username, avatarUrl, keywords }
       </div>
 
       {/* Creator */}
-      <Link href={`/creators/${username}`} className="inline-block">
+      <Link href={`/creators/${creatorId}`} className="inline-block">
         <div className="flex items-center gap-3 transition-opacity hover:opacity-70">
           <Avatar className="h-12 w-12 border-2 border-primary/20">
             <AvatarImage src={avatarUrl || undefined} alt={username || undefined} />

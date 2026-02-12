@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_FOLLOWING_QUERY } from '@workspace/gql/api/creatorAPI';
 import { GetFollowingOutput, PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getFollowings(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getFollowings(input: PaginationInput) {
     });
     return (data?.getFollowing || []) as GetFollowingOutput[];
   } catch (error) {
-    console.error('Error in getFollowings:', error);
+    serverErrorHandler({ error, context: 'GetFollowings' });
     return [];
   }
 }

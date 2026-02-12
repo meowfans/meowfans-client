@@ -1,7 +1,7 @@
 import { APP_PATHS } from './feature-paths';
 
 export const EMPTY_TEXTS: Record<APP_PATHS, string> = {
-  [APP_PATHS.POSTS]: 'No Trending Posts Found',
+  [APP_PATHS.POSTS]: 'No Posts Found',
   [APP_PATHS.CREATORS]: 'No Creators Found',
   [APP_PATHS.VAULTS]: 'No Vaults Found',
   [APP_PATHS.SHORTS]: 'No Shorts Found',

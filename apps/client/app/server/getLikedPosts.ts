@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_LIKED_POSTS_QUERY } from '@workspace/gql/api/postsAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getLikedPosts(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getLikedPosts(input: PaginationInput) {
     });
     return data?.getLikedPosts || [];
   } catch (error) {
-    console.error('Error in getLikedPosts:', error);
+    serverErrorHandler({ error, context: 'GetLikedPosts' });
     return [];
   }
 }

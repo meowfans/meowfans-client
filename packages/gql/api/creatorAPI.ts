@@ -122,8 +122,8 @@ export const UPDATE_CREATOR_PROFILE_MUTATION = graphql(`
 `);
 
 export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
-  query GetPublicCreatorProfile($username: String!) {
-    getPublicCreatorProfile(username: $username) {
+  query GetPublicCreatorProfile($input: GetPublicCreatorProfileInput!) {
+    getPublicCreatorProfile(input: $input) {
       creatorId
       bannerUrl
       avatarUrl

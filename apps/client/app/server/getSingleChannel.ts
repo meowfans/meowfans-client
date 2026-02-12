@@ -5,6 +5,8 @@ import { GET_SINGLE_CHANNEL_QUERY } from '@workspace/gql/api/messagesAPI';
 import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { ChannelsOutput, PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getSingleChannel(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getSingleChannel(input: PaginationInput) {
     });
     return data?.getSingleChannel as ChannelsOutput;
   } catch (error) {
-    console.error('Error in getSingleChannel:', error);
+    serverErrorHandler({ error, context: 'GetSingleChannel' });
     return null;
   }
 }

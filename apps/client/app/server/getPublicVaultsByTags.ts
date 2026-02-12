@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_PUBLIC_VAULTS_BY_TAGS_QUERY } from '@workspace/gql/api/vaultsAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getPublicVaultsByTags(input: PaginationInput) {
@@ -18,7 +20,7 @@ export async function getPublicVaultsByTags(input: PaginationInput) {
 
     return data?.getPublicVaultsByTags || [];
   } catch (error) {
-    console.error('Error fetching vaults by tags:', error);
+    serverErrorHandler({ error, context: 'GetPublicVaultsByTags' });
     return [];
   }
 }

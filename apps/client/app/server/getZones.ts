@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_ZONE_PLANS_QUERY } from '@workspace/gql/api/zonesAPI';
 import { UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getZones() {
@@ -16,7 +18,7 @@ export async function getZones() {
     });
     return data?.getZonePlans || [];
   } catch (error) {
-    console.error('Error in getZones:', error);
+    serverErrorHandler({ error, context: 'GetZones' });
     return [];
   }
 }

@@ -5,8 +5,10 @@ import { useLikesStore } from '@/hooks/store/likes.store';
 import { GetLikedPostsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useServerLikedPosts = (params: PaginationInput, initialLikes: GetLikedPostsOutput[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { postLikes, setPostLikes } = useLikesStore();
   const [loading, setLoading] = useState<boolean>(initialLikes.length === 0);
@@ -39,6 +41,15 @@ export const useServerLikedPosts = (params: PaginationInput, initialLikes: GetLi
       setPostLikes(initialLikes);
     }
   }, [initialLikes, setPostLikes]);
+
+  if (!fan) {
+    return {
+      postLikes: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+  }
 
   return {
     postLikes,

@@ -1,20 +1,21 @@
 'use client';
 
 import { PageHandler } from '@/components/PageHandler';
-import { GetPublicCreatorProfileOutput } from '@workspace/gql/generated/graphql';
+import { GetPublicCreatorProfileOutput, GetPublicPostsOutput, GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CreatorProfileHeader } from './CreatorProfileHeader';
 import { SingleCreatorProfileTabs } from './SingleCreatorProfileTabs';
 
 interface SingleCreatorProfileProps {
-  username: string;
   profile: GetPublicCreatorProfileOutput;
+  initialPosts: GetPublicPostsOutput[];
+  initialVaults: GetPublicVaultsOutput[];
 }
 
 export type TabProps = 'pictures' | 'vaults' | 'posts';
 
-export function SingleCreatorProfile({ username, profile }: SingleCreatorProfileProps) {
+export function SingleCreatorProfile({ profile, initialPosts, initialVaults }: SingleCreatorProfileProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,11 +39,15 @@ export function SingleCreatorProfile({ username, profile }: SingleCreatorProfile
 
   return (
     <PageHandler isEmpty={!profile} isLoading={loading && !profile}>
-      <div className="flex h-full flex-1 flex-col overflow-hidden">
-        <div className="flex-none">
-          <CreatorProfileHeader profile={profile} />
-        </div>
-        <SingleCreatorProfileTabs currentTab={currentTab} onTabChange={handleTabChange} profile={profile} />
+      <div className="flex min-h-screen flex-col bg-black text-white">
+        <CreatorProfileHeader profile={profile} />
+        <SingleCreatorProfileTabs
+          profile={profile}
+          onTabChange={handleTabChange}
+          currentTab={currentTab}
+          initialPosts={initialPosts}
+          initialVaults={initialVaults}
+        />
       </div>
     </PageHandler>
   );

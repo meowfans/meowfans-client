@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_DEFAULT_CREATORS_QUERY } from '@workspace/gql/api/creatorAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getCreators(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getCreators(input: PaginationInput) {
     });
     return data?.getDefaultCreators || [];
   } catch (error) {
-    console.error('Error in getCreators:', error);
+    serverErrorHandler({ error, context: 'GetCreators' });
     return [];
   }
 }

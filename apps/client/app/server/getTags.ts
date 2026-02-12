@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_PUBLIC_TAGS_QUERY } from '@workspace/gql/api/tagsAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getTags(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getTags(input: PaginationInput) {
     });
     return data?.getPublicTags || [];
   } catch (error) {
-    console.error('Error in getTags:', error);
+    serverErrorHandler({ error, context: 'GetTags' });
     return [];
   }
 }

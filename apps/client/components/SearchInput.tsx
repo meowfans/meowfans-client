@@ -75,7 +75,7 @@ export function SearchInput() {
                       <CommandItem
                         key={creator.id}
                         onSelect={() => {
-                          router.push(`/creators/${creator.username}`);
+                          router.push(`/creators/${creator.id}`);
                           setIsOpen(false);
                         }}
                         className="flex items-center gap-3 p-3 cursor-pointer"
@@ -144,7 +144,7 @@ export function SearchInput() {
                       <div
                         key={creator.id}
                         onClick={() => {
-                          router.push(`/creators/${creator.username}`);
+                          router.push(`/creators/${creator.id}`);
                           setIsFocused(false);
                         }}
                         className="flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 cursor-pointer transition-colors group/item"

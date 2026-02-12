@@ -5,6 +5,8 @@ import { createApolloClient } from '@workspace/gql/ApolloClient';
 import { GET_FAN_ASSETS_QUERY } from '@workspace/gql/api/assetsAPI';
 import { PaginationInput, UserRoles } from '@workspace/gql/generated/graphql';
 
+import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
 export async function getFanAssets(input: PaginationInput) {
@@ -17,7 +19,7 @@ export async function getFanAssets(input: PaginationInput) {
     });
     return data?.getFanAssets || [];
   } catch (error) {
-    console.error('Error in getFanAssets:', error);
+    serverErrorHandler({ error, context: 'GetFanAssets' });
     return [];
   }
 }

@@ -9,6 +9,8 @@ type PostsStore = {
   posts: GetPublicPostsOutput[];
   postsLoading: boolean;
   postAssets: PostAssetsEntity[];
+  creatorPosts: GetPublicPostsOutput[];
+  setCreatorPosts: (updater: PostsUpdater) => void;
   setPosts: (updater: PostsUpdater) => void;
   setPostsLoading: (postsLoading: boolean) => void;
   setPostAssets: (postAssets: PostAssetsEntity[]) => void;
@@ -20,6 +22,11 @@ export const usePostsStore = create<PostsStore>()((set, get) => ({
   postAssets: [],
   postsLoading: false,
   post: {} as GetPublicSinglePostOutput,
+  creatorPosts: [],
+  setCreatorPosts: (updater) =>
+    set((state) => ({
+      creatorPosts: typeof updater === 'function' ? (updater as (prev: GetPublicPostsOutput[]) => GetPublicPostsOutput[])(state.creatorPosts) : updater
+    })),
   setPosts: (updater) =>
     set((state) => ({
       posts: typeof updater === 'function' ? (updater as (prev: GetPublicPostsOutput[]) => GetPublicPostsOutput[])(state.posts) : updater

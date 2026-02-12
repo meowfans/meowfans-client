@@ -14,6 +14,7 @@ export const GET_PUBLIC_POSTS_QUERY = graphql(`
       creatorAvatarUrl
       creatorFullname
       creatorUsername
+      creatorId
     }
   }
 `);
@@ -29,9 +30,6 @@ export const GET_PUBLIC_CREATOR_POSTS_QUERY = graphql(`
       objectCount
       isPurchased
       unlockPrice
-      creatorAvatarUrl
-      creatorFullname
-      creatorUsername
     }
   }
 `);

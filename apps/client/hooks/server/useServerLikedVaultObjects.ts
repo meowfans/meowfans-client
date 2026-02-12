@@ -5,8 +5,10 @@ import { useLikesStore } from '@/hooks/store/likes.store';
 import { GetLikedVaultObjectsOutput, PaginationInput, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useServerLikedVaultObjects = (params: PaginationInput, initialLikes: GetLikedVaultObjectsOutput[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { vaultObjectLikes, setVaultObjectLikes, appendVaultObjectLikes } = useLikesStore();
   const [loading, setLoading] = useState<boolean>(initialLikes.length === 0);
@@ -39,6 +41,15 @@ export const useServerLikedVaultObjects = (params: PaginationInput, initialLikes
       setVaultObjectLikes(initialLikes);
     }
   }, [initialLikes, setVaultObjectLikes]);
+
+  if (!fan) {
+    return {
+      vaultObjectLikes: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+  }
 
   return {
     vaultObjectLikes,
