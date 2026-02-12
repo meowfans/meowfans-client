@@ -80,9 +80,16 @@ export function VaultsView({ userId, initialVaults }: VaultsViewProps) {
           </div>
 
           {!hasMore && vaults.length > 0 && (
-            <p className="text-center text-muted-foreground py-10 font-black uppercase tracking-widest text-xs">
-              You&apos;ve reached the end of the collection
-            </p>
+            <div className="flex flex-col items-center gap-6 py-12">
+              <p className="text-center text-muted-foreground font-black uppercase tracking-widest text-[10px] opacity-40">
+                You&apos;ve reached the end of the collection
+              </p>
+              <Link href={`/creators/${userId}/posts`}>
+                <button className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-white transition-colors border border-white/10 px-6 py-2 rounded-full">
+                  View All Posts
+                </button>
+              </Link>
+            </div>
           )}
         </InfiniteScrollManager>
       </PageHandler>

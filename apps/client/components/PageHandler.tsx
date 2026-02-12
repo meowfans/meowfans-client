@@ -22,16 +22,16 @@ export const PageHandler = ({ children, isLoading, isEmpty, path }: PageHandlerP
   return (
     <AnimatePresence mode="wait">
       {isLoading ? (
-        <LoadingComponent key="loading" loadingText={LOADING_TEXTS[currentPath]} />
+        <LoadingComponent key="loading" loadingText={LOADING_TEXTS[currentPath] || 'Loading...'} />
       ) : isEmpty ? (
-        <EmptyComponent key="empty" path={currentPath} />
+        <EmptyComponent key={`empty-${currentPath}`} path={currentPath} />
       ) : (
         <motion.div
-          key="content"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          key={`content-${currentPath}`}
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -5 }}
+          transition={{ duration: 0.2 }}
           className="w-full"
         >
           {children}

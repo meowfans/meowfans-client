@@ -1,8 +1,10 @@
 'use client';
 
 import { BlurImage } from '@/components/BlurImage';
+import { PageHandler } from '@/components/PageHandler';
+import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { GetPublicCreatorProfileOutput, GetPublicPostsOutput, GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Grid3x3, ImageIcon, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { TabProps } from './SingleCreatorProfile';
@@ -50,9 +52,12 @@ export const SingleCreatorProfileTabs = ({
           })}
         </div>
       </div>
-
-      <div className="w-full">
-        <AnimatePresence mode="wait">
+      <PageHandler
+        isEmpty={currentTab === 'posts' ? !initialPosts.length : currentTab === 'vaults' ? !initialVaults.length : true}
+        isLoading={false}
+        path={currentTab === 'posts' ? APP_PATHS.POSTS : currentTab === 'vaults' ? APP_PATHS.VAULTS : APP_PATHS.PICTURES}
+      >
+        <div className="w-full">
           {currentTab === 'posts' && (
             <motion.div
               key="posts"
@@ -62,11 +67,7 @@ export const SingleCreatorProfileTabs = ({
               className="grid grid-cols-3 gap-[1px] md:gap-1"
             >
               {initialPosts.map((post) => (
-                <Link
-                  href={`/creators/${profile.creatorId}/posts`}
-                  key={post.id}
-                  className="relative aspect-square w-full overflow-hidden bg-white/5"
-                >
+                <Link href={`/posts/${post.id}`} key={post.id} className="relative aspect-square w-full overflow-hidden bg-white/5">
                   <BlurImage src={post.preview ?? ''} alt={post.caption ?? ''} className="h-full w-full object-cover" />
                   {post.objectCount > 1 && (
                     <div className="absolute top-2 right-2 md:top-3 md:right-3">
@@ -75,16 +76,24 @@ export const SingleCreatorProfileTabs = ({
                       </svg>
                     </div>
                   )}
-                  {post.unlockPrice && post.unlockPrice > 0 && !post.isPurchased && (
+                  {!post.isPurchased && (
                     <div className="absolute top-2 left-2">
                       <Lock className="h-3 w-3 text-white/60" />
                     </div>
                   )}
                 </Link>
               ))}
+              {initialPosts.length > 0 && (
+                <div className="col-span-3 flex justify-center py-8">
+                  <Link href={`/creators/${profile.creatorId}/posts`}>
+                    <button className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-white transition-colors border border-white/10 px-6 py-2 rounded-full">
+                      View All Posts
+                    </button>
+                  </Link>
+                </div>
+              )}
             </motion.div>
           )}
-
           {currentTab === 'vaults' && (
             <motion.div
               key="vaults"
@@ -94,19 +103,24 @@ export const SingleCreatorProfileTabs = ({
               className="grid grid-cols-3 gap-[1px] md:gap-1"
             >
               {initialVaults.map((vault) => (
-                <Link
-                  href={`/creators/${profile.creatorId}/vaults`}
-                  key={vault.id}
-                  className="relative aspect-square w-full overflow-hidden bg-white/5"
-                >
+                <Link href={`/vaults/${vault.id}`} key={vault.id} className="relative aspect-square w-full overflow-hidden bg-white/5">
                   <BlurImage src={vault.preview ?? ''} alt={vault.description ?? ''} className="h-full w-full object-cover" />
-                  {vault.unlockPrice && vault.unlockPrice > 0 && !vault.isPurchased && (
+                  {!vault.isPurchased && (
                     <div className="absolute top-2 left-2">
                       <Lock className="h-3 w-3 text-white/60" />
                     </div>
                   )}
                 </Link>
               ))}
+              {initialVaults.length > 0 && (
+                <div className="col-span-3 flex justify-center py-8">
+                  <Link href={`/creators/${profile.creatorId}/vaults`}>
+                    <button className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-white transition-colors border border-white/10 px-6 py-2 rounded-full">
+                      View All Vaults
+                    </button>
+                  </Link>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -124,8 +138,8 @@ export const SingleCreatorProfileTabs = ({
               <p className="text-muted-foreground text-sm">No photos yet</p>
             </motion.div>
           )}
-        </AnimatePresence>
-      </div>
+        </div>
+      </PageHandler>
     </div>
   );
 };

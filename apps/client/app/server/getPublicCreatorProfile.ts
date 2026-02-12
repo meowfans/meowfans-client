@@ -6,10 +6,11 @@ import { GET_PUBLIC_CREATOR_PROFILE_QUERY } from '@workspace/gql/api/creatorAPI'
 import { UserRoles } from '@workspace/gql/generated/graphql';
 
 import { serverErrorHandler } from '@workspace/ui/hooks/server-error-handler';
+import { cache } from 'react';
 
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
-export const getPublicCreatorProfile = async (userId: string) => {
+export const getPublicCreatorProfile = cache(async (userId: string) => {
   try {
     const client = await getClient();
     const { data } = await client.query({
@@ -22,4 +23,4 @@ export const getPublicCreatorProfile = async (userId: string) => {
     serverErrorHandler({ error, context: 'GetPublicCreatorProfile' });
     return null;
   }
-};
+});
