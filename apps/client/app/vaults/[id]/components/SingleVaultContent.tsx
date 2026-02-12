@@ -2,6 +2,7 @@
 
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { cn } from '@workspace/ui/lib/utils';
 import { Grid3x3, Image as ImageIcon, LayoutGrid, Maximize } from 'lucide-react';
 import { useState } from 'react';
@@ -26,7 +27,8 @@ export function SingleVaultContent({
   loadMore,
   onPurchaseObject
 }: SingleVaultContentProps) {
-  const [gridCols, setGridCols] = useState<number>(3);
+  const isMobile = useIsMobile();
+  const [gridCols, setGridCols] = useState<number>(isMobile ? 1 : 3);
 
   // Mapping gridCols to responsive classes
   const layouts = [
