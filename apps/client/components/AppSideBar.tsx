@@ -47,10 +47,8 @@ import {
   Heart,
   History,
   Home,
-  ImageDown,
   LifeBuoy,
   Lightbulb,
-  Image as LucideImage,
   Mails,
   Scale,
   Search,
@@ -102,7 +100,6 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           { label: 'Creators', url: '/creators', emoji: '', icon: BadgeCheck, isEnabled: FEATURE_FLAGS['/creators'] },
           { label: 'Vaults', url: '/vaults', emoji: '', icon: GalleryVerticalEnd, isEnabled: FEATURE_FLAGS['/vaults'] },
           { label: 'Shorts', url: '/shorts', emoji: '', icon: Video, isEnabled: FEATURE_FLAGS['/shorts'] },
-          { label: 'Pictures', url: '/pictures', emoji: '', icon: LucideImage, isEnabled: FEATURE_FLAGS['/pictures'] },
           { label: 'Categories', url: '/categories', emoji: '', icon: ArrowDownAZ, isEnabled: FEATURE_FLAGS['/categories'] }
         ]
       },
@@ -116,7 +113,6 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           { label: 'All ', url: '/trending', emoji: '', icon: Flame, isEnabled: FEATURE_FLAGS['/trending'] },
           { label: 'Creators ', url: '/trending/creators', emoji: '', icon: VerifiedIcon, isEnabled: FEATURE_FLAGS['/trending/creators'] },
           { label: 'Posts ', url: '/trending/posts', emoji: '', icon: GalleryHorizontal, isEnabled: FEATURE_FLAGS['/trending/posts'] },
-          { label: 'Pictures ', url: '/trending/pictures', emoji: '', icon: ImageDown, isEnabled: FEATURE_FLAGS['/trending/pictures'] },
           { label: 'Vaults ', url: '/trending/vaults', emoji: '', icon: Album, isEnabled: FEATURE_FLAGS['/trending/vaults'] },
           { label: 'Top creators', url: '/top-creators', emoji: '', icon: Trophy, isEnabled: FEATURE_FLAGS['/top-creators'] }
         ]
