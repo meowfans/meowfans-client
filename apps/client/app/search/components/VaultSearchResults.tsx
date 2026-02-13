@@ -2,16 +2,16 @@
 
 import { VaultCard } from '@/app/vaults/components/VaultCard';
 import { PageHandler } from '@/components/PageHandler';
-import { usePublicVaultsByTags } from '@/hooks/client/useVaults';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { useServerPublicVaultsByTags } from '@/hooks/server/useServerTags';
 
 interface VaultSearchResultsProps {
   query: string;
 }
 
 export function VaultSearchResults({ query }: VaultSearchResultsProps) {
-  const { vaults, loading, hasMore, loadMore } = usePublicVaultsByTags({
+  const { vaults, loading, hasMore, loadMore } = useServerPublicVaultsByTags({
     searchTerm: query,
     take: 10,
     sortBy: SortBy.VaultViewCount,
