@@ -6,21 +6,23 @@ import { Button } from '@workspace/ui/components/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@workspace/ui/components/command';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
 import { Input } from '@workspace/ui/components/input';
+import useDebounce from '@workspace/ui/hooks/useDebounce';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Briefcase, Command as CommandIcon, Image as ImageIcon, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export function SearchInput() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const router = useRouter();
+  const debouncedSearchQuery = useDebounce(searchQuery, 800);
   const containerRef = useRef<HTMLDivElement>(null);
   const { creators, loading } = useCreators({
-    searchTerm: searchQuery,
+    searchTerm: debouncedSearchQuery,
     take: 5,
-    enabled: isFocused || isOpen
+    enabled: !!debouncedSearchQuery.trim().length && (isFocused || isOpen)
   });
 
   const handleSearch = (query: string) => {
@@ -52,11 +54,11 @@ export function SearchInput() {
           <DialogContent className="p-0 border-none sm:max-w-[425px] top-[15%] translate-y-0 shadow-2xl rounded-2xl overflow-hidden">
             <DialogHeader className="sr-only">
               <DialogTitle>Search</DialogTitle>
-              <DialogDescription>Search for creators, posts, or vaults</DialogDescription>
+              <DialogDescription>Search for creators</DialogDescription>
             </DialogHeader>
             <Command className="rounded-none border-none">
               <CommandInput
-                placeholder="Search creators, posts, vaults..."
+                placeholder="Search creators"
                 value={searchQuery}
                 onValueChange={setSearchQuery}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
@@ -91,16 +93,6 @@ export function SearchInput() {
                     ))}
                   </CommandGroup>
                 )}
-                <CommandGroup heading="Quick Links">
-                  <CommandItem onSelect={() => handleSearch('trending')} className="gap-2 p-3">
-                    <ImageIcon className="h-4 w-4 text-primary" />
-                    <span>Trending Posts</span>
-                  </CommandItem>
-                  <CommandItem onSelect={() => handleSearch('top-creators')} className="gap-2 p-3">
-                    <Briefcase className="h-4 w-4 text-primary" />
-                    <span>Top Creators</span>
-                  </CommandItem>
-                </CommandGroup>
               </CommandList>
             </Command>
           </DialogContent>
@@ -115,7 +107,7 @@ export function SearchInput() {
           />
           <Input
             type="search"
-            placeholder="Search creators, posts, vaults..."
+            placeholder="Search creators"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -137,49 +129,33 @@ export function SearchInput() {
               <div className="max-h-[400px] overflow-y-auto no-scrollbar">
                 {creators.length === 0 && searchQuery ? (
                   <div className="p-8 text-center text-muted-foreground text-sm opacity-50">No results for &quot;{searchQuery}&quot;</div>
-                ) : creators.length > 0 ? (
-                  <div className="p-3 space-y-1">
-                    <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Creators</p>
-                    {creators.map((creator) => (
-                      <div
-                        key={creator.id}
-                        onClick={() => {
-                          router.push(`/creators/${creator.id}`);
-                          setIsFocused(false);
-                        }}
-                        className="flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 cursor-pointer transition-colors group/item"
-                      >
-                        <Avatar className="h-10 w-10 border border-white/5 group-hover/item:border-primary/50 transition-colors">
-                          <AvatarImage src={creator.avatarUrl} className="object-cover" />
-                          <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                            {creator.username.slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col min-w-0">
-                          <span className="font-bold text-sm tracking-tight text-foreground/90">@{creator.username}</span>
-                        </div>
-                        <Search className="ml-auto h-3 w-3 text-muted-foreground opacity-0 group-hover/item:opacity-100 transition-opacity" />
-                      </div>
-                    ))}
-                  </div>
                 ) : (
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center gap-2 px-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                      <CommandIcon className="h-3 w-3" /> Quick suggestions
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {['Trending', 'Top Creators', 'Exclusive', 'Recent'].map((tag) => (
-                        <Button
-                          key={tag}
-                          variant="secondary"
-                          className="justify-start h-10 rounded-xl bg-white/5 hover:bg-white/10 border-none font-bold text-xs"
-                          onClick={() => handleSearch(tag)}
+                  creators.length > 0 && (
+                    <div className="p-3 space-y-1">
+                      <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Creators</p>
+                      {creators.map((creator) => (
+                        <div
+                          key={creator.id}
+                          onClick={() => {
+                            router.push(`/creators/${creator.id}`);
+                            setIsFocused(false);
+                          }}
+                          className="flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 cursor-pointer transition-colors group/item"
                         >
-                          {tag}
-                        </Button>
+                          <Avatar className="h-10 w-10 border border-white/5 group-hover/item:border-primary/50 transition-colors">
+                            <AvatarImage src={creator.avatarUrl} className="object-cover" />
+                            <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                              {creator.username.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-bold text-sm tracking-tight text-foreground/90">@{creator.username}</span>
+                          </div>
+                          <Search className="ml-auto h-3 w-3 text-muted-foreground opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                        </div>
                       ))}
                     </div>
-                  </div>
+                  )
                 )}
               </div>
 

@@ -6,7 +6,7 @@ import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface SearchBarProps {
-  onSearch: (query: string, type: 'vaults' | 'creators' | 'posts') => void;
+  onSearch: (query: string, type: 'vaults' | 'creators') => void;
   focused?: boolean;
 }
 
@@ -33,15 +33,6 @@ export function SearchBar({ onSearch, focused }: SearchBarProps) {
       return;
     }
 
-    if (firstChar === '#') {
-      const value = raw.slice(1).trim();
-
-      if (value.length === 0) return;
-
-      onSearch(value, 'posts');
-      return;
-    }
-
     onSearch(raw, 'vaults');
   }, [debouncedQuery, onSearch]);
 
@@ -51,7 +42,7 @@ export function SearchBar({ onSearch, focused }: SearchBarProps) {
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
         <Input
           autoFocus={focused}
-          placeholder="Search vaults... (use @ for creators, # for posts)"
+          placeholder="Search vaults... (use @ for creators)"
           className="pl-12 pr-12 h-14 text-lg bg-secondary/20 border-none shadow-sm transition-all hover:bg-secondary/30 focus-visible:ring-2 focus-visible:ring-primary/50"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -70,10 +61,6 @@ export function SearchBar({ onSearch, focused }: SearchBarProps) {
         <div className="flex items-center gap-1.5">
           <kbd className="px-1.5 py-0.5 rounded border bg-muted font-sans font-medium text-[10px]">@</kbd>
           <span>Creators</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <kbd className="px-1.5 py-0.5 rounded border bg-muted font-sans font-medium text-[10px]">#</kbd>
-          <span>Posts</span>
         </div>
         <div className="flex items-center gap-1.5">
           <kbd className="px-1.5 py-0.5 rounded border bg-muted font-sans font-medium text-[10px]">text</kbd>

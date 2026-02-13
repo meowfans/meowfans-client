@@ -2,11 +2,10 @@
 
 import { useCallback, useState } from 'react';
 import { CreatorSearchResults } from './CreatorSearchResults';
-import { PostSearchResults } from './PostSearchResults';
 import { SearchBar } from './SearchBar';
 import { VaultSearchResults } from './VaultSearchResults';
 
-export type SearchType = 'vaults' | 'creators' | 'posts';
+export type SearchType = 'vaults' | 'creators';
 
 export function Search() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -26,8 +25,7 @@ export function Search() {
           </div>
           <h2 className="text-2xl font-bold mb-2 tracking-tight">Discover MeowFans</h2>
           <p className="text-muted-foreground text-sm max-w-sm">
-            Search for creators with <span className="font-bold text-foreground">@</span>, posts with{' '}
-            <span className="font-bold text-foreground">#</span>, or explore exclusive vaults.
+            Search for creators with <span className="font-bold text-foreground">@</span>, or explore exclusive vaults.
           </p>
         </div>
       );
@@ -39,10 +37,6 @@ export function Search() {
 
     if (searchType === 'creators') {
       return <CreatorSearchResults query={searchQuery} />;
-    }
-
-    if (searchType === 'posts') {
-      return <PostSearchResults query={searchQuery} />;
     }
   };
 
