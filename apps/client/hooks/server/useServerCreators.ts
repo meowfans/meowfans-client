@@ -18,8 +18,8 @@ export const useServerCreators = (params: PaginationInput, initialCreators: GetD
     try {
       const fetchedCreators = await getCreators({
         ...params,
-        take: params.take ?? 40,
         skip,
+        take: params.take ?? 40,
         sortBy: params.sortBy ?? SortBy.UserCreatedAt,
         orderBy: params.orderBy ?? SortOrder.Desc,
         creatorType: Object.values(CreatorType),
