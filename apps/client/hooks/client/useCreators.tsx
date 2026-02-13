@@ -32,7 +32,7 @@ export const useCreators = ({
         dataFetchType: DataFetchType.InfiniteScroll
       });
 
-      const fetchedCreators = (data?.getDefaultCreators ?? []) as GetDefaultCreatorsOutput[];
+      const fetchedCreators = (data?.getPublicCreators ?? []) as GetDefaultCreatorsOutput[];
 
       setHasMore(fetchedCreators.length === take);
 

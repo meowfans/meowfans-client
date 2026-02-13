@@ -140,9 +140,9 @@ export const GET_PUBLIC_CREATOR_PROFILE_QUERY = graphql(`
   }
 `);
 
-export const GET_DEFAULT_CREATORS_QUERY = graphql(`
-  query GetDefaultCreators($input: PaginationInput!) {
-    getDefaultCreators(input: $input) {
+export const GET_PUBLIC_CREATORS_QUERY = graphql(`
+  query GetPublicCreators($input: PaginationInput!) {
+    getPublicCreators(input: $input) {
       id
       avatarUrl
       username

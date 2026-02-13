@@ -3,19 +3,24 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   GET_CREATORS_BY_ADMIN_QUERY,
-  GET_DEFAULT_CREATORS_QUERY,
+  GET_PUBLIC_CREATORS_QUERY,
   GET_USER_QUERY,
   SUBMIT_CREATOR_VERIFICATION_DETAILS_MUTATION,
   UPDATE_CREATOR_APPROVAL_STATUS_MUTATION,
   UPDATE_CREATOR_PROFILE_MUTATION
 } from '@workspace/gql/api';
-import { CreatorVerificationInput, PaginationInput, UpdateCreatorApprovalStatusInput, UpdateCreatorProfileInput } from '@workspace/gql/generated/graphql';
+import {
+  CreatorVerificationInput,
+  PaginationInput,
+  UpdateCreatorApprovalStatusInput,
+  UpdateCreatorProfileInput
+} from '@workspace/gql/generated/graphql';
 
 export const useCreatorsActions = () => {
   const [submitCreatorVerificationDetails] = useMutation(SUBMIT_CREATOR_VERIFICATION_DETAILS_MUTATION);
   const [updateCreatorApprovalStatus] = useMutation(UPDATE_CREATOR_APPROVAL_STATUS_MUTATION);
   const [updateCreatorProfile] = useMutation(UPDATE_CREATOR_PROFILE_MUTATION);
-  const [getDefaultCreators] = useLazyQuery(GET_DEFAULT_CREATORS_QUERY);
+  const [getDefaultCreators] = useLazyQuery(GET_PUBLIC_CREATORS_QUERY);
   const [getAllCreators] = useLazyQuery(GET_CREATORS_BY_ADMIN_QUERY);
   const [getUser] = useLazyQuery(GET_USER_QUERY);
 
@@ -49,6 +54,6 @@ export const useCreatorsActions = () => {
     publicGetDefaultCreatorsQuery,
     updateCreatorProfileMutation,
     getCreatorsByAdminQuery,
-    getUserQuery,
+    getUserQuery
   };
 };
