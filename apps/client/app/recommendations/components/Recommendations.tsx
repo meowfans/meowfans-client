@@ -22,7 +22,7 @@ export function Recommendations() {
     setLoading(true);
     try {
       let data;
-      const input = { limit: 12 };
+      const input = { limit: 30 };
       switch (type) {
         case 'creators':
           data = await fetchRecommendedCreators(input);

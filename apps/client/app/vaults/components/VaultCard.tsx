@@ -4,8 +4,7 @@
 import { GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
-import { Heart, Lock, ShoppingCart } from 'lucide-react';
-import Image from 'next/image';
+import { GalleryHorizontalEnd, Heart, Lock, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 interface VaultCardProps {
@@ -44,7 +43,7 @@ export function VaultCard({ vault }: VaultCardProps) {
           {/* Object count badge */}
           <div className="absolute bottom-2 right-2">
             <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-              {vault.objectCount} {vault.objectCount === 1 ? 'item' : 'items'}
+              <GalleryHorizontalEnd />
             </Badge>
           </div>
         </div>
