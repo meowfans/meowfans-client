@@ -2,7 +2,6 @@
 
 import { CreatorCard } from '@/app/creators/components/CreatorCard';
 import { PageHandler } from '@/components/PageHandler';
-import { useCreators } from '@/hooks/client/useCreators';
 import { useCreatorsServer } from '@/hooks/server/useServerCreators';
 import { SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
