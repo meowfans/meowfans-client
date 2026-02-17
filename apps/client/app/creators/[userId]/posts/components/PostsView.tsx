@@ -3,7 +3,6 @@
 import { BlurImage } from '@/components/BlurImage';
 import { PageHandler } from '@/components/PageHandler';
 import { ReportModal } from '@/components/ReportModal';
-import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { useServerPublicCreatorPosts } from '@/hooks/server/useServerPublicCreatorPosts';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { EntityType, GetPublicPostsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -19,7 +18,6 @@ interface PostsViewProps {
 }
 
 export function PostsView({ userId, initialPosts }: PostsViewProps) {
-  const { isBlurEnabled } = useContentBlur();
   const [reportPostId, setReportPostId] = useState<string | null>(null);
 
   const {
@@ -56,7 +54,7 @@ export function PostsView({ userId, initialPosts }: PostsViewProps) {
             )
           }
         >
-          <div className="grid grid-cols-3 gap-[1px] md:gap-1">
+          <div className="grid grid-cols-3 gap-px md:gap-1">
             {posts.map((post) => (
               <Link href={`/posts/${post.id}`} key={post.id} className="relative aspect-square w-full overflow-hidden bg-muted/20">
                 <BlurImage

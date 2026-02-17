@@ -191,7 +191,7 @@ export type CreatePostInput = {
   assetIds: Array<Scalars['String']['input']>;
   caption?: InputMaybe<Scalars['String']['input']>;
   previewId?: InputMaybe<Scalars['String']['input']>;
-  types: Array<PostTypes>;
+  type: PostTypes;
   unlockPrice?: InputMaybe<Scalars['Int']['input']>;
 };
 

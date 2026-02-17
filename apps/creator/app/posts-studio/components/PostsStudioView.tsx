@@ -24,7 +24,12 @@ export function PostsStudioView() {
   const { errorHandler } = useErrorHandler();
   const { createPostQuery } = usePostsActions();
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
-  const { assets, loading, hasMore, handleLoadMore } = useAssets({
+  const {
+    assets: creatorAssets,
+    loading,
+    hasMore,
+    handleLoadMore
+  } = useAssets({
     assetType,
     sortBy: SortBy.AssetCreatedAt,
     orderBy: SortOrder.Desc,
@@ -35,7 +40,7 @@ export function PostsStudioView() {
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
   const [previewAssetId, setPreviewAssetId] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
-  const [postType, setPostType] = useState<PostTypes>(PostTypes.Public);
+  const [postType, setPostType] = useState<PostTypes>(PostTypes.Exclusive);
   const [unlockPrice, setUnlockPrice] = useState<number | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,7 +80,7 @@ export function PostsStudioView() {
         assetIds: selectedAssets,
         caption: caption || undefined,
         previewId: previewAssetId || undefined,
-        types: [postType],
+        type: postType,
         unlockPrice: postType === PostTypes.Exclusive ? unlockPrice : undefined
       };
 
@@ -98,8 +103,8 @@ export function PostsStudioView() {
     }
   };
 
-  const selectedAssetsData = assets.filter((a) => selectedAssets.includes(a.id));
-  const previewAsset = selectedAssetsData.find((a) => a.id === previewAssetId);
+  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.assetId));
+  const previewAsset = selectedAssetsData.find((a) => a.assetId === previewAssetId);
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
@@ -143,13 +148,13 @@ export function PostsStudioView() {
                 </TabsList>
 
                 <TabsContent value={assetType} className="mt-4">
-                  {loading && assets.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+                  {loading && creatorAssets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center min-h-75 gap-4">
                       <Loading />
                       <p className="text-sm text-muted-foreground">Loading assets...</p>
                     </div>
-                  ) : assets.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 border-2 border-dashed rounded-lg">
+                  ) : creatorAssets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center min-h-75 gap-4 border-2 border-dashed rounded-lg">
                       <ImageIcon className="h-12 w-12 text-muted-foreground" />
                       <div className="text-center space-y-1">
                         <p className="text-sm font-medium">No assets found</p>
@@ -157,13 +162,19 @@ export function PostsStudioView() {
                       </div>
                     </div>
                   ) : (
-                    <div className="max-h-[600px] overflow-y-auto">
-                      <InfiniteScrollManager dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={handleLoadMore}>
+                    <div id="infinite-scroll-div" className="max-h-150 overflow-y-auto">
+                      <InfiniteScrollManager
+                        dataLength={creatorAssets.length}
+                        loading={loading}
+                        hasMore={hasMore}
+                        scrollableDiv="infinite-scroll-div"
+                        onLoadMore={handleLoadMore}
+                      >
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                           <AnimatePresence mode="popLayout">
-                            {assets.map((asset, index) => {
-                              const isSelected = selectedAssets.includes(asset.id);
-                              const isPreview = previewAssetId === asset.id;
+                            {creatorAssets.map((asset, index) => {
+                              const isSelected = selectedAssets.includes(asset.assetId);
+                              const isPreview = previewAssetId === asset.assetId;
                               return (
                                 <motion.div
                                   key={asset.id}
@@ -171,7 +182,7 @@ export function PostsStudioView() {
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.02, duration: 0.2 }}
                                   className="relative group cursor-pointer"
-                                  onClick={() => handleToggleAsset(asset.id)}
+                                  onClick={() => handleToggleAsset(asset.assetId)}
                                 >
                                   <div
                                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
