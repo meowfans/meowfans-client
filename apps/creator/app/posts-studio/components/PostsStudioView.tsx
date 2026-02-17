@@ -2,7 +2,7 @@
 
 import { useAssets } from '@/hooks/useAssets';
 import { usePostsActions } from '@workspace/gql/actions/posts.actions';
-import { AssetType, CreatePostInput, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatePostInput, FileType, PostTypes, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
@@ -189,7 +189,18 @@ export function PostsStudioView() {
                                       isSelected ? 'border-primary shadow-lg shadow-primary/20' : 'border-border hover:border-primary/50'
                                     }`}
                                   >
-                                    <NextImage src={asset.asset.rawUrl} alt="Asset" fill className="object-cover" />
+                                    {asset.asset.fileType === FileType.Video ? (
+                                      <video
+                                        src={asset.asset.rawUrl}
+                                        controls
+                                        autoPlay
+                                        className="w-full h-full max-h-[70vh] object-contain"
+                                      />
+                                    ) : (
+                                      <div className="relative w-full h-[60vh]">
+                                        <NextImage src={asset.asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
+                                      </div>
+                                    )}
 
                                     {/* Overlay */}
                                     <div

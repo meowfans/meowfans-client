@@ -1,7 +1,7 @@
 'use client';
 
 import { useAssets } from '@/hooks/useAssets';
-import { AssetType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetType, FileType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
@@ -11,9 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/componen
 import { Textarea } from '@workspace/ui/components/textarea';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
+import { MultiEnumDropdown } from '@workspace/ui/globals/MultiEnumDropdown';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, DollarSign, FolderLock, Image as ImageIcon, Sparkles, Upload } from 'lucide-react';
+import { Check, DollarSign, File, FolderLock, Image as ImageIcon, Sparkles, Upload } from 'lucide-react';
 import NextImage from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -21,12 +22,19 @@ import { toast } from 'sonner';
 
 export function VaultsStudioView() {
   const { errorHandler } = useErrorHandler();
-  // const { createVaultQuery } = useVaultsActions(); // TODO: Implement createVaultQuery when available
+  // TODO: Implement createVaultQuery when available
+  const [fileType, setFileType] = useState<FileType[]>([FileType.Image, FileType.Video]);
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
-  const { assets, loading, hasMore, handleLoadMore } = useAssets({
+  const {
+    assets: creatorAssets,
+    loading,
+    hasMore,
+    handleLoadMore
+  } = useAssets({
     assetType,
     sortBy: SortBy.AssetCreatedAt,
     orderBy: SortOrder.Desc,
+    fileType,
     take: 30,
     skip: 0
   });
@@ -72,24 +80,12 @@ export function VaultsStudioView() {
 
     setIsSubmitting(true);
     try {
-      // Mock submission for now as mutation is missing
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      /*
-      const input: CreateVaultInput = {
-        assetIds: selectedAssets,
-        description: description || undefined,
-        previewId: previewAssetId || undefined,
-        unlockPrice: unlockPrice
-      };
-      await createVaultQuery(input);
-      */
+      //  TODO: implement vault creation
 
       toast.success('Vault created successfully!', {
         description: 'Your vault is now available for purchase'
       });
 
-      // Reset form
       setSelectedAssets([]);
       setPreviewAssetId(null);
       setDescription('');
@@ -101,12 +97,11 @@ export function VaultsStudioView() {
     }
   };
 
-  const selectedAssetsData = assets.filter((a) => selectedAssets.includes(a.id));
-  const previewAsset = selectedAssetsData.find((a) => a.id === previewAssetId);
+  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.assetId));
+  const previewAsset = selectedAssetsData.find((a) => a.assetId === previewAssetId);
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -134,8 +129,19 @@ export function VaultsStudioView() {
         <div className="lg:col-span-2 space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Select Content</CardTitle>
-              <CardDescription>Choose assets to include in this vault</CardDescription>
+              <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-col space-y-1">
+                  <CardTitle>Select Content</CardTitle>
+                  <CardDescription>Choose assets to include in this vault</CardDescription>
+                </div>
+                <MultiEnumDropdown
+                  enumValue={FileType}
+                  value={fileType}
+                  onChange={setFileType}
+                  trigger={{ icon: File }}
+                  label="File Type"
+                />
+              </div>
             </CardHeader>
             <CardContent>
               <Tabs value={assetType} onValueChange={(value) => setAssetType(value as AssetType)} className="w-full">
@@ -146,13 +152,13 @@ export function VaultsStudioView() {
                 </TabsList>
 
                 <TabsContent value={assetType} className="mt-4">
-                  {loading && assets.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+                  {loading && creatorAssets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center min-h-75 gap-4">
                       <Loading />
                       <p className="text-sm text-muted-foreground">Loading assets...</p>
                     </div>
-                  ) : assets.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 border-2 border-dashed rounded-lg">
+                  ) : creatorAssets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center min-h-75 gap-4 border-2 border-dashed rounded-lg">
                       <ImageIcon className="h-12 w-12 text-muted-foreground" />
                       <div className="text-center space-y-1">
                         <p className="text-sm font-medium">No assets found</p>
@@ -160,11 +166,17 @@ export function VaultsStudioView() {
                       </div>
                     </div>
                   ) : (
-                    <div className="max-h-[600px] overflow-y-auto">
-                      <InfiniteScrollManager dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={handleLoadMore}>
+                    <div className="max-h-150 overflow-y-auto" id="infinite-scroll-vault">
+                      <InfiniteScrollManager
+                        dataLength={creatorAssets.length}
+                        loading={loading}
+                        scrollableDiv="infinite-scroll-vault"
+                        hasMore={hasMore}
+                        onLoadMore={handleLoadMore}
+                      >
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                           <AnimatePresence mode="popLayout">
-                            {assets.map((asset, index) => {
+                            {creatorAssets.map((asset, index) => {
                               const isSelected = selectedAssets.includes(asset.id);
                               const isPreview = previewAssetId === asset.id;
                               return (
@@ -181,7 +193,17 @@ export function VaultsStudioView() {
                                       isSelected ? 'border-primary shadow-lg shadow-primary/20' : 'border-border hover:border-primary/50'
                                     }`}
                                   >
-                                    <NextImage src={asset.asset.rawUrl} alt="Asset" fill className="object-cover" />
+                                    {asset.asset.fileType === FileType.Video ? (
+                                      <video
+                                        src={asset.asset.rawUrl}
+                                        controls
+                                        className="w-full h-full max-h-[70vh] object-contain"
+                                      />
+                                    ) : (
+                                      <div className="relative w-full h-[60vh]">
+                                        <NextImage src={asset.asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
+                                      </div>
+                                    )}
 
                                     {/* Overlay */}
                                     <div

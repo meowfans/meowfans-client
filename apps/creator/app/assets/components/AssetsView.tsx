@@ -99,12 +99,12 @@ export function AssetsView() {
         <AssetsFilters activeType={activeType} onChangeType={setActiveType} />
         <CardContent className="p-0 sm:p-0">
           {loading && assets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+            <div className="flex flex-col items-center justify-center min-h-75 gap-4">
               <Loading />
               <p className="text-sm text-muted-foreground">Loading assets...</p>
             </div>
           ) : assets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+            <div className="flex flex-col items-center justify-center min-h-75 gap-4">
               <ImageIcon className="h-12 w-12 text-muted-foreground" />
               <div className="text-center space-y-1">
                 <p className="text-sm font-medium">No assets found</p>
