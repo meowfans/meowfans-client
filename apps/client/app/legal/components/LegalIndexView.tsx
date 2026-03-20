@@ -19,7 +19,7 @@ export function LegalIndexView() {
     <div className="flex flex-1 flex-col bg-background min-h-screen p-6 md:p-12 lg:p-20">
       <div className="max-w-4xl mx-auto w-full space-y-12">
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight uppercase italic bg-gradient-to-r from-foreground to-foreground/50 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight uppercase italic bg-linear-to-r from-foreground to-foreground/50 bg-clip-text text-transparent">
             Legal Center
           </h1>
           <p className="text-muted-foreground text-sm md:text-base uppercase tracking-[0.2em] font-medium">
@@ -31,7 +31,7 @@ export function LegalIndexView() {
           {sections.map((section, i) => (
             <motion.div key={section.href} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
               <Link href={section.href}>
-                <div className="group p-6 rounded-[2rem] bg-secondary/15 border border-white/5 hover:bg-secondary/25 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 flex items-center justify-between">
+                <div className="group p-6 rounded-4xl bg-secondary/15 border border-white/5 hover:bg-secondary/25 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 flex items-center justify-between">
                   <div className="flex items-center gap-5">
                     <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform">
                       <section.icon className="h-6 w-6 text-primary" />

@@ -32,5 +32,6 @@ export const EMPTY_TEXTS: Record<APP_PATHS, string> = {
   [APP_PATHS.UPGRADE]: 'No Upgrade Found',
   [APP_PATHS.TRENDING_POSTS]: 'No Trending Posts Found',
   [APP_PATHS.LIKED]: 'No Liked Items Found',
-  [APP_PATHS.SEARCH]:'No search found'
+  [APP_PATHS.SEARCH]: 'No search found',
+  [APP_PATHS.LEGAL]: 'No legal documents found'
 };

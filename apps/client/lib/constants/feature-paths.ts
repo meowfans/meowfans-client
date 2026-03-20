@@ -36,7 +36,8 @@ export enum APP_PATHS {
   FEEDBACK = '/feedback',
   NOTIFICATIONS = '/notifications',
   REPORTS = '/reports',
-  SEARCH = '/search'
+  SEARCH = '/search',
+  LEGAL = '/legal'
 }
 
 export const FEATURE_FLAGS: Record<APP_PATHS, boolean> = {
@@ -80,5 +81,6 @@ export const FEATURE_FLAGS: Record<APP_PATHS, boolean> = {
 
   [APP_PATHS.NOTIFICATIONS]: false,
   [APP_PATHS.REPORTS]: true,
-  [APP_PATHS.SEARCH]: true
+  [APP_PATHS.SEARCH]: true,
+  [APP_PATHS.LEGAL]: true
 };

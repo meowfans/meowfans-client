@@ -13,6 +13,7 @@ export const resolvePathName = (pathname: string) => {
   else if (pathname.startsWith('/settings')) return '/settings';
   else if (pathname.startsWith('/channels')) return '/channels';
   else if (pathname.startsWith('/posts')) return '/posts';
+  else if (pathname.startsWith('/legal')) return '/legal';
   else return pathname;
 };
 
