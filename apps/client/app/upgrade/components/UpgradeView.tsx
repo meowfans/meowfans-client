@@ -33,7 +33,7 @@ export function UpgradeView() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="badge inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-200/20 to-yellow-400/20 border border-amber-200/30 text-amber-300 text-xs mb-4"
+            className="badge inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-linear-to-r from-amber-200/20 to-yellow-400/20 border border-amber-200/30 text-amber-300 text-xs mb-4"
           >
             <Crown className="h-4 w-4 fill-amber-300" />
             Upgrade Your Experience
@@ -102,9 +102,9 @@ export function UpgradeView() {
                     isOneTime ? 'ring-1 ring-purple-500/50' : ''
                   )}
                 >
-                  {isBestValue && <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-purple-500 to-primary" />}
+                  {isBestValue && <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-primary via-purple-500 to-primary" />}
                   {isOneTime && (
-                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500" />
+                    <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-purple-500 via-pink-500 to-purple-500" />
                   )}
 
                   <CardHeader className="text-center pb-2 pt-10">
@@ -160,7 +160,7 @@ export function UpgradeView() {
                       className={cn(
                         'w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm transition-all hover:scale-[1.02] shadow-xl',
                         isBestValue
-                          ? 'bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-primary/25'
+                          ? 'bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-primary/25'
                           : 'bg-secondary hover:bg-secondary/80 text-foreground'
                       )}
                       onClick={() => {

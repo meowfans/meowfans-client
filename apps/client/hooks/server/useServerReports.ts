@@ -5,8 +5,10 @@ import { useReportsStore } from '@/hooks/store/reports.store';
 import { PaginationInput, ReportsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
+import { useFan } from '../context/UserContextWrapper';
 
 export const useServerReports = (params: PaginationInput, initialReports: ReportsEntity[]) => {
+  const { fan } = useFan();
   const { errorHandler } = useErrorHandler();
   const { reports, setReports } = useReportsStore();
   const [loading, setLoading] = useState<boolean>(initialReports.length === 0);
@@ -38,6 +40,14 @@ export const useServerReports = (params: PaginationInput, initialReports: Report
       setReports(initialReports);
     }
   }, [initialReports, setReports]);
+
+  if (!fan)
+    return {
+      reports: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
 
   return {
     reports,
