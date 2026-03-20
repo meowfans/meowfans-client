@@ -14,7 +14,7 @@ export function TrendingHero() {
           Updated 5m ago
         </Badge>
         <h1 className="text-4xl md:text-6xl leading-none">
-          Wha&apos;s <span className="text-primary italic">Hot</span> Today
+          What&apos;s <span className="text-primary italic">Hot</span> Today
         </h1>
         <p className="text-muted-foreground font-medium text-sm md:text-base leading-relaxed">
           The most engaged creators, viral posts, and exclusive captures trending across the MeowFans universe right now.
