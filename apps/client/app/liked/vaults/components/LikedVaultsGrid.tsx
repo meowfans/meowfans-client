@@ -30,7 +30,7 @@ export const LikedVaultsGrid = ({ items, loading, hasMore, onLoadMore }: LikedVa
             >
               <Link href={`/vaults/${item.id}`}>
                 <Card className="group relative overflow-hidden border-none bg-secondary/10 hover:bg-secondary/20 transition-all duration-500 rounded-[3rem] shadow-none hover:shadow-2xl hover:shadow-primary/5 cursor-pointer">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                  <div className="relative aspect-16/10 overflow-hidden bg-muted">
                     <BlurImage
                       src={item.preview as string}
                       alt={item.id as string}

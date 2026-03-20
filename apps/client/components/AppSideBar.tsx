@@ -53,9 +53,9 @@ import {
   Scale,
   Search,
   Send,
-  ShieldAlert,
+  Settings,
+  Settings2,
   Sparkles,
-  Trash2,
   Trophy,
   VerifiedIcon,
   Video
@@ -66,8 +66,8 @@ import * as React from 'react';
 
 export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { fan } = useFan();
-  const { openMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
+  const { openMobile, setOpenMobile, toggleSidebar } = useSidebar();
   const { setOpenLogoutModal } = useUtilsStore();
 
   const data = {
@@ -129,14 +129,8 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ]
   };
 
-  const handleCloseSideBarOnMobile = () => {
-    if (openMobile) {
-      setOpenMobile(false);
-    }
-  };
-
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex flex-row justify-between">
@@ -152,7 +146,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
-                  <SidebarMenuItem key={item.label} onClick={handleCloseSideBarOnMobile}>
+                  <SidebarMenuItem key={item.label} onClick={toggleSidebar}>
                     <SidebarMenuButton asChild isActive={pathname === item.url} tooltip={item.label}>
                       <Link href={item.url}>
                         {item.icon && <item.icon />}
@@ -205,14 +199,14 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                  <DropdownMenuItem asChild onClick={toggleSidebar}>
                     <Link href="/upgrade">
                       <IconLabel icon={Sparkles} label="Upgrade to Pro" />
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                <DropdownMenuItem asChild onClick={toggleSidebar}>
                   <Link href="/support">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={LifeBuoy} label="Support" />
@@ -220,7 +214,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                <DropdownMenuItem asChild onClick={toggleSidebar}>
                   <Link href="/feedback">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={Send} label="Feedback" />
@@ -228,7 +222,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                <DropdownMenuItem asChild onClick={toggleSidebar}>
                   <Link href="/tutorials">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={GraduationCap} label="Academy" />
@@ -236,23 +230,19 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
+                <DropdownMenuItem asChild onClick={toggleSidebar}>
                   <Link href="/legal">
                     <div className="flex items-center justify-between w-full">
                       <IconLabel icon={Scale} label="Legal" />
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild onClick={handleCloseSideBarOnMobile}>
-                  <Link href="/reports">
+                <DropdownMenuItem asChild onClick={toggleSidebar}>
+                  <Link href="/settings">
                     <div className="flex items-center justify-between w-full">
-                      <IconLabel icon={ShieldAlert} label="Reports" />
+                      <IconLabel icon={Settings} label="Settings" />
                     </div>
                   </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setOpenLogoutModal(true)}>
-                  <IconLabel icon={Trash2} label="Log out" />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

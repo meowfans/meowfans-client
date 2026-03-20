@@ -136,6 +136,8 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: RootLayoutProps) {
   const fan = await handleValidateAuth();
 
+  const toggleSidebar = (open: boolean) => !open;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -156,7 +158,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               disableTransitionOnChange
               value={{ light: 'light', dark: 'dark' }}
             >
-              <SidebarProvider>
+              <SidebarProvider defaultOpen={false} >
                 <AppSideBar />
                 <SidebarInset>
                   <AppHeader />

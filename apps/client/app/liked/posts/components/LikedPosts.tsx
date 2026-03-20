@@ -17,7 +17,7 @@ export function LikedPosts({ initialPostLikes }: LikedPostsProps) {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   return (
-    <div className="flex flex-1 flex-col gap-6 md:gap-8 p-4 md:p-8 pt-4 md:pt-0 max-w-4xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col gap-6 md:gap-8 p-2 md:p-8 pt-4 md:pt-0 max-w-4xl mx-auto w-full pb-20">
       <LikedPostsHeader count={postLikes.length} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <PageHandler isLoading={loading && !initialPostLikes.length} isEmpty={!postLikes.length} path={APP_PATHS.LIKED_POSTS}>
         <LikedPostsList items={postLikes} loading={loading} hasMore={hasMore} onLoadMore={loadMore} />
