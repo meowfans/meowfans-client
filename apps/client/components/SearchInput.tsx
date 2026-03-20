@@ -19,7 +19,7 @@ export function SearchInput() {
   const [isFocused, setIsFocused] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 800);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { creators, loading } = useCreators({
+  const { creators } = useCreators({
     searchTerm: debouncedSearchQuery,
     take: 5,
     enabled: !!debouncedSearchQuery.trim().length && (isFocused || isOpen)
@@ -51,7 +51,7 @@ export function SearchInput() {
           <Search className="h-5 w-5" />
         </Button>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="p-0 border-none sm:max-w-[425px] top-[15%] translate-y-0 shadow-2xl rounded-2xl overflow-hidden">
+          <DialogContent className="p-0 border-none sm:max-w-106.25 top-[15%] translate-y-0 shadow-2xl rounded-2xl overflow-hidden">
             <DialogHeader className="sr-only">
               <DialogTitle>Search</DialogTitle>
               <DialogDescription>Search for creators</DialogDescription>
@@ -126,7 +126,7 @@ export function SearchInput() {
               transition={{ duration: 0.2 }}
               className="absolute top-full left-0 right-0 mt-3 bg-background/80 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden z-50 divide-y divide-white/5"
             >
-              <div className="max-h-[400px] overflow-y-auto no-scrollbar">
+              <div className="max-h-100 overflow-y-auto no-scrollbar">
                 {creators.length === 0 && searchQuery ? (
                   <div className="p-8 text-center text-muted-foreground text-sm opacity-50">No results for &quot;{searchQuery}&quot;</div>
                 ) : (

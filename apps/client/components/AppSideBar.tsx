@@ -1,7 +1,6 @@
 'use client';
 
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { useUtilsStore } from '@/hooks/store/utils.store';
 import { FEATURE_FLAGS } from '@/lib/constants/feature-paths';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import {
@@ -54,7 +53,6 @@ import {
   Search,
   Send,
   Settings,
-  Settings2,
   Sparkles,
   Trophy,
   VerifiedIcon,
@@ -67,8 +65,7 @@ import * as React from 'react';
 export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { fan } = useFan();
   const pathname = usePathname();
-  const { openMobile, setOpenMobile, toggleSidebar } = useSidebar();
-  const { setOpenLogoutModal } = useUtilsStore();
+  const { toggleSidebar } = useSidebar();
 
   const data = {
     user: {
@@ -225,7 +222,7 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuItem asChild onClick={toggleSidebar}>
                   <Link href="/tutorials">
                     <div className="flex items-center justify-between w-full">
-                      <IconLabel icon={GraduationCap} label="Academy" />
+                      <IconLabel icon={GraduationCap} label="Guided access" />
                       {!FEATURE_FLAGS['/tutorials'] && <HardHat className="h-3 w-3 text-amber-500/80" />}
                     </div>
                   </Link>

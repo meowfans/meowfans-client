@@ -40,7 +40,7 @@ export function AppHeader() {
   if (pathname.startsWith('/channels/')) return null;
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
       {/* Left Section: Back Button & Sidebar Trigger */}
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" onClick={handleBack} className="h-9 w-9" aria-label="Go back">
