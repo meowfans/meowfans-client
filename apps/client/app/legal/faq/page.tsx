@@ -24,7 +24,7 @@ export default function FAQPage() {
   ];
 
   return (
-    <LegalPageView title="Frequency Asked Questions" icon={HelpCircle}>
+    <LegalPageView title="Frequently Asked Questions" icon={HelpCircle}>
       <p className="lead">Find quick answers to common questions about MeowFans.</p>
 
       <div className="space-y-12 mt-12">
@@ -41,10 +41,10 @@ export default function FAQPage() {
         ))}
       </div>
 
-      <div className="mt-20 p-8 rounded-[2rem] bg-secondary/15 border border-white/5 text-center">
+      <div className="mt-20 p-8 rounded-4xl bg-secondary/15 border text-center">
         <h3 className="mb-2">Still have questions?</h3>
         <p className="text-sm text-muted-foreground mb-6 uppercase tracking-widest font-bold">Our support team is always ready to help.</p>
-        <button className="rounded-full bg-primary text-white font-black uppercase text-[10px] tracking-widest h-11 px-8 shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+        <button className="rounded-full bg-primary font-black dark:text-black text-white uppercase text-[10px] tracking-widest h-11 px-8 shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
           Contact Support
         </button>
       </div>

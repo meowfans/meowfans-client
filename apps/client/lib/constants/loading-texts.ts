@@ -32,5 +32,6 @@ export const LOADING_TEXTS: Record<APP_PATHS, string> = {
   [APP_PATHS.SETTINGS]: 'Loading Settings',
   [APP_PATHS.SUPPORT]: 'Loading Support',
   [APP_PATHS.FEEDBACK]: 'Loading Feedback',
-  [APP_PATHS.SEARCH]:'Loading search'
+  [APP_PATHS.SEARCH]: 'Loading Search',
+  [APP_PATHS.LEGAL]: 'Loading Legal'
 };

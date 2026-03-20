@@ -22,20 +22,12 @@ export function LegalPageView({ title, lastUpdated, icon: Icon = FileText, child
         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px]" />
 
         <div className="max-w-4xl mx-auto px-6 relative z-10">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8 group"
-          >
-            <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Dashboard
-          </Link>
-
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-4">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-2xl shadow-primary/10">
                 <Icon className="h-7 w-7 text-primary" />
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase italic bg-gradient-to-r from-foreground to-foreground/50 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase italic bg-linear-to-r from-foreground to-foreground/50 bg-clip-text">
                 {title}
               </h1>
               {lastUpdated && (
