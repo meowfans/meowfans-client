@@ -1,9 +1,11 @@
 'use client';
 
+import { useToggleSidebar } from '@/hooks/client/useToggleSidebar';
 import { Card } from '@workspace/ui/components/card';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Monitor, Moon, Smartphone } from 'lucide-react';
+import { Eye, EyeOff, Monitor, Moon, PanelLeft, PanelLeftClose, Smartphone } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface SettingsDisplayProps {
   theme: string | undefined;
@@ -13,6 +15,13 @@ interface SettingsDisplayProps {
 }
 
 export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: SettingsDisplayProps) {
+  const { toggle, handleToggleSidebar } = useToggleSidebar();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
     <div className="space-y-8">
       <header className="space-y-1">
@@ -71,6 +80,31 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
                 className="bg-white h-6 w-6 rounded-full shadow-md"
                 layout
                 animate={{ x: isBlurEnabled ? 24 : 0 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              />
+            </div>
+          </div>
+        </Card>
+        <Card className="border-none hidden md:block bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">
+                {toggle ? <PanelLeft className="h-5 w-5 text-primary" /> : <PanelLeftClose className="h-5 w-5 text-primary" />}
+               Toggle Sidebar
+              </h4>
+              <p className="text-xs text-muted-foreground font-medium max-w-md">Turn off the toggling mode to keep the sidebar open in desktop mode</p>
+            </div>
+            <div
+              className={cn(
+                'w-14 h-8 rounded-full p-1 cursor-pointer transition-colors duration-300 ease-in-out',
+                toggle ? 'bg-primary' : 'bg-secondary'
+              )}
+              onClick={handleToggleSidebar}
+            >
+              <motion.div
+                className="bg-white h-6 w-6 rounded-full shadow-md"
+                layout
+                animate={{ x: toggle ? 24 : 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             </div>

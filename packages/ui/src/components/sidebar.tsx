@@ -12,6 +12,7 @@ import { cn } from '@workspace/ui/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
+import { setCookie } from 'cookies-next';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -23,7 +24,9 @@ const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 type SidebarContextProps = {
   state: 'expanded' | 'collapsed';
   open: boolean;
+  toggle: boolean;
   setOpen: (open: boolean) => void;
+  setToggle: (toggle: boolean) => void;
   openMobile: boolean;
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean | undefined;
@@ -45,6 +48,7 @@ function SidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
+  toggle = true,
   className,
   style,
   children,
@@ -53,9 +57,22 @@ function SidebarProvider({
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  toggle?: boolean;
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
+
+  // This is the internal state of the sidebar toggle.
+  const [_toggle, _setToggle] = React.useState(toggle);
+
+  const setToggle = React.useCallback((value: boolean) => {
+    _setToggle(value);
+    setCookie('toggle', value ? 'true' : 'false', { maxAge: SIDEBAR_COOKIE_MAX_AGE, path: '/' });
+  }, []);
+
+  React.useEffect(() => {
+    _setToggle(toggle);
+  }, [toggle]);
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -64,22 +81,19 @@ function SidebarProvider({
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === 'function' ? value(open) : value;
-      if (setOpenProp) {
-        setOpenProp(openState);
-      } else {
-        _setOpen(openState);
-      }
+      if (setOpenProp) setOpenProp(openState);
+      else _setOpen(openState);
 
       // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      setCookie(SIDEBAR_COOKIE_NAME, openState, { maxAge: SIDEBAR_COOKIE_MAX_AGE, path: '/' });
     },
     [setOpenProp, open]
   );
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen, setOpenMobile]);
+    return isMobile ? setOpenMobile((open) => !open) : _toggle ? setOpen(_toggle) : setOpen((open) => !open);
+  }, [isMobile, setOpen, setOpenMobile, _toggle]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -102,13 +116,15 @@ function SidebarProvider({
     () => ({
       state,
       open,
+      toggle: _toggle,
       setOpen,
+      setToggle,
       isMobile,
       openMobile,
       setOpenMobile,
       toggleSidebar
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, _toggle, setOpen, setToggle, isMobile, openMobile, setOpenMobile, toggleSidebar]
   );
 
   return (
@@ -160,9 +176,7 @@ function Sidebar({
   }
 
   // Prevent flickering by not rendering until isMobile is determined
-  if (isMobile === undefined) {
-    return null;
-  }
+  if (isMobile === undefined) return null;
 
   if (isMobile) {
     return (
@@ -246,7 +260,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      title='Cmd + B or Ctrl + B'
+      title="Cmd + B or Ctrl + B"
       className={cn('size-7', className)}
       onClick={(event) => {
         onClick?.(event);
@@ -438,15 +452,9 @@ function SidebarMenuButton({
     />
   );
 
-  if (!tooltip) {
-    return button;
-  }
+  if (!tooltip) return button;
 
-  if (typeof tooltip === 'string') {
-    tooltip = {
-      children: tooltip
-    };
-  }
+  if (typeof tooltip === 'string') tooltip = { children: tooltip };
 
   return (
     <Tooltip>
