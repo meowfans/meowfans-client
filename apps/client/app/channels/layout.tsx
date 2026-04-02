@@ -1,5 +1,5 @@
 import { getChannels } from '../server/getChannels';
-import { ChannelsLayoutClient } from './components/ChannelsLayoutClient';
+import { ChannelsLayoutClient } from '@/app/channels/components/ChannelsLayoutClient';
 
 export default async function ChannelsLayout({ children }: { children: React.ReactNode }) {
   const channels = await getChannels({

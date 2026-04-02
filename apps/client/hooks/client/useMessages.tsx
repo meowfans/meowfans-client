@@ -92,6 +92,8 @@ export const useMessageMutations = () => {
         );
         successHandler({ message: 'Message sent' });
       }
+
+      console.log({newMessage, data, input })
     } catch (error) {
       errorHandler({ error });
     } finally {

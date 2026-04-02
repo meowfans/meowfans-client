@@ -24,6 +24,7 @@
     "@workspace/gql": "workspace:*",
     "@workspace/ui": "workspace:*",
     "cookies-next": "^6.1.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "embla-carousel-react": "^8.6.0",
     "emotion": "^11.0.0",

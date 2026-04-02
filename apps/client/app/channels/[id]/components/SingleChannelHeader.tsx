@@ -1,7 +1,8 @@
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
-import { ArrowLeft, MoreVertical, Phone, Video } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
+import { ArrowLeft, MoreVertical, Phone, Video, Pin, BellOff, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 
 interface SingleChannelHeaderProps {
@@ -12,7 +13,7 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
   return (
     <div className="flex-none flex items-center justify-between p-4 border-b bg-background/80 backdrop-blur-xl z-10">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild className="rounded-full">
+        <Button variant="ghost" size="icon" asChild className="rounded-full md:hidden">
           <Link href="/channels">
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -40,15 +41,38 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
       </div>
 
       <div className="flex items-center gap-2">
+        {channel?.isPinned && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
+        {channel?.isMuted && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
+        
         <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
           <Phone className="h-4 w-4" />
         </Button>
         <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
           <Video className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon-sm" className="rounded-full h-9 w-9">
-          <MoreVertical className="h-4 w-4 text-muted-foreground" />
-        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon-sm" className="rounded-full h-9 w-9">
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
+            <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+              <Pin className="h-3.5 w-3.5" />
+              {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+              <BellOff className="h-3.5 w-3.5" />
+              {channel?.isMuted ? 'Unmute' : 'Mute Notifications'}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-border/50" />
+            <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive">
+              <ShieldAlert className="h-3.5 w-3.5" />
+              {channel?.isMessagingBlocked ? 'Unblock User' : 'Block User'}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
