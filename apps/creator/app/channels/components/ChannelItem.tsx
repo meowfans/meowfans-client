@@ -1,14 +1,20 @@
-'use client';
-
 import { useUpdateChannelStatus } from '@/hooks/useChannels';
-import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
+import { Card, CardContent } from '@workspace/ui/components/card';
 import { Checkbox } from '@workspace/ui/components/checkbox';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
-import { MoreVertical, ShieldBan, Trash2, VolumeX } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { formatDistanceToNow } from 'date-fns';
+import { BellOff, CheckCircle, MoreVertical, Pin, ShieldBan, Trash2, VolumeX } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface ChannelItemProps {
@@ -18,25 +24,11 @@ interface ChannelItemProps {
   onToggleSelect?: (id: string) => void;
 }
 
-function timeAgo(date: Date) {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-  let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + 'y ago';
-  interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + 'mo ago';
-  interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + 'd ago';
-  interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + 'h ago';
-  interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + 'm ago';
-  return 'just now';
-}
-
 export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSelect }: ChannelItemProps) {
   const router = useRouter();
-  const { channelId } = useParams();
-  const isActive = channelId === channel.id;
+  const pathname = usePathname();
+  const currentId = pathname.split('/').pop();
+  const isActive = currentId === channel.id;
   const { updateChannelStatus } = useUpdateChannelStatus();
 
   const handleChannelClick = () => {
@@ -47,74 +39,137 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
     router.push(`/channels/${channel.id}`);
   };
 
-  const handleAction = async (action: 'Mute' | 'Block' | 'Delete') => {
-    if (action === 'Block') {
-      await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Rejected });
-    } else if (action === 'Delete') {
-      await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Rejected });
-    } else {
-      toast.info(`${action} action triggered (mock)`);
-    }
+  const handleAction = async (action: 'Mute' | 'Pin' | 'Block' | 'Delete' | 'Read') => {
+    toast.info(`${action} action triggered (mock)`);
   };
 
   const lastMessage = channel.lastMessage?.content || 'No messages yet';
-  const lastMessageTime = channel.lastMessage?.createdAt ? timeAgo(new Date(channel.lastMessage.createdAt)) : '';
+  const lastMessageTime = channel.lastMessage?.createdAt
+    ? formatDistanceToNow(new Date(channel.lastMessage.createdAt), { addSuffix: false })
+    : '';
 
   return (
-    <div
+    <Card
       className={cn(
-        'px-4 py-3 flex items-center gap-3 hover:bg-muted/50 transition-colors cursor-pointer group relative border-b border-border/40 last:border-0',
-        isActive && !isMultiSelectMode ? 'bg-muted/80' : 'bg-transparent',
-        isSelected && 'bg-primary/5'
+        'group relative transition-all duration-200 cursor-pointer shadow-none overflow-hidden rounded-none border-none border-b border-border/5',
+        isActive && !isMultiSelectMode ? 'bg-primary/20' : 'bg-transparent hover:bg-secondary/20',
+        isSelected && 'bg-primary/10 pl-2'
       )}
       onClick={handleChannelClick}
     >
-      {isMultiSelectMode && (
-        <Checkbox
-          checked={isSelected}
-          onCheckedChange={() => onToggleSelect?.(channel.id)}
-          onClick={(e) => e.stopPropagation()}
-          className="shrink-0"
-        />
-      )}
-      <Avatar className="h-9 w-9 border shrink-0">
-        <AvatarImage src={channel.fanAvatarUrl} alt={channel.fanFullname} />
-        <AvatarFallback>{channel.fanFullname.slice(0, 2).toUpperCase()}</AvatarFallback>
-      </Avatar>
+      <CardContent className="p-1 md:p-1 py-1 md:py-1">
+        <div className="flex items-center gap-1.5">
+          {isMultiSelectMode && (
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => onToggleSelect?.(channel.id)}
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0 scale-75 mr-0.5 border-primary/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />
+          )}
 
-      <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-baseline">
-          <h3 className={cn('text-xs font-semibold truncate', isActive ? 'text-foreground' : 'text-foreground/90')}>
-            {channel.fanFullname}
-          </h3>
-          <span className="text-[9px] text-muted-foreground whitespace-nowrap ml-1 flex-shrink-0">{lastMessageTime}</span>
+          <div className="relative shrink-0">
+            <Avatar className="h-7.5 w-7.5 border-none shadow-sm transition-all duration-300">
+              <AvatarImage src={channel.fanAvatarUrl} alt={channel.fanFullname} className="object-cover" />
+              <AvatarFallback className="bg-primary/10 text-[9px] font-black text-primary">
+                {channel.fanFullname.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            {channel.isFanOnline && (
+              <span className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full border border-background bg-green-500" />
+            )}
+            {channel.isPinned && <Pin className="absolute -top-1 -right-1 h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-1">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <h3
+                  className={cn(
+                    'font-bold text-[10.5px] tracking-tight truncate transition-colors duration-200',
+                    isActive ? 'text-primary' : 'text-foreground group-hover:text-primary'
+                  )}
+                >
+                  {channel.fanFullname}
+                </h3>
+                {channel.isMuted && <BellOff className="h-2.5 w-2.5 text-muted-foreground/30" />}
+              </div>
+              {lastMessageTime && (
+                <span className="text-[7px] font-bold text-muted-foreground/20 whitespace-nowrap">{lastMessageTime}</span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-1 mt-[-1px]">
+              <p
+                className={cn(
+                  'text-[8.5px] font-medium truncate transition-colors duration-200 pr-2',
+                  isActive ? 'text-primary/60 font-bold' : 'text-muted-foreground/40'
+                )}
+              >
+                {lastMessage}
+              </p>
+              <div className="flex items-center gap-1 shrink-0">
+                {!channel.lastMessage?.hasSeen && !isActive && (
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 top-0 bottom-0 flex items-center pr-0.5 z-20">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="h-6 w-6 rounded-full bg-background/50 backdrop-blur-md border border-white/5 shadow-lg"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
+                <DropdownMenuItem
+                  onClick={() => handleAction('Read')}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
+                >
+                  <CheckCircle className="h-3.5 w-3.5" />
+                  Mark as read
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleAction('Pin')}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
+                >
+                  <Pin className="h-3.5 w-3.5" />
+                  {channel.isPinned ? 'Unpin' : 'Pin chat'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleAction('Mute')}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
+                >
+                  <VolumeX className="h-3.5 w-3.5" />
+                  {channel.isMuted ? 'Unmute' : 'Mute notifications'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-border/50" />
+                <DropdownMenuItem
+                  onClick={() => handleAction('Block')}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <ShieldBan className="h-3.5 w-3.5" />
+                  Block interaction
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleAction('Delete')}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete conversation
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">{lastMessage}</p>
-      </div>
-
-      <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleAction('Mute')}>
-              <VolumeX className="mr-2 h-3.5 w-3.5" />
-              <span>Mute</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleAction('Block')}>
-              <ShieldBan className="mr-2 h-3.5 w-3.5" />
-              <span>Block</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleAction('Delete')} className="text-destructive focus:text-destructive">
-              <Trash2 className="mr-2 h-3.5 w-3.5" />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -28,7 +28,7 @@ export function ChannelsList({
 }: ChannelsListProps) {
   return (
     <InfiniteScrollManager dataLength={channels.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
-      <div className="flex flex-col">
+      <div className="flex flex-col py-0.5">
         <AnimatePresence mode="popLayout">
           {channels.map((channel, index) => (
             <motion.div
@@ -37,6 +37,7 @@ export function ChannelsList({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ delay: index * 0.05 }}
+              className="relative group/item"
             >
               <ChannelItem
                 channel={channel}

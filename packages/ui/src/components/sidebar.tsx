@@ -10,9 +10,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@works
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { cn } from '@workspace/ui/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { setCookie } from 'cookies-next';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
-import { setCookie } from 'cookies-next';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -252,9 +252,9 @@ function Sidebar({
 }
 
 function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, toggle } = useSidebar();
 
-  return (
+  return !toggle ? (
     <Button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
@@ -271,7 +271,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       <PanelLeftIcon />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
-  );
+  ) : null;
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {

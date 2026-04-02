@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@workspace/ui/lib/utils';
-import { motion } from 'motion/react';
-import React, { HTMLAttributes, useCallback, useMemo, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import React, { HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
 
 interface WarpBackgroundProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

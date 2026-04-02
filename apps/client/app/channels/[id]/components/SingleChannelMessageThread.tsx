@@ -4,9 +4,10 @@ import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+import { Copy, Edit, Reply, Trash, Zap, MoreHorizontal, ShieldCheck } from 'lucide-react';
 
 interface SingleChannelMessageThreadProps {
   channel: ChannelsOutput;
@@ -18,12 +19,17 @@ interface SingleChannelMessageThreadProps {
 
 export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handleLoadMore, loading }: SingleChannelMessageThreadProps) => {
   const { fan } = useFan();
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <PageHandler isEmpty={!channel.messages?.length} isLoading={loading}>
       <div ref={scrollRef} className="h-full overflow-y-auto p-6 space-y-6 flex flex-col-reverse custom-scrollbar z-0">
         <AnimatePresence initial={false}>
           {channel?.messages?.map((msg) => {
-            const isMe = msg.senderId === fan?.user?.id;
+            const isMe = msg.senderId === fan?.fanId;
             return (
               <motion.div
                 key={msg.id}
@@ -38,21 +44,62 @@ export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handle
                       <AvatarFallback>{channel.creatorFullname?.[0]}</AvatarFallback>
                     </Avatar>
                   )}
-                  <div className={`space-y-1.5 ${isMe ? 'items-end' : 'items-start'} flex flex-col`}>
-                    <Card
-                      className={`p-4 border-none shadow-md ${
-                        isMe
-                          ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground rounded-2xl rounded-tr-none'
-                          : 'bg-secondary/60 backdrop-blur-md text-foreground rounded-2xl rounded-tl-none border border-white/10'
-                      }`}
-                    >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                    </Card>
+                  <div className={`space-y-1.5 ${isMe ? 'items-end' : 'items-start'} flex flex-col group relative`}>
+                    <div className="flex items-center gap-2 group">
+                      <Card
+                        className={`p-3 border-none shadow-sm relative overflow-visible ${
+                          isMe
+                            ? 'bg-gradient-to-br from-primary to-primary text-primary-foreground rounded-2xl rounded-tr-none'
+                            : 'bg-secondary/40 backdrop-blur-md text-foreground rounded-2xl rounded-tl-none border border-white/5'
+                        }`}
+                      >
+                        {msg.isExclusive && (
+                          <div className="absolute -top-1.5 -left-1.5 bg-primary rounded-full p-0.5 border-2 border-background shadow-lg rotate-[-15deg] scale-75">
+                            <ShieldCheck className="h-3 w-3 text-white" />
+                          </div>
+                        )}
+                        <p className="text-[13px] leading-relaxed whitespace-pre-wrap font-medium">{msg.content}</p>
+                      </Card>
+
+                      <div className={`opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center gap-1 ${isMe ? 'mr-1' : 'ml-1'}`}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon-sm" className="rounded-full h-7 w-7 hover:bg-secondary">
+                              <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align={isMe ? 'end' : 'start'} className="w-40 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
+                            <DropdownMenuItem onClick={() => {}} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+                              <Reply className="h-3 w-3" />
+                              Reply
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => copyToClipboard(msg.content)} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+                              <Copy className="h-3 w-3" />
+                              Copy Text
+                            </DropdownMenuItem>
+                            {isMe && (
+                              <>
+                                <DropdownMenuSeparator className="bg-border/50" />
+                                <DropdownMenuItem onClick={() => {}} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+                                  <Edit className="h-3 w-3" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {}} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive">
+                                  <Trash className="h-3 w-3" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+
                     <div className={`flex items-center gap-2 px-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                      <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-tighter">
+                      <p className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-tighter">
                         {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
                       </p>
-                      {isMe && <Zap className="h-2.5 w-2.5 text-primary opacity-50" />}
+                      {msg.hasSeen && isMe && <Zap className="h-2 w-2 text-primary fill-primary opacity-30" />}
                     </div>
                   </div>
                 </div>
