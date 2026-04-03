@@ -45,7 +45,7 @@ const EmptyStateWrapper = ({
       />
     </div>
     <h2 className="text-2xl font-black tracking-tight mb-2">{title}</h2>
-    <p className="text-sm text-muted-foreground max-w-[280px] mx-auto leading-relaxed mb-8">{description}</p>
+    <p className="text-sm text-muted-foreground max-w-70 mx-auto leading-relaxed mb-8">{description}</p>
     {action && (
       <Button asChild className="rounded-2xl px-8 h-12 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all font-bold">
         <Link href={action.href}>{action.label}</Link>

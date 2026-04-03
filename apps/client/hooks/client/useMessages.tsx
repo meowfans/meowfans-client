@@ -48,7 +48,7 @@ export const useChannelMessages = (input: PaginationInput) => {
     }
   };
 
-  const handleLoadMore = () => {
+  const loadMore = () => {
     if (!loading && hasMore) loadMessages();
   };
 
@@ -65,11 +65,11 @@ export const useChannelMessages = (input: PaginationInput) => {
     return {
       loading: false,
       hasMore: false,
-      handleLoadMore: () => null,
+      loadMore: () => null,
       channel: {} as ChannelsOutput
     };
 
-  return { channel, loading, hasMore, handleLoadMore, handleRefresh };
+  return { channel, loading, hasMore, loadMore, handleRefresh };
 };
 
 export const useMessageMutations = () => {
