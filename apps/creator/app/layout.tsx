@@ -1,6 +1,8 @@
 import { AppHeader } from '@/components/AppHeader';
 import { AppSideBar } from '@/components/AppSideBar';
+import { Events } from '@/components/Events';
 import { CreatorStatusGuard } from '@/components/status/CreatorStatusGuard';
+import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { CreatorContextWrapper } from '@/hooks/context/useCreator';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -142,6 +144,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               disableTransitionOnChange
               value={{ light: 'light', dark: 'dark' }}
             >
+              <EventsProvider />
+              <Events />
               <CreatorStatusGuard>
                 <SidebarProvider>
                   <AppSideBar />

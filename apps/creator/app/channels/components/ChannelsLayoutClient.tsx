@@ -1,11 +1,10 @@
 'use client';
 
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
-import { usePathname } from 'next/navigation';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import { Channels } from './Channels';
-import { cn } from '@workspace/ui/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ChannelsLayoutClientProps {
   initialChannels: ChannelsOutput[];
@@ -49,12 +48,10 @@ export function ChannelsLayoutClient({ initialChannels, children }: ChannelsLayo
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
-      {/* Channels Sidebar Panel */}
-      <div className="w-72 lg:w-80 xl:w-[340px] flex-none overflow-hidden xl:rounded-3xl border-r xl:border border-border/10 bg-secondary/10 backdrop-blur-3xl transition-all duration-500">
+      <div className="w-72 lg:w-80 xl:w-85 flex-none overflow-hidden xl:rounded-3xl border-r xl:border border-border/10 bg-secondary/10 backdrop-blur-3xl transition-all duration-500">
         <Channels initialChannels={initialChannels} />
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 min-w-0 xl:rounded-3xl overflow-hidden border-border/10 bg-secondary/5 backdrop-blur-3xl shadow-sm">
         {children}
       </div>

@@ -24,6 +24,10 @@ enum UserRoles {
   SuperViewer = 'SUPER_VIEWER'
 }
 
+export const getTime = (dateAsString: string, toNumber?:boolean): number =>{
+  return  new Date(toNumber ? Number(dateAsString) : dateAsString).getTime();
+}
+
 export const tokenMap = {
   [UserRoles.Admin]: adminCookieKey,
   [UserRoles.Creator]: creatorCookieKey,

@@ -2,9 +2,11 @@ import { AgeGate } from '@/components/AgeGate';
 import { AppHeader } from '@/components/AppHeader';
 import { AppSideBar } from '@/components/AppSideBar';
 import { CookieConsent } from '@/components/CookieConsent';
+import { Events } from '@/components/Events';
 import { FeatureGate } from '@/components/FeatureGate';
 import { RTAFooter } from '@/components/RTAFooter';
 import { fetchRequest } from '@/hooks/client/useAPI';
+import { EventsProvider } from '@/hooks/context/EventsProvider';
 import { UserContextWrapper } from '@/hooks/context/UserContextWrapper';
 import { AppConfig } from '@/lib/app.config';
 import { configService } from '@/util/config';
@@ -157,6 +159,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               disableTransitionOnChange
               value={{ light: 'light', dark: 'dark' }}
             >
+              <EventsProvider />
+              <Events />
               <SidebarProvider toggle={toggle === 'true'}>
                 <AppSideBar />
                 <SidebarInset>

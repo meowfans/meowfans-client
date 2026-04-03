@@ -25,7 +25,7 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
       <Button variant="ghost" size="icon-sm" onClick={() => router.push('/channels')} className="shrink-0 rounded-full md:hidden">
         <ArrowLeft className="h-4 w-4" />
       </Button>
-      
+
       <div className="relative shrink-0 group cursor-pointer">
         <Avatar className="h-9 w-9 border-none shadow-sm transition-transform duration-300 group-hover:scale-105">
           <AvatarImage src={channel?.fanAvatarUrl} className="object-cover" />
@@ -43,7 +43,7 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
           <h2 className="font-black text-[13px] tracking-tight truncate text-foreground/90">{channel?.fanFullname}</h2>
           {channel?.isPinned && <Pin className="h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
         </div>
-        <p className="text-[10px] font-bold text-muted-foreground/40 mt-[-1px]">
+        <p className="text-[10px] font-bold text-muted-foreground/40 -mt-px">
           {channel?.isFanOnline ? (
             <span className="text-green-500/80 uppercase tracking-widest text-[9px]">Online Now</span>
           ) : (

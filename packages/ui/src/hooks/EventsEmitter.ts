@@ -1,6 +1,6 @@
 class EventEmitter extends EventTarget {
   private static instance: EventEmitter;
-  private constructor() {
+  constructor() {
     super();
   }
   static getInstance() {
