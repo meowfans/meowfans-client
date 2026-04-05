@@ -1,7 +1,7 @@
 'use client';
 
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
-import { useUpdateChannelStatus } from '@/hooks/useChannels';
+import { useUpdateChannel, useUpdateChannelStatus } from '@/hooks/useChannels';
 import { useMessageMutations } from '@/hooks/useMessages';
 import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
@@ -21,10 +21,12 @@ import { useState } from 'react';
 
 export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | null }) {
   const router = useRouter();
-  const { updateChannelStatus } = useUpdateChannelStatus();
   const { deleteMessages } = useMessageMutations();
+  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const { updateChannel, loading: channelLoading } = useUpdateChannel();
   const { openMultiSelect, setOpenMultiSelect, deleteMessageIds, setDeleteMessageIds } = useMessageMultiSelectStore();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const loading = statusLoading || channelLoading;
 
   const handleStatusChange = async (status: MessageChannelStatus) => {
     if (!channel) return;
@@ -142,37 +144,53 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
-                <DropdownMenuItem
-                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
-                  onClick={() => setOpenMultiSelect(true)}
-                >
-                  <CheckSquare className="h-3.5 w-3.5" />
-                  Select Messages
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleStatusChange(MessageChannelStatus.Accepted)}
-                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
-                >
-                  <Pin className="h-3.5 w-3.5" />
-                  {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-border/50" />
-                <DropdownMenuItem
-                  onClick={() => handleStatusChange(MessageChannelStatus.Blocked)}
-                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
-                >
-                  <ShieldBan className="h-3.5 w-3.5" />
-                  Block Interaction
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleStatusChange(MessageChannelStatus.Rejected)}
-                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Delete Thread
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+              {channel && (
+                <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
+                  <DropdownMenuItem
+                    className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                    onClick={() => setOpenMultiSelect(true)}
+                  >
+                    <CheckSquare className="h-3.5 w-3.5" />
+                    Select Messages
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => updateChannel({ channelId: channel.id, isPinned: !channel.isPinned })}
+                    disabled={loading}
+                    className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                  >
+                    <Pin className="h-3.5 w-3.5" />
+                    {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border/50" />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      handleStatusChange(MessageChannelStatus.Blocked);
+                      updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
+                    }}
+                    className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <ShieldBan className="h-3.5 w-3.5" />
+                    {channel?.isBlocked ? 'Unblock' : 'Block'} Interaction
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border/50" />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted });
+                    }}
+                    className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <ShieldBan className="h-3.5 w-3.5" />
+                    {channel?.isRestricted ? 'Unrestrict' : 'Restrict'} Interaction
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(MessageChannelStatus.Rejected)}
+                    className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete Thread
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
         </div>

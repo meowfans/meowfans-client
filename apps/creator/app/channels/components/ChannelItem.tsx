@@ -1,5 +1,5 @@
-import { useUpdateChannelStatus } from '@/hooks/useChannels';
-import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+import { useUpdateChannel, useUpdateChannelStatus } from '@/hooks/useChannels';
+import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent } from '@workspace/ui/components/card';
@@ -13,9 +13,8 @@ import {
 } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { BellOff, CheckCircle, MoreVertical, Pin, ShieldBan, Trash2, VolumeX } from 'lucide-react';
+import { BellOff, CheckCircle, Lock, MoreVertical, Pin, ShieldBan, Trash2, VolumeX } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 interface ChannelItemProps {
   channel: ChannelsOutput;
@@ -29,7 +28,10 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
   const pathname = usePathname();
   const currentId = pathname.split('/').pop();
   const isActive = currentId === channel.id;
-  const { updateChannelStatus } = useUpdateChannelStatus();
+
+  const { updateChannel, loading: channelLoading } = useUpdateChannel();
+  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const loading = channelLoading || statusLoading;
 
   const handleChannelClick = () => {
     if (isMultiSelectMode && onToggleSelect) {
@@ -39,8 +41,31 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
     router.push(`/channels/${channel.id}`);
   };
 
-  const handleAction = async (action: 'Mute' | 'Pin' | 'Block' | 'Delete' | 'Read') => {
-    toast.info(`${action} action triggered (mock)`);
+  const handlePin = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await updateChannel({ channelId: channel.id, isPinned: !channel.isPinned });
+  };
+
+  const handleMute = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await updateChannel({ channelId: channel.id, isMuted: !channel.isMuted });
+  };
+
+  const handleBlock = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Blocked });
+    if (currentId === channel.id) router.push('/channels');
+  };
+
+  const handleRestrict = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted });
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Rejected });
+    if (currentId === channel.id) router.push('/channels');
   };
 
   const lastMessage = channel.lastMessage?.content || 'No messages yet';
@@ -92,7 +117,8 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                 >
                   {channel.fanFullname}
                 </h3>
-                {channel.isMuted && <BellOff className="h-2.5 w-2.5 text-muted-foreground/30" />}
+                {channel.isMuted && <BellOff className="h-2.5 w-2.5 fill-primary" />}
+                {channel.isRestricted && <Lock className="h-2.5 w-2.5 text-amber-500" />}
               </div>
               {lastMessageTime && (
                 <span className="text-[7px] font-bold text-muted-foreground/20 whitespace-nowrap">{lastMessageTime}</span>
@@ -122,6 +148,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                 <Button
                   variant="ghost"
                   size="icon-sm"
+                  disabled={loading}
                   className="h-6 w-6 rounded-full bg-background/50 backdrop-blur-md border border-white/5 shadow-lg"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -130,36 +157,48 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
                 <DropdownMenuItem
-                  onClick={() => handleAction('Read')}
+                  disabled={loading}
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <CheckCircle className="h-3.5 w-3.5" />
                   Mark as read
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleAction('Pin')}
+                  onClick={handlePin}
+                  disabled={loading}
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <Pin className="h-3.5 w-3.5" />
                   {channel.isPinned ? 'Unpin' : 'Pin chat'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleAction('Mute')}
+                  onClick={handleMute}
+                  disabled={loading}
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <VolumeX className="h-3.5 w-3.5" />
                   {channel.isMuted ? 'Unmute' : 'Mute notifications'}
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleRestrict}
+                  disabled={loading}
+                  className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                  {channel.isRestricted ? 'Remove Restriction' : 'Restrict Access'}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem
-                  onClick={() => handleAction('Block')}
+                  onClick={handleBlock}
+                  disabled={loading}
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                 >
                   <ShieldBan className="h-3.5 w-3.5" />
-                  Block interaction
+                  {channel.isBlocked ? 'Unblock' : 'Block interaction'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleAction('Delete')}
+                  onClick={handleDelete}
+                  disabled={loading}
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                 >
                   <Trash2 className="h-3.5 w-3.5" />

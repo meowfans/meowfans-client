@@ -1,7 +1,7 @@
+import { useUpdateChannel, useUpdateChannelStatus } from '@/hooks/client/useChannels';
 import { useMessageMutations } from '@/hooks/client/useMessages';
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
-import { useMessagesActions } from '@workspace/gql/actions';
-import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
 import { DestroyModal } from '@workspace/ui/modals/DestroyModal';
-import { ArrowLeft, BellOff, CheckSquare, MoreVertical, Phone, Pin, ShieldAlert, Trash, Video, X } from 'lucide-react';
+import { ArrowLeft, BellOff, CheckSquare, Lock, MoreVertical, Phone, Pin, ShieldAlert, Trash, Video, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -24,6 +24,9 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
   const { openMultiSelect, setOpenMultiSelect, deleteMessageIds, setDeleteMessageIds } = useMessageMultiSelectStore();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const { deleteMessages } = useMessageMutations();
+  const { updateChannel, loading: channelLoading } = useUpdateChannel();
+  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const loading = channelLoading || statusLoading;
 
   const handleDeleteConfirm = () => {
     deleteMessages({ messageIds: deleteMessageIds });
@@ -141,18 +144,38 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
                   <CheckSquare className="h-3.5 w-3.5" />
                   Select Messages
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+                <DropdownMenuItem
+                  disabled={loading}
+                  onClick={() => updateChannel({ channelId: channel.id, isPinned: !channel.isPinned })}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                >
                   <Pin className="h-3.5 w-3.5" />
                   {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
+                <DropdownMenuItem
+                  disabled={loading}
+                  onClick={() => updateChannel({ channelId: channel.id, isMuted: !channel.isMuted })}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                >
                   <BellOff className="h-3.5 w-3.5" />
                   {channel?.isMuted ? 'Unmute' : 'Mute Notifications'}
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={loading}
+                  onClick={() => updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted })}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                  {channel?.isRestricted ? 'Remove Restriction' : 'Restrict Access'}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border/50" />
-                <DropdownMenuItem className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive">
+                <DropdownMenuItem
+                  disabled={loading}
+                  onClick={() => updateChannelStatus({ channelId: channel.id, status: channel.isBlocked ? MessageChannelStatus.Accepted : MessageChannelStatus.Blocked })}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                >
                   <ShieldAlert className="h-3.5 w-3.5" />
-                  {channel?.isMessagingBlocked ? 'Unblock User' : 'Block User'}
+                  {channel?.isBlocked ? 'Unblock User' : 'Block User'}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

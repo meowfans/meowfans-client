@@ -17,15 +17,11 @@ export const UPDATE_LAST_SEEN_QUERY = graphql(`
 export const UPDATE_CHANNEL_MUTATION = graphql(`
   mutation UpdateChannel($input: UpdateChannelInput!) {
     updateChannel(input: $input) {
-      creatorId
-      fanId
-      id
-      isMessagingBlocked
+      channelId
       isMuted
-      isPinned
       isRestricted
-      label
-      lastMessageId
+      isBlocked
+      isPinned
     }
   }
 `);
@@ -59,7 +55,7 @@ export const GET_CHANNELS_QUERY = graphql(`
       status
       isFanOnline
       isCreatorOnline
-      isMessagingBlocked
+      isBlocked
       lastMessage {
         channelId
         content

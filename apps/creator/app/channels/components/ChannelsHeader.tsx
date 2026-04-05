@@ -1,4 +1,7 @@
-import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+'use client';
+
+import { useUpdateChannelStatus } from '@/hooks/useChannels';
+import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
 import { Input } from '@workspace/ui/components/input';
@@ -33,6 +36,19 @@ export const ChannelsHeader = ({
   setSelectedChannels
 }: ChannelsHeaderProps) => {
   const pathname = usePathname();
+  const { updateChannelStatus, loading } = useUpdateChannelStatus();
+
+  const handleBulkDelete = async () => {
+    if (selectedChannels.length === 0) return;
+    await Promise.all(
+      selectedChannels.map((channelId) =>
+        updateChannelStatus({ channelId, status: MessageChannelStatus.Rejected })
+      )
+    );
+    setSelectedChannels([]);
+    setIsMultiSelectMode(false);
+  };
+
   return (
     <div className="flex-none py-2 px-1.5 space-y-3 bg-background/20">
       <div className="flex flex-row justify-between items-center gap-2 px-1">
@@ -137,18 +153,16 @@ export const ChannelsHeader = ({
           <Button
             variant="destructive"
             className="flex-1 h-8 rounded-lg text-[9px] font-black uppercase tracking-tighter"
-            disabled={selectedChannels.length === 0}
-            onClick={() => {
-              setSelectedChannels([]);
-              setIsMultiSelectMode(false);
-            }}
+            disabled={selectedChannels.length === 0 || loading}
+            onClick={handleBulkDelete}
           >
             <Trash2 className="h-3 w-3 mr-1.5" />
-            Delete ({selectedChannels.length})
+            {loading ? 'Deleting…' : `Delete (${selectedChannels.length})`}
           </Button>
           <Button
             variant="outline"
             className="h-8 rounded-lg text-[9px] font-black uppercase tracking-tighter border-muted-foreground/10"
+            disabled={loading}
             onClick={() => {
               const allIds = filteredChannels.map((c: ChannelsOutput) => c.id);
               setSelectedChannels(selectedChannels.length === filteredChannels.length ? [] : allIds);

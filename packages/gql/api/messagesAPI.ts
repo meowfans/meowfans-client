@@ -23,7 +23,7 @@ export const GET_SINGLE_CHANNEL_QUERY = graphql(`
       status
       isFanOnline
       isCreatorOnline
-      isMessagingBlocked
+      isBlocked
       messages {
         id
         content

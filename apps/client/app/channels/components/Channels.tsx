@@ -2,7 +2,6 @@
 
 import { useServerChannels } from '@/hooks/server/useServerChannels';
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
-import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { ChannelFilter, ChannelsHeader } from './ChannelsHeader';
 import { ChannelsList } from './ChannelsList';
@@ -14,9 +13,6 @@ interface ChannelsProps {
 export function Channels({ initialChannels }: ChannelsProps) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filter, setFilter] = useState<ChannelFilter>('all');
-  const pathname = usePathname();
-  const currentId = pathname.split('/').pop();
-  const [openOptions, setOpenOptions] = useState<boolean>(false);
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
