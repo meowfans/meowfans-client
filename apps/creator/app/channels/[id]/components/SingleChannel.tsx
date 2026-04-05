@@ -1,7 +1,7 @@
 'use client';
 
 import { useCreator } from '@/hooks/context/useCreator';
-import { useChannelMessages } from '@/hooks/useMessages';
+import { useServerSingleChannel } from '@/hooks/server/useServerSingleChannel';
 import { useQuery } from '@apollo/client/react';
 import { UPDATE_LAST_SEEN_QUERY } from '@workspace/gql/api';
 import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
@@ -21,13 +21,11 @@ interface SingleChannelProps {
 export function SingleChannel({ channelId, initialChannel }: SingleChannelProps) {
   const { creator } = useCreator();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { channel, loading, hasMore, handleLoadMore } = useChannelMessages({ relatedEntityId: channelId, take: 50 });
+  const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 30 }, initialChannel);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [channel?.messages]);
+  const isRequested = channel?.status === MessageChannelStatus.Requested;
+  const isBlocked = channel?.isMessagingBlocked || channel?.status === MessageChannelStatus.Blocked;
+  const isRestricted = channel?.isRestricted;
 
   const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
     skip: !channelId && !loading,
@@ -36,7 +34,6 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
 
   useEffect(() => {
     const lastMessage = (channel.messages || []).at(0);
-
     if (lastMessage?.recipientUserId === creator?.creatorId) {
       refetch({ input: { messageChannelId: channelId, messageId: lastMessage?.id } });
     }
@@ -59,24 +56,12 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
     );
   }
 
-  const isRequested = channel?.status === MessageChannelStatus.Requested;
-  const isBlocked = channel?.isMessagingBlocked || channel?.status === MessageChannelStatus.Blocked;
-  const isRestricted = channel?.isRestricted;
-
   return (
     <div className="flex h-full flex-col bg-background relative overflow-hidden border-l border-border/50">
       <SingleChannelHeader channel={channel} />
-      <SingleChannelStatus isBlocked={isBlocked} isRequested={isRequested} isRestricted={isRestricted} />
+      <SingleChannelStatus channel={channel} isBlocked={isBlocked} isRequested={isRequested} isRestricted={isRestricted} />
 
-      <div className="flex-1 min-h-0 relative">
-        <SingleChannelMessageThread
-          channel={channel}
-          scrollRef={scrollRef}
-          hasMore={hasMore}
-          handleLoadMore={handleLoadMore}
-          loading={loading}
-        />
-      </div>
+      <SingleChannelMessageThread channel={channel} scrollRef={scrollRef} hasMore={hasMore} handleLoadMore={loadMore} loading={loading} />
 
       {!isRequested && !isBlocked && <SingleChannelInputArea channel={channel} />}
     </div>

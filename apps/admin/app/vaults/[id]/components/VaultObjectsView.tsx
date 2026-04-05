@@ -43,7 +43,7 @@ interface VaultObjectsViewProps {
 export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const router = useRouter();
   const [status, setStatus] = useState<DownloadStates[]>(Object.values(DownloadStates));
-  const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType)); // Empty array means all types in some APIs, or we might need to send all. Let's send all if empty.
+  const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType)); 
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();
@@ -131,7 +131,6 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
 
   return (
     <div className="space-y-6 p-4 md:p-8 pt-6 max-w-6xl mx-auto flex flex-col h-full w-full min-w-0 overflow-hidden">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between shrink-0">
         <div className="flex items-center gap-4">
           <div className="min-w-0">
@@ -153,7 +152,6 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         )}
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 shrink-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -237,7 +235,6 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         </DropdownMenu>
       </div>
 
-      {/* Content */}
       <div className="flex-1 min-h-0 relative border rounded-md bg-card overflow-hidden">
         {loading && vaultObjects.length === 0 ? (
           <div className="h-full flex items-center justify-center">
@@ -255,27 +252,26 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             >
               <div className="overflow-x-auto">
                 <table className="w-full caption-bottom text-sm">
-                  {/* ... table content ... */}
                   <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
                     <TableRow>
-                      <TableHead className="w-[50px] px-3">
+                      <TableHead className="w-12.5 px-3">
                         <Checkbox
                           checked={isAllSelected || (isIndeterminate ? 'indeterminate' : false)}
                           onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
                           aria-label="Select all"
                         />
                       </TableHead>
-                      <TableHead className="w-[80px] md:w-[100px]">Preview</TableHead>
-                      <TableHead className="w-[80px] md:w-[100px] text-center">Type</TableHead>
-                      <TableHead className="w-[100px] md:w-[150px] text-center">Status</TableHead>
-                      <TableHead className="min-w-[150px]">Object URL</TableHead>
+                      <TableHead className="w-20 md:w-25">Preview</TableHead>
+                      <TableHead className="w-20 md:w-25 text-center">Type</TableHead>
+                      <TableHead className="w-25 md:w-37.5 text-center">Status</TableHead>
+                      <TableHead className="min-w-37.5">Object URL</TableHead>
                       <TableHead className="text-right whitespace-nowrap">Created At</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {vaultObjects.map((obj) => (
                       <TableRow key={obj.id} className="hover:bg-muted/50" data-state={selectedObjects.includes(obj.id) && 'selected'}>
-                        <TableCell className="w-[50px] px-3">
+                        <TableCell className="w-12.5 px-3">
                           <Checkbox
                             checked={selectedObjects.includes(obj.id)}
                             onCheckedChange={(checked) => handleSelectObject(obj.id, checked as boolean)}
@@ -307,7 +303,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
                           </div>
                         </TableCell>
                         <TableCell
-                          className="font-mono text-xs text-muted-foreground max-w-[150px] md:max-w-[300px] truncate"
+                          className="font-mono text-xs text-muted-foreground max-w-37.5 md:max-w-75 truncate"
                           title={obj.objectUrl}
                         >
                           {obj.objectUrl || '-'}

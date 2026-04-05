@@ -5,10 +5,9 @@ import { Input } from '@workspace/ui/components/input';
 import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { pluralizeByCount } from '@workspace/ui/lib/helpers';
 import { cn } from '@workspace/ui/lib/utils';
-import { BellOff, Check, Filter, MessageCircle, MessageSquare, MoreVertical, Pin, Search, Trash2, X } from 'lucide-react';
+import { BellOff, Check, Filter, MessageSquare, MoreVertical, Pin, Search, Trash2, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-
-export type ChannelFilter = 'all' | 'pinned' | 'muted' | 'unread';
+import { ChannelFilter } from './Channels';
 
 interface ChannelsHeaderProps {
   filteredChannels: ChannelsOutput[];
@@ -34,13 +33,6 @@ export const ChannelsHeader = ({
   setSelectedChannels
 }: ChannelsHeaderProps) => {
   const pathname = usePathname();
-  const filterLabels: Record<ChannelFilter, { label: string; icon: any }> = {
-    all: { label: 'All', icon: MessageCircle },
-    pinned: { label: 'Pinned', icon: Pin },
-    muted: { label: 'Muted', icon: BellOff },
-    unread: { label: 'Unread', icon: MessageCircle }
-  };
-
   return (
     <div className="flex-none py-2 px-1.5 space-y-3 bg-background/20">
       <div className="flex flex-row justify-between items-center gap-2 px-1">

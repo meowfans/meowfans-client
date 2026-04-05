@@ -24,7 +24,7 @@ enum UserRoles {
   SuperViewer = 'SUPER_VIEWER'
 }
 
-export const getTime = (dateAsString: string, toNumber?:boolean): number =>{
+export const getTime = (dateAsString: string | number| Date, toNumber?:boolean): number =>{
   return  new Date(toNumber ? Number(dateAsString) : dateAsString).getTime();
 }
 

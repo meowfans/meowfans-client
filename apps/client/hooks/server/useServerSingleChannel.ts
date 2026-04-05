@@ -10,7 +10,7 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
   const { errorHandler } = useErrorHandler();
   const { channel, setChannel } = useChannelsStore();
   const [loading, setLoading] = useState<boolean>(!initialChannel);
-  const [hasMore, setHasMore] = useState<boolean>(initialChannel?.messages?.length === (params.take ?? 20));
+  const [hasMore, setHasMore] = useState<boolean>(initialChannel?.messages?.length === (params.take ?? 30));
   const [skip, setSkip] = useState<number>(initialChannel?.messages?.length ?? 0);
 
   const loadMore = async () => {
@@ -20,18 +20,18 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
       const fetched = await getSingleChannel({
         ...params,
         skip,
-        take: params.take ?? 20
+        take: params.take ?? 30
       });
 
       const fetchedChannel = fetched as ChannelsOutput;
       const fetchedMessages = (fetchedChannel?.messages ?? []) as MessagesOutput[];
 
-      setHasMore(fetchedMessages.length === (params.take ?? 20));
+      setHasMore(fetchedMessages.length === (params.take ?? 30));
       setChannel((prev) => ({
         ...fetchedChannel,
-        messages: prev?.messages ? [...prev.messages, ...fetchedMessages] : fetchedMessages
+        messages: [...prev.messages, ...fetchedMessages]
       }));
-      setSkip((prev) => prev + (params.take ?? 20));
+      setSkip((prev) => prev + (params.take ?? 30));
     } catch (error) {
       errorHandler({ error, msg: 'Error loading messages! Try again later.' });
     } finally {
@@ -40,7 +40,7 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
   };
 
   useEffect(() => {
-    if (initialChannel) {
+    if (initialChannel?.messages.length) {
       setChannel(initialChannel);
       setSkip(initialChannel.messages?.length ?? 0);
     }

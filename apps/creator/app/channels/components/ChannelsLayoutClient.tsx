@@ -1,10 +1,12 @@
 'use client';
 
+import { useUtilsStore } from '@/hooks/store/utils.store';
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { Channels } from './Channels';
+import { ChannelsSidebarAssets } from './ChannelsSidebarAssets';
 
 interface ChannelsLayoutClientProps {
   initialChannels: ChannelsOutput[];
@@ -14,6 +16,7 @@ interface ChannelsLayoutClientProps {
 export function ChannelsLayoutClient({ initialChannels, children }: ChannelsLayoutClientProps) {
   const pathname = usePathname();
   const isMobile = useIsMobile();
+  const { showAssetsSidebar } = useUtilsStore();
   const isBasePage = pathname === '/channels' || pathname === '/channels/';
 
   if (isMobile) {
@@ -36,9 +39,23 @@ export function ChannelsLayoutClient({ initialChannels, children }: ChannelsLayo
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              className="flex-1 overflow-hidden"
+              className="flex-1 overflow-hidden relative"
             >
               {children}
+              <AnimatePresence>
+                {showAssetsSidebar && (
+                  <motion.div
+                    key="assets-overlay"
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    className="absolute inset-0 z-50 bg-background flex flex-col"
+                  >
+                    <ChannelsSidebarAssets />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
         </AnimatePresence>

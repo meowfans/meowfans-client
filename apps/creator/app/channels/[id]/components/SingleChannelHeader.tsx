@@ -1,16 +1,30 @@
 'use client';
 
+import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
 import { useUpdateChannelStatus } from '@/hooks/useChannels';
+import { useMessageMutations } from '@/hooks/useMessages';
 import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@workspace/ui/components/dropdown-menu';
-import { ArrowLeft, Check, MoreVertical, Pin, ShieldBan, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@workspace/ui/components/dropdown-menu';
+import { DestroyModal } from '@workspace/ui/modals/DestroyModal';
+import { ArrowLeft, BellOff, CheckSquare, MoreVertical, Phone, Pin, ShieldBan, Trash, Trash2, Video, X } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | null }) {
   const router = useRouter();
   const { updateChannelStatus } = useUpdateChannelStatus();
+  const { deleteMessages } = useMessageMutations();
+  const { openMultiSelect, setOpenMultiSelect, deleteMessageIds, setDeleteMessageIds } = useMessageMultiSelectStore();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleStatusChange = async (status: MessageChannelStatus) => {
     if (!channel) return;
@@ -20,65 +34,149 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
     }
   };
 
-  return (
-    <div className="flex items-center gap-3 p-3 border-b bg-background/60 backdrop-blur-xl sticky top-0 z-50">
-      <Button variant="ghost" size="icon-sm" onClick={() => router.push('/channels')} className="shrink-0 rounded-full md:hidden">
-        <ArrowLeft className="h-4 w-4" />
-      </Button>
+  const handleDeleteConfirm = () => {
+    deleteMessages({ messageIds: deleteMessageIds });
+    setShowDeleteModal(false);
+    setOpenMultiSelect(false);
+    setDeleteMessageIds([]);
+  };
 
-      <div className="relative shrink-0 group cursor-pointer">
-        <Avatar className="h-9 w-9 border-none shadow-sm transition-transform duration-300 group-hover:scale-105">
-          <AvatarImage src={channel?.fanAvatarUrl} className="object-cover" />
-          <AvatarFallback className="bg-primary/10 text-[10px] font-black text-primary">
-            {channel?.fanFullname?.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        {channel?.isFanOnline && (
-          <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-background bg-green-500 shadow-sm" />
-        )}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <h2 className="font-black text-[13px] tracking-tight truncate text-foreground/90">{channel?.fanFullname}</h2>
-          {channel?.isPinned && <Pin className="h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
+  const renderMultiSelectHeader = () => (
+    <div className="flex items-center justify-between p-3 border-b bg-background/80 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full bg-secondary/50 hover:bg-secondary"
+          onClick={() => {
+            setOpenMultiSelect(false);
+            setDeleteMessageIds([]);
+          }}
+        >
+          <X className="h-5 w-5" />
+        </Button>
+        <div className="flex flex-col">
+          <h2 className="font-bold text-base leading-none tracking-tight">Select Messages</h2>
+          <p className="text-[11px] uppercase font-bold text-muted-foreground tracking-wider mt-1">{deleteMessageIds.length} Selected</p>
         </div>
-        <p className="text-[10px] font-bold text-muted-foreground/40 -mt-px">
-          {channel?.isFanOnline ? (
-            <span className="text-green-500/80 uppercase tracking-widest text-[9px]">Online Now</span>
-          ) : (
-            <span className="uppercase tracking-widest text-[9px]">Offline</span>
-          )}
-        </p>
       </div>
-
-      <div className="flex items-center gap-1">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" className="h-8 w-8 rounded-full text-muted-foreground hover:bg-secondary">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
-            <DropdownMenuItem onClick={() => handleStatusChange(MessageChannelStatus.Accepted)} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer">
-              <Pin className="h-3.5 w-3.5" />
-              {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-border/50" />
-            <DropdownMenuItem onClick={() => handleStatusChange(MessageChannelStatus.Blocked)} className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive">
-              <ShieldBan className="h-3.5 w-3.5" />
-              Block Interaction
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleStatusChange(MessageChannelStatus.Rejected)}
-              className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              Delete Thread
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex items-center">
+        <Button
+          variant="destructive"
+          size="sm"
+          className="rounded-full font-bold shadow-lg"
+          disabled={deleteMessageIds.length === 0}
+          onClick={() => setShowDeleteModal(true)}
+        >
+          <Trash className="h-4 w-4 mr-2" />
+          Delete
+        </Button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <DestroyModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Messages"
+        subDescription={`Are you sure you want to delete ${deleteMessageIds.length} selected message(s)? This action cannot be undone.`}
+        submitButton={{
+          onClick: handleDeleteConfirm,
+          title: 'Delete'
+        }}
+        cancelButton={{
+          onClick: () => setShowDeleteModal(false),
+          title: 'Cancel',
+          variant: 'outline'
+        }}
+      />
+      {openMultiSelect ? (
+        renderMultiSelectHeader()
+      ) : (
+        <div className="flex-none flex items-center justify-between p-4 border-b bg-background/80 backdrop-blur-xl z-10">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" asChild className="rounded-full md:hidden">
+              <Link href="/channels">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+            </Button>
+
+            <div className="relative group cursor-pointer">
+              <Avatar className="h-10 w-10 border-2 border-background shadow-lg transition-transform group-hover:scale-105">
+                <AvatarImage src={channel?.fanAvatarUrl} />
+                <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                  {channel?.fanFullname?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              {channel?.isFanOnline && (
+                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500 shadow-sm" />
+              )}
+            </div>
+            <div className="flex flex-col">
+              <h2 className="font-bold text-base leading-none tracking-tight">{channel?.fanFullname}</h2>
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className={`h-1.5 w-1.5 rounded-full ${channel?.isFanOnline ? 'bg-green-500' : 'bg-muted-foreground/30'}`} />
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">
+                  {channel?.isFanOnline ? 'Online' : 'Away'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {channel?.isPinned && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
+            {channel?.isMuted && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
+
+            <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
+              <Phone className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
+              <Video className="h-4 w-4" />
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon-sm" className="h-8 w-8 rounded-full text-muted-foreground hover:bg-secondary">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 backdrop-blur-3xl bg-background/80 shadow-2xl">
+                <DropdownMenuItem
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                  onClick={() => setOpenMultiSelect(true)}
+                >
+                  <CheckSquare className="h-3.5 w-3.5" />
+                  Select Messages
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleStatusChange(MessageChannelStatus.Accepted)}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
+                >
+                  <Pin className="h-3.5 w-3.5" />
+                  {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-border/50" />
+                <DropdownMenuItem
+                  onClick={() => handleStatusChange(MessageChannelStatus.Blocked)}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <ShieldBan className="h-3.5 w-3.5" />
+                  Block Interaction
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleStatusChange(MessageChannelStatus.Rejected)}
+                  className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete Thread
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

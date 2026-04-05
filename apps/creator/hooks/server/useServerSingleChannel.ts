@@ -29,7 +29,7 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
       setHasMore(fetchedMessages.length === (params.take ?? 20));
       setChannel((prev) => ({
         ...fetchedChannel,
-        messages: prev?.messages ? [...prev.messages, ...fetchedMessages] : fetchedMessages
+        messages: [...prev.messages, ...fetchedMessages]
       }));
       setSkip((prev) => prev + (params.take ?? 20));
     } catch (error) {
@@ -40,7 +40,7 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
   };
 
   useEffect(() => {
-    if (initialChannel) {
+    if (initialChannel?.messages.length) {
       setChannel(initialChannel);
       setSkip(initialChannel.messages?.length ?? 0);
     }
@@ -51,7 +51,6 @@ export const useServerSingleChannel = (params: PaginationInput, initialChannel: 
     loading,
     hasMore,
     loadMore,
-    handleLoadMore: loadMore,
     refresh: () => {
       setChannel({} as ChannelsOutput);
       loadMore();
