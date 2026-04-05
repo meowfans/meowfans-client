@@ -6,7 +6,7 @@ import { SeenPreview } from '@workspace/ui/globals/SeenPreview';
 import { getTime } from '@workspace/ui/lib/helpers';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { MessageInfoModal } from '../modal/MessageInfoModal';
 import { SingleMessageContent } from './SingleMessageContent';
 
@@ -16,10 +16,11 @@ interface SingleMessageProps {
   message: MessagesOutput;
 }
 
-export const SingleMessage: React.FC<SingleMessageProps> = ({ channel, isMe, message }) => {
+const SingleMessageInner: React.FC<SingleMessageProps> = ({ channel, isMe, message }) => {
   const [showInfo, setShowInfo] = useState(false);
-  const { openMultiSelect, toggleMessageIds, deleteMessageIds } = useMessageMultiSelectStore();
-  const isSelected = deleteMessageIds.includes(message.id);
+  const openMultiSelect = useMessageMultiSelectStore((state) => state.openMultiSelect);
+  const toggleMessageIds = useMessageMultiSelectStore((state) => state.toggleMessageIds);
+  const isSelected = useMessageMultiSelectStore((state) => state.deleteMessageIds.includes(message.id));
 
   const hasSeen = useMemo(() => {
     const creatorSeenTime = getTime(channel?.creatorLastSeenAt);
@@ -77,3 +78,14 @@ export const SingleMessage: React.FC<SingleMessageProps> = ({ channel, isMe, mes
     </>
   );
 };
+
+export const SingleMessage = memo(SingleMessageInner, (prev, next) => {
+  return (
+    prev.isMe === next.isMe &&
+    prev.message.id === next.message.id &&
+    prev.message.updatedAt === next.message.updatedAt &&
+    prev.channel.creatorLastSeenAt === next.channel.creatorLastSeenAt &&
+    prev.channel.creatorAvatarUrl === next.channel.creatorAvatarUrl &&
+    prev.channel.creatorFullname === next.channel.creatorFullname
+  );
+});

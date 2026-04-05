@@ -26,7 +26,7 @@ export function BatchDownloadModal({ isOpen, onClose, selectedCreators, onSucces
     setLoading(true);
     try {
       const input: DownloadAllCreatorObjectsAsBatchInput = {
-        creatorIds: selectedCreators,
+        creatorIds: selectedCreators
       };
 
       await downloadAllCreatorObjectsMutation(input);

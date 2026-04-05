@@ -1,7 +1,9 @@
 'use client';
 
+import { playNotification } from '@/app/helpers/play-notification';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useChannelsStore } from '@/hooks/store/channels.store';
+import { useNotificationsStore } from '@/hooks/store/notifications.store';
 import { usePostsStore } from '@/hooks/store/posts.store';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { FanProfilesEntity, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
@@ -15,6 +17,7 @@ export const Events = () => {
   const { setChannel, setChannels } = useChannelsStore();
   const { setPost, setPostAssets } = usePostsStore();
   const { setVaultObjects, setVault } = useVaultsStore();
+  const { allowNotification, allowMessagesNotification } = useNotificationsStore();
 
   const onSuccess = () => {
     toast.promise(
@@ -138,12 +141,9 @@ export const Events = () => {
 
   const onSendMessageFromCreator = async (event: CustomEvent) => {
     const newMessage = event.detail?.data?.newMessage;
-    try {
-      const audio = new Audio('/notification.mp3');
-      audio.play().catch((e) => console.log('Audio playback failed: ', e));
-    } catch (e) {
-      console.log('Audio not supported', e);
-    }
+
+    playNotification(allowNotification && allowMessagesNotification);
+
     setChannel((prev) => {
       const prevMessages = prev?.messages ?? [];
       return { ...prev, messages: [newMessage, ...prevMessages] };
@@ -170,7 +170,6 @@ export const Events = () => {
 
   const onPresence = async (event: CustomEvent) => {
     const { channelId, userId, isOnline } = event.detail.data;
-    console.log({ channelId, userId, isOnline });
     setChannel((prev) => (prev.id === channelId && userId === prev.creatorId ? { ...prev, isCreatorOnline: isOnline } : prev));
     setChannels((prev) =>
       prev?.map((channel) =>

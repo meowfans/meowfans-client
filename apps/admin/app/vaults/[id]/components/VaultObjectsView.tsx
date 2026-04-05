@@ -43,7 +43,7 @@ interface VaultObjectsViewProps {
 export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const router = useRouter();
   const [status, setStatus] = useState<DownloadStates[]>(Object.values(DownloadStates));
-  const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType)); 
+  const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();

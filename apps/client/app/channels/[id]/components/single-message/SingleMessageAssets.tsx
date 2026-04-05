@@ -10,7 +10,7 @@ interface SingleMessageAssetsProps {
 }
 
 export const SingleMessageAssets: React.FC<SingleMessageAssetsProps> = ({ message }) => {
-  const { setSelectedMessage } = useMessageInputStore();
+  const setPayableMessage = useMessageInputStore((state) => state.setPayableMessage);
 
   if (!message.messageAssets || message.messageAssets.length === 0) return null;
 
@@ -49,7 +49,7 @@ export const SingleMessageAssets: React.FC<SingleMessageAssetsProps> = ({ messag
         </p>
 
         <InteractionButton
-          onClick={() => setSelectedMessage(message)}
+          onClick={() => setPayableMessage(message)}
           actionName="Unlock Message"
           className="h-10 w-full max-w-55 px-4 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest shadow-[0_10px_20px_-5px_rgba(var(--primary),0.4)] hover:scale-105 transition-all text-xs"
         >

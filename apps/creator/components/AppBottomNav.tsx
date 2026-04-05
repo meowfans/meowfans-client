@@ -17,7 +17,6 @@ export function AppBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
 
-  
   if (pathname.startsWith('/channels/')) return null;
   if (pathname.startsWith('/playground')) return null;
 

@@ -1,4 +1,4 @@
-import { ShortsProvider } from "@/hooks/context/ShortsWrapper";
+import { ShortsProvider } from '@/hooks/context/ShortsWrapper';
 
 interface ShortsLayoutProps {
   children: React.ReactNode;

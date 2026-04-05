@@ -25,7 +25,8 @@ export const usePostsStore = create<PostsStore>()((set, get) => ({
   creatorPosts: [],
   setCreatorPosts: (updater) =>
     set((state) => ({
-      creatorPosts: typeof updater === 'function' ? (updater as (prev: GetPublicPostsOutput[]) => GetPublicPostsOutput[])(state.creatorPosts) : updater
+      creatorPosts:
+        typeof updater === 'function' ? (updater as (prev: GetPublicPostsOutput[]) => GetPublicPostsOutput[])(state.creatorPosts) : updater
     })),
   setPosts: (updater) =>
     set((state) => ({

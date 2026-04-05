@@ -1,4 +1,3 @@
-import { getPublicVaultsByTags } from '@/app/server/getPublicVaultsByTags';
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions/vaults.actions';
 import { CreatorType, DataFetchType, GetPublicVaultsOutput, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -59,5 +58,3 @@ export const useVaults = (params: PaginationInput) => {
     refresh
   };
 };
-
-

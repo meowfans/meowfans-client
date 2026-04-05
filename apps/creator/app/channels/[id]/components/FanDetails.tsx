@@ -8,8 +8,19 @@ import { DropdownMenuSeparator } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
 import {
-  Bell, BellOff, Calendar, Clock, ExternalLink, Lock,
-  MoreVertical, Pin, ShieldAlert, ShieldCheck, ShieldX, Trash, Unlock
+  Bell,
+  BellOff,
+  Calendar,
+  Clock,
+  ExternalLink,
+  Lock,
+  MoreVertical,
+  Pin,
+  ShieldAlert,
+  ShieldCheck,
+  ShieldX,
+  Trash,
+  Unlock
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,7 +30,8 @@ interface FanDetailsProps {
 }
 
 export function FanDetails({ channel }: FanDetailsProps) {
-  const { updateChannel, loading } = useUpdateChannel();
+  const updateChannel = useUpdateChannel().updateChannel;
+  const loading = useUpdateChannel().loading;
   const router = useRouter();
 
   if (!channel) return null;
@@ -27,7 +39,7 @@ export function FanDetails({ channel }: FanDetailsProps) {
   const handleToggle = async (field: 'isPinned' | 'isMuted' | 'isRestricted' | 'isBlocked') => {
     await updateChannel({
       channelId: channel.id,
-      [field]: !channel[field],
+      [field]: !channel[field]
     });
   };
 
@@ -139,13 +151,7 @@ export function FanDetails({ channel }: FanDetailsProps) {
               loading={loading}
               onClick={handleBlock}
             />
-            <SettingsItem
-              icon={ShieldX}
-              label="Terminate thread"
-              isDestructive
-              loading={loading}
-              onClick={handleTerminate}
-            />
+            <SettingsItem icon={ShieldX} label="Terminate thread" isDestructive loading={loading} onClick={handleTerminate} />
           </div>
         </div>
       </div>
@@ -206,7 +212,9 @@ function SettingsItem({
         />
         {label}
       </div>
-      {isActive && !isDestructive && <div className="h-1 w-1 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />}
+      {isActive && !isDestructive && (
+        <div className="h-1 w-1 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+      )}
     </Button>
   );
 }

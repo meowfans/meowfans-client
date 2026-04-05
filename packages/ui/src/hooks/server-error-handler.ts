@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
 
 interface ServerErrorOptions {

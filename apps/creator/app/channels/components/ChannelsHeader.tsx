@@ -36,15 +36,12 @@ export const ChannelsHeader = ({
   setSelectedChannels
 }: ChannelsHeaderProps) => {
   const pathname = usePathname();
-  const { updateChannelStatus, loading } = useUpdateChannelStatus();
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
+  const loading = useUpdateChannelStatus().loading;
 
   const handleBulkDelete = async () => {
     if (selectedChannels.length === 0) return;
-    await Promise.all(
-      selectedChannels.map((channelId) =>
-        updateChannelStatus({ channelId, status: MessageChannelStatus.Rejected })
-      )
-    );
+    await Promise.all(selectedChannels.map((channelId) => updateChannelStatus({ channelId, status: MessageChannelStatus.Rejected })));
     setSelectedChannels([]);
     setIsMultiSelectMode(false);
   };

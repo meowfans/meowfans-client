@@ -27,4 +27,4 @@ export function FollowingGrid({ creators, loading, hasMore, loadMore, initialCre
       </div>
     </PageHandler>
   );
-};
+}

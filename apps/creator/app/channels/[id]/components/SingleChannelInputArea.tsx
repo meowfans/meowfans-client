@@ -14,23 +14,24 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export function SingleChannelInputArea({ channel }: { channel: ChannelsOutput | null }) {
-  const { creator } = useCreator();
-  const {
-    content: message,
-    setContent: setMessage,
-    isExclusive,
-    setIsExclusive,
-    unlockAmount,
-    setUnlockAmount,
-    isEditing,
-    setIsEditing,
-    replyMessageId,
-    setReplyMessageId,
-    selectedMessage,
-    setSelectedMessage
-  } = useMessageUIStore();
+  const creator = useCreator().creator;
+  const message = useMessageUIStore((state) => state.content);
+  const setMessage = useMessageUIStore((state) => state.setContent);
+  const isExclusive = useMessageUIStore((state) => state.isExclusive);
+  const setIsExclusive = useMessageUIStore((state) => state.setIsExclusive);
+  const unlockAmount = useMessageUIStore((state) => state.unlockAmount);
+  const setUnlockAmount = useMessageUIStore((state) => state.setUnlockAmount);
+  const isEditing = useMessageUIStore((state) => state.isEditing);
+  const setIsEditing = useMessageUIStore((state) => state.setIsEditing);
+  const replyMessageId = useMessageUIStore((state) => state.replyMessageId);
+  const setReplyMessageId = useMessageUIStore((state) => state.setReplyMessageId);
+  const selectedMessage = useMessageUIStore((state) => state.selectedMessage);
+  const setSelectedMessage = useMessageUIStore((state) => state.setSelectedMessage);
   const [disabled, setDisabled] = useState<boolean>(false);
-  const { showAssetsSidebar, setShowAssetsSidebar, selectedAssets, setSelectedAssets } = useUtilsStore();
+  const showAssetsSidebar = useUtilsStore((state) => state.showAssetsSidebar);
+  const setShowAssetsSidebar = useUtilsStore((state) => state.setShowAssetsSidebar);
+  const selectedAssets = useUtilsStore((state) => state.selectedAssets);
+  const setSelectedAssets = useUtilsStore((state) => state.setSelectedAssets);
   const { sendMessage, sendReply, updateMessage, loading: isSending } = useMessageMutations();
 
   useEffect(() => {

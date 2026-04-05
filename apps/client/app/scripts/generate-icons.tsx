@@ -16,7 +16,7 @@ async function generateIcon(width: number, height: number, name: string, subPath
         background: 'transparent'
       }}
     >
-    <Logo width={width} height={height} />
+      <Logo width={width} height={height} />
     </div>,
     { width, height }
   );
@@ -34,7 +34,6 @@ async function run() {
   await generateIcon(180, 180, 'apple-icon-180.png', 'icons');
   await generateIcon(192, 192, 'icon-192.png', 'icons');
   await generateIcon(512, 512, 'icon-512.png', 'icons');
-
 }
 
 run();

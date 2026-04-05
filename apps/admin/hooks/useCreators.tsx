@@ -22,7 +22,7 @@ export const useCreators = (params: PaginationInput) => {
     setLoading(creators.length === 0);
 
     try {
-      const { data } = await getCreatorsByAdminQuery({ ...params, take: 100, skip, });
+      const { data } = await getCreatorsByAdminQuery({ ...params, take: 100, skip });
       const fetchedCreators = data?.getCreatorsByAdmin.creators as UsersEntity[];
 
       setHasMore(fetchedCreators.length === 100);

@@ -2,7 +2,15 @@
 
 import { getTags } from '@/app/server/getTags';
 import { useTagsStore } from '@/hooks/store/tags.store';
-import { CreatorType, DataFetchType, GetPublicVaultsOutput, PaginationInput, SortBy, SortOrder, TagsEntity } from '@workspace/gql/generated/graphql';
+import {
+  CreatorType,
+  DataFetchType,
+  GetPublicVaultsOutput,
+  PaginationInput,
+  SortBy,
+  SortOrder,
+  TagsEntity
+} from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useVaultsStore } from '../store/vaults.store';

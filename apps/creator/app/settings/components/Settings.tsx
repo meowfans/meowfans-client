@@ -1,11 +1,11 @@
 'use client';
 
-import { useContentBlur } from '@/hooks/client/useContentBlur';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bell, Globe, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { SettingsAccountManageMent } from './SettingsAccountManagement';
 import { SettingsDisplay } from './SettingsDisplay';
 import { SettingsLanguage } from './SettingsLanguage';
 import { SettingsNotifications } from './SettingsNotifications';
@@ -15,8 +15,6 @@ export function Settings() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { isBlurEnabled, toggleBlur } = useContentBlur();
-
   const tabParam = searchParams.get('tab') as SettingsTab;
   const [activeTab, setActiveTab] = useState<SettingsTab>(tabParam || 'display');
   const { setTheme, theme } = useTheme();
@@ -57,13 +55,13 @@ export function Settings() {
             transition={{ duration: 0.3 }}
             className="space-y-8"
           >
-            {activeTab === 'display' && (
-              <SettingsDisplay theme={theme} setTheme={setTheme} isBlurEnabled={isBlurEnabled} toggleBlur={toggleBlur} />
-            )}
+            {activeTab === 'display' && <SettingsDisplay theme={theme} setTheme={setTheme} />}
 
             {activeTab === 'notifications' && <SettingsNotifications />}
 
             {activeTab === 'language' && <SettingsLanguage language={language} setLanguage={setLanguage} />}
+
+            {activeTab === 'account-management' && <SettingsAccountManageMent />}
           </motion.div>
         </AnimatePresence>
       </div>

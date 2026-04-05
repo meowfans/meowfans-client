@@ -69,15 +69,15 @@ function getContentForSlug(slug: string) {
 
           <h3>Monthly Subscriptions</h3>
           <p>
-            A subscription gives you full access to a creator&apos;s public feed, including photos, videos, and status updates. Subscriptions
-            typically renew automatically every 30 days.
+            A subscription gives you full access to a creator&apos;s public feed, including photos, videos, and status updates.
+            Subscriptions typically renew automatically every 30 days.
           </p>
 
           <h3>The Vault</h3>
           <p>
-            The Vault contains exclusive, one-off content that isn&apos;t included in the regular subscription. This could be high-resolution
-            sets, long-form videos, or special collections. Once you unlock a vault item, it&apos;s yours to view forever in your &quot;Purchased&quot;
-            tab.
+            The Vault contains exclusive, one-off content that isn&apos;t included in the regular subscription. This could be
+            high-resolution sets, long-form videos, or special collections. Once you unlock a vault item, it&apos;s yours to view forever in
+            your &quot;Purchased&quot; tab.
           </p>
 
           <h3>Payment Security</h3>
@@ -98,13 +98,14 @@ function getContentForSlug(slug: string) {
 
           <h3>Using Keywords effectively</h3>
           <p>
-            Don&apos;t just search for names. Try searching for specific styles, locations, or content types. Our algorithm indexes bio text and
-            tags to give you the most relevant results.
+            Don&apos;t just search for names. Try searching for specific styles, locations, or content types. Our algorithm indexes bio text
+            and tags to give you the most relevant results.
           </p>
 
           <h3>Filter by Activity</h3>
           <p>
-            Want to see who&apos;s active right now? Use the &quot;Active&quot; filter to find creators who have posted recently or are currently online.
+            Want to see who&apos;s active right now? Use the &quot;Active&quot; filter to find creators who have posted recently or are
+            currently online.
           </p>
 
           <h3>Sorting Options</h3>
@@ -118,7 +119,10 @@ function getContentForSlug(slug: string) {
       return (
         <>
           <h2>Build Meaningful Connections</h2>
-          <p>MeowFans isn&apos;t just about viewing content—it&apos;s about the community. Here&apos;s how you can engage with your favorite creators.</p>
+          <p>
+            MeowFans isn&apos;t just about viewing content—it&apos;s about the community. Here&apos;s how you can engage with your favorite
+            creators.
+          </p>
 
           <h3>Direct Messaging</h3>
           <p>
@@ -180,14 +184,14 @@ function getContentForSlug(slug: string) {
 
           <h3>Utilize the Vault</h3>
           <p>
-            Don&apos;t put everything in your main feed. Use the Vault for your highest-value content. This creates an additional revenue stream
-            alongside your monthly subscriptions.
+            Don&apos;t put everything in your main feed. Use the Vault for your highest-value content. This creates an additional revenue
+            stream alongside your monthly subscriptions.
           </p>
 
           <h3>Engagement Equals Growth</h3>
           <p>
-            Responding to messages and comments doesn&apos;t just feel good—it&apos;s good for business. Engaged fans are much more likely to remain
-            subscribers long-term.
+            Responding to messages and comments doesn&apos;t just feel good—it&apos;s good for business. Engaged fans are much more likely
+            to remain subscribers long-term.
           </p>
 
           <h3>Promote on Social Media</h3>

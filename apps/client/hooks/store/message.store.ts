@@ -10,6 +10,8 @@ type MessageInputStore = {
   setIsEditing: (isEditing: boolean) => void;
   setReplyMessageId: (replyMessageId: string | null) => void;
   setSelectedMessage: (selectedMessage: MessagesOutput | null) => void;
+  payableMessage: MessagesOutput | null;
+  setPayableMessage: (payableMessage: MessagesOutput | null) => void;
 };
 
 export const useMessageInputStore = create<MessageInputStore>()((set) => ({
@@ -20,7 +22,9 @@ export const useMessageInputStore = create<MessageInputStore>()((set) => ({
   content: '',
   replyMessageId: null,
   setContent: (content) => set({ content }),
-  setIsEditing: (isEditing) => set({ isEditing })
+  setIsEditing: (isEditing) => set({ isEditing }),
+  payableMessage: null,
+  setPayableMessage: (payableMessage: MessagesOutput | null) => set({ payableMessage })
 }));
 
 type MessageMultiSelectStore = {

@@ -2,7 +2,7 @@
 
 import { useServerChannels } from '@/hooks/server/useServerChannels';
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChannelFilter, ChannelsHeader } from './ChannelsHeader';
 import { ChannelsList } from './ChannelsList';
 
@@ -13,7 +13,6 @@ interface ChannelsProps {
 export function Channels({ initialChannels }: ChannelsProps) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filter, setFilter] = useState<ChannelFilter>('all');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
 
@@ -32,13 +31,6 @@ export function Channels({ initialChannels }: ChannelsProps) {
 
     return result;
   }, [channels, searchTerm, filter]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-background/40 backdrop-blur-3xl">

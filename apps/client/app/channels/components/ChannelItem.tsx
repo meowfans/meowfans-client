@@ -29,8 +29,10 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
   const currentId = pathname.split('/').pop();
   const isActive = currentId === channel.id;
 
-  const { updateChannel, loading: channelLoading } = useUpdateChannel();
-  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const updateChannel = useUpdateChannel().updateChannel;
+  const channelLoading = useUpdateChannel().loading;
+  const statusLoading = useUpdateChannelStatus().loading;
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
   const loading = channelLoading || statusLoading;
 
   const handleChannelClick = () => {
@@ -54,6 +56,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
   const handleBlock = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Blocked });
+    await updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
     if (currentId === channel.id) router.push('/channels');
   };
 
@@ -95,12 +98,12 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
 
           <div className="relative shrink-0">
             <Avatar className="h-7.5 w-7.5 border-none shadow-sm transition-all duration-300">
-              <AvatarImage src={channel.fanAvatarUrl} alt={channel.fanFullname} className="object-cover" />
+              <AvatarImage src={channel.creatorAvatarUrl} alt={channel.creatorFullname} className="object-cover" />
               <AvatarFallback className="bg-primary/10 text-[9px] font-black text-primary">
-                {channel.fanFullname.slice(0, 2).toUpperCase()}
+                {channel.creatorFullname.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            {channel.isFanOnline && (
+            {channel.isCreatorOnline && (
               <span className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full border border-background bg-green-500" />
             )}
             {channel.isPinned && <Pin className="absolute -top-1 -right-1 h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
@@ -115,7 +118,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                     isActive ? 'text-primary' : 'text-foreground group-hover:text-primary'
                   )}
                 >
-                  {channel.fanFullname}
+                  {channel.creatorFullname}
                 </h3>
                 {channel.isMuted && <BellOff className="h-2.5 w-2.5 fill-primary" />}
                 {channel.isRestricted && <Lock className="h-2.5 w-2.5 text-amber-500" />}
@@ -125,7 +128,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-1 mt-[-1px]">
+            <div className="flex items-center justify-between gap-1 -mt-px">
               <p
                 className={cn(
                   'text-[8.5px] font-medium truncate transition-colors duration-200 pr-2',

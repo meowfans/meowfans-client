@@ -11,10 +11,7 @@ interface ProfileFormFieldTextProps {
   setUsername: (username: string) => void;
 }
 
-export const ProfileFormFieldText = ({
-  username,
-  setUsername,
-}: ProfileFormFieldTextProps) => {
+export const ProfileFormFieldText = ({ username, setUsername }: ProfileFormFieldTextProps) => {
   const { fan } = useFan();
   return (
     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
@@ -38,7 +35,7 @@ export const ProfileFormFieldText = ({
               <Input
                 id="username"
                 value={username}
-                autoComplete='username'
+                autoComplete="username"
                 onChange={(e) => setUsername(e.target.value)}
                 className="pl-10 h-12 bg-background/40 border-none focus-visible:ring-2 focus-visible:ring-primary/20 rounded-2xl font-medium transition-all"
                 placeholder="johndoe"
@@ -55,7 +52,7 @@ export const ProfileFormFieldText = ({
               <Input
                 value={fan?.user.firstName}
                 disabled
-                autoComplete='given-name'
+                autoComplete="given-name"
                 className="h-12 bg-secondary/30 border-none opacity-60 cursor-not-allowed rounded-2xl font-medium"
               />
             </div>
@@ -64,7 +61,7 @@ export const ProfileFormFieldText = ({
               <Input
                 value={fan?.user.lastName}
                 disabled
-                autoComplete='family-name'
+                autoComplete="family-name"
                 className="h-12 bg-secondary/30 border-none opacity-60 cursor-not-allowed rounded-2xl font-medium"
               />
             </div>

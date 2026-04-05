@@ -4,16 +4,14 @@ import { useNotificationsStore } from '@/hooks/store/notifications.store';
 import { Switch } from '@workspace/ui/components/switch';
 
 export function SettingsNotifications() {
-  const {
-    allowNotification,
-    setAllowNotification,
-    allowMessagesNotification,
-    setAllowMessagesNotification,
-    allowInteractionsNotification,
-    setAllowInteractionsNotification,
-    allowSystemNotification,
-    setAllowSystemNotification
-  } = useNotificationsStore();
+  const setAllowSystemNotification = useNotificationsStore().setAllowSystemNotification;
+  const allowNotification = useNotificationsStore().allowNotification;
+  const allowMessagesNotification = useNotificationsStore().allowMessagesNotification;
+  const setAllowMessagesNotification = useNotificationsStore().setAllowMessagesNotification;
+  const allowInteractionsNotification = useNotificationsStore().allowInteractionsNotification;
+  const setAllowInteractionsNotification = useNotificationsStore().setAllowInteractionsNotification;
+  const allowSystemNotification = useNotificationsStore().allowSystemNotification;
+  const setAllowNotification = useNotificationsStore().setAllowNotification;
 
   const notificationSettings = [
     {
@@ -51,8 +49,8 @@ export function SettingsNotifications() {
       </header>
 
       <div className="space-y-4">
-        {notificationSettings.map((notification, i) => {
-          const isDisabled = !notification.isGlobal && !allowNotification;
+        {notificationSettings.map((notif, i) => {
+          const isDisabled = !notif.isGlobal && !allowNotification;
 
           return (
             <div
@@ -62,10 +60,10 @@ export function SettingsNotifications() {
               }`}
             >
               <div className="space-y-1">
-                <h4 className="font-black italic uppercase tracking-tight text-sm">{notification.title}</h4>
-                <p className="text-xs text-muted-foreground font-medium">{notification.desc}</p>
+                <h4 className="font-black italic uppercase tracking-tight text-sm">{notif.title}</h4>
+                <p className="text-xs text-muted-foreground font-medium">{notif.desc}</p>
               </div>
-              <Switch checked={notification.checked} onCheckedChange={notification.onCheckedChange} disabled={isDisabled} />
+              <Switch checked={notif.checked} onCheckedChange={notif.onCheckedChange} disabled={isDisabled} />
             </div>
           );
         })}

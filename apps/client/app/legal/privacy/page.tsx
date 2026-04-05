@@ -26,8 +26,8 @@ export default function PrivacyPage() {
 
       <h2>4. Cookies and Tracking</h2>
       <p>
-        We use cookies and similar tracking technologies to analyze trends, administer the website, and track users&apos; movements around the
-        platform.
+        We use cookies and similar tracking technologies to analyze trends, administer the website, and track users&apos; movements around
+        the platform.
       </p>
 
       <h2>5. Security</h2>

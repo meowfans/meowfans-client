@@ -21,11 +21,16 @@ interface SingleChannelHeaderProps {
 }
 
 export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
-  const { openMultiSelect, setOpenMultiSelect, deleteMessageIds, setDeleteMessageIds } = useMessageMultiSelectStore();
+  const openMultiSelect = useMessageMultiSelectStore().openMultiSelect;
+  const setOpenMultiSelect = useMessageMultiSelectStore().setOpenMultiSelect;
+  const deleteMessageIds = useMessageMultiSelectStore().deleteMessageIds;
+  const setDeleteMessageIds = useMessageMultiSelectStore().setDeleteMessageIds;
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const { deleteMessages } = useMessageMutations();
-  const { updateChannel, loading: channelLoading } = useUpdateChannel();
-  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const deleteMessages = useMessageMutations().deleteMessages;
+  const channelLoading = useUpdateChannel().loading;
+  const updateChannel = useUpdateChannel().updateChannel;
+  const statusLoading = useUpdateChannelStatus().loading;
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
   const loading = channelLoading || statusLoading;
 
   const handleDeleteConfirm = () => {
@@ -96,7 +101,7 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
-            
+
             <div className="relative group cursor-pointer">
               <Avatar className="h-10 w-10 border-2 border-background shadow-lg transition-transform group-hover:scale-105">
                 <AvatarImage src={channel?.creatorAvatarUrl} />
@@ -171,7 +176,12 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem
                   disabled={loading}
-                  onClick={() => updateChannelStatus({ channelId: channel.id, status: channel.isBlocked ? MessageChannelStatus.Accepted : MessageChannelStatus.Blocked })}
+                  onClick={() =>
+                    updateChannelStatus({
+                      channelId: channel.id,
+                      status: channel.isBlocked ? MessageChannelStatus.Accepted : MessageChannelStatus.Blocked
+                    })
+                  }
                   className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                 >
                   <ShieldAlert className="h-3.5 w-3.5" />

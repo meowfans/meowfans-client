@@ -1,20 +1,18 @@
 'use client';
 
-import { useToggleSidebar } from '@/hooks/client/useToggleSidebar';
+import { useToggleSidebar } from '@/hooks/useToggleSidebar';
 import { Card } from '@workspace/ui/components/card';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Monitor, Moon, PanelLeft, PanelLeftClose, Smartphone } from 'lucide-react';
+import { Monitor, Moon, PanelLeft, PanelLeftClose, Smartphone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface SettingsDisplayProps {
   theme: string | undefined;
   setTheme: (theme: string) => void;
-  isBlurEnabled: boolean;
-  toggleBlur: () => void;
 }
 
-export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: SettingsDisplayProps) {
+export function SettingsDisplay({ theme, setTheme }: SettingsDisplayProps) {
   const { toggle, handleToggleSidebar } = useToggleSidebar();
   const [mounted, setMounted] = useState(false);
 
@@ -30,7 +28,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
       </header>
 
       <div className="grid grid-cols-1 gap-6">
-        <Card className="border-none bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+        <Card className="border-none bg-secondary/5 p-8 rounded-4xl ring-1 ring-white/5 space-y-6">
           <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">
             <Moon className="h-5 w-5 text-primary" />
             Theme Preference
@@ -45,7 +43,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
                 key={mode.id}
                 onClick={() => setTheme(mode.id)}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-3 p-6 rounded-[1.5rem] border-2 transition-all font-black uppercase text-[10px] tracking-widest',
+                  'flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 transition-all font-black uppercase text-[10px] tracking-widest',
                   theme === mode.id || (!theme && mode.id === 'system')
                     ? 'border-primary bg-primary/5 text-primary'
                     : 'border-border/50 hover:bg-secondary/40 text-muted-foreground'
@@ -58,34 +56,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
           </div>
         </Card>
 
-        <Card className="border-none bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">
-                {isBlurEnabled ? <EyeOff className="h-5 w-5 text-primary" /> : <Eye className="h-5 w-5 text-primary" />}
-                Content Safety
-              </h4>
-              <p className="text-xs text-muted-foreground font-medium max-w-md">
-                Automatically blur images and sensitive content until you choose to reveal them.
-              </p>
-            </div>
-            <div
-              className={cn(
-                'w-14 h-8 rounded-full p-1 cursor-pointer transition-colors duration-300 ease-in-out',
-                isBlurEnabled ? 'bg-primary' : 'bg-secondary'
-              )}
-              onClick={toggleBlur}
-            >
-              <motion.div
-                className="bg-white h-6 w-6 rounded-full shadow-md"
-                layout
-                animate={{ x: isBlurEnabled ? 24 : 0 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              />
-            </div>
-          </div>
-        </Card>
-        <Card className="border-none hidden md:block bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+        <Card className="border-none hidden md:block bg-secondary/5 p-8 rounded-4xl ring-1 ring-white/5 space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">

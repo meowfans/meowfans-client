@@ -17,7 +17,7 @@ export default async function SingleChannelPage({ params }: SingleChannelProps) 
   const channel = await getSingleChannel({ relatedEntityId: id, take: 10 });
 
   return (
-  <div className="flex h-full w-full overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden">
       <div className="flex-1 min-w-0 h-full">
         <SingleChannel initialChannel={channel} channelId={id} />
       </div>

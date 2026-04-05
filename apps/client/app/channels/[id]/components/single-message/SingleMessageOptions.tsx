@@ -25,7 +25,10 @@ export const SingleMessageOptions: React.FC<SingleMessageOptionsProps> = ({ isMe
   };
 
   const { deleteMessage } = useMessageMutations();
-  const { setContent, setIsEditing, setReplyMessageId, setSelectedMessage } = useMessageInputStore();
+  const setContent = useMessageInputStore((state) => state.setContent);
+  const setIsEditing = useMessageInputStore((state) => state.setIsEditing);
+  const setReplyMessageId = useMessageInputStore((state) => state.setReplyMessageId);
+  const setSelectedMessage = useMessageInputStore((state) => state.setSelectedMessage);
 
   const handleReply = () => {
     setReplyMessageId(message.id);
