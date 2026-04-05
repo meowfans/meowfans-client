@@ -10,6 +10,12 @@ export const Events = () => {
 
   const onSendMessageFromFan = async (event: CustomEvent) => {
     const { newMessage } = event.detail?.data;
+    try {
+      const audio = new Audio('/notification.mp3');
+      audio.play().catch((e) => console.log('Audio playback failed: ', e));
+    } catch (e) {
+      console.log('Audio not supported', e);
+    }
 
     setChannel((prev) => {
       const prevMessages = prev?.messages ?? [];

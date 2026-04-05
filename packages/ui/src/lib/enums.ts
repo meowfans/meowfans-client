@@ -36,7 +36,8 @@ export enum EventTypes {
   UpdateMessage = 'update_message',
   MessageSeen = 'message_seen',
   LastMessage = 'last_message',
-  Presence = 'presence'
+  Presence = 'presence',
+  UpdateChannel = 'update_channel'
 }
 
 export enum BackGroundColors {

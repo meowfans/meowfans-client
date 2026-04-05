@@ -138,6 +138,12 @@ export const Events = () => {
 
   const onSendMessageFromCreator = async (event: CustomEvent) => {
     const newMessage = event.detail?.data?.newMessage;
+    try {
+      const audio = new Audio('/notification.mp3');
+      audio.play().catch((e) => console.log('Audio playback failed: ', e));
+    } catch (e) {
+      console.log('Audio not supported', e);
+    }
     setChannel((prev) => {
       const prevMessages = prev?.messages ?? [];
       return { ...prev, messages: [newMessage, ...prevMessages] };
@@ -182,6 +188,13 @@ export const Events = () => {
     });
   };
 
+  const onUpdateChannel = async (event: CustomEvent) => {
+    const { data } = event.detail;
+    const updatedChannel = data.updatedChannel;
+    setChannel((prev) => (prev.id === updatedChannel.id ? { ...prev, ...updatedChannel } : prev));
+    setChannels((prev) => prev?.map((channel) => (channel.id === updatedChannel.id ? { ...channel, ...updatedChannel } : channel)));
+  };
+
   useEffect(() => {
     const onUpdateChannelLastMessageHandler = (e: Event) => onUpdateChannelLastMessage(e as CustomEvent);
     const postUnlockHandler = (e: Event) => onPostUnlocked(e as CustomEvent);
@@ -194,6 +207,7 @@ export const Events = () => {
     const deleteManyHandler = (e: Event) => onDeleteMessages(e as CustomEvent);
     const onSeenMessageHandler = (e: Event) => onSeenMessage(e as CustomEvent);
     const onPresenceHandler = (e: Event) => onPresence(e as CustomEvent);
+    const onUpdateChannelHandler = (e: Event) => onUpdateChannel(e as CustomEvent);
 
     eventEmitter.addEventListener(EventTypes.LastMessage, onUpdateChannelLastMessageHandler);
     eventEmitter.addEventListener(EventTypes.PostUnlocked, postUnlockHandler);
