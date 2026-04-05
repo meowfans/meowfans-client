@@ -1,10 +1,9 @@
 'use client';
 
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import { SingleMessage } from './SingleMessage';
-import { Button } from '@workspace/ui/components/button';
+import { SingleMessage } from './single-message/SingleMessage';
 
 interface SingleChannelMessageThreadProps {
   channel: ChannelsOutput | null;
@@ -15,13 +14,6 @@ interface SingleChannelMessageThreadProps {
 }
 
 export function SingleChannelMessageThread({ channel, scrollRef, hasMore, handleLoadMore, loading }: SingleChannelMessageThreadProps) {
-  const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
-  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
-
-  const toggleMessageSelection = (messageId: string) => {
-    setSelectedMessages((prev) => (prev.includes(messageId) ? prev.filter((id) => id !== messageId) : [...prev, messageId]));
-  };
-
   return (
     <div
       ref={scrollRef}
@@ -29,35 +21,22 @@ export function SingleChannelMessageThread({ channel, scrollRef, hasMore, handle
       className="h-full overflow-y-auto p-4 flex flex-col-reverse bg-background/5 transition-opacity duration-500 custom-scrollbar"
     >
       <AnimatePresence initial={false}>
-        {channel?.messages?.map((msg) => {
-          const isMe = msg.senderId !== channel?.fanId;
-          const isSelected = selectedMessages.includes(msg.id);
-          return (
-            <SingleMessage
-              isMe={isMe}
-              isMultiSelectMode={isMultiSelectMode}
-              isSelected={isSelected}
-              message={msg}
-              channel={channel}
-              toggleMessageSelection={toggleMessageSelection}
-              key={msg.id}
-            />
-          );
-        })}
+        <InfiniteScrollManager
+          dataLength={channel?.messages.length || 0}
+          inverse={true}
+          hasMore={hasMore}
+          loading={loading}
+          onLoadMore={handleLoadMore}
+          scrollableDiv="chatScrollable"
+        >
+          <div className="flex flex-col-reverse w-full h-full">
+            {channel?.messages?.map((msg) => {
+              const isMe = msg.senderId !== channel?.fanId;
+              return <SingleMessage isMe={isMe} message={msg} channel={channel} key={msg.id} />;
+            })}
+          </div>
+        </InfiniteScrollManager>
       </AnimatePresence>
-
-      {hasMore && (
-        <div className="flex justify-center py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleLoadMore}
-            className="rounded-full bg-background/50 border-muted/50 text-xs px-4"
-          >
-            Load earlier messages
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

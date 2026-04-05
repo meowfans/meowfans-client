@@ -21,7 +21,8 @@ interface InfiniteScrollManagerProps {
 
 const LoadingComponent = () => {
   return (
-    <div className="flex flex-col items-center justify-center py-12 gap-4">
+    <div className="flex flex-col items-center justify-center my-16 px-4">
+      <div className="h-px w-12 bg-border/20 mb-6" />
       <Loading />
     </div>
   );
@@ -30,7 +31,7 @@ const LoadingComponent = () => {
 const DefaultEndMessage = () => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="h-[1px] w-12 bg-border/20 mb-6" />
+      <div className="h-px w-12 bg-border/20 mb-6" />
       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 text-center">
         You&apos;ve reached the end of the collection
       </p>
@@ -45,6 +46,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   children,
   scrollableDiv,
   inverse,
+  loading,
   scrollThreshold = 0.7,
   customHeight = 'h-full',
   useWindowScroll,
@@ -54,12 +56,13 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
     return (
       <InfiniteScroll
         inverse={inverse}
-        loader={<LoadingComponent />}
+        loader={loading && <LoadingComponent />}
         hasMore={hasMore}
         scrollThreshold={scrollThreshold}
         next={onLoadMore}
         dataLength={dataLength}
         endMessage={endMessage}
+        className={cn(inverse ? 'flex flex-col-reverse' : '')}
       >
         {children}
       </InfiniteScroll>
@@ -69,20 +72,21 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   return scrollableDiv ? (
     <InfiniteScroll
       inverse={inverse}
-      loader={<LoadingComponent />}
+      loader={loading && <LoadingComponent />}
       hasMore={hasMore}
       scrollThreshold={scrollThreshold}
       next={onLoadMore}
       dataLength={dataLength}
       scrollableTarget={scrollableDiv}
       endMessage={endMessage}
+      className={cn(inverse ? 'flex flex-col-reverse' : '')}
     >
       {children}
     </InfiniteScroll>
   ) : (
     <div id="scrollableDiv" className={cn('overflow-auto', customHeight)} style={{ WebkitOverflowScrolling: 'touch' }}>
       <InfiniteScroll
-        loader={<LoadingComponent />}
+        loader={loading && <LoadingComponent />}
         inverse={inverse}
         hasMore={hasMore}
         scrollThreshold={0.7}
@@ -90,6 +94,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
         dataLength={dataLength}
         scrollableTarget="scrollableDiv"
         endMessage={endMessage}
+        className={cn(inverse ? 'flex flex-col-reverse' : '')}
       >
         {children}
       </InfiniteScroll>

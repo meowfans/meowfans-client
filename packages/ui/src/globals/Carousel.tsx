@@ -14,6 +14,7 @@ export enum FileType {
   Image = 'IMAGE',
   Video = 'VIDEO'
 }
+
 interface CarouselProps<T> {
   items: T[];
   getKey: (item: T) => string | number;
@@ -89,7 +90,7 @@ export const Carousel = <T,>({
     return (
       <div
         className={cn(
-          'w-full rounded-[2rem] bg-secondary/10 flex flex-col items-center justify-center border border-dashed border-white/5',
+          'w-full rounded-4xl bg-secondary/10 flex flex-col items-center justify-center border border-dashed border-white/5',
           aspectRatio === 'square' ? 'aspect-square' : 'aspect-video',
           className
         )}
@@ -101,7 +102,7 @@ export const Carousel = <T,>({
 
   return (
     <div
-      className={cn('relative w-full group select-none overflow-hidden rounded-[2rem] md:rounded-[3rem]', className)}
+      className={cn('relative w-full group select-none overflow-hidden rounded-4xl md:rounded-[3rem]', className)}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -132,7 +133,7 @@ export const Carousel = <T,>({
               )}
             >
               <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-                {getFileType(item).toUpperCase() === FileType.Image ? (
+                {getFileType(item).toLowerCase() === 'image' ? (
                   getUrl(item) ? (
                     <motion.img
                       initial={{ scale: 1.1, opacity: 0 }}
@@ -149,7 +150,9 @@ export const Carousel = <T,>({
                     </div>
                   )
                 ) : (
-                  getUrl(item) && <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
+                  getUrl(item) && (
+                    <video src={getUrl(item)} poster={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
+                  )
                 )}
               </div>
 

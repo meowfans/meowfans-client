@@ -1,5 +1,3 @@
-'use client';
-
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
@@ -27,7 +25,7 @@ export function ChannelsList({
   setSelectedChannels
 }: ChannelsListProps) {
   return (
-    <InfiniteScrollManager dataLength={channels.length} loading={loading} endMessage={null} hasMore={hasMore} onLoadMore={onLoadMore}>
+    <InfiniteScrollManager dataLength={channels.length} endMessage={null} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
       <div className="flex flex-col py-0.5">
         <AnimatePresence mode="popLayout">
           {channels.map((channel, index) => (

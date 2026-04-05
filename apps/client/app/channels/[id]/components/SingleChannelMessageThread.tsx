@@ -1,9 +1,10 @@
-import { PageHandler } from '@/components/PageHandler';
+import { PaymentModal } from '@/components/PaymentModal';
 import { useFan } from '@/hooks/context/UserContextWrapper';
-import { ChannelsOutput } from '@workspace/gql/generated/graphql';
-import { Button } from '@workspace/ui/components/button';
+import { useMessageInputStore } from '@/hooks/store/message.store';
+import { ChannelsOutput, PurchaseType } from '@workspace/gql/generated/graphql';
+import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { AnimatePresence } from 'framer-motion';
-import { SingleMessage } from './SingleMessage';
+import { SingleMessage } from './single-message/SingleMessage';
 
 interface SingleChannelMessageThreadProps {
   channel: ChannelsOutput;
@@ -15,30 +16,43 @@ interface SingleChannelMessageThreadProps {
 
 export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handleLoadMore, loading }: SingleChannelMessageThreadProps) => {
   const { fan } = useFan();
+  const { selectedMessage, setSelectedMessage } = useMessageInputStore();
 
   return (
-    <PageHandler isEmpty={!channel.messages?.length} isLoading={loading}>
-      <div ref={scrollRef} className="h-full overflow-y-auto p-6 space-y-6 flex flex-col-reverse custom-scrollbar z-0">
-        <AnimatePresence initial={false}>
-          {channel?.messages?.map((msg) => {
-            const isMe = msg.senderId === fan?.fanId;
-            return <SingleMessage channel={channel} isMe={isMe} message={msg} key={msg.id} />;
-          })}
-        </AnimatePresence>
-
-        {hasMore && (
-          <div className="flex justify-center py-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLoadMore}
-              className="rounded-full bg-background/50 border-muted/50 text-xs px-4"
-            >
-              Load earlier messages
-            </Button>
+    <div
+      ref={scrollRef}
+      id="chatScrollable"
+      className="h-full overflow-y-auto p-4 flex flex-col-reverse bg-background/5 transition-opacity duration-500 custom-scrollbar"
+    >
+      <AnimatePresence initial={false}>
+        <InfiniteScrollManager
+          dataLength={channel?.messages?.length || 0}
+          hasMore={hasMore}
+          loading={loading}
+          inverse={true}
+          onLoadMore={handleLoadMore}
+          scrollableDiv="chatScrollable"
+        >
+          <div className="flex flex-col-reverse w-full h-full">
+            {channel?.messages?.map((msg) => {
+              const isMe = msg.senderId === fan?.fanId;
+              return <SingleMessage channel={channel} isMe={isMe} message={msg} key={msg.id} />;
+            })}
           </div>
-        )}
-      </div>
-    </PageHandler>
+        </InfiniteScrollManager>
+      </AnimatePresence>
+      {selectedMessage && (
+        <PaymentModal
+          open={!!selectedMessage}
+          onOpenChange={() => setSelectedMessage(null)}
+          amount={Number(selectedMessage.unlockPrice || 0)}
+          entityId={selectedMessage.id}
+          creatorId={selectedMessage.senderId}
+          purchaseType={PurchaseType.Message}
+          title="Unlock Premium Message"
+          description="Get instant access to this exclusive drop from the creator."
+        />
+      )}
+    </div>
   );
 };

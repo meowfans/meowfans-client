@@ -22,7 +22,7 @@ export function AppBottomNav() {
   if (pathname.startsWith('/shorts')) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 w-full border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden pb-[env(safe-area-inset-bottom)]">
+    <div className="fixed bottom-0 left-0 right-0 z-50 w-full border-t bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 md:hidden pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto grid h-16 max-w-3xl grid-cols-6 items-center justify-items-center px-1">
         {navItems.map((item, idx) => (
           <Button

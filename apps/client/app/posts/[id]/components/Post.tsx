@@ -45,7 +45,7 @@ export function SinglePost({ initialPost }: SinglePostProps) {
   if ((!post && !loading) || !post.id) {
     return (
       <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-        <div className="mb-6 rounded-[2rem] bg-secondary/20 p-8">
+        <div className="mb-6 rounded-4xl bg-secondary/20 p-8">
           <Sparkles className="h-12 w-12 text-muted-foreground/30" />
         </div>
         <h2 className="text-3xl font-black italic uppercase tracking-tighter">Content Missing</h2>
@@ -82,7 +82,7 @@ export function SinglePost({ initialPost }: SinglePostProps) {
             priority
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-background/90 to-background" />
       </div>
 
       <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar">
@@ -96,7 +96,7 @@ export function SinglePost({ initialPost }: SinglePostProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Card className="overflow-hidden border border-white/5 bg-secondary/[0.03] backdrop-blur-3xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-[2rem] md:rounded-[3rem]">
+            <Card className="overflow-hidden border border-white/5 bg-secondary/3 backdrop-blur-3xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-4xl md:rounded-[3rem]">
               <PostDetailCreatorBar
                 creatorUsername={post.creatorUsername}
                 creatorAvatarUrl={post.creatorAvatarUrl}

@@ -9,10 +9,10 @@ interface TemplateProps {
 
 export default function Template({ children }: TemplateProps) {
   const pathname = usePathname();
-  const isChannelDetail = pathname.startsWith('/channels/');
+  const isChannelsPath = pathname.startsWith('/channels');
 
   return (
-    <div className={isChannelDetail ? 'flex flex-1 flex-col h-screen' : 'flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4'}>
+    <div className={isChannelsPath ? 'flex flex-1 flex-col' : 'flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4'}>
       {children}
       <AppBottomNav />
     </div>

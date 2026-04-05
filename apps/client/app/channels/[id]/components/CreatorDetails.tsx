@@ -9,17 +9,16 @@ import { motion } from 'framer-motion';
 import { Bell, BellOff, Calendar, Lock, MoreVertical, Pin, ShieldAlert, ShieldCheck, Trash, Unlock, User } from 'lucide-react';
 import Link from 'next/link';
 
-interface UserDetailsProps {
+interface CreatorDetailsProps {
   channel: ChannelsOutput | null;
 }
 
-export function UserDetails({ channel }: UserDetailsProps) {
+export function CreatorDetails({ channel }: CreatorDetailsProps) {
   if (!channel) return null;
 
   return (
     <div className="flex h-full w-full flex-col bg-background/30 backdrop-blur-3xl overflow-y-auto custom-scrollbar border-l border-border/50">
       <div className="p-4 space-y-6">
-        {/* Profile Section */}
         <div className="flex flex-col items-center text-center space-y-4">
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative">
             <Avatar className="h-32 w-32 border-4 border-background shadow-2xl ring-2 ring-primary/20">
@@ -63,7 +62,6 @@ export function UserDetails({ channel }: UserDetailsProps) {
           <InfoItem icon={Calendar} label="Member since" value="January 2024" />
         </div>
 
-        {/* Media / Files (Placeholders for aesthetics) */}
         <div className="space-y-4">
           <SectionTitle>Shared Media</SectionTitle>
           <div className="grid grid-cols-3 gap-2">
@@ -78,7 +76,6 @@ export function UserDetails({ channel }: UserDetailsProps) {
           </div>
         </div>
 
-        {/* Chat Actions */}
         <div className="space-y-2 pb-10">
           <SectionTitle>Conversation Management</SectionTitle>
           <div className="p-1 rounded-2xl bg-secondary/20 space-y-1 overflow-hidden">

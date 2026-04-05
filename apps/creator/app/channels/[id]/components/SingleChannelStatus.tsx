@@ -1,3 +1,4 @@
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Lock, MessageCircle, ShieldAlert } from 'lucide-react';
 
@@ -5,9 +6,10 @@ interface SingleChannelStatusProps {
   isRequested: boolean;
   isBlocked: boolean;
   isRestricted: boolean;
+  channel: ChannelsOutput;
 }
 
-export const SingleChannelStatus: React.FC<SingleChannelStatusProps> = ({ isBlocked, isRequested, isRestricted }) => {
+export const SingleChannelStatus: React.FC<SingleChannelStatusProps> = ({ isBlocked, isRequested, isRestricted, channel }) => {
   return isRequested ? (
     <div className="flex-none bg-primary/5 p-4 border-b border-primary/10 backdrop-blur-xl animate-in slide-in-from-top duration-500 z-40">
       <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
@@ -18,7 +20,7 @@ export const SingleChannelStatus: React.FC<SingleChannelStatusProps> = ({ isBloc
           <div>
             <h3 className="text-xs font-black uppercase tracking-tight">Channel Request</h3>
             <p className="text-[10px] font-medium text-muted-foreground/60 leading-tight">
-              This fan is interested in starting a conversation.
+              {channel?.fanFullname} is interested in starting a conversation.
             </p>
           </div>
         </div>

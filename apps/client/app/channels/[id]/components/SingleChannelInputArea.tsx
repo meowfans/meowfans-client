@@ -7,7 +7,9 @@ import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
-import { ImageIcon, Paperclip, Send, Smile } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CornerDownRight, ImageIcon, Paperclip, Send, Smile, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface SingleChannelInputAreaProps {
   channel: ChannelsOutput | null;
@@ -15,43 +17,98 @@ interface SingleChannelInputAreaProps {
 
 export const SingleChannelInputArea = ({ channel }: SingleChannelInputAreaProps) => {
   const { fan } = useFan();
-  const { content, setContent } = useMessageInputStore();
-  const { sendMessage, loading } = useMessageMutations();
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const { sendMessage, sendReply, updateMessage, loading } = useMessageMutations();
+  const { content, setContent, isEditing, setIsEditing, replyMessageId, setReplyMessageId, selectedMessage, setSelectedMessage } =
+    useMessageInputStore();
+
+  useEffect(() => {
+    setDisabled(!content.trim() || loading || (isEditing && selectedMessage?.content === content.trim()));
+  }, [content, loading, isEditing, selectedMessage]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || loading || !fan?.fanId || !channel?.creatorId) return;
 
-    await sendMessage({
-      content,
-      recipientUserId: channel.creatorId,
-      senderId: fan.fanId
-    });
+    if (isEditing && selectedMessage) {
+      await updateMessage({
+        messageId: selectedMessage.id,
+        content: content.trim()
+      });
+      setIsEditing(false);
+      setSelectedMessage(null);
+    } else if (replyMessageId) {
+      await sendReply({
+        content: content.trim(),
+        recipientUserId: channel.creatorId,
+        senderId: fan.fanId,
+        messageId: replyMessageId
+      });
+      setReplyMessageId(null);
+      setSelectedMessage(null);
+    } else {
+      await sendMessage({
+        content: content.trim(),
+        recipientUserId: channel.creatorId,
+        senderId: fan.fanId
+      });
+    }
     setContent('');
+  };
+
+  const cancelAction = () => {
+    setIsEditing(false);
+    setReplyMessageId(null);
+    setSelectedMessage(null);
+    if (isEditing) setContent('');
   };
 
   if (!channel) return null;
 
   return (
-    <div className="flex-none p-2 sm:p-4 bg-card/60 backdrop-blur-xl border-t z-10">
-      <div className="max-w-5xl mx-auto">
-        <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
-          <div className="flex gap-0.5 shrink-0 pb-0.5">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="text-muted-foreground h-9 w-9 sm:h-10 sm:w-10 hover:bg-secondary rounded-xl transition-all"
-            >
-              <Paperclip className="h-4 w-4 sm:h-5 sm:w-5" />
+    <div className="flex flex-col border-t bg-card/60 backdrop-blur-xl">
+      <AnimatePresence>
+        {(isEditing || replyMessageId) && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="px-4 py-2 bg-secondary/50 border-b border-primary/10 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="flex-none p-1.5 bg-primary/10 rounded-lg">
+                {isEditing ? (
+                  <CornerDownRight className="h-3.5 w-3.5 text-primary rotate-180" />
+                ) : (
+                  <CornerDownRight className="h-3.5 w-3.5 text-primary" />
+                )}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                  {isEditing ? 'Editing Message' : 'Replying to'}
+                </span>
+                <p className="text-xs text-muted-foreground truncate">{selectedMessage?.content}</p>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon-sm" onClick={cancelAction} className="h-6 w-6 rounded-full hover:bg-secondary">
+              <X className="h-3 w-3" />
             </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="p-3 space-y-3">
+        <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
+          <div className="flex gap-1.5 shrink-0 pb-0.5">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="icon-sm"
-              className="text-muted-foreground h-9 w-9 sm:h-10 sm:w-10 hover:bg-secondary rounded-xl hidden sm:flex transition-all"
+              className={`h-9 w-9 rounded-xl shrink-0 transition-all border-border/30`}
             >
-              <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            <Button type="button" variant="outline" size="icon-sm" className="h-9 w-9 rounded-xl shrink-0 transition-all border-border/30">
+              <ImageIcon className="h-4 w-4" />
             </Button>
           </div>
 
@@ -76,11 +133,11 @@ export const SingleChannelInputArea = ({ channel }: SingleChannelInputAreaProps)
           <LoadingButtonV2
             type="submit"
             size={'icon'}
-            disabled={!content.trim() || loading}
+            disabled={disabled}
             loading={loading}
-            className="flex-none h-10 w-10 sm:h-11 sm:w-11 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all"
+            className="flex-none h-10 w-10 rounded-xl shrink-0 shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
           >
-            <Send className="h-4 w-4 sm:h-5 sm:w-5 ml-0.5" />
+            <Send className="h-4 w-4" />
           </LoadingButtonV2>
         </form>
       </div>

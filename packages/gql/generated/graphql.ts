@@ -995,6 +995,7 @@ export type MessagesEntity = {
   hasSeen: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   isExclusive: Scalars['Boolean']['output'];
+  isPurchased: Scalars['Boolean']['output'];
   messageAssets: Array<MessageAssetsEntity>;
   messagePurchases: Array<MessagePurchasesEntity>;
   reaction: MessageReactionsEntity;
@@ -1017,10 +1018,11 @@ export type MessagesOutput = {
   hasSeen: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   isExclusive: Scalars['Boolean']['output'];
+  isPurchased: Scalars['Boolean']['output'];
   messageAssets: Array<MessageAssetsOutput>;
   recipientUserId: Scalars['String']['output'];
   repliedTo?: Maybe<MessagesOutput>;
-  repliedToId?: Maybe<Scalars['Boolean']['output']>;
+  repliedToId?: Maybe<Scalars['String']['output']>;
   senderId: Scalars['String']['output'];
   unlockPrice?: Maybe<Scalars['Float']['output']>;
   unlockedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -2576,42 +2578,42 @@ export type GetSingleChannelQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleChannelQuery = { __typename?: 'Query', getSingleChannel: { __typename?: 'ChannelsOutput', id: string, creatorId: string, creatorAvatarUrl: string, creatorFullname: string, creatorLastSeenAt?: any | null, isCreatorOnline: boolean, fanId: string, fanAvatarUrl: string, fanFullname: string, fanLastSeenAt?: any | null, isFanOnline: boolean, lastMessageId?: string | null, isPinned: boolean, label: string, isMuted: boolean, isRestricted: boolean, initiatedByUserId: string, status: MessageChannelStatus, isMessagingBlocked: boolean, messages: Array<{ __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> }> } };
+export type GetSingleChannelQuery = { __typename?: 'Query', getSingleChannel: { __typename?: 'ChannelsOutput', id: string, creatorId: string, creatorAvatarUrl: string, creatorFullname: string, creatorLastSeenAt?: any | null, isCreatorOnline: boolean, fanId: string, fanAvatarUrl: string, fanFullname: string, fanLastSeenAt?: any | null, isFanOnline: boolean, lastMessageId?: string | null, isPinned: boolean, label: string, isMuted: boolean, isRestricted: boolean, initiatedByUserId: string, status: MessageChannelStatus, isMessagingBlocked: boolean, messages: Array<{ __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> }> } };
 
 export type SendMessageFromCreatorMutationVariables = Exact<{
   input: SendMessageFromCreatorInput;
 }>;
 
 
-export type SendMessageFromCreatorMutation = { __typename?: 'Mutation', sendMessageFromCreator: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> } };
+export type SendMessageFromCreatorMutation = { __typename?: 'Mutation', sendMessageFromCreator: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> } };
 
 export type SendMessageFromFanMutationVariables = Exact<{
   input: SendMessageFromFanInput;
 }>;
 
 
-export type SendMessageFromFanMutation = { __typename?: 'Mutation', sendMessageFromFan: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any } };
+export type SendMessageFromFanMutation = { __typename?: 'Mutation', sendMessageFromFan: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any } };
 
 export type SendReplyFromCreatorMutationVariables = Exact<{
   input: SendMessageFromCreatorInput;
 }>;
 
 
-export type SendReplyFromCreatorMutation = { __typename?: 'Mutation', sendReplyFromCreator: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> } };
+export type SendReplyFromCreatorMutation = { __typename?: 'Mutation', sendReplyFromCreator: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null, messageAssets: Array<{ __typename?: 'MessageAssetsOutput', createdAt: any, fileType: FileType, id: string, mediaType: MediaType, rawUrl: string }> } };
 
 export type SendReplyFromFanMutationVariables = Exact<{
   input: SendMessageFromFanInput;
 }>;
 
 
-export type SendReplyFromFanMutation = { __typename?: 'Mutation', sendReplyFromFan: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null } };
+export type SendReplyFromFanMutation = { __typename?: 'Mutation', sendReplyFromFan: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any, repliedTo?: { __typename?: 'MessagesOutput', id: string, content: string } | null } };
 
 export type UpdateMessageMutationVariables = Exact<{
   input: UpdateMessageInput;
 }>;
 
 
-export type UpdateMessageMutation = { __typename?: 'Mutation', updateMessage: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: boolean | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any } };
+export type UpdateMessageMutation = { __typename?: 'Mutation', updateMessage: { __typename?: 'MessagesOutput', id: string, content: string, senderId: string, recipientUserId: string, channelId: string, unlockPrice?: number | null, isExclusive: boolean, hasAccess: boolean, repliedToId?: string | null, hasSeen: boolean, unlockedAt?: any | null, createdAt: any, updatedAt: any } };
 
 export type DeleteMessagesMutationVariables = Exact<{
   input: DeleteMessagesInput;
