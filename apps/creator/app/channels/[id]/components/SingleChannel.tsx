@@ -19,7 +19,7 @@ interface SingleChannelProps {
 }
 
 export function SingleChannel({ channelId, initialChannel }: SingleChannelProps) {
-  const { creator } = useCreator();
+  const creator = useCreator().creator;
   const scrollRef = useRef<HTMLDivElement>(null);
   const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 30 }, initialChannel);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -47,7 +48,7 @@ const ASPECT_RATIOS = [
   { value: 9 / 16, label: '9:16', name: 'Portrait' },
   { value: 4 / 3, label: '4:3', name: 'Standard' },
   { value: 3 / 4, label: '3:4', name: 'Portrait' },
-  { value: 21 / 9, label: '21:9', name: 'Ultrawide' },
+  { value: 21 / 9, label: '21:9', name: 'Ultra-wide' },
   { value: 3 / 1, label: '3:1', name: 'Banner' }
 ];
 

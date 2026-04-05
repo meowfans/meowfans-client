@@ -21,7 +21,7 @@ export default function Icon() {
         background: 'transparent'
       }}
     >
-     <Logo width={512} height={512} />
+      <Logo width={512} height={512} />
     </div>,
     {
       ...size

@@ -12,7 +12,9 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export function ChannelsSidebarAssets() {
-  const { setShowAssetsSidebar, selectedAssets, setSelectedAssets } = useUtilsStore();
+  const setShowAssetsSidebar = useUtilsStore().setShowAssetsSidebar;
+  const selectedAssets = useUtilsStore().selectedAssets;
+  const setSelectedAssets = useUtilsStore().setSelectedAssets;
   const [searchTerm, setSearchTerm] = useState('');
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [debouncedSearch, setDebouncedSearch] = useState('');

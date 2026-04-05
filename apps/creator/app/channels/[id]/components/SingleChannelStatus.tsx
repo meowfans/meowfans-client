@@ -14,8 +14,10 @@ interface SingleChannelStatusProps {
 }
 
 export const SingleChannelStatus: React.FC<SingleChannelStatusProps> = ({ isBlocked, isRequested, isRestricted, channel }) => {
-  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
-  const { updateChannel, loading: channelLoading } = useUpdateChannel();
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
+  const statusLoading = useUpdateChannelStatus().loading;
+  const updateChannel = useUpdateChannel().updateChannel;
+  const channelLoading = useUpdateChannel().loading;
   const loading = statusLoading || channelLoading;
   const router = useRouter();
 

@@ -7,9 +7,5 @@ export default async function ChannelsLayout({ children }: { children: React.Rea
     skip: 0
   });
 
-  return (
-    <ChannelsLayoutClient initialChannels={channels}>
-      {children}
-    </ChannelsLayoutClient>
-  );
+  return <ChannelsLayoutClient initialChannels={channels}>{children}</ChannelsLayoutClient>;
 }

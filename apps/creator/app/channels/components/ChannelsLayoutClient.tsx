@@ -16,7 +16,7 @@ interface ChannelsLayoutClientProps {
 export function ChannelsLayoutClient({ initialChannels, children }: ChannelsLayoutClientProps) {
   const pathname = usePathname();
   const isMobile = useIsMobile();
-  const { showAssetsSidebar } = useUtilsStore();
+  const showAssetsSidebar = useUtilsStore().showAssetsSidebar;
   const isBasePage = pathname === '/channels' || pathname === '/channels/';
 
   if (isMobile) {

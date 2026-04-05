@@ -17,7 +17,8 @@ interface SingleChannelMessageThreadProps {
 
 export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handleLoadMore, loading }: SingleChannelMessageThreadProps) => {
   const { fan } = useFan();
-  const { selectedMessage, setSelectedMessage } = useMessageInputStore();
+  const payableMessage = useMessageInputStore((state) => state.payableMessage);
+  const setPayableMessage = useMessageInputStore((state) => state.setPayableMessage);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -41,16 +42,16 @@ export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handle
             const isMe = msg.senderId === fan?.fanId;
             return <SingleMessage channel={channel} isMe={isMe} message={msg} key={msg.id} />;
           })}
-          <div key={"ref" + channel?.id} ref={sentinelRef} />
+          <div key={'ref' + channel?.id} ref={sentinelRef} />
         </div>
       </AnimatePresence>
-      {selectedMessage && (
+      {payableMessage && (
         <PaymentModal
-          open={!!selectedMessage}
-          onOpenChange={() => setSelectedMessage(null)}
-          amount={Number(selectedMessage.unlockPrice || 0)}
-          entityId={selectedMessage.id}
-          creatorId={selectedMessage.senderId}
+          open={!!payableMessage}
+          onOpenChange={() => setPayableMessage(null)}
+          amount={Number(payableMessage.unlockPrice || 0)}
+          entityId={payableMessage.id}
+          creatorId={payableMessage.senderId}
           purchaseType={PurchaseType.Message}
           title="Unlock Premium Message"
           description="Get instant access to this exclusive drop from the creator."

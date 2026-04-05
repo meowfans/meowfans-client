@@ -103,9 +103,7 @@ export function UpgradeView() {
                   )}
                 >
                   {isBestValue && <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-primary via-purple-500 to-primary" />}
-                  {isOneTime && (
-                    <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-purple-500 via-pink-500 to-purple-500" />
-                  )}
+                  {isOneTime && <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-purple-500 via-pink-500 to-purple-500" />}
 
                   <CardHeader className="text-center pb-2 pt-10">
                     {isBestValue && (

@@ -194,11 +194,7 @@ export function VaultsStudioView() {
                                     }`}
                                   >
                                     {asset.asset.fileType === FileType.Video ? (
-                                      <video
-                                        src={asset.asset.rawUrl}
-                                        controls
-                                        className="w-full h-full max-h-[70vh] object-contain"
-                                      />
+                                      <video src={asset.asset.rawUrl} controls className="w-full h-full max-h-[70vh] object-contain" />
                                     ) : (
                                       <div className="relative w-full h-[60vh]">
                                         <NextImage src={asset.asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />

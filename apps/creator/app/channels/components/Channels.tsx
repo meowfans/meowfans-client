@@ -15,7 +15,7 @@ interface ChannelsProps {
 }
 
 export function Channels({ initialChannels }: ChannelsProps) {
-  const { showAssetsSidebar } = useUtilsStore();
+  const showAssetsSidebar = useUtilsStore().showAssetsSidebar;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);

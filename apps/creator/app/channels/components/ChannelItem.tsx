@@ -29,8 +29,10 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
   const currentId = pathname.split('/').pop();
   const isActive = currentId === channel.id;
 
-  const { updateChannel, loading: channelLoading } = useUpdateChannel();
-  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
+  const channelLoading = useUpdateChannel().loading;
+  const updateChannel = useUpdateChannel().updateChannel;
+  const statusLoading = useUpdateChannelStatus().loading;
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
   const loading = channelLoading || statusLoading;
 
   const handleChannelClick = () => {
@@ -54,6 +56,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
   const handleBlock = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Blocked });
+    await updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
     if (currentId === channel.id) router.push('/channels');
   };
 
@@ -125,7 +128,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-1 mt-[-1px]">
+            <div className="flex items-center justify-between gap-1 -mt-px">
               <p
                 className={cn(
                   'text-[8.5px] font-medium truncate transition-colors duration-200 pr-2',

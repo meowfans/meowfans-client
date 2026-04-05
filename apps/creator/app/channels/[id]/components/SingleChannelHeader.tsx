@@ -21,10 +21,15 @@ import { useState } from 'react';
 
 export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | null }) {
   const router = useRouter();
-  const { deleteMessages } = useMessageMutations();
-  const { updateChannelStatus, loading: statusLoading } = useUpdateChannelStatus();
-  const { updateChannel, loading: channelLoading } = useUpdateChannel();
-  const { openMultiSelect, setOpenMultiSelect, deleteMessageIds, setDeleteMessageIds } = useMessageMultiSelectStore();
+  const deleteMessages = useMessageMutations().deleteMessages;
+  const statusLoading = useUpdateChannelStatus().loading;
+  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
+  const channelLoading = useUpdateChannel().loading;
+  const updateChannel = useUpdateChannel().updateChannel;
+  const openMultiSelect = useMessageMultiSelectStore().openMultiSelect;
+  const setOpenMultiSelect = useMessageMultiSelectStore().setOpenMultiSelect;
+  const deleteMessageIds = useMessageMultiSelectStore().deleteMessageIds;
+  const setDeleteMessageIds = useMessageMultiSelectStore().setDeleteMessageIds;
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const loading = statusLoading || channelLoading;
 

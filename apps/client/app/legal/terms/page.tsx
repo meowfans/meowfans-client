@@ -32,8 +32,8 @@ export default function TermsPage() {
 
       <h2>5. Limitation of Liability</h2>
       <p>
-        MeowFans is provided &quot;as is&quot; without any warranties. We are not liable for any indirect, incidental, or consequential damages
-        arising from your use of the platform.
+        MeowFans is provided &quot;as is&quot; without any warranties. We are not liable for any indirect, incidental, or consequential
+        damages arising from your use of the platform.
       </p>
     </LegalPageView>
   );

@@ -40,6 +40,6 @@ export default function Image() {
         <Logo width={128} height={128} />
       </div>
     </div>,
-    {...size}
+    { ...size }
   );
 }

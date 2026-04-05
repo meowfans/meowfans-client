@@ -1,21 +1,20 @@
 'use client';
 
 import { useChannelsStore } from '@/hooks/store/channels.store';
+import { useNotificationsStore } from '@/hooks/store/notifications.store';
 import { eventEmitter } from '@workspace/ui/hooks/EventsEmitter';
 import { EventTypes } from '@workspace/ui/lib';
 import { useEffect } from 'react';
+import { playNotification } from '@/app/helpers/play-notification';
 
 export const Events = () => {
   const { setChannel, setChannels } = useChannelsStore();
+  const { allowNotification, allowMessagesNotification } = useNotificationsStore();
 
   const onSendMessageFromFan = async (event: CustomEvent) => {
     const { newMessage } = event.detail?.data;
-    try {
-      const audio = new Audio('/notification.mp3');
-      audio.play().catch((e) => console.log('Audio playback failed: ', e));
-    } catch (e) {
-      console.log('Audio not supported', e);
-    }
+
+    playNotification(allowNotification && allowMessagesNotification);
 
     setChannel((prev) => {
       const prevMessages = prev?.messages ?? [];
@@ -83,7 +82,6 @@ export const Events = () => {
 
   const onPresence = async (event: CustomEvent) => {
     const { channelId, userId, isOnline } = event.detail.data;
-    console.log({ channelId, userId, isOnline });
     setChannel((prev) => (prev.id === channelId && userId === prev.fanId ? { ...prev, isFanOnline: isOnline } : prev));
     setChannels((prev) =>
       prev?.map((channel) => (channel.id === channelId && userId === channel.fanId ? { ...channel, isFanOnline: isOnline } : channel))

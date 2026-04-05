@@ -19,8 +19,14 @@ export const SingleChannelInputArea = ({ channel }: SingleChannelInputAreaProps)
   const { fan } = useFan();
   const [disabled, setDisabled] = useState<boolean>(false);
   const { sendMessage, sendReply, updateMessage, loading } = useMessageMutations();
-  const { content, setContent, isEditing, setIsEditing, replyMessageId, setReplyMessageId, selectedMessage, setSelectedMessage } =
-    useMessageInputStore();
+  const content = useMessageInputStore((state) => state.content);
+  const setContent = useMessageInputStore((state) => state.setContent);
+  const isEditing = useMessageInputStore((state) => state.isEditing);
+  const setIsEditing = useMessageInputStore((state) => state.setIsEditing);
+  const replyMessageId = useMessageInputStore((state) => state.replyMessageId);
+  const setReplyMessageId = useMessageInputStore((state) => state.setReplyMessageId);
+  const selectedMessage = useMessageInputStore((state) => state.selectedMessage);
+  const setSelectedMessage = useMessageInputStore((state) => state.setSelectedMessage);
 
   useEffect(() => {
     setDisabled(!content.trim() || loading || (isEditing && selectedMessage?.content === content.trim()));

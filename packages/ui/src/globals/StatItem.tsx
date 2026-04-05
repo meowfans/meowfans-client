@@ -1,6 +1,6 @@
 'use client';
 
-import { pluralizeByCount } from "../lib";
+import { pluralizeByCount } from '../lib';
 
 interface StatItemProps {
   icon?: React.ReactNode;
