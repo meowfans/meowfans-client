@@ -13,7 +13,8 @@ import {
   DropdownMenuTrigger
 } from '@workspace/ui/components/dropdown-menu';
 import { SidebarTrigger } from '@workspace/ui/components/sidebar';
-import { ArrowLeft, Bell, LogOut, Settings, User } from 'lucide-react';
+import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
+import { Bell, LogOut, Settings, User } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ImpersonationTimer } from './ImpersonationTimer';
 import { LogoutModal } from './LogoutModal';
@@ -31,11 +32,9 @@ export function AppHeader() {
   if (pathname.startsWith('/channels/')) return null;
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={handleBack} className="h-9 w-9" aria-label="Go back">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <ReturnToPreviousPage applyReturn />
         <SidebarTrigger className="-ml-1" />
       </div>
 

@@ -8,8 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/av
 import { Button } from '@workspace/ui/components/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@workspace/ui/components/sheet';
 import { SidebarTrigger } from '@workspace/ui/components/sidebar';
+import { ReturnToPreviousPage } from '@workspace/ui/globals/ReturnToPreviousPage';
 import { buildSafeUrl } from '@workspace/ui/lib/helpers';
-import { ArrowLeft, Bell, CreditCard, HardHat, LogOut, Settings, ShieldAlert, User } from 'lucide-react';
+import { Bell, CreditCard, HardHat, LogOut, Settings, ShieldAlert, User } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LogoutModal } from './LogoutModal';
@@ -28,10 +29,6 @@ export function AppHeader() {
     setMounted(true);
   }, []);
 
-  const handleBack = () => {
-    router.back();
-  };
-
   const handleNavigate = (path: string) => {
     router.push(path);
     setIsSheetOpen(false);
@@ -41,11 +38,8 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
-      {/* Left Section: Back Button & Sidebar Trigger */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={handleBack} className="h-9 w-9" aria-label="Go back">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <ReturnToPreviousPage applyReturn />
         <SidebarTrigger className="-ml-1" />
         {!isUnderConstruction && <HardHat className="ml-auto h-3 w-3 text-amber-500/80" />}
       </div>

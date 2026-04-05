@@ -13,6 +13,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { setCookie } from 'cookies-next';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
+import { toast } from 'sonner';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -254,7 +255,22 @@ function Sidebar({
 function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
   const { toggleSidebar, toggle } = useSidebar();
 
-  return !toggle ? (
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (toggle) {
+      toast.warning('Toggle mode is off', {
+        description: 'To turn it on, change it from Settings',
+        action: {
+          label: 'Settings',
+          onClick: () => window.location.href = '/settings'
+        }
+      });
+    } else {
+      onClick?.(event);
+      toggleSidebar();
+    }
+  };
+
+  return (
     <Button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
@@ -262,16 +278,13 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       size="icon"
       title="Cmd + B or Ctrl + B"
       className={cn('size-7', className)}
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
+      onClick={handleClick}
       {...props}
     >
       <PanelLeftIcon />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
-  ) : null;
+  );
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
