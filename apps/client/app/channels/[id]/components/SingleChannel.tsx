@@ -24,7 +24,7 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
   const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 10 }, initialChannel);
 
   const isRequested = channel?.status === MessageChannelStatus.Requested;
-  const isBlocked = channel?.isMessagingBlocked || channel?.status === MessageChannelStatus.Blocked;
+  const isBlocked = channel?.isBlocked || channel?.status === MessageChannelStatus.Blocked;
   const isRestricted = channel?.isRestricted;
 
   const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
@@ -62,7 +62,6 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
       <SingleChannelStatus channel={channel} isBlocked={isBlocked} isRequested={isRequested} isRestricted={isRestricted} />
 
       <SingleChannelMessageThread channel={channel} scrollRef={scrollRef} hasMore={hasMore} handleLoadMore={loadMore} loading={loading} />
-
       {!isRequested && !isBlocked && <SingleChannelInputArea channel={channel} />}
     </div>
   );

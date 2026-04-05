@@ -1,23 +1,44 @@
 'use client';
 
-import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+import { useUpdateChannel } from '@/hooks/useChannels';
+import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenuSeparator } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { 
-  Bell, BellOff, Calendar, Lock, MoreVertical, Pin, ShieldAlert, 
-  ShieldCheck, Trash, Unlock, User, ExternalLink, Mail, Clock
+import {
+  Bell, BellOff, Calendar, Clock, ExternalLink, Lock,
+  MoreVertical, Pin, ShieldAlert, ShieldCheck, ShieldX, Trash, Unlock
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface FanDetailsProps {
   channel: ChannelsOutput | null;
 }
 
 export function FanDetails({ channel }: FanDetailsProps) {
+  const { updateChannel, loading } = useUpdateChannel();
+  const router = useRouter();
+
   if (!channel) return null;
+
+  const handleToggle = async (field: 'isPinned' | 'isMuted' | 'isRestricted' | 'isBlocked') => {
+    await updateChannel({
+      channelId: channel.id,
+      [field]: !channel[field],
+    });
+  };
+
+  const handleBlock = async () => {
+    await updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
+  };
+
+  const handleTerminate = async () => {
+    await updateChannel({ channelId: channel.id, isBlocked: true });
+    router.push('/channels');
+  };
 
   return (
     <div className="flex h-full w-full flex-col bg-background/30 backdrop-blur-3xl overflow-y-auto custom-scrollbar border-l border-border/50">
@@ -51,7 +72,10 @@ export function FanDetails({ channel }: FanDetailsProps) {
               size="sm"
               className="rounded-2xl h-10 px-6 bg-secondary/30 border-none font-black text-[10px] uppercase tracking-widest hover:bg-primary/10 hover:text-primary transition-all"
             >
-              <Link href={`/fans/${channel.fanId}`}>View Profile</Link>
+              <Link href={`/fans/${channel.fanId}`}>
+                <ExternalLink className="w-3 h-3 mr-1.5" />
+                View Profile
+              </Link>
             </Button>
             <Button variant="outline" size="sm" className="rounded-2xl h-10 w-10 p-0 bg-secondary/30 border-none">
               <MoreVertical className="w-4 h-4" />
@@ -87,22 +111,41 @@ export function FanDetails({ channel }: FanDetailsProps) {
           <div className="p-1 rounded-2xl bg-secondary/20 space-y-1 overflow-hidden shadow-sm">
             <SettingsItem
               icon={channel.isPinned ? Pin : Pin}
-              label={channel.isPinned ? 'Unpin selection' : 'Pin conversation'}
+              label={channel.isPinned ? 'Unpin conversation' : 'Pin conversation'}
               isActive={channel.isPinned}
+              loading={loading}
+              onClick={() => handleToggle('isPinned')}
             />
             <SettingsItem
               icon={channel.isMuted ? BellOff : Bell}
-              label={channel.isMuted ? 'Muted' : 'Unmuted'}
+              label={channel.isMuted ? 'Unmute notifications' : 'Mute notifications'}
               isActive={channel.isMuted}
+              loading={loading}
+              onClick={() => handleToggle('isMuted')}
             />
             <DropdownMenuSeparator className="bg-border/20 mx-3 my-1" />
             <SettingsItem
               icon={channel.isRestricted ? Lock : Unlock}
-              label={channel.isRestricted ? 'Restricted' : 'Standard Access'}
+              label={channel.isRestricted ? 'Remove restriction' : 'Restrict access'}
               isActive={channel.isRestricted}
+              loading={loading}
+              onClick={() => handleToggle('isRestricted')}
             />
-            <SettingsItem icon={ShieldAlert} label={channel.isMessagingBlocked ? 'Unblock' : 'Block interaction'} isDestructive />
-            <SettingsItem icon={Trash} label="Terminate thread" isDestructive />
+            <SettingsItem
+              icon={channel.isBlocked ? ShieldCheck : ShieldAlert}
+              label={channel.isBlocked ? 'Unblock interaction' : 'Block interaction'}
+              isDestructive={!channel.isBlocked}
+              isActive={channel.isBlocked}
+              loading={loading}
+              onClick={handleBlock}
+            />
+            <SettingsItem
+              icon={ShieldX}
+              label="Terminate thread"
+              isDestructive
+              loading={loading}
+              onClick={handleTerminate}
+            />
           </div>
         </div>
       </div>
@@ -132,20 +175,26 @@ function SettingsItem({
   icon: Icon,
   label,
   isDestructive,
-  isActive
+  isActive,
+  loading,
+  onClick
 }: {
   icon: any;
   label: string;
   isDestructive?: boolean;
   isActive?: boolean;
+  loading?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Button
       variant="ghost"
+      disabled={loading}
+      onClick={onClick}
       className={cn(
         'w-full justify-between h-11 px-3 rounded-xl hover:bg-background/40 transition-all font-black text-[10px] uppercase tracking-tighter group',
         isDestructive ? 'text-destructive hover:text-destructive hover:bg-destructive/10' : 'text-foreground/60',
-        isActive && 'text-primary bg-primary/5'
+        isActive && !isDestructive && 'text-primary bg-primary/5'
       )}
     >
       <div className="flex items-center gap-3">
@@ -157,7 +206,7 @@ function SettingsItem({
         />
         {label}
       </div>
-      {isActive && <div className="h-1 w-1 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />}
+      {isActive && !isDestructive && <div className="h-1 w-1 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.5)]" />}
     </Button>
   );
 }

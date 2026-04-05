@@ -95,7 +95,7 @@ export function CreatorDetails({ channel }: CreatorDetailsProps) {
               label={channel.isRestricted ? 'Remove restriction' : 'Restrict interaction'}
               isActive={channel.isRestricted}
             />
-            <SettingsItem icon={ShieldAlert} label={channel.isMessagingBlocked ? 'Unblock creator' : 'Block creator'} isDestructive />
+            <SettingsItem icon={ShieldAlert} label={channel.isBlocked ? 'Unblock creator' : 'Block creator'} isDestructive />
             <SettingsItem icon={Trash} label="Delete conversation" isDestructive />
           </div>
         </div>

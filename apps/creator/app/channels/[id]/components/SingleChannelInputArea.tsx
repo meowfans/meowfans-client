@@ -237,7 +237,7 @@ export function SingleChannelInputArea({ channel }: { channel: ChannelsOutput | 
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               disabled={isSending}
-              className="h-10 px-4 rounded-xl bg-secondary/20 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20 transition-all font-medium text-[13px] placeholder:text-muted-foreground/30 placeholder:uppercase placeholder:tracking-widest placeholder:text-[10px]"
+              className="h-10 px-4 rounded-xl bg-secondary/30 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20 transition-all font-medium text-[13px] placeholder:text-muted-foreground/30 placeholder:uppercase placeholder:tracking-widest placeholder:text-[10px]"
             />
           </div>
 

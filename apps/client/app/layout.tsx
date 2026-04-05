@@ -149,9 +149,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Fan}>
           <UserContextWrapper fan={fan}>
+            <Toaster position="top-center" richColors />
             <AgeGate />
             <CookieConsent />
-            <Toaster position="top-center" richColors />
             <ThemeProvider
               attribute="class"
               defaultTheme="system"
@@ -165,10 +165,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 <AppSideBar />
                 <SidebarInset>
                   <AppHeader />
-                  <div id="main-content-scroll" className="flex flex-1 flex-col overflow-y-auto">
-                    <FeatureGate>{children}</FeatureGate>
-                    <RTAFooter />
-                  </div>
+                  <FeatureGate>{children}</FeatureGate>
+                  <RTAFooter />
                 </SidebarInset>
               </SidebarProvider>
             </ThemeProvider>

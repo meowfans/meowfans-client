@@ -14,7 +14,6 @@ export function RTAFooter() {
   return (
     <footer className="w-full bg-background border-t border-white/5 py-1 md:py-2 px-4 md:px-6 pb-20 md:pb-2 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-        {/* Left: RTA & Tagline */}
         <div className="flex items-center gap-2 md:gap-6">
           <div className="flex items-center gap-2">
             <div className="px-1.5 py-0.5 rounded-[3px] bg-primary/10 border border-primary/20 shrink-0">
@@ -29,7 +28,6 @@ export function RTAFooter() {
           </p>
         </div>
 
-        {/* Center: Legal Links */}
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           {AppConfig.legal.map((link) => (
             <Link
@@ -42,7 +40,6 @@ export function RTAFooter() {
           ))}
         </div>
 
-        {/* Right: Copyright & Security */}
         <div className="flex items-center gap-3 md:gap-4">
           <div className="flex items-center gap-1.5 opacity-20 hover:opacity-100 transition-opacity">
             <div className="h-1 w-1 rounded-full bg-primary" />

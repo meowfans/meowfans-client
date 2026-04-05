@@ -97,7 +97,7 @@ export const SingleChannelInputArea = ({ channel }: SingleChannelInputAreaProps)
         )}
       </AnimatePresence>
       <div className="p-3 space-y-3">
-        <form onSubmit={handleSend} className="flex items-end gap-2 sm:gap-3">
+        <form onSubmit={handleSend} className="flex items-end gap-2">
           <div className="flex gap-1.5 shrink-0 pb-0.5">
             <Button
               type="button"

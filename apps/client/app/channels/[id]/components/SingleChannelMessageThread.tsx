@@ -1,9 +1,10 @@
 import { PaymentModal } from '@/components/PaymentModal';
+import { useInfiniteObserver } from '@/hooks/client/useInfiniteObserver';
 import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useMessageInputStore } from '@/hooks/store/message.store';
 import { ChannelsOutput, PurchaseType } from '@workspace/gql/generated/graphql';
-import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
 import { SingleMessage } from './single-message/SingleMessage';
 
 interface SingleChannelMessageThreadProps {
@@ -18,6 +19,16 @@ export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handle
   const { fan } = useFan();
   const { selectedMessage, setSelectedMessage } = useMessageInputStore();
 
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useInfiniteObserver({
+    target: sentinelRef,
+    hasMore,
+    loading,
+    onLoadMore: handleLoadMore,
+    root: scrollRef.current ?? null
+  });
+
   return (
     <div
       ref={scrollRef}
@@ -25,21 +36,13 @@ export const SingleChannelMessageThread = ({ channel, scrollRef, hasMore, handle
       className="h-full overflow-y-auto p-4 flex flex-col-reverse bg-background/5 transition-opacity duration-500 custom-scrollbar"
     >
       <AnimatePresence initial={false}>
-        <InfiniteScrollManager
-          dataLength={channel?.messages?.length || 0}
-          hasMore={hasMore}
-          loading={loading}
-          inverse={true}
-          onLoadMore={handleLoadMore}
-          scrollableDiv="chatScrollable"
-        >
-          <div className="flex flex-col-reverse w-full h-full">
-            {channel?.messages?.map((msg) => {
-              const isMe = msg.senderId === fan?.fanId;
-              return <SingleMessage channel={channel} isMe={isMe} message={msg} key={msg.id} />;
-            })}
-          </div>
-        </InfiniteScrollManager>
+        <div className="flex flex-col-reverse w-full h-full">
+          {channel?.messages?.map((msg) => {
+            const isMe = msg.senderId === fan?.fanId;
+            return <SingleMessage channel={channel} isMe={isMe} message={msg} key={msg.id} />;
+          })}
+          <div key={"ref" + channel?.id} ref={sentinelRef} />
+        </div>
       </AnimatePresence>
       {selectedMessage && (
         <PaymentModal

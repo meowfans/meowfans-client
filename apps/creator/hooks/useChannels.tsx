@@ -7,7 +7,8 @@ import {
   CreateChannelInput,
   MessageChannelStatus,
   PaginationInput,
-  UpdateChannelInput
+  UpdateChannelInput,
+  UpdateChannelOutput
 } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
@@ -69,11 +70,11 @@ export const useUpdateChannel = () => {
     setLoading(true);
     try {
       const { data } = await updateChannelMutation(input);
-      const updatedChannel = data?.updateChannel as ChannelsOutput;
-      if (!updatedChannel) return;
+      const { channelId, ...rest } = data?.updateChannel as UpdateChannelOutput;
+      if (!data?.updateChannel) return;
 
-      setChannels(channels.map((c) => (c.id === updatedChannel.id ? { ...c, ...updatedChannel } : c)));
-      setChannel(updatedChannel);
+      setChannels(channels.map((c) => (c.id === channelId ? { ...c, ...rest } : c)) as ChannelsOutput[]);
+      setChannel((prev) => ({ ...prev, ...rest }) as ChannelsOutput);
       successHandler({ message: 'Channel updated successfully' });
     } catch (error) {
       errorHandler({ error });
