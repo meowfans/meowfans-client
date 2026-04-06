@@ -21,14 +21,14 @@ interface SingleChannelProps {
 export function SingleChannel({ channelId, initialChannel }: SingleChannelProps) {
   const { fan } = useFan();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 10 }, initialChannel);
+  const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 30 }, initialChannel);
 
   const isRequested = channel?.status === MessageChannelStatus.Requested;
-  const isBlocked = channel?.isBlocked || channel?.status === MessageChannelStatus.Blocked;
-  const isRestricted = channel?.isRestricted;
+  const isBlocked = channel?.hasBlockedThisChannel || channel?.status === MessageChannelStatus.Blocked;
+  const isRestricted = channel?.hasRestrictedThisChannel;
 
   const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
-    skip: !channelId && !loading,
+    skip: (!channelId && !loading) || isRestricted || isBlocked || isRequested,
     variables: { input: { messageChannelId: channelId } }
   });
 
@@ -37,7 +37,7 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
     if (lastMessage?.recipientUserId === fan?.fanId) {
       refetch({ input: { messageChannelId: channelId, messageId: lastMessage?.id } });
     }
-  }, [channel?.messages, channelId, refetch, fan]);
+  }, [channel?.messages, channelId, fan]); //eslint-disable-line
 
   if (loading && !channel?.id) {
     return (
@@ -61,7 +61,7 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
       <SingleChannelHeader channel={channel} />
       <SingleChannelStatus channel={channel} isBlocked={isBlocked} isRequested={isRequested} isRestricted={isRestricted} />
 
-      <SingleChannelMessageThread channel={channel} scrollRef={scrollRef} hasMore={hasMore} handleLoadMore={loadMore} loading={loading} />
+      <SingleChannelMessageThread channel={channel} scrollRef={scrollRef} hasMore={hasMore} loadMore={loadMore} loading={loading} />
       {!isRequested && !isBlocked && <SingleChannelInputArea channel={channel} />}
     </div>
   );

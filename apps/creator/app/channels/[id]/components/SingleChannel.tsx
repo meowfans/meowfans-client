@@ -24,11 +24,11 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
   const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 30 }, initialChannel);
 
   const isRequested = channel?.status === MessageChannelStatus.Requested;
-  const isBlocked = channel?.isBlocked || channel?.status === MessageChannelStatus.Blocked;
-  const isRestricted = channel?.isRestricted;
+  const isBlocked = channel?.hasBlockedThisChannel || channel?.status === MessageChannelStatus.Blocked;
+  const isRestricted = channel?.hasRestrictedThisChannel;
 
   const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
-    skip: !channelId && !loading,
+    skip: (!channelId && !loading) || isRestricted || isBlocked || isRequested,
     variables: { input: { messageChannelId: channelId } }
   });
 
@@ -37,7 +37,7 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
     if (lastMessage?.recipientUserId === creator?.creatorId) {
       refetch({ input: { messageChannelId: channelId, messageId: lastMessage?.id } });
     }
-  }, [channel?.messages, channelId, refetch, creator]);
+  }, [channel?.messages, channelId, creator]); //eslint-disable-line
 
   if (loading && !channel?.id) {
     return (

@@ -46,7 +46,7 @@ export const useChannelMessages = (input: PaginationInput) => {
     }
   };
 
-  const handleLoadMore = () => {
+  const loadMore = () => {
     if (!loading && hasMore) loadMessages();
   };
 
@@ -59,7 +59,7 @@ export const useChannelMessages = (input: PaginationInput) => {
     loadMessages(true);
   }, [input.relatedEntityId, input.take]); //eslint-disable-line
 
-  return { channel, loading, hasMore, handleLoadMore, handleRefresh };
+  return { channel, loading, hasMore, loadMore, handleRefresh };
 };
 
 export const useMessageMutations = () => {

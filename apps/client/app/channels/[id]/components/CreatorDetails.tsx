@@ -80,22 +80,22 @@ export function CreatorDetails({ channel }: CreatorDetailsProps) {
           <SectionTitle>Conversation Management</SectionTitle>
           <div className="p-1 rounded-2xl bg-secondary/20 space-y-1 overflow-hidden">
             <SettingsItem
-              icon={channel.isPinned ? Pin : Pin}
-              label={channel.isPinned ? 'Unpin this chat' : 'Pin this chat'}
-              isActive={channel.isPinned}
+              icon={channel.hasPinnedThisChannel ? Pin : Pin}
+              label={channel.hasPinnedThisChannel ? 'Unpin this chat' : 'Pin this chat'}
+              isActive={channel.hasPinnedThisChannel}
             />
             <SettingsItem
-              icon={channel.isMuted ? BellOff : Bell}
-              label={channel.isMuted ? 'Unmute notifications' : 'Mute notifications'}
-              isActive={channel.isMuted}
+              icon={channel.hasMutedThisChannel ? BellOff : Bell}
+              label={channel.hasMutedThisChannel ? 'Unmute notifications' : 'Mute notifications'}
+              isActive={channel.hasMutedThisChannel}
             />
             <DropdownMenuSeparator className="bg-border/20 mx-3 my-1" />
             <SettingsItem
-              icon={channel.isRestricted ? Lock : Unlock}
-              label={channel.isRestricted ? 'Remove restriction' : 'Restrict interaction'}
-              isActive={channel.isRestricted}
+              icon={channel.hasRestrictedThisChannel ? Lock : Unlock}
+              label={channel.hasRestrictedThisChannel ? 'Remove restriction' : 'Restrict interaction'}
+              isActive={channel.hasRestrictedThisChannel}
             />
-            <SettingsItem icon={ShieldAlert} label={channel.isBlocked ? 'Unblock creator' : 'Block creator'} isDestructive />
+            <SettingsItem icon={ShieldAlert} label={channel.hasBlockedThisChannel ? 'Unblock creator' : 'Block creator'} isDestructive />
             <SettingsItem icon={Trash} label="Delete conversation" isDestructive />
           </div>
         </div>

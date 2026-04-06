@@ -25,8 +25,8 @@ export function Channels({ initialChannels }: ChannelsProps) {
         channel.label.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (filter === 'pinned') result = result.filter((c) => c.isPinned);
-    if (filter === 'muted') result = result.filter((c) => c.isMuted);
+    if (filter === 'pinned') result = result.filter((c) => c.hasPinnedThisChannel);
+    if (filter === 'muted') result = result.filter((c) => c.hasMutedThisChannel);
     if (filter === 'unread') result = result.filter((c) => !c.lastMessage?.hasSeen);
 
     return result;

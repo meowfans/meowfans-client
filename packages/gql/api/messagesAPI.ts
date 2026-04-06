@@ -15,15 +15,15 @@ export const GET_SINGLE_CHANNEL_QUERY = graphql(`
       fanLastSeenAt
       isFanOnline
       lastMessageId
-      isPinned
       label
-      isMuted
-      isRestricted
       initiatedByUserId
       status
       isFanOnline
       isCreatorOnline
-      isBlocked
+      hasMutedThisChannel
+      hasRestrictedThisChannel
+      hasBlockedThisChannel
+      hasPinnedThisChannel
       messages {
         id
         content

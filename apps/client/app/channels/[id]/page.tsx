@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function SingleChannelPage({ params }: SingleChannelProps) {
   const { id } = await params;
-  const channel = await getSingleChannel({ relatedEntityId: id, take: 10 });
+  const channel = await getSingleChannel({ relatedEntityId: id, take: 30 });
 
   return (
     <div className="flex h-full w-full overflow-hidden">

@@ -38,8 +38,8 @@ export function Channels({ initialChannels }: ChannelsProps) {
   const { channels, loading, hasMore, loadMore: handleLoadMore } = useServerChannels(params, initialChannels);
 
   const filteredChannels = channels.filter((channel: ChannelsOutput) => {
-    if (filter === 'pinned') return channel.isPinned;
-    if (filter === 'muted') return channel.isMuted;
+    if (filter === 'pinned') return channel.hasPinnedThisChannel;
+    if (filter === 'muted') return channel.hasMutedThisChannel;
     if (filter === 'unread') return !channel.lastMessage?.hasSeen;
     return true;
   });
