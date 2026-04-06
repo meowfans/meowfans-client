@@ -5,6 +5,7 @@ export * from './comments.actions';
 export * from './creators.actions';
 export * from './fan.actions';
 export * from './follows.actions';
+export * from './history.actions';
 export * from './likes.actions';
 export * from './messages.actions';
 export * from './posts.actions';
