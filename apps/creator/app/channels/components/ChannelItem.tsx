@@ -45,24 +45,24 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
 
   const handlePin = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await updateChannel({ channelId: channel.id, isPinned: !channel.isPinned });
+    await updateChannel({ channelId: channel.id, hasPinnedThisChannel: !channel.hasPinnedThisChannel });
   };
 
   const handleMute = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await updateChannel({ channelId: channel.id, isMuted: !channel.isMuted });
+    await updateChannel({ channelId: channel.id, hasMutedThisChannel: !channel.hasMutedThisChannel });
   };
 
   const handleBlock = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await updateChannelStatus({ channelId: channel.id, status: MessageChannelStatus.Blocked });
-    await updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
+    await updateChannel({ channelId: channel.id, hasBlockedThisChannel: !channel.hasBlockedThisChannel });
     if (currentId === channel.id) router.push('/channels');
   };
 
   const handleRestrict = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted });
+    await updateChannel({ channelId: channel.id, hasRestrictedThisChannel: !channel.hasRestrictedThisChannel });
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -106,7 +106,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
             {channel.isFanOnline && (
               <span className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full border border-background bg-green-500" />
             )}
-            {channel.isPinned && <Pin className="absolute -top-1 -right-1 h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
+            {channel.hasPinnedThisChannel && <Pin className="absolute -top-1 -right-1 h-2.5 w-2.5 text-primary fill-primary rotate-45" />}
           </div>
 
           <div className="flex-1 min-w-0">
@@ -120,8 +120,8 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                 >
                   {channel.fanFullname}
                 </h3>
-                {channel.isMuted && <BellOff className="h-2.5 w-2.5 fill-primary" />}
-                {channel.isRestricted && <Lock className="h-2.5 w-2.5 text-amber-500" />}
+                {channel.hasMutedThisChannel && <BellOff className="h-2.5 w-2.5 fill-primary" />}
+                {channel.hasRestrictedThisChannel && <Lock className="h-2.5 w-2.5 text-amber-500" />}
               </div>
               {lastMessageTime && (
                 <span className="text-[7px] font-bold text-muted-foreground/20 whitespace-nowrap">{lastMessageTime}</span>
@@ -172,7 +172,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <Pin className="h-3.5 w-3.5" />
-                  {channel.isPinned ? 'Unpin' : 'Pin chat'}
+                  {channel.hasPinnedThisChannel ? 'Unpin' : 'Pin chat'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleMute}
@@ -180,7 +180,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <VolumeX className="h-3.5 w-3.5" />
-                  {channel.isMuted ? 'Unmute' : 'Mute notifications'}
+                  {channel.hasMutedThisChannel ? 'Unmute' : 'Mute notifications'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleRestrict}
@@ -188,7 +188,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer"
                 >
                   <Lock className="h-3.5 w-3.5" />
-                  {channel.isRestricted ? 'Remove Restriction' : 'Restrict Access'}
+                  {channel.hasRestrictedThisChannel ? 'Remove Restriction' : 'Restrict Access'}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem
@@ -197,7 +197,7 @@ export function ChannelItem({ channel, isMultiSelectMode, isSelected, onToggleSe
                   className="flex items-center gap-2 font-bold text-[11px] py-1.5 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                 >
                   <ShieldBan className="h-3.5 w-3.5" />
-                  {channel.isBlocked ? 'Unblock' : 'Block interaction'}
+                  {channel.hasBlockedThisChannel ? 'Unblock' : 'Block interaction'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleDelete}

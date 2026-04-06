@@ -1,7 +1,7 @@
 import { useUpdateChannel, useUpdateChannelStatus } from '@/hooks/client/useChannels';
 import { useMessageMutations } from '@/hooks/client/useMessages';
 import { useMessageMultiSelectStore } from '@/hooks/store/message.store';
-import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import {
@@ -30,7 +30,6 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
   const channelLoading = useUpdateChannel().loading;
   const updateChannel = useUpdateChannel().updateChannel;
   const statusLoading = useUpdateChannelStatus().loading;
-  const updateChannelStatus = useUpdateChannelStatus().updateChannelStatus;
   const loading = channelLoading || statusLoading;
 
   const handleDeleteConfirm = () => {
@@ -125,8 +124,8 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
           </div>
 
           <div className="flex items-center gap-2">
-            {channel?.isPinned && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
-            {channel?.isMuted && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
+            {channel?.hasPinnedThisChannel && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
+            {channel?.hasMutedThisChannel && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
 
             <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
               <Phone className="h-4 w-4" />
@@ -151,41 +150,36 @@ export const SingleChannelHeader = ({ channel }: SingleChannelHeaderProps) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={loading}
-                  onClick={() => updateChannel({ channelId: channel.id, isPinned: !channel.isPinned })}
+                  onClick={() => updateChannel({ channelId: channel.id, hasPinnedThisChannel: !channel.hasPinnedThisChannel })}
                   className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
                 >
                   <Pin className="h-3.5 w-3.5" />
-                  {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
+                  {channel?.hasPinnedThisChannel ? 'Unpin Chat' : 'Pin Chat'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={loading}
-                  onClick={() => updateChannel({ channelId: channel.id, isMuted: !channel.isMuted })}
+                  onClick={() => updateChannel({ channelId: channel.id, hasMutedThisChannel: !channel.hasMutedThisChannel })}
                   className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
                 >
                   <BellOff className="h-3.5 w-3.5" />
-                  {channel?.isMuted ? 'Unmute' : 'Mute Notifications'}
+                  {channel?.hasMutedThisChannel ? 'Unmute' : 'Mute Notifications'}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={loading}
-                  onClick={() => updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted })}
+                  onClick={() => updateChannel({ channelId: channel.id, hasRestrictedThisChannel: !channel.hasRestrictedThisChannel })}
                   className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
                 >
                   <Lock className="h-3.5 w-3.5" />
-                  {channel?.isRestricted ? 'Remove Restriction' : 'Restrict Access'}
+                  {channel?.hasRestrictedThisChannel ? 'Remove Restriction' : 'Restrict Access'}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem
                   disabled={loading}
-                  onClick={() =>
-                    updateChannelStatus({
-                      channelId: channel.id,
-                      status: channel.isBlocked ? MessageChannelStatus.Accepted : MessageChannelStatus.Blocked
-                    })
-                  }
+                  onClick={() => updateChannel({ channelId: channel.id, hasBlockedThisChannel: !channel.hasBlockedThisChannel })}
                   className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                 >
                   <ShieldAlert className="h-3.5 w-3.5" />
-                  {channel?.isBlocked ? 'Unblock User' : 'Block User'}
+                  {channel?.hasBlockedThisChannel ? 'Unblock User' : 'Block User'}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

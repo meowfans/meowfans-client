@@ -1,7 +1,7 @@
 'use client';
 
 import { useUpdateChannel } from '@/hooks/useChannels';
-import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
+import { ChannelsOutput } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { DropdownMenuSeparator } from '@workspace/ui/components/dropdown-menu';
@@ -19,7 +19,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   ShieldX,
-  Trash,
   Unlock
 } from 'lucide-react';
 import Link from 'next/link';
@@ -36,7 +35,9 @@ export function FanDetails({ channel }: FanDetailsProps) {
 
   if (!channel) return null;
 
-  const handleToggle = async (field: 'isPinned' | 'isMuted' | 'isRestricted' | 'isBlocked') => {
+  const handleToggle = async (
+    field: 'hasPinnedThisChannel' | 'hasMutedThisChannel' | 'hasRestrictedThisChannel' | 'hasBlockedThisChannel'
+  ) => {
     await updateChannel({
       channelId: channel.id,
       [field]: !channel[field]
@@ -44,11 +45,11 @@ export function FanDetails({ channel }: FanDetailsProps) {
   };
 
   const handleBlock = async () => {
-    await updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
+    await updateChannel({ channelId: channel.id, hasBlockedThisChannel: !channel.hasBlockedThisChannel });
   };
 
   const handleTerminate = async () => {
-    await updateChannel({ channelId: channel.id, isBlocked: true });
+    await updateChannel({ channelId: channel.id, hasBlockedThisChannel: true });
     router.push('/channels');
   };
 
@@ -122,32 +123,32 @@ export function FanDetails({ channel }: FanDetailsProps) {
           <SectionTitle>Conversation Settings</SectionTitle>
           <div className="p-1 rounded-2xl bg-secondary/20 space-y-1 overflow-hidden shadow-sm">
             <SettingsItem
-              icon={channel.isPinned ? Pin : Pin}
-              label={channel.isPinned ? 'Unpin conversation' : 'Pin conversation'}
-              isActive={channel.isPinned}
+              icon={channel.hasPinnedThisChannel ? Pin : Pin}
+              label={channel.hasPinnedThisChannel ? 'Unpin conversation' : 'Pin conversation'}
+              isActive={channel.hasPinnedThisChannel}
               loading={loading}
-              onClick={() => handleToggle('isPinned')}
+              onClick={() => handleToggle('hasPinnedThisChannel')}
             />
             <SettingsItem
-              icon={channel.isMuted ? BellOff : Bell}
-              label={channel.isMuted ? 'Unmute notifications' : 'Mute notifications'}
-              isActive={channel.isMuted}
+              icon={channel.hasMutedThisChannel ? BellOff : Bell}
+              label={channel.hasMutedThisChannel ? 'Unmute notifications' : 'Mute notifications'}
+              isActive={channel.hasMutedThisChannel}
               loading={loading}
-              onClick={() => handleToggle('isMuted')}
+              onClick={() => handleToggle('hasMutedThisChannel')}
             />
             <DropdownMenuSeparator className="bg-border/20 mx-3 my-1" />
             <SettingsItem
-              icon={channel.isRestricted ? Lock : Unlock}
-              label={channel.isRestricted ? 'Remove restriction' : 'Restrict access'}
-              isActive={channel.isRestricted}
+              icon={channel.hasRestrictedThisChannel ? Lock : Unlock}
+              label={channel.hasRestrictedThisChannel ? 'Remove restriction' : 'Restrict access'}
+              isActive={channel.hasRestrictedThisChannel}
               loading={loading}
-              onClick={() => handleToggle('isRestricted')}
+              onClick={() => handleToggle('hasRestrictedThisChannel')}
             />
             <SettingsItem
-              icon={channel.isBlocked ? ShieldCheck : ShieldAlert}
-              label={channel.isBlocked ? 'Unblock interaction' : 'Block interaction'}
-              isDestructive={!channel.isBlocked}
-              isActive={channel.isBlocked}
+              icon={channel.hasBlockedThisChannel ? ShieldCheck : ShieldAlert}
+              label={channel.hasBlockedThisChannel ? 'Unblock interaction' : 'Block interaction'}
+              isDestructive={!channel.hasBlockedThisChannel}
+              isActive={channel.hasBlockedThisChannel}
               loading={loading}
               onClick={handleBlock}
             />

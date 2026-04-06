@@ -165,8 +165,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 <AppSideBar />
                 <SidebarInset>
                   <AppHeader />
-                  <FeatureGate>{children}</FeatureGate>
-                  <RTAFooter />
+                  <div id="main-content-scroll" className="flex flex-1 flex-col overflow-y-auto">
+                    <FeatureGate>{children}</FeatureGate>
+                    <RTAFooter />
+                  </div>
                 </SidebarInset>
               </SidebarProvider>
             </ThemeProvider>

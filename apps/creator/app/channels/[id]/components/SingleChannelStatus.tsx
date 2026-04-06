@@ -83,7 +83,7 @@ export const SingleChannelStatus: React.FC<SingleChannelStatusProps> = ({ isBloc
         variant="ghost"
         size="sm"
         disabled={loading}
-        onClick={() => updateChannel({ channelId: channel.id, isRestricted: false })}
+        onClick={() => updateChannel({ channelId: channel.id, hasRestrictedThisChannel: false })}
         className="h-6 px-3 rounded-full text-[9px] font-black uppercase tracking-wider text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 border border-amber-500/30"
       >
         <Unlock className="h-2.5 w-2.5 mr-1" />

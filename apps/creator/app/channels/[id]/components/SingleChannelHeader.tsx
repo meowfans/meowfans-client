@@ -133,8 +133,8 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
           </div>
 
           <div className="flex items-center gap-2">
-            {channel?.isPinned && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
-            {channel?.isMuted && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
+            {channel?.hasPinnedThisChannel && <Pin className="h-3.5 w-3.5 text-primary fill-primary rotate-45" />}
+            {channel?.hasMutedThisChannel && <BellOff className="h-3.5 w-3.5 text-muted-foreground/40" />}
 
             <Button variant="outline" size="icon-sm" className="rounded-full h-9 w-9 border-muted/50 hidden sm:flex">
               <Phone className="h-4 w-4" />
@@ -159,33 +159,33 @@ export function SingleChannelHeader({ channel }: { channel: ChannelsOutput | nul
                     Select Messages
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => updateChannel({ channelId: channel.id, isPinned: !channel.isPinned })}
+                    onClick={() => updateChannel({ channelId: channel.id, hasPinnedThisChannel: !channel.hasPinnedThisChannel })}
                     disabled={loading}
                     className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer"
                   >
                     <Pin className="h-3.5 w-3.5" />
-                    {channel?.isPinned ? 'Unpin Chat' : 'Pin Chat'}
+                    {channel?.hasPinnedThisChannel ? 'Unpin Chat' : 'Pin Chat'}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-border/50" />
                   <DropdownMenuItem
                     onClick={() => {
                       handleStatusChange(MessageChannelStatus.Blocked);
-                      updateChannel({ channelId: channel.id, isBlocked: !channel.isBlocked });
+                      updateChannel({ channelId: channel.id, hasBlockedThisChannel: !channel.hasBlockedThisChannel });
                     }}
                     className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                   >
                     <ShieldBan className="h-3.5 w-3.5" />
-                    {channel?.isBlocked ? 'Unblock' : 'Block'} Interaction
+                    {channel?.hasBlockedThisChannel ? 'Unblock' : 'Block'} Interaction
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-border/50" />
                   <DropdownMenuItem
                     onClick={() => {
-                      updateChannel({ channelId: channel.id, isRestricted: !channel.isRestricted });
+                      updateChannel({ channelId: channel.id, hasRestrictedThisChannel: !channel.hasRestrictedThisChannel });
                     }}
                     className="flex items-center gap-2 font-bold text-[11px] py-2 rounded-lg cursor-pointer text-destructive focus:text-destructive"
                   >
                     <ShieldBan className="h-3.5 w-3.5" />
-                    {channel?.isRestricted ? 'Unrestrict' : 'Restrict'} Interaction
+                    {channel?.hasRestrictedThisChannel ? 'Unrestrict' : 'Restrict'} Interaction
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleStatusChange(MessageChannelStatus.Rejected)}
