@@ -449,6 +449,10 @@ export type DeleteSharePostInput = {
   shareId: Scalars['String']['input'];
 };
 
+export type DeleteWatchHistoryInput = {
+  watchId: Scalars['String']['input'];
+};
+
 export enum DocumentQualityType {
   DefaultDefinition = 'DEFAULT_DEFINITION',
   DivDefinition = 'DIV_DEFINITION',
@@ -794,6 +798,7 @@ export type GetRecommendationsInput = {
   status?: Array<DownloadStates>;
   take?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  watchHistoryTypes?: InputMaybe<Array<WatchHistoryType>>;
 };
 
 export type GetZonePlansOutput = {
@@ -934,6 +939,7 @@ export enum MessageChannelStatus {
 
 export type MessageChannelsEntity = {
   __typename?: 'MessageChannelsEntity';
+  blockedByUserId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   creatorId: Scalars['String']['output'];
   creatorProfile: CreatorProfilesEntity;
@@ -1052,6 +1058,7 @@ export type Mutation = {
   deletePosts: Scalars['Boolean']['output'];
   deleteShare: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
+  deleteWatchHistory: Scalars['Boolean']['output'];
   downloadAllCreatorObjects: Scalars['String']['output'];
   downloadCreatorObjectsAsBatch: Scalars['String']['output'];
   followCreator?: Maybe<GetFollowingOutput>;
@@ -1176,6 +1183,11 @@ export type MutationDeletePostsArgs = {
 
 export type MutationDeleteShareArgs = {
   input: DeleteSharePostInput;
+};
+
+
+export type MutationDeleteWatchHistoryArgs = {
+  input: DeleteWatchHistoryInput;
 };
 
 
@@ -1380,6 +1392,7 @@ export type PaginationInput = {
   status?: Array<DownloadStates>;
   take?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  watchHistoryTypes?: InputMaybe<Array<WatchHistoryType>>;
 };
 
 export type PaymentsEntity = {
@@ -1622,6 +1635,7 @@ export type Query = {
   getTotalObjectsAsType: Scalars['Int']['output'];
   getUser: UsersEntity;
   getVaultsAnalytics: Array<VaultStatsAnalyticsOutput>;
+  getWatchHistory: Array<WatchHistoryEntity>;
   getZonePlans: Array<GetZonePlansOutput>;
   searchTags: Array<TagsEntity>;
   updateLastSeen: ResultOk;
@@ -1861,6 +1875,11 @@ export type QueryGetUserArgs = {
 
 export type QueryGetVaultsAnalyticsArgs = {
   input: VaultStatsInput;
+};
+
+
+export type QueryGetWatchHistoryArgs = {
+  input: PaginationInput;
 };
 
 
@@ -2274,6 +2293,23 @@ export type VaultsEntity = {
   viewCount?: Maybe<Scalars['Int']['output']>;
 };
 
+export type WatchHistoryEntity = {
+  __typename?: 'WatchHistoryEntity';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  entityId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  type: WatchHistoryType;
+  userId: Scalars['String']['output'];
+};
+
+export enum WatchHistoryType {
+  Live = 'LIVE',
+  Post = 'POST',
+  Story = 'STORY',
+  Vault = 'VAULT'
+}
+
 export type ZoneMembershipsEntity = {
   __typename?: 'ZoneMembershipsEntity';
   endsAt: Scalars['DateTime']['output'];
@@ -2569,6 +2605,20 @@ export type UpdateFanProfileMutationVariables = Exact<{
 
 
 export type UpdateFanProfileMutation = { __typename?: 'Mutation', updateFanProfile: { __typename?: 'FanProfilesEntity', appliedAt?: any | null, createdAt: any, deletedAt?: any | null, fanId: string, isBanned: boolean, updatedAt: any, user: { __typename?: 'UsersEntity', avatarUrl?: string | null, bannerUrl?: string | null, createdAt: any, deletedAt?: any | null, firstName: string, id: string, lastLoginAt?: any | null, lastName: string, roles: Array<UserRoles>, updatedAt: any, username: string } } };
+
+export type GetWatchHistoryQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+
+export type GetWatchHistoryQuery = { __typename?: 'Query', getWatchHistory: Array<{ __typename?: 'WatchHistoryEntity', id: string, userId: string, type: WatchHistoryType, entityId: string, createdAt: any, deletedAt?: any | null }> };
+
+export type DeleteWatchHistoryMutationVariables = Exact<{
+  input: DeleteWatchHistoryInput;
+}>;
+
+
+export type DeleteWatchHistoryMutation = { __typename?: 'Mutation', deleteWatchHistory: boolean };
 
 export type InitiateCreatorObjectsImportMutationVariables = Exact<{
   input: CreateImportQueueInput;
@@ -3041,6 +3091,8 @@ export const DownloadAllCreatorObjectsDocument = {"kind":"Document","definitions
 export const TerminateDownloadingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"TerminateDownloading"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"terminateDownloading"}}]}}]} as unknown as DocumentNode<TerminateDownloadingMutation, TerminateDownloadingMutationVariables>;
 export const GetFanProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getFanProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getFanProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"appliedAt"}},{"kind":"Field","name":{"kind":"Name","value":"hasZoneMembership"}},{"kind":"Field","name":{"kind":"Name","value":"currentZone"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"zoneType"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"bannerUrl"}}]}}]}}]}}]} as unknown as DocumentNode<GetFanProfileQuery, GetFanProfileQueryVariables>;
 export const UpdateFanProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateFanProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateUserProfileInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateFanProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appliedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"isBanned"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"bannerUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastLoginAt"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateFanProfileMutation, UpdateFanProfileMutationVariables>;
+export const GetWatchHistoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetWatchHistory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getWatchHistory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"entityId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]} as unknown as DocumentNode<GetWatchHistoryQuery, GetWatchHistoryQueryVariables>;
+export const DeleteWatchHistoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteWatchHistory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteWatchHistoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteWatchHistory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteWatchHistoryMutation, DeleteWatchHistoryMutationVariables>;
 export const InitiateCreatorObjectsImportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InitiateCreatorObjectsImport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateImportQueueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initiateCreatorObjectsImport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<InitiateCreatorObjectsImportMutation, InitiateCreatorObjectsImportMutationVariables>;
 export const InitiateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Initiate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateImportQueueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initiate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<InitiateMutation, InitiateMutationVariables>;
 export const GetSingleChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSingleChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSingleChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"creatorAvatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"creatorFullname"}},{"kind":"Field","name":{"kind":"Name","value":"creatorLastSeenAt"}},{"kind":"Field","name":{"kind":"Name","value":"isCreatorOnline"}},{"kind":"Field","name":{"kind":"Name","value":"fanId"}},{"kind":"Field","name":{"kind":"Name","value":"fanAvatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"fanFullname"}},{"kind":"Field","name":{"kind":"Name","value":"fanLastSeenAt"}},{"kind":"Field","name":{"kind":"Name","value":"isFanOnline"}},{"kind":"Field","name":{"kind":"Name","value":"lastMessageId"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"initiatedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"isFanOnline"}},{"kind":"Field","name":{"kind":"Name","value":"isCreatorOnline"}},{"kind":"Field","name":{"kind":"Name","value":"hasMutedThisChannel"}},{"kind":"Field","name":{"kind":"Name","value":"hasRestrictedThisChannel"}},{"kind":"Field","name":{"kind":"Name","value":"hasBlockedThisChannel"}},{"kind":"Field","name":{"kind":"Name","value":"hasPinnedThisChannel"}},{"kind":"Field","name":{"kind":"Name","value":"messages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"senderId"}},{"kind":"Field","name":{"kind":"Name","value":"recipientUserId"}},{"kind":"Field","name":{"kind":"Name","value":"channelId"}},{"kind":"Field","name":{"kind":"Name","value":"unlockPrice"}},{"kind":"Field","name":{"kind":"Name","value":"isExclusive"}},{"kind":"Field","name":{"kind":"Name","value":"hasAccess"}},{"kind":"Field","name":{"kind":"Name","value":"repliedToId"}},{"kind":"Field","name":{"kind":"Name","value":"hasSeen"}},{"kind":"Field","name":{"kind":"Name","value":"unlockedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"repliedTo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}},{"kind":"Field","name":{"kind":"Name","value":"messageAssets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"fileType"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"mediaType"}},{"kind":"Field","name":{"kind":"Name","value":"rawUrl"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSingleChannelQuery, GetSingleChannelQueryVariables>;
