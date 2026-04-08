@@ -1,13 +1,13 @@
 'use client';
 
 import { useAssets } from '@/hooks/useAssets';
-import { AssetsEntity, AssetType, FileType, PaginationInput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetsEntity, AssetType, FileType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { Image as ImageIcon } from 'lucide-react';
 import NextImage from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { AssetsFilters } from './AssetsFilters';
 import { AssetsGrid } from './AssetsGrid';
@@ -18,57 +18,41 @@ import { UploadModal } from './UploadModal';
 
 export function AssetsView() {
   const [activeType, setActiveType] = useState<string>('ALL');
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
   const [previewAsset, setPreviewAsset] = useState<AssetsEntity | null>(null);
+  const [fileType] = useState<FileType[]>(Object.values(FileType));
 
-  const params: PaginationInput = {
-    sortBy: SortBy.AssetCreatedAt,
-    orderBy: SortOrder.Desc,
-    take: 30,
-    skip: 0,
-    assetType: AssetType.Private,
-    fileType: activeType === 'ALL' ? undefined : [activeType as FileType]
-  };
+  const queryArgs = useMemo(
+    () => ({
+      sortBy: SortBy.AssetCreatedAt,
+      orderBy: SortOrder.Desc,
+      take: 30,
+      skip: 0,
+      assetType: AssetType.Private,
+      fileType: activeType === 'ALL' ? fileType : [activeType as FileType]
+    }),
+    [activeType, fileType]
+  );
 
-  const { assets, loading, hasMore, handleLoadMore, handleRefetch } = useAssets(params);
-
-  const handleUploadFiles = async (files: File[]) => {
-    setIsUploading(true);
-    // Mock upload simulating API delay
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // In real implementation: loop files and upload
-      toast.success(`${files.length} asset(s) uploaded successfully`);
-      handleRefetch(30);
-    } catch (err) {
-      toast.error('Upload failed');
-    } finally {
-      setIsUploading(false);
-      setIsUploadModalOpen(false);
-    }
-  };
+  const { assets, loading, hasMore, handleLoadMore, handleRefetch } = useAssets(queryArgs);
 
   const handleOpenUploadModal = () => {
     setIsUploadModalOpen(true);
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this asset?')) {
-      toast.success('Asset deleted (mock)');
-      handleRefetch(30);
-      setSelectedAssets((prev) => prev.filter((pid) => pid !== id));
-    }
+    toast.success('Asset deleted (mock)');
+    handleRefetch(30);
+    setSelectedAssets((prev) => prev.filter((pid) => pid !== id));
   };
 
   const handleBulkDelete = () => {
     if (selectedAssets.length === 0) return;
-    if (confirm(`Delete ${selectedAssets.length} assets?`)) {
-      toast.success(`${selectedAssets.length} assets deleted (mock)`);
-      handleRefetch(30);
-      setSelectedAssets([]);
-    }
+    toast.success(`${selectedAssets.length} assets deleted (mock)`);
+    handleRefetch(30);
+    setSelectedAssets([]);
   };
 
   const handleToggleSelect = (id: string) => {
@@ -80,7 +64,6 @@ export function AssetsView() {
   };
 
   const totalAssets = assets.length;
-  // Use optional chaining and fallback for safety, in case asset is null/undefined though typed otherwise
   const imageCount = assets.filter((a) => a.asset?.fileType === FileType.Image).length;
   const videoCount = assets.filter((a) => a.asset?.fileType === FileType.Video).length;
 
@@ -126,15 +109,16 @@ export function AssetsView() {
         </CardContent>
       </Card>
 
-      {/* Upload Modal */}
       <UploadModal
         isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        onUpload={handleUploadFiles}
+        onClose={() => {
+          setIsUploadModalOpen(false);
+          handleRefetch(30);
+        }}
         isUploading={isUploading}
+        setIsUploading={setIsUploading}
       />
 
-      {/* Fullscreen Preview Modal */}
       {previewAsset && (
         <Modal
           isOpen={!!previewAsset}

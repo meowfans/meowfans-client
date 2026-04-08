@@ -12,6 +12,7 @@ import { Loading } from '@workspace/ui/globals/Loading';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { CheckCircle2, Clock, Loader2, Search, ShieldCheck, UserCog, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { ImportCreatorsSheet } from './ImportCreatorsSheet';
 
 export function DashboardView() {
   const { admin } = useAdmin();
@@ -70,6 +71,7 @@ export function DashboardView() {
             Welcome back, <span className="font-semibold text-foreground">@{admin?.user?.username}</span>
           </p>
         </div>
+        <ImportCreatorsSheet />
       </div>
 
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
@@ -141,7 +143,7 @@ export function DashboardView() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-[200px]">
+        <div className="flex items-center justify-center h-50">
           <Loading />
         </div>
       ) : (

@@ -11,10 +11,12 @@ import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManag
 import { Loading } from '@workspace/ui/globals/Loading';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
 import { MoreHorizontal, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export function ProfilesView() {
   const { creators, loading, count, hasMore, handleLoadMore } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll });
   const { onOpen } = useImpersonationStore();
+  const router = useRouter();
 
   return (
     <div className="space-y-8 p-4 md:p-8 pt-6 max-w-6xl mx-auto flex flex-col h-full w-full min-w-0 overflow-hidden">
@@ -37,18 +39,18 @@ export function ProfilesView() {
           <table className="w-full caption-bottom text-sm">
             <TableHeader>
               <TableRow>
-                <TableHead className="sticky left-0 top-0 z-50 bg-card min-w-[120px] px-3">Creator</TableHead>
+                <TableHead className="sticky left-0 top-0 z-50 bg-card min-w-30 px-3">Creator</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center px-2 min-w-28">Assets</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center px-2 min-w-28">Vaults</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center min-w-27.5">Posts</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center min-w-27.5">Subscribers</TableHead>
-                <TableHead className="sticky top-0 z-30 bg-card text-center px-4 min-w-28 bg-card">Actions</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card text-center px-4 min-w-28">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {creators.map((creator) => (
                 <TableRow key={creator.id} className="hover:bg-primary/5 transition-colors group border-b border-primary/5">
-                  <TableCell className="py-4 sticky left-0 z-20 bg-card/90 backdrop-blur-md group-hover:bg-primary/10 transition-colors border-r border-primary/5 min-w-[120px] table-cell">
+                  <TableCell className="py-4 sticky left-0 z-20 bg-card/90 backdrop-blur-md group-hover:bg-primary/10 transition-colors border-r border-primary/5 min-w-30 table-cell">
                     <div className="flex items-center gap-2">
                       <Avatar className="h-9 w-9 border-2 border-primary/10 group-hover:border-primary/40 transition-colors shrink-0">
                         <AvatarImage src={creator?.avatarUrl ?? MEOW_FANS_AVATAR} />
@@ -76,7 +78,7 @@ export function ProfilesView() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-xl border-primary/20">
-                        <DropdownMenuItem className="text-xs uppercase font-black italic">View Details</DropdownMenuItem>
+                        <DropdownMenuItem className="text-xs uppercase font-black italic" onClick={() => router.push(`/profiles/${creator.username}`)}>View Details</DropdownMenuItem>
                         <DropdownMenuItem className="text-xs uppercase font-black italic">Suspend User</DropdownMenuItem>
                         <DropdownMenuItem className="text-xs uppercase font-black italic text-destructive">Delete Account</DropdownMenuItem>
                         <DropdownMenuItem className="text-xs uppercase font-black italic" onClick={() => onOpen(creator.id)}>
