@@ -7,12 +7,13 @@ import { JwtUser } from './types';
 
 export const resolvePathName = (pathname: string) => {
   if (pathname.startsWith('/vaults')) return '/vaults';
-  else if (pathname.startsWith('/profiles')) return '/profiles';
   else if (pathname.startsWith('/dashboard')) return '/dashboard';
-  else if (pathname.startsWith('/creators')) return '/creators';
-  else if (pathname.startsWith('/settings')) return '/settings';
+  else if (pathname.startsWith('/categories')) return '/categories';
   else if (pathname.startsWith('/channels')) return '/channels';
   else if (pathname.startsWith('/posts')) return '/posts';
+  else if (pathname.startsWith('/profiles')) return '/profiles';
+  else if (pathname.startsWith('/creators')) return '/creators';
+  else if (pathname.startsWith('/settings')) return '/settings';
   else if (pathname.startsWith('/legal')) return '/legal';
   else return pathname;
 };
