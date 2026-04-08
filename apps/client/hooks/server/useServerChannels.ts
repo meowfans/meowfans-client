@@ -41,7 +41,7 @@ export const useServerChannels = (params: PaginationInput, initialChannels: Chan
     }
   }, [initialChannels, setChannels]);
 
-  if (!fan)
+  if (!fan || !initialChannels.length)
     return {
       channels: [],
       loading: false,

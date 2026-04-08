@@ -42,6 +42,14 @@ export const useServerPosts = (params: PaginationInput, initialPosts: GetPublicP
     }
   }, [initialPosts, setPosts]);
 
+  if (!initialPosts.length)
+    return {
+      posts: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+
   return {
     posts,
     loading,

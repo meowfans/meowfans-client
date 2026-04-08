@@ -15,11 +15,10 @@ interface ShortsProps {
 }
 
 export function Shorts({ initialShorts }: ShortsProps) {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const { publicShorts, loading, loadMore, hasMore } = useServerShorts({ take: 10 }, initialShorts);
-  const [globalMute, setGlobalMute] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [dismissedAds, setDismissedAds] = useState<number[]>([]);
+  const [globalMute, setGlobalMute] = useState<boolean>(true);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,7 +49,7 @@ export function Shorts({ initialShorts }: ShortsProps) {
         onScroll={handleScroll}
         className="h-full w-full max-w-100 md:rounded-[2.5rem] md:my-4 md:h-[calc(100%-2rem)] md:border-8 md:border-white/5 md:shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-y relative"
       >
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence key={'_animate_presence'} mode="popLayout">
           {publicShorts.length === 0 ? (
             <ShortsEmptyState onRefresh={() => window.location.reload()} />
           ) : (

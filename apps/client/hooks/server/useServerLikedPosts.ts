@@ -42,7 +42,7 @@ export const useServerLikedPosts = (params: PaginationInput, initialLikes: GetLi
     }
   }, [initialLikes, setPostLikes]);
 
-  if (!fan) {
+  if (!fan || !initialLikes.length) {
     return {
       postLikes: [],
       loading: false,

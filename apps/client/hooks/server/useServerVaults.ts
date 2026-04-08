@@ -43,6 +43,15 @@ export const useServerVaults = (params: PaginationInput, initialVaults: GetPubli
     }
   }, [initialVaults, setVaults]);
 
+  if (!initialVaults.length) {
+    return {
+      vaults: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+  }
+
   return {
     vaults,
     loading,

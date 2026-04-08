@@ -1,11 +1,6 @@
 'use client';
 
-import { useServerChannels } from '@/hooks/server/useServerChannels';
-import { useServerCreators } from '@/hooks/server/useServerCreators';
-import { useServerGetFollowings } from '@/hooks/server/useServerGetFollowings';
-import { useServerPurchased } from '@/hooks/server/useServerPurchased';
 import { ChannelsOutput, GetDefaultCreatorsOutput, GetFanAssetsOutput, GetFollowingOutput } from '@workspace/gql/generated/graphql';
-import { useMemo } from 'react';
 import { DashboardChannels } from './DashboardChannels';
 import { DashboardFanAssets } from './DashboardFanAssets';
 import { DashBoardHeader } from './DashboardHeader';
@@ -21,30 +16,21 @@ interface DashboardProps {
 }
 
 export function Dashboard({ initialFollowings, initialFanAssets, initialCreators, initialChannels }: DashboardProps) {
-  const { followings } = useServerGetFollowings({ take: 30 }, initialFollowings);
-  const { fanAssets, loading: assetsLoading } = useServerPurchased({ take: 5 }, initialFanAssets);
-  const { creators, loading: creatorsLoading } = useServerCreators({ take: 10 }, initialCreators);
-  const { channels, loading: channelsLoading } = useServerChannels({ take: 5, skip: 0 }, initialChannels);
-
-  const recommendedCreators = useMemo<GetDefaultCreatorsOutput[]>(() => {
-    return creators.filter((c) => !followings.some((f) => f.id === c.id)).slice(0, 5);
-  }, [creators, followings]);
-
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-6 h-screen">
       <DashBoardHeader />
       <div className="py-6">
-        <DashboardStats followingLength={followings.length} fanAssetsLength={fanAssets.length} channelsLength={channels.length} />
+        <DashboardStats followingLength={initialFollowings.length} fanAssetsLength={initialFanAssets.length} channelsLength={initialChannels.length} />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-7 items-start">
         <div className="space-y-8 lg:col-span-4">
-          <DashboardFanAssets fanAssets={fanAssets} assetsLoading={assetsLoading} />
-          <DashboardRecommendCreators creatorsLoading={creatorsLoading} recommendedCreators={recommendedCreators} />
+          <DashboardFanAssets fanAssets={initialFanAssets} assetsLoading={false} />
+          <DashboardRecommendCreators creatorsLoading={false} recommendedCreators={initialCreators} />
         </div>
 
         <div className="space-y-8 lg:col-span-3">
-          <DashboardChannels channels={channels} channelsLoading={channelsLoading} isEmpty={!channels.length && !channelsLoading} />
+          <DashboardChannels channels={initialChannels} channelsLoading={false} isEmpty={!initialChannels.length && !false} />
           <DashboardInteractions />
         </div>
       </div>

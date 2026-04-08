@@ -43,7 +43,7 @@ export const useServerGetFollowings = (params: PaginationInput, initialFollowing
     }
   }, [initialFollowings, setFollowings]);
 
-  if (!fan)
+  if (!fan || !initialFollowings.length)
     return {
       followings: [],
       loading: false,

@@ -44,7 +44,7 @@ export const useServerPurchased = (params: PaginationInput, initialData: GetFanA
     }
   }, [initialData, setFanAssets]);
 
-  if (!fan)
+  if (!fan || !initialData.length)
     return {
       fanAssets: [],
       loading: false,

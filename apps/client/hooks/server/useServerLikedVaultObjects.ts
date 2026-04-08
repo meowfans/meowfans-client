@@ -42,7 +42,7 @@ export const useServerLikedVaultObjects = (params: PaginationInput, initialLikes
     }
   }, [initialLikes, setVaultObjectLikes]);
 
-  if (!fan) {
+  if (!fan || !initialLikes.length) {
     return {
       vaultObjectLikes: [],
       loading: false,

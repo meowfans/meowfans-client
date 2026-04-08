@@ -1,5 +1,6 @@
 'use client';
 
+import { getPublicVaultsByTags } from '@/app/server/getPublicVaultsByTags';
 import { getTags } from '@/app/server/getTags';
 import { useTagsStore } from '@/hooks/store/tags.store';
 import {
@@ -14,7 +15,6 @@ import {
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 import { useVaultsStore } from '../store/vaults.store';
-import { getPublicVaultsByTags } from '@/app/server/getPublicVaultsByTags';
 
 interface UseServerTagsProps {
   limit?: number;
@@ -53,6 +53,16 @@ export const useServerTags = ({ limit = 100 }: UseServerTagsProps, initialTags: 
       setOffset(initialTags.length);
     }
   }, [initialTags, setTags, tags.length]);
+
+  if (!initialTags.length) {
+    return {
+      tags: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {},
+      isEmpty: true
+    };
+  }
 
   return {
     tags,
