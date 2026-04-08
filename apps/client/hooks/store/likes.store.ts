@@ -1,19 +1,16 @@
 import { GetLikedPostsOutput, GetLikedVaultObjectsOutput, GetLikedVaultsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type PostLikesUpdater = GetLikedPostsOutput[] | ((prev: GetLikedPostsOutput[]) => GetLikedPostsOutput[]);
-type VaultLikesUpdater = GetLikedVaultsOutput[] | ((prev: GetLikedVaultsOutput[]) => GetLikedVaultsOutput[]);
-type VaultObjectLikesUpdater = GetLikedVaultObjectsOutput[] | ((prev: GetLikedVaultObjectsOutput[]) => GetLikedVaultObjectsOutput[]);
 
 type LikesStore = {
   postLikes: GetLikedPostsOutput[];
   vaultLikes: GetLikedVaultsOutput[];
   vaultObjectLikes: GetLikedVaultObjectsOutput[];
-  setPostLikes: (updater: PostLikesUpdater) => void;
+  setPostLikes: (updater: Updater<GetLikedPostsOutput[]>) => void;
   appendVaultLikes: (vaults: GetLikedVaultsOutput[]) => void;
-  setVaultLikes: (updater: VaultLikesUpdater) => void;
+  setVaultLikes: (updater: Updater<GetLikedVaultsOutput[]>) => void;
   appendVaultObjectLikes: (vaultObjects: GetLikedVaultObjectsOutput[]) => void;
-  setVaultObjectLikes: (updater: VaultObjectLikesUpdater) => void;
+  setVaultObjectLikes: (updater: Updater<GetLikedVaultObjectsOutput[]>) => void;
 };
 
 export const useLikesStore = create<LikesStore>()((set) => ({

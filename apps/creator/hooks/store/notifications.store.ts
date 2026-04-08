@@ -32,6 +32,8 @@ export const useNotificationsStore = create<NotificationsStore>()(
       setAllowSystemNotification: (updater: NotificationUpdater) =>
         set((prev) => ({ allowSystemNotification: typeof updater === 'function' ? updater(prev.allowSystemNotification) : updater }))
     }),
-    { name: 'notifications-store', storage: createJSONStorage(() => localStorage) }
+    { name: 'creator-notifications-store',
+      
+      skipHydration: true, storage: createJSONStorage(() => localStorage) }
   )
 );

@@ -1,14 +1,12 @@
 import { ChannelsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type ChannelUpdater = ChannelsOutput | ((prev: ChannelsOutput) => ChannelsOutput);
-type ChannelsUpdater = ChannelsOutput[] | ((prev: ChannelsOutput[]) => ChannelsOutput[]);
 
 type ChannelsStore = {
   channels: ChannelsOutput[];
   channel: ChannelsOutput;
-  setChannel: (updater: ChannelUpdater) => void;
-  setChannels: (updater: ChannelsUpdater) => void;
+  setChannel: (updater: Updater<ChannelsOutput>) => void;
+  setChannels: (updater: Updater<ChannelsOutput[]>) => void;
 };
 
 export const useChannelsStore = create<ChannelsStore>()((set) => ({

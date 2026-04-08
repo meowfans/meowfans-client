@@ -1,16 +1,18 @@
-import { ShadCnBackgrounds } from '@workspace/ui/lib';
+import { ShadCnBackgrounds, Updater } from '@workspace/ui/lib';
 import { create } from 'zustand';
 
 type BackgroundStore = {
   bgModalOpen: boolean;
-  setBgModalOpen: (open: boolean) => void;
+  setBgModalOpen: (updater: Updater<boolean>) => void;
   shadCnBackground: ShadCnBackgrounds | null;
-  setBackground: (bg: ShadCnBackgrounds | null) => void;
+  setBackground: (updater: Updater<ShadCnBackgrounds | null>) => void;
 };
 
 export const useShadCnBackgroundStore = create<BackgroundStore>()((set) => ({
   bgModalOpen: false,
-  setBgModalOpen: () => set((state) => ({ bgModalOpen: !state.bgModalOpen })),
+  setBgModalOpen: (updater: Updater<boolean>) =>
+    set((state) => ({ bgModalOpen: typeof updater === 'function' ? updater(state.bgModalOpen) : updater })),
   shadCnBackground: null,
-  setBackground: (shadCnBackground: ShadCnBackgrounds | null) => set(() => ({ shadCnBackground }))
+  setBackground: (updater: Updater<ShadCnBackgrounds | null>) =>
+    set((state) => ({ shadCnBackground: typeof updater === 'function' ? updater(state.shadCnBackground) : updater }))
 }));

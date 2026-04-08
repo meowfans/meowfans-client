@@ -1,13 +1,11 @@
 'use client';
 
-import { useFan } from '@/hooks/context/UserContextWrapper';
 import { useServerSingleChannel } from '@/hooks/server/useServerSingleChannel';
-import { useQuery } from '@apollo/client/react';
-import { UPDATE_LAST_SEEN_QUERY } from '@workspace/gql/api';
 import { ChannelsOutput, MessageChannelStatus } from '@workspace/gql/generated/graphql';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { MessageCircle } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { LastSeenUpdater } from './LastSeenUpdater';
 import { SingleChannelHeader } from './SingleChannelHeader';
 import { SingleChannelInputArea } from './SingleChannelInputArea';
 import { SingleChannelMessageThread } from './SingleChannelMessageThread';
@@ -19,25 +17,12 @@ interface SingleChannelProps {
 }
 
 export function SingleChannel({ channelId, initialChannel }: SingleChannelProps) {
-  const { fan } = useFan();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { channel, loading, hasMore, loadMore } = useServerSingleChannel({ relatedEntityId: channelId, take: 30 }, initialChannel);
 
   const isRequested = channel?.status === MessageChannelStatus.Requested;
   const isBlocked = channel?.hasBlockedThisChannel || channel?.status === MessageChannelStatus.Blocked;
   const isRestricted = channel?.hasRestrictedThisChannel;
-
-  const { refetch } = useQuery(UPDATE_LAST_SEEN_QUERY, {
-    skip: (!channelId && !loading) || isRestricted || isBlocked || isRequested,
-    variables: { input: { messageChannelId: channelId } }
-  });
-
-  useEffect(() => {
-    const lastMessage = (channel.messages || []).at(0);
-    if (lastMessage?.recipientUserId === fan?.fanId) {
-      refetch({ input: { messageChannelId: channelId, messageId: lastMessage?.id } });
-    }
-  }, [channel?.messages, channelId, fan]); //eslint-disable-line
 
   if (loading && !channel?.id) {
     return (
@@ -58,6 +43,14 @@ export function SingleChannel({ channelId, initialChannel }: SingleChannelProps)
 
   return (
     <div className="flex h-full flex-col bg-background relative overflow-hidden border-l border-border/50">
+      <LastSeenUpdater
+        channelId={channelId}
+        channel={channel}
+        loading={loading}
+        isRestricted={isRestricted}
+        isBlocked={isBlocked}
+        isRequested={isRequested}
+      />
       <SingleChannelHeader channel={channel} />
       <SingleChannelStatus channel={channel} isBlocked={isBlocked} isRequested={isRequested} isRestricted={isRestricted} />
 

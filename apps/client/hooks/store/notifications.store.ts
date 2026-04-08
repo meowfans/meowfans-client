@@ -1,17 +1,16 @@
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-type NotificationUpdater = boolean | ((prev: boolean) => boolean);
-
-type NotificationsStore = {
+export type NotificationsStore = {
   allowNotification: boolean;
   allowMessagesNotification: boolean;
   allowInteractionsNotification: boolean;
   allowSystemNotification: boolean;
-  setAllowNotification: (updater: NotificationUpdater) => void;
-  setAllowMessagesNotification: (updater: NotificationUpdater) => void;
-  setAllowInteractionsNotification: (updater: NotificationUpdater) => void;
-  setAllowSystemNotification: (updater: NotificationUpdater) => void;
+  setAllowNotification: (updater: Updater<boolean>) => void;
+  setAllowMessagesNotification: (updater: Updater<boolean>) => void;
+  setAllowInteractionsNotification: (updater: Updater<boolean>) => void;
+  setAllowSystemNotification: (updater: Updater<boolean>) => void;
 };
 
 export const useNotificationsStore = create<NotificationsStore>()(
@@ -21,17 +20,17 @@ export const useNotificationsStore = create<NotificationsStore>()(
       allowMessagesNotification: false,
       allowInteractionsNotification: false,
       allowSystemNotification: false,
-      setAllowNotification: (updater: NotificationUpdater) =>
+      setAllowNotification: (updater) =>
         set((prev) => ({ allowNotification: typeof updater === 'function' ? updater(prev.allowNotification) : updater })),
-      setAllowMessagesNotification: (updater: NotificationUpdater) =>
+      setAllowMessagesNotification: (updater) =>
         set((prev) => ({ allowMessagesNotification: typeof updater === 'function' ? updater(prev.allowMessagesNotification) : updater })),
-      setAllowInteractionsNotification: (updater: NotificationUpdater) =>
+      setAllowInteractionsNotification: (updater) =>
         set((prev) => ({
           allowInteractionsNotification: typeof updater === 'function' ? updater(prev.allowInteractionsNotification) : updater
         })),
-      setAllowSystemNotification: (updater: NotificationUpdater) =>
+      setAllowSystemNotification: (updater) =>
         set((prev) => ({ allowSystemNotification: typeof updater === 'function' ? updater(prev.allowSystemNotification) : updater }))
     }),
-    { name: 'notifications-store', storage: createJSONStorage(() => localStorage) }
+    { name: 'client-notifications-store', skipHydration: true, storage: createJSONStorage(() => localStorage) }
   )
 );

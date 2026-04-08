@@ -69,3 +69,5 @@ export interface HeaderProps {
   onClick?: () => unknown;
   path?: string;
 }
+
+export type Updater<T> = T | ((prev: T) => T);

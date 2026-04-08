@@ -111,7 +111,6 @@ export const useVaultObjects = (params: PaginationInput) => {
     loadVaultObjects(true);
 
     return () => {
-      console.log('clearing vault objects');
       setVaultObjects([]);
     };
   }, [params.relatedEntityId, params.sortBy, params.orderBy, params.take]); // eslint-disable-line

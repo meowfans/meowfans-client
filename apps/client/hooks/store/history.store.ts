@@ -1,11 +1,10 @@
 import { WatchHistoryEntity } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type HistoryUpdater = WatchHistoryEntity[] | ((prev: WatchHistoryEntity[]) => WatchHistoryEntity[]);
 
 type HistoryStore = {
   history: WatchHistoryEntity[];
-  setHistory: (updater: HistoryUpdater) => void;
+  setHistory: (updater: Updater<WatchHistoryEntity[]>) => void;
   deleteHistory: (id: string) => void;
 };
 

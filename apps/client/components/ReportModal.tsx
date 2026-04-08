@@ -32,7 +32,6 @@ export function ReportModal({ isOpen, onClose, entityId, entityType }: ReportMod
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    console.log('clicked', fan?.fanId, reason, selectedPreset, entityId, entityType);
     if ((!reason && !selectedPreset) || !entityId || !entityType || !fan) return;
 
     await createReport({

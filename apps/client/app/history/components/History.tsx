@@ -19,8 +19,6 @@ export function History({ initialHistory }: HistoryProps) {
   const { history, loading, loadMore, hasMore } = useServerHistory({ take: 30 }, initialHistory);
   const { deleteWatchHistory, loading: isDeleting } = useHistoryMutations();
 
-  console.log(history)
-
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<TabValue>('all');
 

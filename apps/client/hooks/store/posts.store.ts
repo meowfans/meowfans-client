@@ -1,8 +1,6 @@
 import { GetPublicPostsOutput, GetPublicSinglePostOutput, PostAssetsEntity } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type PostUpdater = GetPublicSinglePostOutput | ((prev: GetPublicSinglePostOutput) => GetPublicSinglePostOutput);
-type PostsUpdater = GetPublicPostsOutput[] | ((prev: GetPublicPostsOutput[]) => GetPublicPostsOutput[]);
 
 type PostsStore = {
   post: GetPublicSinglePostOutput;
@@ -10,11 +8,11 @@ type PostsStore = {
   postsLoading: boolean;
   postAssets: PostAssetsEntity[];
   creatorPosts: GetPublicPostsOutput[];
-  setCreatorPosts: (updater: PostsUpdater) => void;
-  setPosts: (updater: PostsUpdater) => void;
+  setCreatorPosts: (updater: Updater<GetPublicPostsOutput[]>) => void;
+  setPosts: (updater: Updater<GetPublicPostsOutput[]>) => void;
   setPostsLoading: (postsLoading: boolean) => void;
   setPostAssets: (postAssets: PostAssetsEntity[]) => void;
-  setPost: (updater: PostUpdater) => void;
+  setPost: (updater: Updater<GetPublicSinglePostOutput>) => void;
 };
 
 export const usePostsStore = create<PostsStore>()((set, get) => ({

@@ -1,19 +1,18 @@
 import { GetDefaultCreatorsOutput, UsersEntity } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type CreatorsUpdater = GetDefaultCreatorsOutput[] | ((prev: GetDefaultCreatorsOutput[]) => GetDefaultCreatorsOutput[]);
 
 type CreatorsStore = {
   fanProfile: UsersEntity;
   creators: GetDefaultCreatorsOutput[];
-  setFanProfile: (profile: UsersEntity) => void;
-  setCreators: (updater: CreatorsUpdater) => void;
+  setFanProfile: (updater: Updater<UsersEntity>) => void;
+  setCreators: (updater: Updater<GetDefaultCreatorsOutput[]>) => void;
 };
 
 export const useCreatorsStore = create<CreatorsStore>()((set) => ({
   creators: [],
   fanProfile: {} as UsersEntity,
-  setFanProfile: (fanProfile: UsersEntity) => set({ fanProfile }),
+  setFanProfile: (updater) => set((state) => ({ fanProfile: typeof updater === 'function' ? updater(state.fanProfile) : updater })),
   setCreators: (updater) =>
     set((state) => ({
       creators:
