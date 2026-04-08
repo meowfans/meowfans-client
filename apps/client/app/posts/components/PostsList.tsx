@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { APP_PATHS } from '@/lib/constants/feature-paths';
 import { GetPublicPostsOutput } from '@workspace/gql/generated/graphql';
@@ -58,16 +59,22 @@ export const PostsList = ({
             }`}
           >
             <AnimatePresence mode="popLayout">
-              {posts.map((post) => (
-                <PostCard
+              {posts.map((post, index) => (
+                <ApplyAd
                   key={post.id}
-                  post={post}
-                  isBlurEnabled={isBlurEnabled}
-                  isExpanded={expandedPostId === post.id}
-                  onToggleComments={(e) => handleToggleComments(e, post.id)}
-                  onLike={(e) => handleLike(e, post.id)}
-                  onReport={onReport}
-                  viewMode={viewMode}
+                  canApplyAd={true}
+                  zoneIndex={index}
+                  element={
+                    <PostCard
+                      post={post}
+                      isBlurEnabled={isBlurEnabled}
+                      isExpanded={expandedPostId === post.id}
+                      onToggleComments={(e) => handleToggleComments(e, post.id)}
+                      onLike={(e) => handleLike(e, post.id)}
+                      onReport={onReport}
+                      viewMode={viewMode}
+                    />
+                  }
                 />
               ))}
             </AnimatePresence>
