@@ -53,7 +53,7 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
               <InteractionButton
                 variant={profile.isFollowing ? 'secondary' : 'default'}
                 size="sm"
-                className="h-8 md:h-9 rounded-lg font-bold px-6 text-xs md:text-sm min-w-[100px]"
+                className="h-8 md:h-9 rounded-lg font-bold px-6 text-xs md:text-sm min-w-25"
                 onClick={handleFollow}
                 isLoading={followLoading}
                 actionName="follow"

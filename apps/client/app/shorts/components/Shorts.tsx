@@ -1,8 +1,10 @@
 'use client';
 
+import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { useServerShorts } from '@/hooks/server/useServerShorts';
 import { GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
 import { AnimatePresence } from 'framer-motion';
+import { Loader } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ShortCard } from './ShortCard';
 import { ShortsEmptyState } from './ShortsEmptyState';
@@ -17,6 +19,7 @@ export function Shorts({ initialShorts }: ShortsProps) {
   const { publicShorts, loading, loadMore, hasMore } = useServerShorts({ take: 10 }, initialShorts);
   const [globalMute, setGlobalMute] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [dismissedAds, setDismissedAds] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,12 +44,11 @@ export function Shorts({ initialShorts }: ShortsProps) {
   if (!isMounted) return null;
 
   return (
-    <div className="relative h-[calc(100svh-64px)] w-full overflow-hidden flex items-center justify-center">
-      {/* Centered Phone-like Container for Desktop */}
+    <div className="relative h-[calc(100svh-64px)] w-full overflow-hidden flex flex-col items-center justify-center">
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="h-full w-full max-w-[400px] md:rounded-[2.5rem] md:my-4 md:h-[calc(100%-2rem)] md:border-[8px] md:border-white/5 md:shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-y relative"
+        className="h-full w-full max-w-100 md:rounded-[2.5rem] md:my-4 md:h-[calc(100%-2rem)] md:border-8 md:border-white/5 md:shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-y relative"
       >
         <AnimatePresence mode="popLayout">
           {publicShorts.length === 0 ? (
@@ -55,9 +57,18 @@ export function Shorts({ initialShorts }: ShortsProps) {
             publicShorts.map((short, index) => (
               <div key={`${short.id}-${index}`} className="h-full w-full snap-start snap-always relative">
                 <ShortCard globalMute={globalMute} onSetGlobalMute={setGlobalMute} short={short} isActive={index === activeIndex} />
+
+                {index > 0 && index % 3 === 0 && index === activeIndex && (
+                  <div className="absolute inset-0 z-50 flex flex-col items-center justify-center">
+                    <div className="w-full h-full">
+                      <ExoAdProvider zoneId="5771266" zoneType={ExoAdZoneTypes.OutStream} />
+                    </div>
+                  </div>
+                )}
               </div>
             ))
           )}
+          {loading && <Loader className="animate-spin w-10 h-10" />}
         </AnimatePresence>
       </div>
 

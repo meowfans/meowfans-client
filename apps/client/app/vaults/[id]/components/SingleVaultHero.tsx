@@ -34,7 +34,7 @@ export function SingleVaultHero({
   return (
     <div className="relative w-full overflow-hidden bg-black/40">
       <div className="mx-auto max-w-4xl px-0 md:px-6 py-4 md:py-8">
-        <div className="relative aspect-[4/5] md:aspect-video w-full overflow-hidden rounded-[1.5rem] md:rounded-[3rem] shadow-2xl ring-1 ring-white/10">
+        <div className="relative aspect-4/5 md:aspect-video w-full overflow-hidden rounded-3xl md:rounded-[3rem] shadow-2xl ring-1 ring-white/10">
           {showCarousel ? (
             <Carousel
               items={vaultObjects}
@@ -56,7 +56,7 @@ export function SingleVaultHero({
                   <Sparkles className="h-12 w-12 text-muted-foreground/20" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
             </div>
           )}
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { useServerPosts } from '@/hooks/server/useServerPosts';
 import { GetPublicPostsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -28,7 +29,12 @@ export function TrendingPosts({ initialPosts }: TrendingPostsProps) {
         <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className="space-y-4 md:space-y-6 px-1">
             {posts.map((post, index) => (
-              <TrendingPostCard key={`trending-post-id${post.id}`} post={post} index={index} />
+              <ApplyAd
+                element={<TrendingPostCard key={post.id} post={post} index={index} />}
+                canApplyAd={index > 0 && index % 25 === 0}
+                zoneIndex={index}
+                key={post.id}
+              />
             ))}
           </div>
         </InfiniteScrollManager>

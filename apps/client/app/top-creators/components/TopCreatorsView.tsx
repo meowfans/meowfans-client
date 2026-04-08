@@ -8,7 +8,7 @@ export function TopCreatorsView() {
         <div className="aspect-video rounded-xl bg-muted/50" />
         <div className="aspect-video rounded-xl bg-muted/50" />
       </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50">
+      <div className="min-h-screen flex-1 rounded-xl bg-muted/50">
         <div className="flex items-center justify-center h-full">
           <h1 className="text-2xl font-bold text-muted-foreground">Top Creators Coming Soon</h1>
         </div>

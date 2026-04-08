@@ -4,6 +4,7 @@ import { AppSideBar } from '@/components/AppSideBar';
 import { CookieConsent } from '@/components/CookieConsent';
 import { Events } from '@/components/Events';
 import { FeatureGate } from '@/components/FeatureGate';
+import { ResponsiveBannerZone } from '@/components/ResponsiveBannerZone';
 import { RTAFooter } from '@/components/RTAFooter';
 import { fetchRequest } from '@/hooks/client/useAPI';
 import { EventsProvider } from '@/hooks/context/EventsProvider';
@@ -165,8 +166,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 <AppSideBar />
                 <SidebarInset>
                   <AppHeader />
+                  <ResponsiveBannerZone deskBanZoneId="5771518" mobBanZoneId="5769736" />
                   <div id="main-content-scroll" className="flex flex-1 flex-col overflow-y-auto">
                     <FeatureGate>{children}</FeatureGate>
+                    <ResponsiveBannerZone deskBanZoneId="5772072" mobBanZoneId="5771454" />
                     <RTAFooter />
                   </div>
                 </SidebarInset>

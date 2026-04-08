@@ -38,7 +38,8 @@ export type OutstreamZoneIds =
   | '5771278'
   | '5771280'
   | '5771282'
-  | '5771286';
+  | '5771286'
+  | '5893838';
 
 export type MobilePostZoneIds = '5770578';
 
@@ -88,20 +89,23 @@ interface ExoClickAdProviderProps<TZone extends ExoAdZoneTypes> {
   zoneType?: TZone;
   classIdName?: string;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
   zoneId,
   zoneType = ExoAdZoneTypes.Default as TZone,
   classIdName,
-  className
+  className,
+  onClick
 }: ExoClickAdProviderProps<TZone>) => {
   const { fan } = useFan();
+
   const hasSubscribed = () => {
     switch (configService.NEXT_PUBLIC_NODE_ENV) {
       case 'dev_production':
       case 'development':
-        return true;
+        return false;
       default:
         return !!fan?.hasZoneMembership;
     }
@@ -140,7 +144,7 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
         switch (zoneType) {
           case ExoAdZoneTypes.Gallery:
             return (
-              <div className="flex flex-col w-full">
+              <div onClick={onClick} className="flex flex-col w-full">
                 <div className="relative overflow-hidden md:w-[calc(100vw-265px)] p-0 m-0 w-full space-y-1 ">
                   <div id={`exo-zone-${zoneId}`} className={className || ''} />
                 </div>
@@ -149,28 +153,28 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
 
           case ExoAdZoneTypes.MobileBanner:
             return (
-              <div className="flex flex-col items-center justify-center w-full">
+              <div onClick={onClick} className="flex flex-col items-center justify-center w-full">
                 <div id={`exo-zone-${zoneId}`} className={className || 'border-[0.5px] border-black'} />
               </div>
             );
 
           case ExoAdZoneTypes.OutStream:
-            return <div id={`exo-zone-${zoneId}`} className={className || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={className || ''} />;
 
           case ExoAdZoneTypes.MobilePost:
-            return <div id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
 
           case ExoAdZoneTypes.StickyBanner:
-            return <div id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
 
           case ExoAdZoneTypes.SlideVideo:
-            return <div id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
 
           case ExoAdZoneTypes.Default:
-            return <div id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={`${className}` || ''} />;
 
           default:
-            return <div id={`exo-zone-${zoneId}`} className={className || ''} />;
+            return <div onClick={onClick} id={`exo-zone-${zoneId}`} className={className || ''} />;
         }
       })();
 };

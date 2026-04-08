@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { useServerVaults } from '@/hooks/server/useServerVaults';
 import { GetPublicVaultsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -60,7 +61,12 @@ export function TrendingVaults({ initialVaults }: TrendingVaultsProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-1">
             <AnimatePresence mode="popLayout">
               {vaults.map((vault, index) => (
-                <TrendingVaultCard key={vault.id} vault={vault} index={index} />
+                <ApplyAd
+                  element={<TrendingVaultCard key={vault.id} vault={vault} index={index} />}
+                  canApplyAd={index > 0 && index % 25 === 0}
+                  zoneIndex={index}
+                  key={vault.id}
+                />
               ))}
             </AnimatePresence>
           </div>

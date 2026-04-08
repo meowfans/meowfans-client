@@ -25,7 +25,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
   const { likeVaultObject } = useLikeMutations();
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Content Blur Logic
   const { isBlurEnabled } = useContentBlur();
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [isBlurEnabled]); // Re-run intersection logic when blur state changes
+  }, [isBlurEnabled]);
 
   const handleToggleMute = () => {
     const vid = videoRef.current;
@@ -63,7 +62,7 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
   };
 
   const togglePlay = () => {
-    if (isBlurEnabled) return; // Prevent playing if blurred
+    if (isBlurEnabled) return;
 
     if (videoRef.current) {
       if (isPlaying) {
@@ -76,7 +75,7 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
   };
 
   const handleDoubleClick = (e: React.MouseEvent) => {
-    if (isBlurEnabled) return; // Prevent like action if blurred
+    if (isBlurEnabled) return;
 
     if (!isLiked) {
       setIsLiked(true);
@@ -98,7 +97,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           onDoubleClick={handleDoubleClick}
         />
 
-        {/* Play/Pause Indicator Overlay */}
         <AnimatePresence>
           {!isPlaying && !isBlurEnabled && (
             <motion.div
@@ -114,7 +112,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           )}
         </AnimatePresence>
 
-        {/* Double Tap Heart Animation */}
         <AnimatePresence>
           {showHeartAnim && (
             <motion.div
@@ -128,7 +125,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           )}
         </AnimatePresence>
 
-        {/* Right Side Actions */}
         <div
           className={cn(
             'absolute right-4 bottom-24 flex flex-col items-center gap-6 z-10 transition-opacity duration-300',
@@ -181,10 +177,9 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           </Button>
         </div>
 
-        {/* Bottom Info Overlay */}
         <div
           className={cn(
-            'absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/90 via-background/40 to-transparent pt-20 transition-opacity duration-300',
+            'absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-background/90 via-background/40 to-transparent pt-20 transition-opacity duration-300',
             isBlurEnabled ? 'opacity-0 pointer-events-none' : 'opacity-100'
           )}
         >
@@ -217,7 +212,6 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
           </div>
         </div>
 
-        {/* Top Banner (Optional brand touch) */}
         <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start pointer-events-none">
           <span className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">Shorts Feed</span>
         </div>

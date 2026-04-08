@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { useServerVaults } from '@/hooks/server/useServerVaults';
 import { GetPublicVaultsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -26,17 +27,16 @@ export function Vaults({ initialVaults }: VaultsProps) {
       <VaultsHeader />
       <PageHandler isEmpty={!vaults.length} isLoading={loading && !initialVaults?.length}>
         <InfiniteScrollManager dataLength={vaults.length} loading={loading} useWindowScroll hasMore={hasMore} onLoadMore={loadMore}>
-          <div className="grid grid-cols-1 gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {vaults.map((vault) => (
-              <VaultCard key={vault.id} vault={vault} />
+          <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {vaults.map((vault, idx) => (
+              <ApplyAd
+                element={<VaultCard key={vault.id} vault={vault} />}
+                canApplyAd={idx > 0 && idx % 25 === 0}
+                zoneIndex={idx}
+                key={vault.id}
+              />
             ))}
           </div>
-
-          {!hasMore && vaults.length > 0 && (
-            <p className="text-center text-muted-foreground py-10 font-black uppercase tracking-widest text-xs">
-              You&apos;ve reached the end of the collection
-            </p>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>
