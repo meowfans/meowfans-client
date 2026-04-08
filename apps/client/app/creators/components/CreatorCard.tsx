@@ -38,11 +38,7 @@ export function CreatorCard({ creator }: CreatorCardProps) {
                 {creator.username.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-
             <h3 className="mb-1 w-full truncate text-lg font-semibold tracking-tight">@{creator.username}</h3>
-            <p className="mb-2 min-h-[1.5em] w-full truncate text-xs text-muted-foreground">
-              {/* Subtitle or niche could go here if available */}
-            </p>
           </CardContent>
         </Link>
 

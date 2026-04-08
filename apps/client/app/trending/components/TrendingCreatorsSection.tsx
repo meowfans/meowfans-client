@@ -42,7 +42,7 @@ export function TrendingCreatorsSection({ creators }: TrendingCreatorsSectionPro
             transition={{ delay: i * 0.1 }}
           >
             <Link href={`/creators/${creator.id}`}>
-              <Card className="p-4 border-none bg-secondary/15 hover:bg-secondary/30 transition-all rounded-[2rem] text-center space-y-3 group cursor-pointer shadow-none hover:shadow-xl hover:shadow-primary/5">
+              <Card className="p-4 border-none bg-secondary/15 hover:bg-secondary/30 transition-all rounded-4xl text-center space-y-3 group cursor-pointer shadow-none hover:shadow-xl hover:shadow-primary/5">
                 <div className="relative mx-auto w-20 h-20">
                   <Avatar className="h-full w-full border-2 border-background ring-2 ring-primary/5 group-hover:ring-primary/40 transition-all">
                     <AvatarImage src={creator.avatarUrl as string} className="object-cover" />

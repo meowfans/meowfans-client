@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { useServerCreators } from '@/hooks/server/useServerCreators';
 import { GetDefaultCreatorsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
@@ -26,7 +27,7 @@ export function TrendingCreators({ initialCreators }: TrendingCreatorsProps) {
     <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-6xl mx-auto w-full pb-20">
       <div className="flex flex-col gap-4 px-1">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 flex-shrink-0">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 shrink-0">
             <Crown className="h-5 w-5 md:h-6 md:w-6 text-amber-500" />
           </div>
           <div className="min-w-0">
@@ -42,7 +43,12 @@ export function TrendingCreators({ initialCreators }: TrendingCreatorsProps) {
           <div className="grid grid-cols-1 gap-4">
             <AnimatePresence mode="popLayout">
               {creators.map((creator, index) => (
-                <TrendingCreatorCard key={creator.id} creator={creator} index={index} />
+                <ApplyAd
+                  element={<TrendingCreatorCard key={creator.id} creator={creator} index={index} />}
+                  canApplyAd={index > 0 && index % 25 === 0}
+                  zoneIndex={index}
+                  key={creator.id}
+                />
               ))}
             </AnimatePresence>
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { ExoAdProvider, ExoAdZoneTypes } from '@/components/ExoAdProvider';
 import { PaymentModal } from '@/components/PaymentModal';
 import { ReportModal } from '@/components/ReportModal';
 import { useLikeMutations } from '@/hooks/client/useLikeMutations';
@@ -130,6 +131,10 @@ export function SinglePost({ initialPost }: SinglePostProps) {
               </CardContent>
             </Card>
           </motion.div>
+
+          <div className="w-full flex justify-center my-6 shrink-0 z-50 relative">
+            <ExoAdProvider zoneId="5770578" zoneType={ExoAdZoneTypes.MobilePost} />
+          </div>
 
           {/* Comments Section */}
           <PostComments postId={post.id} isLocked={isLocked} />

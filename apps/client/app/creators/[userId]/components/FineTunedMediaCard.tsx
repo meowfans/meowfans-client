@@ -37,7 +37,7 @@ export function FineTunedMediaCard({
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
       <Link href={href} className="block group">
         <Card className="relative overflow-hidden border-white/5 bg-secondary/10 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:border-primary/30 hover:shadow-primary/10">
-          <div className="relative aspect-[4/5] overflow-hidden">
+          <div className="relative aspect-4/5 overflow-hidden">
             <BlurImage
               src={preview}
               alt={caption || title || 'Preview'}
@@ -45,7 +45,7 @@ export function FineTunedMediaCard({
             />
 
             {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
 
             {/* Top Badges */}
             <div className="absolute left-3 top-3 flex flex-wrap gap-2">

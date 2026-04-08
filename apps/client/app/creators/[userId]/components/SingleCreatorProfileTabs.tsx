@@ -41,7 +41,7 @@ export const SingleCreatorProfileTabs = ({
                 key={tab.id}
                 onClick={() => onTabChange(tab.id as TabProps)}
                 className={`relative py-3 md:py-4 flex items-center gap-2 transition-all duration-200 ${
-                  isActive ? 'text-white border-t-2 border-white -mt-[2px]' : 'text-muted-foreground hover:text-white'
+                  isActive ? 'text-white border-t-2 border-white -mt-0.5' : 'text-muted-foreground hover:text-white'
                 }`}
               >
                 <tab.icon className={`h-4 w-4 md:h-3 md:w-3 ${isActive ? 'fill-current' : ''}`} />
@@ -63,7 +63,7 @@ export const SingleCreatorProfileTabs = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-3 gap-[1px] md:gap-1"
+              className="grid grid-cols-3 gap-1px md:gap-1"
             >
               {initialPosts.map((post) => (
                 <Link href={`/posts/${post.id}`} key={post.id} className="relative aspect-square w-full overflow-hidden bg-white/5">
@@ -99,7 +99,7 @@ export const SingleCreatorProfileTabs = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-3 gap-[1px] md:gap-1"
+              className="grid grid-cols-3 gap-px md:gap-1"
             >
               {initialVaults.map((vault) => (
                 <Link href={`/vaults/${vault.id}`} key={vault.id} className="relative aspect-square w-full overflow-hidden bg-white/5">

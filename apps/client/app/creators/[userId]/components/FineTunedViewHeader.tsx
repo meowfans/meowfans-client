@@ -20,7 +20,7 @@ export function FineTunedViewHeader({ title, count }: FineTunedViewHeaderProps) 
   return (
     <div className="relative mb-8 w-full">
       {/* Background Glow */}
-      <div className="absolute -top-24 left-1/2 h-64 w-full -translate-x-1/2 opacity-20 blur-[100px] bg-gradient-to-r from-primary via-purple-500 to-blue-500" />
+      <div className="absolute -top-24 left-1/2 h-64 w-full -translate-x-1/2 opacity-20 blur-[100px] bg-linear-to-r from-primary via-purple-500 to-blue-500" />
 
       <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
@@ -39,7 +39,7 @@ export function FineTunedViewHeader({ title, count }: FineTunedViewHeaderProps) 
               <AvatarFallback className="bg-primary/10">{creator?.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">{title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text">{title}</h1>
               <p className="text-sm font-medium text-primary">@{creator?.username}</p>
             </div>
           </div>

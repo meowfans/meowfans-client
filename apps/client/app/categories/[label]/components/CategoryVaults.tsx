@@ -33,12 +33,6 @@ export function CategoryVaults({ label, initialVaults }: CategoryVaultsProps) {
               <VaultCard key={vault.id} vault={vault} />
             ))}
           </div>
-
-          {!hasMore && vaults.length > 0 && (
-            <p className="text-center text-muted-foreground py-10 font-black uppercase tracking-widest text-xs">
-              You&apos;ve reached the end of the collection
-            </p>
-          )}
         </InfiniteScrollManager>
       </PageHandler>
     </div>

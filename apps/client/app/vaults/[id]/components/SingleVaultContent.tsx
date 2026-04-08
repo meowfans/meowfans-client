@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
@@ -78,12 +79,19 @@ export function SingleVaultContent({
         <InfiniteScrollManager dataLength={vaultObjects.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
           <div className={cn('grid gap-4', gridClasses)}>
             {vaultObjects.map((obj, index) => (
-              <SingleVaultObjectCard
+              <ApplyAd
+                element={
+                  <SingleVaultObjectCard
+                    key={obj.id}
+                    obj={obj}
+                    index={index}
+                    isVaultPurchased={isVaultPurchased}
+                    onPurchase={onPurchaseObject}
+                  />
+                }
+                canApplyAd={index > 0 && index % 25 === 0}
+                zoneIndex={index}
                 key={obj.id}
-                obj={obj}
-                index={index}
-                isVaultPurchased={isVaultPurchased}
-                onPurchase={onPurchaseObject}
               />
             ))}
           </div>

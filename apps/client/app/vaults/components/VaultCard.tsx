@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { BlurImage } from '@/components/BlurImage';
 import { GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
@@ -17,7 +17,7 @@ export function VaultCard({ vault }: VaultCardProps) {
       <Card className="group overflow-hidden border-none bg-secondary/20 shadow-none transition-all hover:bg-secondary/40 hover:shadow-lg hover:shadow-primary/5">
         {/* Preview Image */}
         <div className="relative aspect-square overflow-hidden bg-muted">
-          <img
+          <BlurImage
             width={300}
             height={400}
             src={vault.preview as string}

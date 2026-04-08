@@ -1,5 +1,6 @@
 'use client';
 
+import { ApplyAd } from '@/components/ApplyAd';
 import { PageHandler } from '@/components/PageHandler';
 import { useServerCreators } from '@/hooks/server/useServerCreators';
 import { GetDefaultCreatorsOutput } from '@workspace/gql/generated/graphql';
@@ -21,8 +22,13 @@ export function Creators({ initialCreators }: CreatorsProps) {
         <div id="creators-scroll-wrapper">
           <InfiniteScrollManager dataLength={creators.length} loading={loading} hasMore={hasMore} onLoadMore={loadMore} useWindowScroll>
             <div className="grid grid-cols-1 gap-6 p-6 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {creators.map((creator) => (
-                <CreatorCard key={creator.id} creator={creator} />
+              {creators.map((creator, index) => (
+                <ApplyAd
+                  canApplyAd={index > 0 && index % 25 === 0}
+                  element={<CreatorCard creator={creator} key={creator.id} />}
+                  zoneIndex={index}
+                  key={creator.id}
+                />
               ))}
             </div>
           </InfiniteScrollManager>
