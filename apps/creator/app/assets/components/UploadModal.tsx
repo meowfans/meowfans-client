@@ -1,7 +1,12 @@
 'use client';
 
+import useAPI from '@/hooks/useAPI';
+import { AssetType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
+import { Dropdown } from '@workspace/ui/globals/Dropdown';
+import { MediaType } from '@workspace/ui/lib/enums';
+import { resolveFileType } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FileVideo, Upload, X } from 'lucide-react';
@@ -12,8 +17,8 @@ import { toast } from 'sonner';
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpload: (files: File[]) => Promise<void>;
   isUploading: boolean;
+  setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FilePreview {
@@ -22,10 +27,13 @@ interface FilePreview {
   type: 'image' | 'video';
 }
 
-export function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProps) {
+export function UploadModal({ isOpen, onClose, isUploading, setIsUploading }: UploadModalProps) {
+  const { upload } = useAPI();
   const [files, setFiles] = useState<FilePreview[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [mediaType, setMediaType] = useState<MediaType>(MediaType.PROFILE_MEDIA);
+  const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
 
   const handleFiles = useCallback((newFiles: FileList | null) => {
     if (!newFiles) return;
@@ -87,14 +95,38 @@ export function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadMo
     if (files.length === 0) return;
 
     try {
-      await onUpload(files.map((f) => f.file));
-      // Cleanup previews
+      await handleUploadFiles(files.map((f) => f.file));
       files.forEach((f) => URL.revokeObjectURL(f.preview));
       setFiles([]);
       onClose();
     } catch (error) {
-      // Error handled by parent usually, but keep files if failed?
-      // For now assume parent handles toast
+      toast.error('Error while uploading files', {
+        description: error.message
+      });
+    }
+  };
+
+  const handleUploadFiles = async (files: File[]) => {
+    setIsUploading(true);
+    try {
+      await Promise.all(
+        files.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          await upload({
+            assetType,
+            fileType: resolveFileType(file.name),
+            formData,
+            mediaType
+          });
+        })
+      );
+      toast.success(`${files.length} asset(s) uploaded successfully`);
+    } catch (err) {
+      toast.error('Upload failed');
+    } finally {
+      setIsUploading(false);
+      
     }
   };
 
@@ -111,7 +143,30 @@ export function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadMo
       description="Drag and drop images or videos here, or click to select files"
     >
       <div className="space-y-4">
-        {/* Drop Zone */}
+        <div className="grid grid-cols-2">
+          <Dropdown
+            enumValue={MediaType}
+            filterBy={mediaType}
+            onFilterBy={setMediaType}
+            trigger={{
+              label: mediaType
+                .replace(/([A-Z])/g, ' $1')
+                .trim()
+                .toUpperCase()
+            }}
+            title="Set media type"
+            label="Media Type"
+          />
+
+          <Dropdown
+            title="Set asset type"
+            label="Asset Type"
+            enumValue={AssetType}
+            filterBy={assetType}
+            onFilterBy={setAssetType}
+            trigger={{ label: assetType }}
+          />
+        </div>
         <div
           className={`relative border-2 border-dashed rounded-lg p-8 transition-colors text-center cursor-pointer ${
             dragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50 hover:bg-muted/50'
@@ -142,14 +197,13 @@ export function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadMo
           </div>
         </div>
 
-        {/* File List */}
         <AnimatePresence>
           {files.length > 0 && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="space-y-2 max-h-[300px] overflow-y-auto pr-1"
+              className="space-y-2 max-h-75 overflow-y-auto pr-1"
             >
               {files.map((file, index) => (
                 <motion.div
@@ -192,7 +246,6 @@ export function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadMo
           )}
         </AnimatePresence>
 
-        {/* Footer Actions */}
         <div className="flex justify-end gap-2 pt-4 border-t">
           <Button variant="outline" onClick={handleClose} disabled={isUploading}>
             Cancel
