@@ -45,7 +45,7 @@ export const FEATURE_FLAGS: Record<APP_PATHS, boolean> = {
   [APP_PATHS.HOME]: true,
   [APP_PATHS.DASHBOARD]: true,
   [APP_PATHS.SUBSCRIPTIONS]: false,
-  [APP_PATHS.HISTORY]: false,
+  [APP_PATHS.HISTORY]: true,
   [APP_PATHS.POSTS]: true,
   [APP_PATHS.CREATORS]: true,
   [APP_PATHS.VAULTS]: true,
