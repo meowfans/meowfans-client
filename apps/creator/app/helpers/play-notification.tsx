@@ -18,8 +18,8 @@ if (typeof window !== 'undefined') {
         }
         isUnlocked = true;
       })
-      .catch(() => {
-        // If muted play fails, just load it
+      .catch((e) => {
+        console.log('Muted play failed! instance is loaded only', e);
         audioInstance?.load();
       });
 
@@ -32,8 +32,10 @@ if (typeof window !== 'undefined') {
 }
 
 export const playNotification = (canPlay: boolean) => {
+  console.log('playing', canPlay);
   try {
     if (canPlay && audioInstance) {
+      console.log('hasAudioInstance');
       audioInstance.currentTime = 0;
       audioInstance.play().catch((e) => console.log('Audio playback failed: ', e));
     }

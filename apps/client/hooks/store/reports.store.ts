@@ -1,11 +1,10 @@
 import { ReportsEntity } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type ReportsUpdater = ReportsEntity[] | ((prev: ReportsEntity[]) => ReportsEntity[]);
 
 type ReportsStore = {
   reports: ReportsEntity[];
-  setReports: (updater: ReportsUpdater) => void;
+  setReports: (updater: Updater<ReportsEntity[]>) => void;
   clearReports: () => void;
 };
 

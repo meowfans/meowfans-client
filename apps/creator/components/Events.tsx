@@ -1,15 +1,16 @@
 'use client';
 
+import { playNotification } from '@/app/helpers/play-notification';
 import { useChannelsStore } from '@/hooks/store/channels.store';
 import { useNotificationsStore } from '@/hooks/store/notifications.store';
 import { eventEmitter } from '@workspace/ui/hooks/EventsEmitter';
 import { EventTypes } from '@workspace/ui/lib';
 import { useEffect } from 'react';
-import { playNotification } from '@/app/helpers/play-notification';
 
 export const Events = () => {
   const { setChannel, setChannels } = useChannelsStore();
-  const { allowNotification, allowMessagesNotification } = useNotificationsStore();
+  const allowNotification = useNotificationsStore((n) => n.allowNotification);
+  const allowMessagesNotification = useNotificationsStore((n) => n.allowMessagesNotification);
 
   const onSendMessageFromFan = async (event: CustomEvent) => {
     const { newMessage } = event.detail?.data;

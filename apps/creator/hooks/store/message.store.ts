@@ -1,29 +1,33 @@
 import { CreatorAssetsEntity, MessagesOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
 type MessageUIStore = {
-  setSelectedMessage: (selectedMessage: MessagesOutput | null) => void;
-  setUnlockAmount: (unlockAmount: number | null) => void;
+  setSelectedMessage: (updater: Updater<MessagesOutput | null>) => void;
+  setUnlockAmount: (updater: Updater<number | null>) => void;
   attachments: Array<CreatorAssetsEntity>;
   selectedMessage: MessagesOutput | null;
-  setContent: (content: string) => void;
+  setContent: (updater: Updater<string>) => void;
   isEditing: boolean;
   content: string;
   openAssets: boolean;
   isExclusive: boolean;
   unlockAmount: number | null;
   replyMessageId: string | null;
-  setIsEditing: (isEditing: boolean) => void;
-  setOpenAssets: (openAssets: boolean) => void;
-  setIsExclusive: (isExclusive: boolean) => void;
-  setReplyMessageId: (replyMessageId: string | null) => void;
-  setAttachments: (attachments: CreatorAssetsEntity[]) => void;
+  setIsEditing: (updater: Updater<boolean>) => void;
+  setOpenAssets: (updater: Updater<boolean>) => void;
+  setIsExclusive: (updater: Updater<boolean>) => void;
+  setReplyMessageId: (updater: Updater<string | null>) => void;
+  setAttachments: (updater: Updater<CreatorAssetsEntity[]>) => void;
 };
 
 export const useMessageUIStore = create<MessageUIStore>()((set) => ({
-  setSelectedMessage: (selectedMessage: MessagesOutput | null) => set({ selectedMessage }),
-  setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
-  setUnlockAmount: (unlockAmount) => set({ unlockAmount }),
+  setSelectedMessage: (updater: Updater<MessagesOutput | null>) =>
+    set((state) => ({ selectedMessage: typeof updater === 'function' ? updater(state.selectedMessage) : updater })),
+  setReplyMessageId: (updater: Updater<string | null>) =>
+    set((state) => ({ replyMessageId: typeof updater === 'function' ? updater(state.replyMessageId) : updater })),
+  setUnlockAmount: (updater: Updater<number | null>) =>
+    set((state) => ({ unlockAmount: typeof updater === 'function' ? updater(state.unlockAmount) : updater })),
   selectedMessage: null,
   isExclusive: false,
   openAssets: false,
@@ -32,26 +36,32 @@ export const useMessageUIStore = create<MessageUIStore>()((set) => ({
   attachments: [],
   unlockAmount: null,
   replyMessageId: null,
-  setContent: (content) => set({ content }),
-  setIsEditing: (isEditing) => set({ isEditing }),
-  setOpenAssets: (openAssets) => set({ openAssets }),
-  setIsExclusive: (isExclusive) => set({ isExclusive }),
-  setAttachments: (attachments) => set({ attachments })
+  setContent: (updater: Updater<string>) => set((state) => ({ content: typeof updater === 'function' ? updater(state.content) : updater })),
+  setIsEditing: (updater: Updater<boolean>) =>
+    set((state) => ({ isEditing: typeof updater === 'function' ? updater(state.isEditing) : updater })),
+  setOpenAssets: (updater: Updater<boolean>) =>
+    set((state) => ({ openAssets: typeof updater === 'function' ? updater(state.openAssets) : updater })),
+  setIsExclusive: (updater: Updater<boolean>) =>
+    set((state) => ({ isExclusive: typeof updater === 'function' ? updater(state.isExclusive) : updater })),
+  setAttachments: (updater: Updater<CreatorAssetsEntity[]>) =>
+    set((state) => ({ attachments: typeof updater === 'function' ? updater(state.attachments) : updater }))
 }));
 
 type MessageMultiSelectStore = {
   openMultiSelect: boolean;
   deleteMessageIds: string[];
   toggleMessageIds: (deleteMessageId: string) => void;
-  setDeleteMessageIds: (deleteMessageIds: string[]) => void;
-  setOpenMultiSelect: (openMultiSelect: boolean) => void;
+  setDeleteMessageIds: (updater: Updater<string[]>) => void;
+  setOpenMultiSelect: (updater: Updater<boolean>) => void;
 };
 
 export const useMessageMultiSelectStore = create<MessageMultiSelectStore>((set) => ({
   deleteMessageIds: [],
-  setDeleteMessageIds: (deleteMessageIds) => set({ deleteMessageIds }),
+  setDeleteMessageIds: (updater: Updater<string[]>) =>
+    set((state) => ({ deleteMessageIds: typeof updater === 'function' ? updater(state.deleteMessageIds) : updater })),
   openMultiSelect: false,
-  setOpenMultiSelect: (openMultiSelect) => set({ openMultiSelect }),
+  setOpenMultiSelect: (updater: Updater<boolean>) =>
+    set((state) => ({ openMultiSelect: typeof updater === 'function' ? updater(state.openMultiSelect) : updater })),
   toggleMessageIds: (deleteMessageId) =>
     set((state) => {
       const isSelected = state.deleteMessageIds.includes(deleteMessageId);

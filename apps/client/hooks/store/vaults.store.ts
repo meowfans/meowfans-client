@@ -1,17 +1,14 @@
 import { GetPublicSingleVaultOutput, GetPublicVaultObjectsOutput, GetPublicVaultsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type VaultUpdater = GetPublicSingleVaultOutput | ((prev: GetPublicSingleVaultOutput) => GetPublicSingleVaultOutput);
-type VaultObjectsUpdater = GetPublicVaultObjectsOutput[] | ((prev: GetPublicVaultObjectsOutput[]) => GetPublicVaultObjectsOutput[]);
-type VaultsUpdater = GetPublicVaultsOutput[] | ((prev: GetPublicVaultsOutput[]) => GetPublicVaultsOutput[]);
 
 type VaultsStore = {
   vault: GetPublicSingleVaultOutput;
   vaults: GetPublicVaultsOutput[];
   vaultObjects: GetPublicVaultObjectsOutput[];
-  setVault: (updater: VaultUpdater) => void;
-  setVaults: (updater: VaultsUpdater) => void;
-  setVaultObjects: (updater: VaultObjectsUpdater) => void;
+  setVault: (updater: Updater<GetPublicSingleVaultOutput>) => void;
+  setVaults: (updater: Updater<GetPublicVaultsOutput[]>) => void;
+  setVaultObjects: (updater: Updater<GetPublicVaultObjectsOutput[]>) => void;
 };
 
 export const useVaultsStore = create<VaultsStore>()((set) => ({

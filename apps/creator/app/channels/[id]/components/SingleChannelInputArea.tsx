@@ -94,8 +94,9 @@ export function SingleChannelInputArea({ channel }: { channel: ChannelsOutput | 
   useEffect(() => {
     if (!showAssetsSidebar && selectedAssets.length) {
       setIsExclusive(true);
+      setUnlockAmount(5);
     }
-  }, [showAssetsSidebar, selectedAssets, setIsExclusive]);
+  }, [showAssetsSidebar, selectedAssets, setIsExclusive, setUnlockAmount]);
 
   if (!channel) return null;
 
@@ -201,6 +202,8 @@ export function SingleChannelInputArea({ channel }: { channel: ChannelsOutput | 
               onClick={() => {
                 setIsExclusive(false);
                 setUnlockAmount(null);
+                setSelectedAssets([]);
+                setShowAssetsSidebar(false);
               }}
               className="h-7 w-7 rounded-full hover:bg-amber-500/20 text-amber-500"
             >

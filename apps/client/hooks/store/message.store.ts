@@ -1,45 +1,51 @@
 import { MessagesOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
 type MessageInputStore = {
   selectedMessage: MessagesOutput | null;
   isEditing: boolean;
   content: string;
-  replyMessageId: string | null;
-  setContent: (content: string) => void;
-  setIsEditing: (isEditing: boolean) => void;
-  setReplyMessageId: (replyMessageId: string | null) => void;
-  setSelectedMessage: (selectedMessage: MessagesOutput | null) => void;
   payableMessage: MessagesOutput | null;
-  setPayableMessage: (payableMessage: MessagesOutput | null) => void;
+  replyMessageId: string | null;
+  setContent: (updater: Updater<string>) => void;
+  setIsEditing: (updater: Updater<boolean>) => void;
+  setReplyMessageId: (updater: Updater<string | null>) => void;
+  setSelectedMessage: (updater: Updater<MessagesOutput | null>) => void;
+  setPayableMessage: (updater: Updater<MessagesOutput | null>) => void;
 };
 
 export const useMessageInputStore = create<MessageInputStore>()((set) => ({
-  setReplyMessageId: (replyMessageId) => set({ replyMessageId }),
+  setReplyMessageId: (updater) =>
+    set((state) => ({ replyMessageId: typeof updater === 'function' ? updater(state.replyMessageId) : updater })),
   selectedMessage: null,
   isEditing: false,
-  setSelectedMessage: (selectedMessage: MessagesOutput | null) => set({ selectedMessage }),
   content: '',
-  replyMessageId: null,
-  setContent: (content) => set({ content }),
-  setIsEditing: (isEditing) => set({ isEditing }),
   payableMessage: null,
-  setPayableMessage: (payableMessage: MessagesOutput | null) => set({ payableMessage })
+  replyMessageId: null,
+  setContent: (updater) => set((state) => ({ content: typeof updater === 'function' ? updater(state.content) : updater })),
+  setIsEditing: (updater) => set((state) => ({ isEditing: typeof updater === 'function' ? updater(state.isEditing) : updater })),
+  setSelectedMessage: (updater) =>
+    set((state) => ({ selectedMessage: typeof updater === 'function' ? updater(state.selectedMessage) : updater })),
+  setPayableMessage: (updater) =>
+    set((state) => ({ payableMessage: typeof updater === 'function' ? updater(state.payableMessage) : updater }))
 }));
 
 type MessageMultiSelectStore = {
   openMultiSelect: boolean;
   deleteMessageIds: string[];
-  setOpenMultiSelect: (openMultiSelect: boolean) => void;
+  setOpenMultiSelect: (updater: Updater<boolean>) => void;
   toggleMessageIds: (deleteMessageId: string) => void;
-  setDeleteMessageIds: (deleteMessageIds: string[]) => void;
+  setDeleteMessageIds: (updater: Updater<string[]>) => void;
 };
 
 export const useMessageMultiSelectStore = create<MessageMultiSelectStore>((set) => ({
-  setDeleteMessageIds: (deleteMessageIds) => set({ deleteMessageIds }),
+  setDeleteMessageIds: (updater) =>
+    set((state) => ({ deleteMessageIds: typeof updater === 'function' ? updater(state.deleteMessageIds) : updater })),
   openMultiSelect: false,
   deleteMessageIds: [],
-  setOpenMultiSelect: (openMultiSelect) => set({ openMultiSelect }),
+  setOpenMultiSelect: (updater) =>
+    set((state) => ({ openMultiSelect: typeof updater === 'function' ? updater(state.openMultiSelect) : updater })),
   toggleMessageIds: (deleteMessageId) =>
     set((state) => {
       const isSelected = state.deleteMessageIds.includes(deleteMessageId);

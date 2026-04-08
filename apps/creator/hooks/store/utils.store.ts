@@ -1,22 +1,23 @@
 import { AssetsEntity, PostsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { BackGroundColors } from '@workspace/ui/lib/enums';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
 type UtilsStore = {
   shareModal: PostsEntity | null;
   shareVaultModal: VaultsEntity | null;
-  setVaultShareModal: (shareVaultModal: null | VaultsEntity) => void;
+  setVaultShareModal: (updater: Updater<VaultsEntity | null>) => void;
   openLogoutModal: boolean;
   bgColor: BackGroundColors;
   openAsstPickerModal: boolean;
   showAssetsSidebar: boolean;
   selectedAssets: AssetsEntity[];
-  setShareModal: (shareModal: null | PostsEntity) => void;
-  setBgColor: (bgColor: BackGroundColors) => void;
-  setOpenLogoutModal: (openLogoutModal: boolean) => void;
-  setOpenAsstPickerModal: (openAsstPickerModal: boolean) => void;
-  setShowAssetsSidebar: (showAssetsSidebar: boolean) => void;
-  setSelectedAssets: (selectedAssets: AssetsEntity[] | ((prev: AssetsEntity[]) => AssetsEntity[])) => void;
+  setShareModal: (updater: Updater<PostsEntity | null>) => void;
+  setBgColor: (updater: Updater<BackGroundColors>) => void;
+  setOpenLogoutModal: (updater: Updater<boolean>) => void;
+  setOpenAsstPickerModal: (updater: Updater<boolean>) => void;
+  setShowAssetsSidebar: (updater: Updater<boolean>) => void;
+  setSelectedAssets: (updater: Updater<AssetsEntity[]>) => void;
 };
 
 export const useUtilsStore = create<UtilsStore>()((set) => ({
@@ -27,14 +28,18 @@ export const useUtilsStore = create<UtilsStore>()((set) => ({
   selectedAssets: [],
   shareVaultModal: null,
   bgColor: BackGroundColors.DEFAULT,
-  setBgColor: (bgColor: BackGroundColors) => set({ bgColor }),
-  setVaultShareModal: (shareVaultModal) => set({ shareVaultModal }),
-  setShareModal: (shareModal: PostsEntity | null) => set({ shareModal }),
-  setOpenAsstPickerModal: (openAsstPickerModal: boolean) => set({ openAsstPickerModal }),
-  setOpenLogoutModal: (openLogoutModal: boolean) => set({ openLogoutModal }),
-  setShowAssetsSidebar: (showAssetsSidebar: boolean) => set({ showAssetsSidebar }),
-  setSelectedAssets: (selectedAssets) =>
-    set((state) => ({
-      selectedAssets: typeof selectedAssets === 'function' ? selectedAssets(state.selectedAssets) : selectedAssets
-    }))
+  setBgColor: (updater: Updater<BackGroundColors>) =>
+    set((state) => ({ bgColor: typeof updater === 'function' ? updater(state.bgColor) : updater })),
+  setVaultShareModal: (updater: Updater<VaultsEntity | null>) =>
+    set((state) => ({ shareVaultModal: typeof updater === 'function' ? updater(state.shareVaultModal) : updater })),
+  setShareModal: (updater: Updater<PostsEntity | null>) =>
+    set((state) => ({ shareModal: typeof updater === 'function' ? updater(state.shareModal) : updater })),
+  setOpenAsstPickerModal: (updater: Updater<boolean>) =>
+    set((state) => ({ openAsstPickerModal: typeof updater === 'function' ? updater(state.openAsstPickerModal) : updater })),
+  setOpenLogoutModal: (updater: Updater<boolean>) =>
+    set((state) => ({ openLogoutModal: typeof updater === 'function' ? updater(state.openLogoutModal) : updater })),
+  setShowAssetsSidebar: (updater: Updater<boolean>) =>
+    set((state) => ({ showAssetsSidebar: typeof updater === 'function' ? updater(state.showAssetsSidebar) : updater })),
+  setSelectedAssets: (updater) =>
+    set((state) => ({ selectedAssets: typeof updater === 'function' ? updater(state.selectedAssets) : updater }))
 }));

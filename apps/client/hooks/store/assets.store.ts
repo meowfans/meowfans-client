@@ -1,17 +1,14 @@
 import { CreatorAssetsEntity, GetFanAssetsOutput, GetPublicShortsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
-
-type FanAssetsUpdater = GetFanAssetsOutput[] | ((prev: GetFanAssetsOutput[]) => GetFanAssetsOutput[]);
-type AssetsUpdater = CreatorAssetsEntity[] | ((prev: CreatorAssetsEntity[]) => CreatorAssetsEntity[]);
-type PublicShortsUpdater = GetPublicShortsOutput[] | ((prev: GetPublicShortsOutput[]) => GetPublicShortsOutput[]);
 
 type AssetsStore = {
   fanAssets: GetFanAssetsOutput[];
   assets: CreatorAssetsEntity[];
   publicShorts: GetPublicShortsOutput[];
-  setPublicShorts: (publicShorts: PublicShortsUpdater) => void;
-  setFanAssets: (fanAssets: FanAssetsUpdater) => void;
-  setAssets: (assets: AssetsUpdater) => void;
+  setPublicShorts: (publicShorts: Updater<GetPublicShortsOutput[]>) => void;
+  setFanAssets: (fanAssets: Updater<GetFanAssetsOutput[]>) => void;
+  setAssets: (assets: Updater<CreatorAssetsEntity[]>) => void;
 };
 
 export const useAssetsStore = create<AssetsStore>()((set) => ({

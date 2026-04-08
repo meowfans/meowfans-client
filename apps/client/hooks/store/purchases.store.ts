@@ -1,12 +1,13 @@
 import { PostPurchasesEntity } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
 type PurchasesStore = {
   postPurchases: PostPurchasesEntity[];
-  setPostPurchases: (postPurchases: PostPurchasesEntity[]) => void;
+  setPostPurchases: (updater: Updater<PostPurchasesEntity[]>) => void;
 };
 
 export const usePurchasesStore = create<PurchasesStore>((set) => ({
   postPurchases: [],
-  setPostPurchases: (postPurchases: PostPurchasesEntity[]) => set({ postPurchases })
+  setPostPurchases: (updater) => set((state) => ({ postPurchases: typeof updater === 'function' ? updater(state.postPurchases) : updater }))
 }));

@@ -1,4 +1,5 @@
 import { PostAssetsEntity, PostsEntity, PostStatAnalyticsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -7,12 +8,12 @@ type PostsStore = {
   posts: PostsEntity[];
   openPostCreateModal: boolean;
   postAssets: PostAssetsEntity[];
-  setPost: (post: PostsEntity) => void;
-  setPosts: (posts: PostsEntity[]) => void;
+  setPost: (updater: Updater<PostsEntity>) => void;
+  setPosts: (updater: Updater<PostsEntity[]>) => void;
   postsAnalytics: PostStatAnalyticsOutput[];
-  setOpenPostCreateModal: (open: boolean) => void;
-  setPostAssets: (postAssets: PostAssetsEntity[]) => void;
-  setPostsAnalytics: (postsAnalytics: PostStatAnalyticsOutput[]) => void;
+  setOpenPostCreateModal: (updater: Updater<boolean>) => void;
+  setPostAssets: (updater: Updater<PostAssetsEntity[]>) => void;
+  setPostsAnalytics: (updater: Updater<PostStatAnalyticsOutput[]>) => void;
 };
 
 export const usePostsStore = create<PostsStore>()(
@@ -24,11 +25,11 @@ export const usePostsStore = create<PostsStore>()(
       openPostCreateModal: false,
       postsAnalytics: [],
 
-      setPost: (post) => set({ post }),
-      setPosts: (posts) => set({ posts }),
-      setPostAssets: (postAssets) => set({ postAssets }),
-      setOpenPostCreateModal: (open) => set({ openPostCreateModal: open }),
-      setPostsAnalytics: (postsAnalytics) => set({ postsAnalytics })
+      setPost: (updater) => set((state) => ({ post: typeof updater === 'function' ? updater(state.post) : updater })),
+      setPosts: (updater) => set((state) => ({ posts: typeof updater === 'function' ? updater(state.posts) : updater })),
+      setPostAssets: (updater) => set((state) => ({ postAssets: typeof updater === 'function' ? updater(state.postAssets) : updater })),
+      setOpenPostCreateModal: (updater) => set((state) => ({ openPostCreateModal: typeof updater === 'function' ? updater(state.openPostCreateModal) : updater })),
+      setPostsAnalytics: (updater) => set((state) => ({ postsAnalytics: typeof updater === 'function' ? updater(state.postsAnalytics) : updater }))
     }),
     {
       name: 'posts-store',
