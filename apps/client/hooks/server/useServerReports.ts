@@ -41,7 +41,7 @@ export const useServerReports = (params: PaginationInput, initialReports: Report
     }
   }, [initialReports, setReports]);
 
-  if (!fan)
+  if (!fan || !initialReports.length)
     return {
       reports: [],
       loading: false,
