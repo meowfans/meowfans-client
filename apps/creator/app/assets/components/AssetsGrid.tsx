@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatorAssetsEntity, FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
+import { FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
@@ -22,7 +22,7 @@ interface AssetsGridProps {
 export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onView, selectedAssets, onToggleSelect }: AssetsGridProps) {
   return (
     <div className="p-2 sm:p-6">
-      <InfiniteScrollManager dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
+      <InfiniteScrollManager useWindowScroll dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
           <AnimatePresence mode="popLayout">
             {assets.map((asset, index) => {

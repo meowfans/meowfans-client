@@ -126,7 +126,7 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
       <SheetTrigger asChild>
         <Button variant="outline">Import</Button>
       </SheetTrigger>
-      <SheetContent className="p-1">
+      <SheetContent className="p-1 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Add new contents to {user && user?.username.toUpperCase()}</SheetTitle>
           <SheetDescription>{user ? `You are importing to ${user?.username}` : 'Be descriptive about site information'}</SheetDescription>

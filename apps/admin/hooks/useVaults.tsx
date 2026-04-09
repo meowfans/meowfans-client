@@ -1,6 +1,6 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions';
-import { GetAllObjectsCountOutput, GetVaultObjectsOutput, PaginationInput, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { GetAllObjectsCountOutput, GetVaultObjectsOutput, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -51,13 +51,7 @@ export const useGetAllObjectsCount = () => {
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const { getAllObjectsCountOfEachTypeQuery } = useVaultsActions();
-
-  const [objectsCount, setObjectsCount] = useState<GetAllObjectsCountOutput>({
-    fulfilled: 0,
-    pending: 0,
-    processing: 0,
-    rejected: 0
-  });
+  const { objectsCount, setObjectsCount } = useVaultsStore();
 
   const fetchCounts = async () => {
     setLoading(true);

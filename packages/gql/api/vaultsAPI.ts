@@ -137,6 +137,7 @@ export const GET_CREATOR_VAULT_OBJECTS_QUERY = graphql(`
       updatedAt
       deletedAt
       username
+      creatorId
     }
   }
 `);

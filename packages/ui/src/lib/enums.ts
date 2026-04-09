@@ -39,7 +39,9 @@ export enum EventTypes {
   Presence = 'presence',
   UpdateChannel = 'update_channel',
   VaultObjectStatus = 'vault_object_status',
-  ObjectCount = 'object_count'
+  ObjectsCount = 'object_count',
+  CreatorObjectsCount = 'creator_object_count',
+  ImportStatus = 'import_status'
 }
 
 export enum BackGroundColors {
