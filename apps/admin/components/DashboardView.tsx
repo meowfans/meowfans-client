@@ -2,8 +2,9 @@
 
 import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useImpersonationStore } from '@/hooks/store/impersonation.store';
-import { useUser } from '@/hooks/useUser';
 import { useGetAllObjectsCount } from '@/hooks/useVaults';
+import { useCreatorsActions } from '@workspace/gql/actions';
+import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
@@ -16,10 +17,12 @@ import { ImportCreatorsSheet } from './ImportCreatorsSheet';
 
 export function DashboardView() {
   const { admin } = useAdmin();
+  const { getUserQuery } = useCreatorsActions();
   const { loading, fetchCounts, objectsCount } = useGetAllObjectsCount();
-  const { loadCreator, user, loading: searching } = useUser();
   const { onOpen } = useImpersonationStore();
-  const [searchUsername, setSearchUsername] = useState('');
+  const [searchUsername, setSearchUsername] = useState<string>('');
+  const [user, setUser] = useState<UsersEntity | null>(null);
+  const [searching, setSearching] = useState<boolean>(false);
 
   useEffect(() => {
     fetchCounts();
@@ -28,7 +31,15 @@ export function DashboardView() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchUsername.trim()) return;
-    await loadCreator(searchUsername.trim());
+    setSearching(true);
+    try {
+      const user = await getUserQuery(searchUsername.trim());
+      setUser(user.data?.getUser as UsersEntity);
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setSearching(false);
+    }
   };
 
   const stats = [

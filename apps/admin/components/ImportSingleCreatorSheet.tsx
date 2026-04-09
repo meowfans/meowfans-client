@@ -1,8 +1,7 @@
 'use client';
-import { useUser } from '@/hooks/useUser';
 import { useMutation } from '@apollo/client/react';
 import { INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION } from '@workspace/gql/api/importAPI';
-import { DocumentQualityType, FileType, ImportTypes, ServiceType } from '@workspace/gql/generated/graphql';
+import { DocumentQualityType, FileType, ImportTypes, ServiceType, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
@@ -23,11 +22,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface ImportSingleCreatorSheetProps {
-  username?: string;
+  user: UsersEntity | null;
 }
 
-export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> = ({ username }) => {
-  const { loadCreator, user } = useUser();
+export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> = ({ user }) => {
   const [url, setUrl] = useState<string>('');
   const [start, setStart] = useState<number>(0);
   const [exclude, setExclude] = useState<number>(0);
@@ -43,12 +41,6 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
   const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Profile);
   const [initiateImport] = useMutation(INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION);
   const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
-
-  const handleGetUser = async () => {
-    if (username) {
-      await loadCreator(username.toString());
-    }
-  };
 
   const handleInitiate = async () => {
     setLoading(true);
@@ -128,10 +120,6 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
       }
     }
   }, [url]);
-
-  useEffect(() => {
-    handleGetUser();
-  }, [username]); //eslint-disable-line
 
   return (
     <Sheet onOpenChange={handleClose} open={isOpen}>
