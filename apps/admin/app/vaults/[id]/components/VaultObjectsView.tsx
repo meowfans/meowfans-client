@@ -1,6 +1,7 @@
 'use client';
 
 import { ImportSingleCreatorSheet } from '@/components/ImportSingleCreatorSheet';
+import { useUser } from '@/hooks/useUser';
 import { useVaultObjects } from '@/hooks/useVaults';
 import { useVaultsActions } from '@workspace/gql/actions';
 import { DataFetchType, DownloadStates, FileType, UploadVaultQueueInput } from '@workspace/gql/generated/graphql';
@@ -34,7 +35,7 @@ import {
   VideoIcon,
   XCircle
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface VaultObjectsViewProps {
   id: string;
@@ -48,14 +49,20 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
+  const { user } = useUser({ userIdOrName: id });
 
-  const { vaultObjects, loading, hasNext, handleLoadMore } = useVaultObjects({
-    relatedUserId: id,
-    take: 20,
-    dataFetchType: DataFetchType.InfiniteScroll,
-    fileType: fileTypes.length > 0 ? fileTypes : undefined,
-    status: status.length > 0 ? status : undefined
-  });
+  const queryArgs = useMemo(
+    () => ({
+      relatedUserId: id,
+      take: 100,
+      dataFetchType: DataFetchType.InfiniteScroll,
+      fileType: fileTypes.length > 0 ? fileTypes : undefined,
+      status: status.length > 0 ? status : undefined
+    }),
+    [fileTypes, status, id]
+  );
+
+  const { vaultObjects, loading, hasNext, handleLoadMore } = useVaultObjects(queryArgs);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -93,7 +100,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedObjects(vaultObjects.map((obj) => obj.id));
+      setSelectedObjects(vaultObjects.filter((v) => v.status !== DownloadStates.Fulfilled).map((obj) => obj.id));
     } else {
       setSelectedObjects([]);
     }
@@ -149,7 +156,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             Download Selected ({selectedObjects.length})
           </Button>
         )}
-        <ImportSingleCreatorSheet username={vaultObjects[0]?.username} />
+        <ImportSingleCreatorSheet user={user} />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 shrink-0">
@@ -241,90 +248,84 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             <Loading />
           </div>
         ) : (
-          <div className="h-full overflow-auto" id="vault-objects-container">
-            <InfiniteScrollManager
-              dataLength={vaultObjects.length}
-              hasMore={hasNext}
-              onLoadMore={handleLoadMore}
-              loading={loading}
-              useWindowScroll={false}
-              scrollableDiv="vault-objects-container"
-            >
-              <div className="overflow-x-auto">
-                <table className="w-full caption-bottom text-sm">
-                  <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
-                    <TableRow>
-                      <TableHead className="w-12.5 px-3">
+          <InfiniteScrollManager
+            useWindowScroll
+            dataLength={vaultObjects.length}
+            hasMore={hasNext}
+            onLoadMore={handleLoadMore}
+            loading={loading}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full caption-bottom text-sm">
+                <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
+                  <TableRow>
+                    <TableHead className="w-12.5 px-3">
+                      <Checkbox
+                        checked={isAllSelected || (isIndeterminate ? 'indeterminate' : false)}
+                        onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                        aria-label="Select all"
+                      />
+                    </TableHead>
+                    <TableHead className="w-20 md:w-25">Preview</TableHead>
+                    <TableHead className="w-20 md:w-25 text-center">Type</TableHead>
+                    <TableHead className="w-25 md:w-37.5 text-center">Status</TableHead>
+                    <TableHead className="min-w-37.5">Object URL</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Created At</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {vaultObjects.map((obj) => (
+                    <TableRow key={obj.id} className="hover:bg-muted/50" data-state={selectedObjects.includes(obj.id) && 'selected'}>
+                      <TableCell className="w-12.5 px-3">
                         <Checkbox
-                          checked={isAllSelected || (isIndeterminate ? 'indeterminate' : false)}
-                          onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                          aria-label="Select all"
+                          checked={selectedObjects.includes(obj.id)}
+                          onCheckedChange={(checked) => handleSelectObject(obj.id, checked as boolean)}
+                          aria-label="Select row"
                         />
-                      </TableHead>
-                      <TableHead className="w-20 md:w-25">Preview</TableHead>
-                      <TableHead className="w-20 md:w-25 text-center">Type</TableHead>
-                      <TableHead className="w-25 md:w-37.5 text-center">Status</TableHead>
-                      <TableHead className="min-w-37.5">Object URL</TableHead>
-                      <TableHead className="text-right whitespace-nowrap">Created At</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {vaultObjects.map((obj) => (
-                      <TableRow key={obj.id} className="hover:bg-muted/50" data-state={selectedObjects.includes(obj.id) && 'selected'}>
-                        <TableCell className="w-12.5 px-3">
-                          <Checkbox
-                            checked={selectedObjects.includes(obj.id)}
-                            onCheckedChange={(checked) => handleSelectObject(obj.id, checked as boolean)}
-                            aria-label="Select row"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <div className="relative h-10 w-10 md:h-12 md:w-12 rounded-md overflow-hidden bg-muted border">
-                            {obj.objectUrl && (
-                              <div className="h-full w-full flex items-center justify-center bg-secondary">
-                                {getFileTypeIcon(obj.fileType)}
-                              </div>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex justify-center">
-                            <Badge variant="secondary" className="gap-1 hidden sm:flex">
+                      </TableCell>
+                      <TableCell>
+                        <div className="relative h-10 w-10 md:h-12 md:w-12 rounded-md overflow-hidden bg-muted border">
+                          {obj.objectUrl && (
+                            <div className="h-full w-full flex items-center justify-center bg-secondary">
                               {getFileTypeIcon(obj.fileType)}
-                              <span className="capitalize">{obj.fileType.toLowerCase()}</span>
-                            </Badge>
-                            <div className="sm:hidden text-muted-foreground">{getFileTypeIcon(obj.fileType)}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            {getStatusIcon(obj.status)}
-                            <span className="font-medium text-xs uppercase hidden sm:inline">{obj.status}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell
-                          className="font-mono text-xs text-muted-foreground max-w-37.5 md:max-w-75 truncate"
-                          title={obj.objectUrl}
-                        >
-                          {obj.objectUrl || '-'}
-                        </TableCell>
-                        <TableCell className="text-right text-xs text-muted-foreground whitespace-nowrap">
-                          {new Date(obj.createdAt).toLocaleDateString()}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {vaultObjects.length === 0 && !loading && (
-                      <TableRow>
-                        <TableCell colSpan={6} className="h-24 text-center">
-                          No results found.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </table>
-              </div>
-            </InfiniteScrollManager>
-          </div>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex justify-center">
+                          <Badge variant="secondary" className="gap-1 hidden sm:flex">
+                            {getFileTypeIcon(obj.fileType)}
+                            <span className="capitalize">{obj.fileType.toLowerCase()}</span>
+                          </Badge>
+                          <div className="sm:hidden text-muted-foreground">{getFileTypeIcon(obj.fileType)}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {getStatusIcon(obj.status)}
+                          <span className="font-medium text-xs uppercase hidden sm:inline">{obj.status}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground max-w-37.5 md:max-w-75 truncate" title={obj.objectUrl}>
+                        {obj.objectUrl || '-'}
+                      </TableCell>
+                      <TableCell className="text-right text-xs text-muted-foreground whitespace-nowrap">
+                        {new Date(obj.createdAt).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {vaultObjects.length === 0 && !loading && (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-24 text-center">
+                        No results found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </table>
+            </div>
+          </InfiniteScrollManager>
         )}
       </div>
     </div>

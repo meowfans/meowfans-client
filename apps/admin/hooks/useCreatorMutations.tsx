@@ -1,6 +1,6 @@
 'use client';
 
-import { useCreatorsActions } from '@workspace/gql/actions';
+import { useCreatorsActions, useUserActions } from '@workspace/gql/actions';
 import { CreatorApprovalStatus, UpdateCreatorApprovalStatusInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
@@ -11,6 +11,7 @@ export const useCreatorMutations = () => {
   const { successHandler } = useSuccessHandler();
   const { errorHandler } = useErrorHandler();
   const { updateCreatorApprovalStatusMutation } = useCreatorsActions();
+  const { deleteUserMutation } = useUserActions();
 
   const updateCreatorApprovalStatus = async (input: UpdateCreatorApprovalStatusInput) => {
     setLoading(true);
@@ -28,8 +29,21 @@ export const useCreatorMutations = () => {
     return updatedStatus;
   };
 
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      await deleteUserMutation();
+      successHandler({ message: 'Your account has been deleted' });
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     updateCreatorApprovalStatus,
-    loading
+    loading,
+    deleteAccount
   };
 };
