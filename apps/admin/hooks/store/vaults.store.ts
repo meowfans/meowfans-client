@@ -1,4 +1,4 @@
-import { GetVaultObjectsOutput, UsersEntity } from '@workspace/gql/generated/graphql';
+import { GetAllObjectsCountOutput, GetVaultObjectsOutput, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
@@ -15,10 +15,20 @@ type VaultsStore = {
   setTerminatingImportsModal: (open: Updater<boolean>) => void;
   openImportSheet: boolean;
   setOpenImportSheet: (opn: boolean) => void;
+  objectsCount: GetAllObjectsCountOutput;
+  setObjectsCount: (counts: Updater<GetAllObjectsCountOutput>) => void;
+  creatorObjectsCount: GetAllObjectsCountOutput;
+  setCreatorObjectsCount: (counts: Updater<GetAllObjectsCountOutput>) => void;
 };
 
 export const useVaultsStore = create<VaultsStore>()((set) => ({
+  creatorObjectsCount: { fulfilled: 0, pending: 0, processing: 0, rejected: 0 },
   vaultObjects: [],
+  objectsCount: { fulfilled: 0, pending: 0, processing: 0, rejected: 0 },
+  setObjectsCount: (counts: Updater<GetAllObjectsCountOutput>) =>
+    set((state) => ({ objectsCount: typeof counts === 'function' ? counts(state.objectsCount) : counts })),
+  setCreatorObjectsCount: (counts: Updater<GetAllObjectsCountOutput>) =>
+    set((state) => ({ creatorObjectsCount: typeof counts === 'function' ? counts(state.creatorObjectsCount) : counts })),
   setVaultObjects: (updater: Updater<GetVaultObjectsOutput[]>) =>
     set((state) => ({ vaultObjects: typeof updater === 'function' ? updater(state.vaultObjects) : updater })),
   eventSource: null,

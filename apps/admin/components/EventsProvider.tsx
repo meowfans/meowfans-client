@@ -2,14 +2,14 @@
 
 import { configService } from '@/util/config';
 import { eventEmitter } from '@workspace/ui/hooks/EventsEmitter';
-import { creatorCookieKey } from '@workspace/ui/lib/constants';
+import { adminCookieKey } from '@workspace/ui/lib/constants';
 import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 
 export const EventsProvider = () => {
   const [retry, setRetry] = useState<number>(0);
   useEffect(() => {
-    const authCookieKey = getCookie(creatorCookieKey);
+    const authCookieKey = getCookie(adminCookieKey);
 
     if (!authCookieKey) return;
 
