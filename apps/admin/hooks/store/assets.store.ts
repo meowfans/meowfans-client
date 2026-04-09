@@ -1,29 +1,29 @@
-import { CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
+import { GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { create } from 'zustand';
 
 type AssetsStore = {
-  assets: CreatorAssetsEntity[];
-  setAssets: (assets: CreatorAssetsEntity[]) => void;
+  assets: GetCreatorAssetsOutput[];
   updated: boolean;
-  setUpdated: (updated: boolean) => void;
   deleteModal: boolean;
-  setDeleteModal: (deleteModal: boolean) => void;
-  canSelect: boolean;
-  setCanSelect: (canSelect: boolean) => void;
   openUploadModal: boolean;
-  setOpenUploadModal: (open: boolean) => void;
+  canSelect: boolean;
   selectedAssets: string[];
-  toggleSelect: (assets: string) => void;
   rangeSelection: boolean;
+  option: boolean;
+  toggleSelect: (assets: string) => void;
+  setAssets: (assets: GetCreatorAssetsOutput[]) => void;
+  setUpdated: (updated: boolean) => void;
+  setDeleteModal: (deleteModal: boolean) => void;
+  setCanSelect: (canSelect: boolean) => void;
+  setOpenUploadModal: (open: boolean) => void;
   setRangeSelection: (rangeSelection: boolean) => void;
   setSelectedAssets: (assets: string[]) => void;
-  option: boolean;
   setOption: (open: boolean) => void;
 };
 
 export const useAssetsStore = create<AssetsStore>()((set) => ({
   assets: [],
-  setAssets: (assets: CreatorAssetsEntity[]) => set({ assets }),
+  setAssets: (assets: GetCreatorAssetsOutput[]) => set({ assets }),
   updated: false,
   setUpdated: (updated: boolean) => set(() => ({ updated })),
   option: false,

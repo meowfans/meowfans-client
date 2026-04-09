@@ -57,12 +57,12 @@ export function AssetSelectorModal({
 
           <TabsContent value={assetType} className="mt-4">
             {loading && assets.length === 0 ? (
-              <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+              <div className="flex flex-col items-center justify-center min-h-75 gap-4">
                 <Loading />
                 <p className="text-sm text-muted-foreground">Loading assets...</p>
               </div>
             ) : assets.length === 0 ? (
-              <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 border-2 border-dashed rounded-lg">
+              <div className="flex flex-col items-center justify-center min-h-75 gap-4 border-2 border-dashed rounded-lg">
                 <ImageIcon className="h-12 w-12 text-muted-foreground" />
                 <div className="text-center space-y-1">
                   <p className="text-sm font-medium">No assets found</p>
@@ -70,14 +70,14 @@ export function AssetSelectorModal({
                 </div>
               </div>
             ) : (
-              <div className="max-h-[500px] overflow-y-auto">
+              <div className="max-h-125 overflow-y-auto">
                 <InfiniteScrollManager dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={handleLoadMore}>
                   <div
                     className={`grid gap-3 ${aspectRatio === 'banner' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'}`}
                   >
                     <AnimatePresence mode="popLayout">
                       {assets.map((asset, index) => {
-                        const isSelected = asset.asset.rawUrl === selectedUrl;
+                        const isSelected = asset.rawUrl === selectedUrl;
                         return (
                           <motion.div
                             key={asset.id}
@@ -85,14 +85,14 @@ export function AssetSelectorModal({
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.02, duration: 0.2 }}
                             className="relative group cursor-pointer"
-                            onClick={() => handleSelectAsset(asset.asset.rawUrl)}
+                            onClick={() => handleSelectAsset(asset.rawUrl)}
                           >
                             <div
-                              className={`relative ${aspectRatio === 'banner' ? 'aspect-[21/9]' : 'aspect-square'} rounded-lg overflow-hidden border-2 transition-all ${
+                              className={`relative ${aspectRatio === 'banner' ? 'aspect-21/9' : 'aspect-square'} rounded-lg overflow-hidden border-2 transition-all ${
                                 isSelected ? 'border-primary shadow-lg shadow-primary/20' : 'border-border hover:border-primary/50'
                               }`}
                             >
-                              <NextImage src={asset.asset.rawUrl} alt="Asset" fill className="object-cover" />
+                              <NextImage src={asset.rawUrl} alt="Asset" fill className="object-cover" />
 
                               {/* Overlay */}
                               <div

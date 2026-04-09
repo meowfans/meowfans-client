@@ -1,4 +1,4 @@
-import { AssetsEntity, PostsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
+import { GetCreatorAssetsOutput, PostsEntity, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { BackGroundColors } from '@workspace/ui/lib/enums';
 import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
@@ -11,13 +11,13 @@ type UtilsStore = {
   bgColor: BackGroundColors;
   openAsstPickerModal: boolean;
   showAssetsSidebar: boolean;
-  selectedAssets: AssetsEntity[];
+  selectedAssets: GetCreatorAssetsOutput[];
   setShareModal: (updater: Updater<PostsEntity | null>) => void;
   setBgColor: (updater: Updater<BackGroundColors>) => void;
   setOpenLogoutModal: (updater: Updater<boolean>) => void;
   setOpenAsstPickerModal: (updater: Updater<boolean>) => void;
   setShowAssetsSidebar: (updater: Updater<boolean>) => void;
-  setSelectedAssets: (updater: Updater<AssetsEntity[]>) => void;
+  setSelectedAssets: (updater: Updater<GetCreatorAssetsOutput[]>) => void;
 };
 
 export const useUtilsStore = create<UtilsStore>()((set) => ({

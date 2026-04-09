@@ -1,7 +1,7 @@
 'use client';
 
 import { useAssets } from '@/hooks/useAssets';
-import { AssetsEntity, AssetType, FileType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetsEntity, AssetType, FileType, GetCreatorAssetsOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { Modal } from '@workspace/ui/modals/Modal';
@@ -21,7 +21,7 @@ export function AssetsView() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
-  const [previewAsset, setPreviewAsset] = useState<AssetsEntity | null>(null);
+  const [previewAsset, setPreviewAsset] = useState<GetCreatorAssetsOutput | null>(null);
   const [fileType] = useState<FileType[]>(Object.values(FileType));
 
   const queryArgs = useMemo(
@@ -59,13 +59,13 @@ export function AssetsView() {
     setSelectedAssets((prev) => (prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]));
   };
 
-  const handleView = (asset: AssetsEntity) => {
+  const handleView = (asset: GetCreatorAssetsOutput) => {
     setPreviewAsset(asset);
   };
 
   const totalAssets = assets.length;
-  const imageCount = assets.filter((a) => a.asset?.fileType === FileType.Image).length;
-  const videoCount = assets.filter((a) => a.asset?.fileType === FileType.Video).length;
+  const imageCount = assets.filter((a) => a.fileType === FileType.Image).length;
+  const videoCount = assets.filter((a) => a.fileType === FileType.Video).length;
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">

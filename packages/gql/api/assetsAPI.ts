@@ -40,23 +40,19 @@ export const GET_ALL_ASSETS_QUERY = graphql(`
 export const GET_CREATOR_ASSETS_QUERY = graphql(`
   query GetCreatorAssets($input: PaginationInput!) {
     getCreatorAssets(input: $input) {
-      assetId
-      createdAt
-      creatorId
-      deletedAt
       id
       type
-      asset {
-        createdAt
-        creatorId
-        fileType
-        id
-        mediaType
-        mimeType
-        rawUrl
-        updatedAt
-        isPosted
-      }
+      rawUrl
+      blurredUrl
+      creatorId
+      vaultObjectId
+      viewCount
+      mimeType
+      isPosted
+      mediaType
+      fileType
+      displayOrder
+      createdAt
     }
   }
 `);

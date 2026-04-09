@@ -1,9 +1,7 @@
 'use client';
-import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useUser } from '@/hooks/useUser';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useMutation } from '@apollo/client/react';
 import { INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION } from '@workspace/gql/api/importAPI';
-import { GET_USER_QUERY } from '@workspace/gql/api/userAPI';
 import { DocumentQualityType, FileType, ImportTypes, ServiceType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
@@ -21,12 +19,14 @@ import {
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { HostNames } from '@workspace/ui/lib';
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export const ImportSingleCreatorSheet = () => {
-  const { username } = useParams();
+interface ImportSingleCreatorSheetProps {
+  username?: string;
+}
+
+export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> = ({ username }) => {
   const { loadCreator, user } = useUser();
   const [url, setUrl] = useState<string>('');
   const [start, setStart] = useState<number>(0);

@@ -1,5 +1,5 @@
 import { configService } from '@/util/config';
-import { AssetType } from '@workspace/gql/generated/graphql';
+import { AssetType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import {
   authCookieKey,
   authRefreshCookieKey,
@@ -65,7 +65,7 @@ const useAPI = () => {
         }
       }
     });
-    return data as UploadMediaOutput;
+    return data as GetCreatorAssetsOutput;
   };
 
   return {

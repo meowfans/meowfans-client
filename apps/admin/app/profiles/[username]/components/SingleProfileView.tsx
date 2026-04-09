@@ -16,7 +16,7 @@ export const SingleProfileView = ({ username }: SingleProfileViewProps) => {
           </h2>
           <p className="text-sm text-muted-foreground">Manage details and import content for @{username}</p>
         </div>
-        <ImportSingleCreatorSheet />
+        <ImportSingleCreatorSheet username={username} />
       </div>
     </div>
   );

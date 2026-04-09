@@ -1,6 +1,6 @@
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import { useAssetsActions } from '@workspace/gql/actions';
-import { AssetType, CreatorAssetsEntity, PaginationInput } from '@workspace/gql/generated/graphql';
+import { AssetType, GetCreatorAssetsOutput, PaginationInput } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +19,7 @@ export const useAssets = (params: PaginationInput) => {
         skip,
         assetType: AssetType.Private
       });
-      const fetchedAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
+      const fetchedAssets = data?.getCreatorAssets as GetCreatorAssetsOutput[];
       setHasMore(fetchedAssets.length === 50);
 
       if (initialLoad) setAssets(fetchedAssets);

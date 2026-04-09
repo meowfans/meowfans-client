@@ -1,5 +1,7 @@
 import { AppHeader } from '@/components/AppHeader';
 import { AppSideBar } from '@/components/AppSideBar';
+import { Events } from '@/components/Events';
+import { EventsProvider } from '@/components/EventsProvider';
 import { AdminContextWrapper } from '@/hooks/context/AdminContextWrapper';
 import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
@@ -128,12 +130,13 @@ export default async function RootLayout({ children }: Props) {
         <meta httpEquiv="Delegate-CH" content={AppConfig.delegateCh} />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-
       <body className={cn(inter.variable, 'overscroll-none')}>
         <ApolloWrapper apiGraphqlUrl={configService.NEXT_PUBLIC_API_GRAPHQL_URL} role={UserRoles.Admin}>
           <AdminContextWrapper creator={admin as CreatorProfilesEntity}>
             <Toaster position="top-center" richColors />
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <EventsProvider />
+              <Events />
               <SidebarProvider defaultOpen>
                 <AppSideBar />
                 <SidebarInset>

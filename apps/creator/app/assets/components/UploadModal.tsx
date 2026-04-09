@@ -1,5 +1,6 @@
 'use client';
 
+import { useAssetsStore } from '@/hooks/store/assets.store';
 import useAPI from '@/hooks/useAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -34,6 +35,7 @@ export function UploadModal({ isOpen, onClose, isUploading, setIsUploading }: Up
   const inputRef = useRef<HTMLInputElement>(null);
   const [mediaType, setMediaType] = useState<MediaType>(MediaType.PROFILE_MEDIA);
   const [assetType, setAssetType] = useState<AssetType>(AssetType.Private);
+  const setAssets = useAssetsStore((s) => s.setAssets);
 
   const handleFiles = useCallback((newFiles: FileList | null) => {
     if (!newFiles) return;
@@ -113,12 +115,13 @@ export function UploadModal({ isOpen, onClose, isUploading, setIsUploading }: Up
         files.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
-          await upload({
+          const asset = await upload({
             assetType,
             fileType: resolveFileType(file.name),
             formData,
             mediaType
           });
+          setAssets((prev) => [asset, ...prev]);
         })
       );
       toast.success(`${files.length} asset(s) uploaded successfully`);
@@ -126,7 +129,6 @@ export function UploadModal({ isOpen, onClose, isUploading, setIsUploading }: Up
       toast.error('Upload failed');
     } finally {
       setIsUploading(false);
-      
     }
   };
 

@@ -156,19 +156,19 @@ export function VaultsView() {
           <table className="w-full caption-bottom text-sm">
             <TableHeader>
               <TableRow>
-                <TableHead className="sticky left-0 top-0 z-50 bg-card w-[50px] px-3">
+                <TableHead className="sticky left-0 top-0 z-50 bg-card w-12.5 px-3">
                   <Checkbox
                     checked={isAllSelected || (isIndeterminate ? 'indeterminate' : false)}
                     onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
                     aria-label="Select all"
                   />
                 </TableHead>
-                <TableHead className="sticky left-[50px] top-0 z-50 bg-card min-w-[120px] px-3">Creator</TableHead>
+                <TableHead className="sticky left-12.5 top-0 z-50 bg-card min-w-30 px-3">Creator</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center px-2 min-w-28">Pending</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center px-2 min-w-28">Processing</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center min-w-27.5">Rejected</TableHead>
                 <TableHead className="sticky top-0 z-30 bg-card text-center min-w-27.5">Fulfilled</TableHead>
-                <TableHead className="sticky top-0 z-30 bg-card text-center px-4 min-w-28 bg-card">Actions</TableHead>
+                <TableHead className="sticky top-0 z-30 bg-card text-center px-4 min-w-28">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -178,14 +178,14 @@ export function VaultsView() {
                   className="hover:bg-primary/5 transition-colors group border-b border-primary/5"
                   data-state={selectedCreators.includes(creator.id) && 'selected'}
                 >
-                  <TableCell className="py-4 sticky left-0 z-20 bg-card/90 backdrop-blur-md border-r border-primary/5 w-[50px] table-cell">
+                  <TableCell className="py-4 sticky left-0 z-20 bg-card/90 backdrop-blur-md border-r border-primary/5 w-12.5 table-cell">
                     <Checkbox
                       checked={selectedCreators.includes(creator.id)}
                       onCheckedChange={(checked) => handleSelectCreator(creator.id, checked as boolean)}
                       aria-label="Select row"
                     />
                   </TableCell>
-                  <TableCell className="py-4 sticky left-[50px] z-20 bg-card/90 backdrop-blur-md group-hover:bg-primary/10 transition-colors border-r border-primary/5 min-w-[120px] table-cell">
+                  <TableCell className="py-4 sticky left-12.5 z-20 bg-card/90 backdrop-blur-md group-hover:bg-primary/10 transition-colors border-r border-primary/5 min-w-30 table-cell">
                     <div className="flex items-center gap-2">
                       <Avatar className="h-9 w-9 border-2 border-primary/10 group-hover:border-primary/40 transition-colors shrink-0">
                         <AvatarImage src={creator?.avatarUrl ?? MEOW_FANS_AVATAR} />

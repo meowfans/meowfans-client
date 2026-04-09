@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatorAssetsEntity, FileType } from '@workspace/gql/generated/graphql';
+import { CreatorAssetsEntity, FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
@@ -9,12 +9,12 @@ import { Check, Eye, Play, Trash2 } from 'lucide-react';
 import NextImage from 'next/image';
 
 interface AssetsGridProps {
-  assets: CreatorAssetsEntity[];
+  assets: GetCreatorAssetsOutput[];
   loading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
   onDelete: (id: string) => void;
-  onView: (asset: CreatorAssetsEntity['asset']) => void;
+  onView: (asset: GetCreatorAssetsOutput) => void;
   selectedAssets: string[];
   onToggleSelect: (id: string) => void;
 }
@@ -25,13 +25,13 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
       <InfiniteScrollManager dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
           <AnimatePresence mode="popLayout">
-            {assets.map((item, index) => {
-              const isSelected = selectedAssets.includes(item.id);
-              const isVideo = item.asset.fileType === FileType.Video;
+            {assets.map((asset, index) => {
+              const isSelected = selectedAssets.includes(asset.id);
+              const isVideo = asset.fileType === FileType.Video;
 
               return (
                 <motion.div
-                  key={item.id}
+                  key={asset.id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
@@ -41,11 +41,11 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
                   }`}
                 >
                   {/* Main Content - Tap to View */}
-                  <div className="w-full h-full cursor-pointer" onClick={() => onView(item.asset)}>
-                    {item.asset.rawUrl ? (
+                  <div className="w-full h-full cursor-pointer" onClick={() => onView(asset)}>
+                    {asset.rawUrl ? (
                       isVideo ? (
                         <div className="relative w-full h-full bg-black">
-                          <video src={item.asset.rawUrl} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+                          <video src={asset.rawUrl} className="w-full h-full object-cover" muted playsInline preload="metadata" />
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="bg-black/50 rounded-full p-2">
                               <Play className="h-6 w-6 text-white fill-white/50" />
@@ -54,7 +54,7 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
                         </div>
                       ) : (
                         <NextImage
-                          src={item.asset.rawUrl}
+                          src={asset.rawUrl}
                           alt="Asset"
                           fill
                           className="object-cover transition-transform group-hover:scale-105"
@@ -70,7 +70,7 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
                     className="absolute top-2 right-2 z-10 cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onToggleSelect(item.id);
+                      onToggleSelect(asset.id);
                     }}
                   >
                     <div
@@ -88,14 +88,14 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
                   </div>
 
                   {/* Desktop Hover Actions */}
-                  <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center gap-2 pointer-events-none">
+                  <div className="absolute inset-x-0 bottom-0 p-2 bg-linear-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center gap-2 pointer-events-none">
                     <Button
                       variant="secondary"
                       size="icon"
                       className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-black pointer-events-auto"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onView(item.asset);
+                        onView(asset);
                       }}
                     >
                       <Eye className="h-4 w-4" />
@@ -106,7 +106,7 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onV
                       className="h-8 w-8 rounded-full pointer-events-auto"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onDelete(item.id);
+                        onDelete(asset.id);
                       }}
                     >
                       <Trash2 className="h-4 w-4" />
