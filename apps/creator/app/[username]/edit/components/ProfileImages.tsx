@@ -146,7 +146,7 @@ export function ProfileImages() {
             <CardDescription>Customize your profile with a banner image</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="relative aspect-[21/9] rounded-lg overflow-hidden bg-secondary/20 border-2 border-dashed border-border group hover:border-primary transition-colors">
+            <div className="relative aspect-21/9 rounded-lg overflow-hidden bg-secondary/20 border-2 border-dashed border-border group hover:border-primary transition-colors">
               {bannerUrl ? (
                 <NextImage src={bannerUrl} alt="Banner" fill className="object-cover" />
               ) : (

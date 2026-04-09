@@ -123,30 +123,20 @@ export const GET_ALL_VAULTS_QUERY = graphql(`
 export const GET_CREATOR_VAULT_OBJECTS_QUERY = graphql(`
   query GetCreatorVaultObjectsByAdmin($input: PaginationInput!) {
     getCreatorVaultObjectsByAdmin(input: $input) {
-      createdAt
-      deletedAt
       id
       objectUrl
+      vaultId
+      suffix
+      importedAt
+      totalEarning
+      unlockPrice
       status
       fileType
+      contentType
+      createdAt
       updatedAt
-      vaultId
-      vault {
-        createdAt
-        creatorId
-        deletedAt
-        id
-        updatedAt
-        url
-        creatorProfile {
-          creatorId
-          user {
-            avatarUrl
-            id
-            username
-          }
-        }
-      }
+      deletedAt
+      username
     }
   }
 `);

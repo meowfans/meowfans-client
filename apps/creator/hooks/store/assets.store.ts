@@ -1,4 +1,4 @@
-import { AssetsEntity, CreatorAssetsEntity } from '@workspace/gql/generated/graphql';
+import { AssetsEntity, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
@@ -10,7 +10,7 @@ type AssetsStore = {
   selectedAssets: string[];
   rangeSelection: boolean;
   option: boolean;
-  assets: CreatorAssetsEntity[];
+  assets: GetCreatorAssetsOutput[];
   selectedAssetsRecord: AssetsEntity[];
   toggleSelect: (assets: string) => void;
   setCanSelect: (updater: Updater<boolean>) => void;
@@ -20,7 +20,7 @@ type AssetsStore = {
   setSelectedAssets: (updater: Updater<string[]>) => void;
   setSelectedAssetsRecord: (updater: Updater<AssetsEntity[]>) => void;
   setOption: (updater: Updater<boolean>) => void;
-  setAssets: (updater: Updater<CreatorAssetsEntity[]>) => void;
+  setAssets: (updater: Updater<GetCreatorAssetsOutput[]>) => void;
   setDeleteModal: (updater: Updater<boolean>) => void;
 };
 
@@ -29,7 +29,7 @@ export const useAssetsStore = create<AssetsStore>()((set) => ({
   setSelectedAssetsRecord: (updater: Updater<AssetsEntity[]>) =>
     set((state) => ({ selectedAssetsRecord: typeof updater === 'function' ? updater(state.selectedAssetsRecord) : updater })),
   assets: [],
-  setAssets: (updater: Updater<CreatorAssetsEntity[]>) =>
+  setAssets: (updater: Updater<GetCreatorAssetsOutput[]>) =>
     set((state) => ({ assets: typeof updater === 'function' ? updater(state.assets) : updater })),
   updated: false,
   setUpdated: (updater: Updater<boolean>) =>

@@ -1,6 +1,6 @@
 import { useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions';
-import { GetAllObjectsCountOutput, PaginationInput, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
+import { GetAllObjectsCountOutput, GetVaultObjectsOutput, PaginationInput, VaultObjectsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +10,7 @@ export const useVaultObjects = (params: PaginationInput) => {
   const [hasNext, setHasNext] = useState<boolean>(false);
   const { vaultObjects, setVaultObjects } = useVaultsStore();
   const { getCreatorVaultObjectsQuery } = useVaultsActions();
+  const [username, setUsername] = useState<string | undefined>('');
 
   const loadVaultObjects = async (initialLoad = false) => {
     const skip = initialLoad ? 0 : vaultObjects.length;
@@ -18,9 +19,10 @@ export const useVaultObjects = (params: PaginationInput) => {
     try {
       const { data } = await getCreatorVaultObjectsQuery({ ...params, skip });
 
-      const fetched = data?.getCreatorVaultObjectsByAdmin as VaultObjectsEntity[];
+      const fetched = data?.getCreatorVaultObjectsByAdmin as GetVaultObjectsOutput[];
       setHasNext(!!fetched.length);
       setVaultObjects(initialLoad ? fetched : [...vaultObjects, ...fetched]);
+      setUsername(vaultObjects[0]?.username);
     } catch (error) {
       errorHandler({ error });
     } finally {
@@ -40,7 +42,8 @@ export const useVaultObjects = (params: PaginationInput) => {
     vaultObjects,
     hasNext,
     handleLoadMore,
-    loading
+    loading,
+    username
   };
 };
 

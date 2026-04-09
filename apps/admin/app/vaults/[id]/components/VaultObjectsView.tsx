@@ -1,5 +1,6 @@
 'use client';
 
+import { ImportSingleCreatorSheet } from '@/components/ImportSingleCreatorSheet';
 import { useVaultObjects } from '@/hooks/useVaults';
 import { useVaultsActions } from '@workspace/gql/actions';
 import { DataFetchType, DownloadStates, FileType, UploadVaultQueueInput } from '@workspace/gql/generated/graphql';
@@ -33,7 +34,6 @@ import {
   VideoIcon,
   XCircle
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface VaultObjectsViewProps {
@@ -41,7 +41,6 @@ interface VaultObjectsViewProps {
 }
 
 export function VaultObjectsView({ id }: VaultObjectsViewProps) {
-  const router = useRouter();
   const [status, setStatus] = useState<DownloadStates[]>(Object.values(DownloadStates));
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
@@ -137,7 +136,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2 truncate">
               Vault Objects
               <Badge variant="outline" className="text-sm md:text-lg px-2 md:px-3 py-0.5 md:py-1 ml-2 font-mono shrink-0">
-                @{id.slice(0, 8)}...
+                @{vaultObjects[0]?.username}...
               </Badge>
             </h1>
             <p className="text-sm text-muted-foreground mt-1 truncate">Manage content objects for this creator</p>
@@ -150,6 +149,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             Download Selected ({selectedObjects.length})
           </Button>
         )}
+        <ImportSingleCreatorSheet username={vaultObjects[0]?.username} />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 shrink-0">

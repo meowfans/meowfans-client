@@ -35,7 +35,7 @@ export const useFollowers = (input: PaginationInput) => {
 
   useEffect(() => {
     loadFollowers(true);
-  }, [input.take, input.skip, input.orderBy, input.searchTerm]);
+  }, [input.take, input.skip, input.orderBy, input.searchTerm]); //eslint-disable-line
 
   return { loading, hasMore, handleLoadMore, followers };
 };

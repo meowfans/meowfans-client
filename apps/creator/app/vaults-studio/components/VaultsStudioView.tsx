@@ -97,8 +97,8 @@ export function VaultsStudioView() {
     }
   };
 
-  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.assetId));
-  const previewAsset = selectedAssetsData.find((a) => a.assetId === previewAssetId);
+  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.id));
+  const previewAsset = selectedAssetsData.find((a) => a.id === previewAssetId);
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
@@ -193,11 +193,11 @@ export function VaultsStudioView() {
                                       isSelected ? 'border-primary shadow-lg shadow-primary/20' : 'border-border hover:border-primary/50'
                                     }`}
                                   >
-                                    {asset.asset.fileType === FileType.Video ? (
-                                      <video src={asset.asset.rawUrl} controls className="w-full h-full max-h-[70vh] object-contain" />
+                                    {asset.fileType === FileType.Video ? (
+                                      <video src={asset.rawUrl} controls className="w-full h-full max-h-[70vh] object-contain" />
                                     ) : (
                                       <div className="relative w-full h-[60vh]">
-                                        <NextImage src={asset.asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
+                                        <NextImage src={asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
                                       </div>
                                     )}
 
@@ -268,7 +268,7 @@ export function VaultsStudioView() {
                 </CardHeader>
                 <CardContent>
                   <div className="relative aspect-video rounded-lg overflow-hidden">
-                    <NextImage src={previewAsset.asset.rawUrl} alt="Cover" fill className="object-cover" />
+                    <NextImage src={previewAsset.rawUrl} alt="Cover" fill className="object-cover" />
                   </div>
                 </CardContent>
               </Card>

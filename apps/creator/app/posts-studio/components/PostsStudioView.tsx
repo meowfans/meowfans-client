@@ -103,8 +103,8 @@ export function PostsStudioView() {
     }
   };
 
-  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.assetId));
-  const previewAsset = selectedAssetsData.find((a) => a.assetId === previewAssetId);
+  const selectedAssetsData = creatorAssets.filter((a) => selectedAssets.includes(a.id));
+  const previewAsset = selectedAssetsData.find((a) => a.id === previewAssetId);
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
@@ -173,8 +173,8 @@ export function PostsStudioView() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                           <AnimatePresence mode="popLayout">
                             {creatorAssets.map((asset, index) => {
-                              const isSelected = selectedAssets.includes(asset.assetId);
-                              const isPreview = previewAssetId === asset.assetId;
+                              const isSelected = selectedAssets.includes(asset.id);
+                              const isPreview = previewAssetId === asset.id;
                               return (
                                 <motion.div
                                   key={asset.id}
@@ -182,23 +182,23 @@ export function PostsStudioView() {
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.02, duration: 0.2 }}
                                   className="relative group cursor-pointer"
-                                  onClick={() => handleToggleAsset(asset.assetId)}
+                                  onClick={() => handleToggleAsset(asset.id)}
                                 >
                                   <div
                                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                                       isSelected ? 'border-primary shadow-lg shadow-primary/20' : 'border-border hover:border-primary/50'
                                     }`}
                                   >
-                                    {asset.asset.fileType === FileType.Video ? (
+                                    {asset.fileType === FileType.Video ? (
                                       <video
-                                        src={asset.asset.rawUrl}
+                                        src={asset.rawUrl}
                                         controls
                                         autoPlay
                                         className="w-full h-full max-h-[70vh] object-contain"
                                       />
                                     ) : (
                                       <div className="relative w-full h-[60vh]">
-                                        <NextImage src={asset.asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
+                                        <NextImage src={asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />
                                       </div>
                                     )}
 
@@ -270,7 +270,7 @@ export function PostsStudioView() {
                 </CardHeader>
                 <CardContent>
                   <div className="relative aspect-square rounded-lg overflow-hidden">
-                    <NextImage src={previewAsset.asset.rawUrl} alt="Preview" fill className="object-cover" />
+                    <NextImage src={previewAsset.rawUrl} alt="Preview" fill className="object-cover" />
                   </div>
                 </CardContent>
               </Card>

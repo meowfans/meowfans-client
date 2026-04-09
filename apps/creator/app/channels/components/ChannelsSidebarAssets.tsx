@@ -2,7 +2,7 @@
 
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useAssets } from '@/hooks/useAssets';
-import { AssetsEntity, AssetType, FileType } from '@workspace/gql/generated/graphql';
+import { AssetType, FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Skeleton } from '@workspace/ui/components/skeleton';
@@ -34,7 +34,7 @@ export function ChannelsSidebarAssets() {
     assetType: AssetType.Private
   });
 
-  const toggleAssetSelection = (asset: AssetsEntity) => {
+  const toggleAssetSelection = (asset: GetCreatorAssetsOutput) => {
     setSelectedAssets((prev) => {
       const isAlreadySelected = prev.some((a) => a.id === asset.id);
       if (isAlreadySelected) {
@@ -113,19 +113,19 @@ export function ChannelsSidebarAssets() {
           <InfiniteScrollManager dataLength={assets.length} onLoadMore={handleLoadMore} hasMore={hasMore} loading={loading}>
             <div className="grid grid-cols-2 gap-2 p-2 pb-10">
               {assets.map((asset) => {
-                const isSelected = selectedAssets.find((a) => a.id === asset.asset.id);
+                const isSelected = selectedAssets.find((a) => a.id === asset.id);
                 return (
                   <div
                     key={asset.id}
-                    onClick={() => toggleAssetSelection(asset.asset)}
+                    onClick={() => toggleAssetSelection(asset)}
                     className={`relative aspect-square rounded-lg overflow-hidden cursor-pointer group border-2 transition-all ${
                       isSelected ? 'border-primary ring-2 ring-primary/10' : 'border-transparent hover:border-primary/50'
                     }`}
                   >
-                    {asset.asset.fileType === FileType.Image ? (
-                      <Image fill src={asset.asset.rawUrl} alt="Asset" className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
+                    {asset.fileType === FileType.Image ? (
+                      <Image fill src={asset.rawUrl} alt="Asset" className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
                     ) : (
-                      <video src={asset.asset.rawUrl} className="w-full h-full object-cover" />
+                      <video src={asset.rawUrl} className="w-full h-full object-cover" />
                     )}
 
                     {/* Overlay */}

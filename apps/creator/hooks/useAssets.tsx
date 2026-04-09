@@ -3,7 +3,7 @@ import { usePostsStore } from '@/hooks/store/posts.store';
 import { useLazyQuery } from '@apollo/client/react';
 import { useAssetsActions } from '@workspace/gql/actions';
 import { GET_POST_ASSETS_QUERY } from '@workspace/gql/api/postsAPI';
-import { AssetType, CreatorAssetsEntity, PaginationInput, PostAssetsEntity, SortOrder } from '@workspace/gql/generated/graphql';
+import { AssetType, CreatorAssetsEntity, GetCreatorAssetsOutput, PaginationInput, PostAssetsEntity, SortOrder } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +19,7 @@ export const useAssets = (params: PaginationInput) => {
     const skip = initialLoad ? 0 : assets.length;
     try {
       const { data } = await getCreatorAssetsQuery({ ...params, take: 30, skip });
-      const fetchedAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
+      const fetchedAssets = data?.getCreatorAssets as GetCreatorAssetsOutput[];
 
       setHasMore(fetchedAssets.length === 30);
       setAssets(initialLoad ? fetchedAssets : [...assets, ...fetchedAssets]);
@@ -32,7 +32,7 @@ export const useAssets = (params: PaginationInput) => {
 
   const handleRefetch = async (take: number) => {
     const { data } = await refetchCreatorAssets({ input: { ...params, take, skip: 0 } });
-    const creatorAssets = data?.getCreatorAssets as CreatorAssetsEntity[];
+    const creatorAssets = data?.getCreatorAssets as GetCreatorAssetsOutput[];
     return creatorAssets;
   };
 
