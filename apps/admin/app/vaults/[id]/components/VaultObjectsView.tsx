@@ -168,7 +168,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
           </div>
         </div>
 
-        <TabsContent value="objects" className="mt-0 focus-visible:outline-none min-h-[400px]">
+        <TabsContent value="objects" className="mt-0 focus-visible:outline-none min-h-100">
           <VaultObjectsTable
             vaultObjects={vaultObjects}
             selectedObjects={selectedObjects}
@@ -180,7 +180,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
           />
         </TabsContent>
 
-        <TabsContent value="vaults" className="mt-0 focus-visible:outline-none min-h-[400px]">
+        <TabsContent value="vaults" className="mt-0 focus-visible:outline-none min-h-100">
           {activeTab === 'vaults' && <VaultsList />}
         </TabsContent>
       </Tabs>

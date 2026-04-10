@@ -45,7 +45,7 @@ export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[106.25">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-full bg-destructive/10 text-destructive">

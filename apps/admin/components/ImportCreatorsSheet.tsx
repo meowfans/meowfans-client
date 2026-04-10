@@ -40,7 +40,7 @@ export const ImportCreatorsSheet = () => {
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
   const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Page);
   const [initiateImport] = useMutation(INITIATE_CREATORS_IMPORT_QUERY_MUTATION);
-  const [processType, setProcessType] = useState<ProcessType>(ProcessType.Function);
+  const [processType, setProcessType] = useState<ProcessType>(ProcessType.Generator);
   const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
 
   const handleInitiate = async () => {
@@ -203,7 +203,7 @@ export const ImportCreatorsSheet = () => {
 
           <div className="grid grid-cols-2 space-x-2">
             <div className="grid gap-2">
-              <Label htmlFor="start">Start</Label>
+              <Label htmlFor="start">Start {start * 50}</Label>
               <Input
                 id="start"
                 type="text"
@@ -214,7 +214,7 @@ export const ImportCreatorsSheet = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="exclude">Exclude / Span</Label>
+              <Label htmlFor="exclude">Exclude / Span {(exclude - 1) * 50}</Label>
               <Input
                 id="exclude"
                 type="text"
