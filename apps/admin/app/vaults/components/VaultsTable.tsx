@@ -137,7 +137,7 @@ export function VaultsTable({
                         <DropdownMenuContent align="end" className="w-56 p-1.5 shadow-xl border-primary/10">
                           <DropdownMenuItem
                             className="text-xs font-bold uppercase tracking-wider gap-2 h-9 cursor-pointer"
-                            onClick={() => router.push(`/vaults/${encodeURIComponent(creator.id)}`)}
+                            onClick={() => router.push(`/vaults/${encodeURIComponent(creator.id)}?tab=objects`)}
                           >
                             <ExternalLink className="h-3.5 w-3.5 text-primary" />
                             View Detailed Vault Objects

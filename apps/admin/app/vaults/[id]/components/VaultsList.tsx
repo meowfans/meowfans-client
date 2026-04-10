@@ -1,9 +1,9 @@
 'use client';
 
 import { useVaults } from '@/hooks/useVaults';
+import { SortOrder } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
-import { Card, CardContent, CardFooter } from '@workspace/ui/components/card';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { format } from 'date-fns';
@@ -13,7 +13,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 export function VaultsList() {
   const { id } = useParams<{ id: string }>();
-  const { vaults, loading, hasNext, handleLoadMore } = useVaults({ take: 30, relatedUserId: id });
+  const { vaults, loading, hasNext, handleLoadMore } = useVaults({ take: 30, relatedUserId: id, orderBy: SortOrder.Desc });
 
   const router = useRouter();
 
@@ -31,7 +31,6 @@ export function VaultsList() {
                 key={vault.id}
                 className="group flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 p-3 border border-primary/10 bg-card hover:border-primary/30 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md"
               >
-                {/* Preview Thumbnail - Horizontal View */}
                 <div className="relative h-24 sm:h-20 aspect-video sm:w-36 overflow-hidden rounded-lg bg-muted shrink-0 shadow-inner">
                   {vault.preview ? (
                     <Image
@@ -49,7 +48,6 @@ export function VaultsList() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
 
-                {/* Main Info Section */}
                 <div className="flex-1 min-w-0 space-y-1 py-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-black italic uppercase tracking-tight text-sm md:text-base truncate group-hover:text-primary transition-colors">
@@ -62,21 +60,21 @@ export function VaultsList() {
                     )}
                   </div>
 
-                  {/* Vault URL Display */}
                   <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] text-primary/60 font-medium truncate max-w-xs md:max-w-md">
                     <Database className="h-2.5 w-2.5 opacity-50" />
-                    <span className="truncate opacity-80 hover:opacity-100 cursor-default">
-                      meowfans.com/vaults/{vault.id}
-                    </span>
+                    <span className="truncate opacity-80 hover:opacity-100 cursor-default">{vault.url}</span>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                     <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold uppercase tracking-widest bg-muted/50 px-2 py-0.5 rounded-full">
                       <Calendar className="h-2.5 w-2.5 text-primary/40" />
-                      {format(new Date(vault.createdAt), 'MMM dd, yyyy')}
+                      {format(new Date(vault.createdAt), 'MMM dd, yyyy: HH:mm:ss')}
                     </div>
-                    
-                    <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] md:text-[9px] font-bold uppercase h-4 md:h-5 border-primary/10 px-1.5">
+
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/5 text-primary text-[8px] md:text-[9px] font-bold uppercase h-4 md:h-5 border-primary/10 px-1.5"
+                    >
                       {vault.objectCount || 0} Objects
                     </Badge>
 
@@ -92,7 +90,6 @@ export function VaultsList() {
                   </div>
                 </div>
 
-                {/* Stats & Status */}
                 <div className="flex items-center gap-4 md:gap-6 px-3 md:px-4 border-l border-primary/5 hidden md:flex shrink-0">
                   <div className="flex flex-col items-center">
                     <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">Likes</span>
@@ -104,13 +101,14 @@ export function VaultsList() {
 
                   <div className="flex flex-col items-center">
                     <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">Status</span>
-                    <span className={`text-[9px] font-black italic uppercase tracking-wider ${vault.isPurchased ? 'text-green-500' : 'text-amber-500'}`}>
+                    <span
+                      className={`text-[9px] font-black italic uppercase tracking-wider ${vault.isPurchased ? 'text-green-500' : 'text-amber-500'}`}
+                    >
                       {vault.isPurchased ? 'Purchased' : 'Public'}
                     </span>
                   </div>
                 </div>
 
-                {/* Actions Section */}
                 <div className="flex items-center gap-2 p-1 md:bg-muted/30 rounded-lg shrink-0 self-end sm:self-center">
                   <Button
                     size="sm"

@@ -12,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/componen
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { Database, Users } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import { VaultObjectsFilters } from './VaultObjectsFilters';
 import { VaultObjectsHeader } from './VaultObjectsHeader';
 import { VaultObjectsTable } from './VaultObjectsTable';
@@ -30,6 +31,11 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
   const [isCleanupModalOpen, setIsCleanupModalOpen] = useState(false);
+
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab') as 'vaults' | 'objects' | null;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();
   const { errorHandler } = useErrorHandler();
@@ -83,6 +89,19 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
     }
   };
 
+  const handleTabChange = (tab: 'vaults' | 'objects') => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    if (tabParam && tabParam !== activeTab) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam, activeTab]);
+
   return (
     <div className="space-y-6 md:space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto flex flex-col min-h-full w-full min-w-0">
       <VaultObjectsHeader
@@ -110,26 +129,43 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         />
       )}
 
-      <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
+      <Tabs
+        value={activeTab}
+        defaultValue="objects"
+        className="w-full space-y-6 md:space-y-8"
+        onValueChange={(value) => handleTabChange(value as 'vaults' | 'objects')}
+      >
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-primary/10 pb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <TabsList className="bg-primary/5 border border-primary/10 p-1 h-11 shrink-0">
+              <TabsTrigger
+                value="objects"
+                className="px-4 md:px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+              >
+                <Users className="h-4 w-4" />
+                Objects
+              </TabsTrigger>
+              <TabsTrigger
+                value="vaults"
+                className="px-4 md:px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+              >
+                <Database className="h-4 w-4" />
+                Vaults
+              </TabsTrigger>
+            </TabsList>
 
-      <Tabs defaultValue="objects" className="w-full space-y-8" onValueChange={setActiveTab}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-primary/10 pb-4">
-          <TabsList className="bg-primary/5 border border-primary/10 p-1 h-11 shrink-0">
-            <TabsTrigger
-              value="objects"
-              className="px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
-            >
-              <Users className="h-4 w-4" />
-              Objects
-            </TabsTrigger>
-            <TabsTrigger
-              value="vaults"
-              className="px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
-            >
-              <Database className="h-4 w-4" />
-              Vaults
-            </TabsTrigger>
-          </TabsList>
+            {activeTab === 'objects' && <div className="hidden sm:block h-6 w-px bg-primary/10 mx-2" />}
+
+            {activeTab === 'objects' && (
+              <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] whitespace-nowrap">
+              {activeTab === 'objects' ? `${vaultObjects.length} Objects Loaded` : 'Vault Discovery'}
+            </span>
+          </div>
         </div>
 
         <TabsContent value="objects" className="mt-0 focus-visible:outline-none min-h-[400px]">

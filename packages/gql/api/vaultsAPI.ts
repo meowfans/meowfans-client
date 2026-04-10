@@ -111,6 +111,7 @@ export const GET_CREATOR_VAULTS_BY_ADMIN_QUERY = graphql(`
       deletedAt
       description
       id
+      url
       keywords
       preview
       updatedAt
