@@ -25,7 +25,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
   const [isCleanupModalOpen, setIsCleanupModalOpen] = useState(false);
-  
+
   const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();
   const { errorHandler } = useErrorHandler();
   const { successHandler } = useSuccessHandler();
@@ -80,41 +80,32 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
 
   return (
     <div className="space-y-6 md:space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto flex flex-col min-h-full w-full min-w-0">
-      <VaultObjectsHeader 
-        user={user} 
-        selectedCount={selectedObjects.length} 
+      <VaultObjectsHeader
+        user={user}
+        selectedCount={selectedObjects.length}
         totalFetched={vaultObjects.length}
-        isProcessing={isProcessing} 
-        onBatchDownload={handleBatchDownload} 
+        isProcessing={isProcessing}
+        onBatchDownload={handleBatchDownload}
         onOpenCleanup={() => setIsCleanupModalOpen(true)}
         onOpenTerminate={setTerminateModalType}
       />
 
       {terminateModalType && (
-        <TerminateModal 
-          isOpen={!!terminateModalType} 
-          onClose={() => setTerminateModalType(null)} 
-          type={terminateModalType} 
-        />
+        <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType(null)} type={terminateModalType} />
       )}
 
       {isCleanupModalOpen && (
-        <CleanUpModal 
-          isOpen={isCleanupModalOpen} 
-          onClose={() => setIsCleanupModalOpen(false)} 
+        <CleanUpModal
+          isOpen={isCleanupModalOpen}
+          onClose={() => setIsCleanupModalOpen(false)}
           creatorId={user?.id || id}
           creatorUsername={user?.username || ''}
         />
       )}
 
-      <VaultObjectsFilters 
-        status={status} 
-        setStatus={setStatus} 
-        fileTypes={fileTypes} 
-        setFileTypes={setFileTypes} 
-      />
+      <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
 
-      <VaultObjectsTable 
+      <VaultObjectsTable
         vaultObjects={vaultObjects}
         selectedObjects={selectedObjects}
         onSelectAll={handleSelectAll}
