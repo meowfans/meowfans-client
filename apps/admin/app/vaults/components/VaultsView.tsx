@@ -23,7 +23,6 @@ export function VaultsView() {
 
   const { objectsCount, fetchCounts } = useGetAllObjectsCount();
   const { onOpen } = useImpersonationStore();
-
   const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
@@ -58,9 +57,7 @@ export function VaultsView() {
       />
 
       <ImportProgress />
-
       <VaultsStats objectsCount={objectsCount} />
-
       <VaultsTable
         creators={creators}
         loading={creatorsLoading}

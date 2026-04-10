@@ -59,11 +59,16 @@ export function CleanUpModal({ isOpen, onClose, creatorId, creatorUsername, onSu
             invalid objects and re-sync status.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0 mt-4">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-6">
+          <Button variant="outline" onClick={onClose} disabled={loading} className="w-full sm:w-auto order-2 sm:order-1 font-bold">
             Cancel
           </Button>
-          <Button onClick={handleCleanUp} disabled={loading} variant="default" className="bg-amber-500 hover:bg-amber-600">
+          <Button 
+            onClick={handleCleanUp} 
+            disabled={loading} 
+            variant="default" 
+            className="w-full sm:w-auto order-1 sm:order-2 bg-amber-500 hover:bg-amber-600 font-bold"
+          >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

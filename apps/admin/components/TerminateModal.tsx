@@ -55,11 +55,11 @@ export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
           </div>
           <DialogDescription className="pt-2">{description}</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0 mt-4">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-6">
+          <Button variant="outline" onClick={onClose} disabled={loading} className="w-full sm:w-auto order-2 sm:order-1 font-bold">
             Cancel
           </Button>
-          <Button onClick={handleTerminate} disabled={loading} variant="destructive">
+          <Button onClick={handleTerminate} disabled={loading} variant="destructive" className="w-full sm:w-auto order-1 sm:order-2 font-bold">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

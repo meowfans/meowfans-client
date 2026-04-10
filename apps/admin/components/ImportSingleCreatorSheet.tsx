@@ -1,7 +1,7 @@
 'use client';
 import { useMutation } from '@apollo/client/react';
 import { INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION } from '@workspace/gql/api/importAPI';
-import { DocumentQualityType, FileType, ImportTypes, ServiceType, UsersEntity } from '@workspace/gql/generated/graphql';
+import { DocumentQualityType, FileType, ImportTypes, ProcessType, ServiceType, UsersEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
@@ -40,6 +40,7 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
   const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Profile);
   const [initiateImport] = useMutation(INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION);
+  const [processType, setProcessType] = useState<ProcessType>(ProcessType.Function);
   const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
 
   const handleInitiate = async () => {
@@ -59,6 +60,7 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
             exclude,
             importType,
             start,
+            processType,
             exceptions
           }
         }
@@ -267,6 +269,17 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 onFilterBy={(val) => setImportType(val as ImportTypes)}
                 trigger={{ label: importType.replace(/_/g, ' ') }}
                 label="Import Types"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="file-type">PROCESS TYPE</Label>
+              <Dropdown
+                enumValue={ProcessType}
+                filterBy={processType}
+                onFilterBy={(val) => setProcessType(val as ProcessType)}
+                trigger={{ label: processType }}
+                label="Process types"
               />
             </div>
           </div>
