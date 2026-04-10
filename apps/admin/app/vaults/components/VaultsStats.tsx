@@ -1,7 +1,6 @@
 'use client';
 
 import { GetAllObjectsCountOutput } from '@workspace/gql/generated/graphql';
-import { Card } from '@workspace/ui/components/card';
 import { CheckCircle2, Clock, ShieldCheck, XCircle } from 'lucide-react';
 import React from 'react';
 

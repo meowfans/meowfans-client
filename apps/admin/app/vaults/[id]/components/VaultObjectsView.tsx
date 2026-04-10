@@ -1,24 +1,29 @@
 'use client';
 
 import { CleanUpModal } from '@/components/CleanUpModal';
+import { ImportProgress } from '@/components/ImportProgress';
 import { TerminateModal } from '@/components/TerminateModal';
 
 import { useUser } from '@/hooks/useUser';
 import { useVaultObjects } from '@/hooks/useVaults';
 import { useVaultsActions } from '@workspace/gql/actions';
 import { DataFetchType, DownloadStates, FileType, UploadVaultQueueInput } from '@workspace/gql/generated/graphql';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
+import { Database, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { VaultObjectsFilters } from './VaultObjectsFilters';
 import { VaultObjectsHeader } from './VaultObjectsHeader';
 import { VaultObjectsTable } from './VaultObjectsTable';
+import { VaultsList } from './VaultsList';
 
 interface VaultObjectsViewProps {
   id: string;
 }
 
 export function VaultObjectsView({ id }: VaultObjectsViewProps) {
+  const [activeTab, setActiveTab] = useState('objects');
   const [status, setStatus] = useState<DownloadStates[]>(Object.values(DownloadStates));
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
@@ -90,6 +95,8 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         onOpenTerminate={setTerminateModalType}
       />
 
+      <ImportProgress />
+
       {terminateModalType && (
         <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType(null)} type={terminateModalType} />
       )}
@@ -105,15 +112,42 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
 
       <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
 
-      <VaultObjectsTable
-        vaultObjects={vaultObjects}
-        selectedObjects={selectedObjects}
-        onSelectAll={handleSelectAll}
-        onSelectObject={handleSelectObject}
-        loading={loading}
-        hasNext={hasNext}
-        onLoadMore={handleLoadMore}
-      />
+      <Tabs defaultValue="objects" className="w-full space-y-8" onValueChange={setActiveTab}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-primary/10 pb-4">
+          <TabsList className="bg-primary/5 border border-primary/10 p-1 h-11 shrink-0">
+            <TabsTrigger
+              value="objects"
+              className="px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+            >
+              <Users className="h-4 w-4" />
+              Objects
+            </TabsTrigger>
+            <TabsTrigger
+              value="vaults"
+              className="px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+            >
+              <Database className="h-4 w-4" />
+              Vaults
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="objects" className="mt-0 focus-visible:outline-none min-h-[400px]">
+          <VaultObjectsTable
+            vaultObjects={vaultObjects}
+            selectedObjects={selectedObjects}
+            onSelectAll={handleSelectAll}
+            onSelectObject={handleSelectObject}
+            loading={loading}
+            hasNext={hasNext}
+            onLoadMore={handleLoadMore}
+          />
+        </TabsContent>
+
+        <TabsContent value="vaults" className="mt-0 focus-visible:outline-none min-h-[400px]">
+          {activeTab === 'vaults' && <VaultsList />}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

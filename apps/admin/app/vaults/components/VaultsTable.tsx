@@ -140,9 +140,9 @@ export function VaultsTable({
                             onClick={() => router.push(`/vaults/${encodeURIComponent(creator.id)}`)}
                           >
                             <ExternalLink className="h-3.5 w-3.5 text-primary" />
-                            View Detail Vault
+                            View Detailed Vault Objects
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             className="text-xs font-bold uppercase tracking-wider gap-2 h-9 cursor-pointer"
                             onClick={() => onImpersonate(creator.id)}
                           >

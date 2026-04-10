@@ -2,6 +2,7 @@
 
 import { BatchDownloadModal } from '@/components/BatchDownloadModal';
 import { CleanUpModal } from '@/components/CleanUpModal';
+import { ImportProgress } from '@/components/ImportProgress';
 import { TerminateModal } from '@/components/TerminateModal';
 import { useImpersonationStore } from '@/hooks/store/impersonation.store';
 import { useCreators } from '@/hooks/useCreators';
@@ -9,19 +10,20 @@ import { useGetAllObjectsCount } from '@/hooks/useVaults';
 import { DataFetchType } from '@workspace/gql/generated/graphql';
 import { useEffect, useState } from 'react';
 import { VaultsHeader } from './VaultsHeader';
-import { VaultsTable } from './VaultsTable';
 import { VaultsStats } from './VaultsStats';
+import { VaultsTable } from './VaultsTable';
 
 export function VaultsView() {
   const {
     creators,
     loading: creatorsLoading,
-    hasMore,
-    handleLoadMore
+    hasMore: creatorsHasMore,
+    handleLoadMore: creatorsLoadMore
   } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll });
+
   const { objectsCount, fetchCounts } = useGetAllObjectsCount();
   const { onOpen } = useImpersonationStore();
-  
+
   const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
@@ -49,19 +51,21 @@ export function VaultsView() {
 
   return (
     <div className="space-y-6 md:space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto flex flex-col min-h-full w-full min-w-0">
-      <VaultsHeader 
+      <VaultsHeader
         selectedCount={selectedCreators.length}
         onStartBatchDownload={() => setIsBatchModalOpen(true)}
         onOpenTerminate={setTerminateModalType}
       />
 
+      <ImportProgress />
+
       <VaultsStats objectsCount={objectsCount} />
 
-      <VaultsTable 
+      <VaultsTable
         creators={creators}
         loading={creatorsLoading}
-        hasMore={hasMore}
-        onLoadMore={handleLoadMore}
+        hasMore={creatorsHasMore}
+        onLoadMore={creatorsLoadMore}
         selectedCreators={selectedCreators}
         onSelectAll={handleSelectAll}
         onSelectCreator={handleSelectCreator}
@@ -77,11 +81,7 @@ export function VaultsView() {
       />
 
       {terminateModalType && (
-        <TerminateModal 
-          isOpen={!!terminateModalType} 
-          onClose={() => setTerminateModalType(null)} 
-          type={terminateModalType} 
-        />
+        <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType(null)} type={terminateModalType} />
       )}
 
       {cleanupModalData && (

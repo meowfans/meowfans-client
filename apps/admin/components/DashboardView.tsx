@@ -11,9 +11,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/componen
 import { Input } from '@workspace/ui/components/input';
 import { Loading } from '@workspace/ui/globals/Loading';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
-import { CheckCircle2, Clock, Loader2, Search, ShieldCheck, UserCog, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Loader2, Search, ShieldCheck, UserCog, XCircle, BarChart3 } from 'lucide-react';
+
 import { useEffect, useState } from 'react';
 import { ImportCreatorsSheet } from './ImportCreatorsSheet';
+import { ImportProgress } from './ImportProgress';
+import { ApplyShadCnChart } from '@workspace/ui/globals/ApplyShadCnChart';
+import { ShadCnChartTypes } from '@workspace/ui/lib/enums';
+
+
 
 export function DashboardView() {
   const { admin } = useAdmin();
@@ -85,6 +91,9 @@ export function DashboardView() {
         <ImportCreatorsSheet />
       </div>
 
+      <ImportProgress showChart={true} />
+
+
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
         <Card className="lg:col-span-4">
           <CardHeader>
@@ -151,7 +160,36 @@ export function DashboardView() {
             )}
           </CardContent>
         </Card>
+
+        <Card className="lg:col-span-3">
+          <CardHeader>
+            <CardTitle className="text-lg md:text-xl font-black italic uppercase tracking-tight flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              Object Status Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="h-[250px] flex items-center justify-center">
+            {loading ? (
+              <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
+            ) : (
+              <ApplyShadCnChart
+                chartType={ShadCnChartTypes.BAR_CHART}
+                dataTable={[
+                  { status: 'Pending', count: objectsCount.pending },
+                  { status: 'Active', count: objectsCount.processing },
+                  { status: 'Done', count: objectsCount.fulfilled },
+                  { status: 'Failed', count: objectsCount.rejected }
+                ]}
+                xDataKey="status"
+                yDataKey="count"
+                XDataLabel="Status"
+                yDataLabel="Objects"
+              />
+            )}
+          </CardContent>
+        </Card>
       </div>
+
 
       {loading ? (
         <div className="flex items-center justify-center h-50">

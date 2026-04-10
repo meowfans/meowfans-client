@@ -1,6 +1,6 @@
-import { useVaultsStore } from '@/hooks/store/vaults.store';
+import { useVaultObjectsStore, useVaultsStore } from '@/hooks/store/vaults.store';
 import { useVaultsActions } from '@workspace/gql/actions';
-import { GetAllObjectsCountOutput, GetVaultObjectsOutput, PaginationInput } from '@workspace/gql/generated/graphql';
+import { GetAllObjectsCountOutput, GetVaultObjectsOutput, PaginationInput, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
@@ -8,7 +8,7 @@ export const useVaultObjects = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasNext, setHasNext] = useState<boolean>(false);
-  const { vaultObjects, setVaultObjects } = useVaultsStore();
+  const { vaultObjects, setVaultObjects } = useVaultObjectsStore();
   const { getCreatorVaultObjectsQuery } = useVaultsActions();
   const [username, setUsername] = useState<string | undefined>('');
 
@@ -47,11 +47,51 @@ export const useVaultObjects = (params: PaginationInput) => {
   };
 };
 
+export const useVaults = (params: PaginationInput) => {
+  const { errorHandler } = useErrorHandler();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasNext, setHasNext] = useState<boolean>(false);
+  const { vaults, setVaults } = useVaultsStore();
+  const { getCreatorVaultsByAdminQuery } = useVaultsActions();
+
+  const loadVaultObjects = async (initialLoad = false) => {
+    const skip = initialLoad ? 0 : vaults.length;
+    setLoading(vaults.length === 0);
+
+    try {
+      const { data } = await getCreatorVaultsByAdminQuery({ ...params, skip });
+
+      const fetched = data?.getCreatorVaultsByAdmin as VaultsEntity[];
+      setHasNext(!!fetched.length);
+      setVaults(initialLoad ? fetched : [...vaults, ...fetched]);
+    } catch (error) {
+      errorHandler({ error });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && hasNext) loadVaultObjects();
+  };
+
+  useEffect(() => {
+    loadVaultObjects(true);
+  }, [params.status, params.fileType, params.relatedUserId, params.take]); //eslint-disable-line
+
+  return {
+    vaults,
+    hasNext,
+    handleLoadMore,
+    loading,
+  };
+};
+
 export const useGetAllObjectsCount = () => {
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const { getAllObjectsCountOfEachTypeQuery } = useVaultsActions();
-  const { objectsCount, setObjectsCount } = useVaultsStore();
+  const { objectsCount, setObjectsCount } = useVaultObjectsStore();
 
   const fetchCounts = async () => {
     setLoading(true);

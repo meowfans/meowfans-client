@@ -41,7 +41,8 @@ export enum EventTypes {
   VaultObjectStatus = 'vault_object_status',
   ObjectsCount = 'object_count',
   CreatorObjectsCount = 'creator_object_count',
-  ImportStatus = 'import_status'
+  ImportStatus = 'import_status',
+  ImportProcess = 'import_process'
 }
 
 export enum BackGroundColors {

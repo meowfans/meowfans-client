@@ -1,7 +1,7 @@
 'use client';
 
 import { ImportCreatorsSheet } from '@/components/ImportCreatorsSheet';
-import { useUtilsStore } from '@/hooks/store/utils.store';
+import { useImportStore } from '@/hooks/store/import.store';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { AlertCircle, Ban, Download, Loader2, Lock } from 'lucide-react';
@@ -13,7 +13,7 @@ interface VaultsHeaderProps {
 }
 
 export function VaultsHeader({ selectedCount, onStartBatchDownload, onOpenTerminate }: VaultsHeaderProps) {
-  const importStatus = useUtilsStore((s) => s.importStatus);
+  const importStatus = useImportStore((s) => s.importStatus);
 
   return (
     <div className="flex flex-col md:flex-row w-full justify-between shrink-0 items-start md:items-center gap-6">
