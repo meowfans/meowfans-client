@@ -103,19 +103,22 @@ export const GET_LIKED_VAULT_OBJECTS_QUERY = graphql(`
   }
 `);
 
-export const GET_ALL_VAULTS_QUERY = graphql(`
-  query GetAllVaultsByAdmin($input: PaginationInput!) {
-    getAllVaultsByAdmin(input: $input) {
-      count
-      vaults {
-        createdAt
-        deletedAt
-        id
-        objectUrl
-        status
-        updatedAt
-        vaultId
-      }
+export const GET_CREATOR_VAULTS_BY_ADMIN_QUERY = graphql(`
+  query GetCreatorVaultsByAdmin($input: PaginationInput!) {
+    getCreatorVaultsByAdmin(input: $input) {
+      createdAt
+      creatorId
+      deletedAt
+      description
+      id
+      keywords
+      preview
+      updatedAt
+      isLiked
+      likeCount
+      isPurchased
+      unlockPrice
+      objectCount
     }
   }
 `);

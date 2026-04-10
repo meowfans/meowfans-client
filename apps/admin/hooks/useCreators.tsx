@@ -1,6 +1,6 @@
 import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useCreatorsActions } from '@workspace/gql/actions';
-import { DataFetchType, GetAllCreatorsOutput, PaginationInput, UsersEntity } from '@workspace/gql/generated/graphql';
+import { GetAllCreatorsOutput, PaginationInput, UsersEntity } from '@workspace/gql/generated/graphql';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useEffect, useState } from 'react';
 
