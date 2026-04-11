@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       {
         hostname: 'images.unsplash.com',
         protocol: 'https'
+      },
+      {
+        hostname: 'media.meowfans.app',
+        protocol: 'https'
       }
     ]
   }

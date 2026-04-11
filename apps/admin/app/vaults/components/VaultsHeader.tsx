@@ -4,12 +4,13 @@ import { ImportCreatorsSheet } from '@/components/ImportCreatorsSheet';
 import { useImportStore } from '@/hooks/store/import.store';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
-import { AlertCircle, Ban, Download, Loader2, Lock } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group';
+import { AlertCircle, Download, Loader2, Lock } from 'lucide-react';
 
 interface VaultsHeaderProps {
   selectedCount: number;
   onStartBatchDownload: () => void;
-  onOpenTerminate: (type: 'downloading' | 'all') => void;
+  onOpenTerminate: (type: 'downloading' | 'importing') => void;
 }
 
 export function VaultsHeader({ selectedCount, onStartBatchDownload, onOpenTerminate }: VaultsHeaderProps) {
@@ -59,11 +60,25 @@ export function VaultsHeader({ selectedCount, onStartBatchDownload, onOpenTermin
             <span className="hidden sm:inline">Stop Downloads</span>
             <span className="sm:hidden">Stop</span>
           </Button>
-          <Button variant="destructive" size="sm" className="h-9 gap-2 flex-1 md:flex-none text-xs" onClick={() => onOpenTerminate('all')}>
-            <Ban className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Stop All Jobs</span>
-            <span className="sm:hidden">Reset</span>
-          </Button>
+          <RadioGroup
+            defaultValue="downloading"
+            onValueChange={(value) => onOpenTerminate(value as 'downloading' | 'importing')}
+            className="flex gap-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="downloading" id="downloading" />
+              <label htmlFor="downloading" className="font-black italic uppercase tracking-tighter text-[10px]">
+                Downloading
+              </label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="importing" id="importing" />
+              <label htmlFor="importing" className="font-black italic uppercase tracking-tighter text-[10px]">
+                Importing
+              </label>
+            </div>
+          </RadioGroup>
         </div>
       </div>
     </div>

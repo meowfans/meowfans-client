@@ -6,8 +6,9 @@ import { UsersEntity } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
-import { Ban, CheckCircle2, Clock, Database, Download, Loader2, ShieldCheck, Trash2, XCircle } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CheckCircle2, Clock, Database, Download, Loader2, ShieldCheck, Trash2, XCircle } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface VaultObjectsHeaderProps {
@@ -17,7 +18,7 @@ interface VaultObjectsHeaderProps {
   isProcessing: boolean;
   onBatchDownload: () => void;
   onOpenCleanup: () => void;
-  onOpenTerminate: (type: 'downloading' | 'all') => void;
+  onOpenTerminate: (type: 'downloading' | 'importing') => void;
 }
 
 export function VaultObjectsHeader({
@@ -47,7 +48,10 @@ export function VaultObjectsHeader({
               <h1 className="text-lg md:text-xl font-black italic uppercase tracking-tighter truncate leading-none">
                 {user?.firstName} {user?.lastName}
               </h1>
-              <Badge variant="secondary" className="hidden sm:flex font-bold text-[8px] bg-primary/5 text-primary/60 border-primary/10 px-1.5 h-4">
+              <Badge
+                variant="secondary"
+                className="hidden sm:flex font-bold text-[8px] bg-primary/5 text-primary/60 border-primary/10 px-1.5 h-4"
+              >
                 @{user?.username}
               </Badge>
               {importStatus && (
@@ -75,11 +79,7 @@ export function VaultObjectsHeader({
 
         <div className="flex flex-wrap items-center gap-1.5 w-full lg:w-auto shrink-0">
           {selectedCount > 0 && (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="w-full sm:w-auto"
-            >
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full sm:w-auto">
               <Button
                 onClick={onBatchDownload}
                 disabled={isProcessing}
@@ -101,15 +101,25 @@ export function VaultObjectsHeader({
               <Trash2 className="h-3 w-3" />
               <span>Clean Up</span>
             </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => onOpenTerminate('all')}
-              className="flex-1 sm:flex-none gap-1.5 h-8 md:h-9 font-black italic uppercase tracking-tighter text-[10px] px-3"
+            <RadioGroup
+              defaultValue="downloading"
+              onValueChange={(value) => onOpenTerminate(value as 'downloading' | 'importing')}
+              className="flex gap-4"
             >
-              <Ban className="h-3 w-3" />
-              <span>Stop</span>
-            </Button>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="downloading" id="downloading" />
+                <label htmlFor="downloading" className="font-black italic uppercase tracking-tighter text-[10px]">
+                  Downloading
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="importing" id="importing" />
+                <label htmlFor="importing" className="font-black italic uppercase tracking-tighter text-[10px]">
+                  Importing
+                </label>
+              </div>
+            </RadioGroup>
           </div>
           <div className="w-full sm:w-auto">
             <ImportSingleCreatorSheet user={user} />

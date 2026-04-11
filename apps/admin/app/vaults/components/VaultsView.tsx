@@ -7,7 +7,7 @@ import { TerminateModal } from '@/components/TerminateModal';
 import { useImpersonationStore } from '@/hooks/store/impersonation.store';
 import { useCreators } from '@/hooks/useCreators';
 import { useGetAllObjectsCount } from '@/hooks/useVaults';
-import { DataFetchType } from '@workspace/gql/generated/graphql';
+import { DataFetchType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { useEffect, useState } from 'react';
 import { VaultsHeader } from './VaultsHeader';
 import { VaultsStats } from './VaultsStats';
@@ -19,13 +19,13 @@ export function VaultsView() {
     loading: creatorsLoading,
     hasMore: creatorsHasMore,
     handleLoadMore: creatorsLoadMore
-  } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll });
+  } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll, sortBy: SortBy.CreatorPendingCount, orderBy: SortOrder.Desc });
 
   const { objectsCount, fetchCounts } = useGetAllObjectsCount();
   const { onOpen } = useImpersonationStore();
   const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
-  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
+  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'importing'>('importing');
   const [cleanupModalData, setCleanupModalData] = useState<{ id: string; username: string } | null>(null);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export function VaultsView() {
       />
 
       {terminateModalType && (
-        <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType(null)} type={terminateModalType} />
+        <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType((prev) => prev)} type={terminateModalType} />
       )}
 
       {cleanupModalData && (
