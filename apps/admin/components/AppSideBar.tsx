@@ -30,7 +30,7 @@ import {
 import { AnimatedLogo } from '@workspace/ui/globals/AnimatedLogo';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { MEOW_FANS_AVATAR } from '@workspace/ui/lib/constants';
-import { CheckCircle2, ChevronsUpDown, LayoutDashboard, Lock, LogOut, Settings, Users } from 'lucide-react';
+import { CheckCircle2, ChevronsUpDown, Database, GalleryHorizontal, LayoutDashboard, Lock, LogOut, Settings, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -53,7 +53,8 @@ export function AppSideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           { label: 'Dashboard', url: '/', icon: LayoutDashboard },
           { label: 'Vaults', url: '/vaults', icon: Lock },
           { label: 'Profiles', url: '/profiles', icon: Users },
-          { label: 'Approvals', url: '/approvals', icon: CheckCircle2 }
+          { label: 'Approvals', url: '/approvals', icon: CheckCircle2 },
+          { label: 'Assets', url: '/assets', icon: GalleryHorizontal },
         ]
       },
       {

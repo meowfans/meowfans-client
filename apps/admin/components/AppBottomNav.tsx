@@ -2,7 +2,7 @@
 
 import { Button } from '@workspace/ui/components/button';
 import { PathNormalizer } from '@workspace/ui/hooks/PathNormalizer';
-import { CheckCircle2, LayoutDashboard, Lock, Settings, Users } from 'lucide-react';
+import { CheckCircle2, GalleryHorizontal, LayoutDashboard, Lock, Settings, Users } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
 const navItems = [
@@ -10,7 +10,8 @@ const navItems = [
   { label: 'Profiles', url: '/profiles', icon: Users },
   { label: 'Approvals', url: '/approvals', icon: CheckCircle2 },
   { label: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
-  { label: 'Settings', url: '/settings', icon: Settings }
+  { label: 'Settings', url: '/settings', icon: Settings },
+  { label: 'Assets', url: '/assets', icon: GalleryHorizontal },
 ];
 
 export function AppBottomNav() {

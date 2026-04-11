@@ -4,7 +4,7 @@ import { Button } from '@workspace/ui/components/button';
 import { cn } from '@workspace/ui/lib/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { FullScreenButton } from './FullScreenButton';
 
@@ -26,6 +26,7 @@ interface CarouselProps<T> {
   loadMore?: () => void;
   hasMore?: boolean;
   loading?: boolean;
+  getPoster?: (item: T) => string;
 }
 
 export const Carousel = <T,>({
@@ -38,7 +39,8 @@ export const Carousel = <T,>({
   aspectRatio = 'square',
   loadMore,
   hasMore,
-  loading
+  loading,
+  getPoster
 }: CarouselProps<T>) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -52,6 +54,20 @@ export const Carousel = <T,>({
   const [canScrollNext, setCanScrollNext] = useState<boolean>(false);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [slideShow, setSlideShow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (slideShow) {
+      const interval = setInterval(() => {
+        emblaApi?.scrollNext();
+        if (!canScrollNext) {
+          setSlideShow(false);
+          clearInterval(interval);
+        }
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [slideShow, emblaApi, canScrollNext]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -106,7 +122,6 @@ export const Carousel = <T,>({
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Immersive Background Blur for current slide */}
       <AnimatePresence mode="popLayout">
         <motion.div
           key={`bg-blur-${selectedIndex}`}
@@ -151,7 +166,7 @@ export const Carousel = <T,>({
                   )
                 ) : (
                   getUrl(item) && (
-                    <video src={getUrl(item)} poster={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
+                    <video src={getUrl(item)} poster={getPoster?.(item)} controls playsInline className="h-full w-full object-contain" />
                   )
                 )}
               </div>
@@ -165,6 +180,15 @@ export const Carousel = <T,>({
                   hasMore={hasMore}
                   className="rounded-2xl border-white/10 bg-black/20 backdrop-blur-3xl hover:bg-black/40 transition-all"
                 />
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSlideShow((prev) => !prev)}
+                  className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-3xl text-white hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
+                >
+                  {slideShow ? <ChevronsRight className="h-5 w-5" /> : <CircleChevronRight className="h-5 w-5" />}
+                </Button>
               </div>
             </div>
           ))}
