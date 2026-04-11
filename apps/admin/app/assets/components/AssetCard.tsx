@@ -13,8 +13,8 @@ interface AssetCardProps {
   asset: AssetsEntity;
   mode: 'grid' | 'list';
   index: number;
-  showCarousel: boolean;
-  onShowCarousel: (val: boolean) => void;
+  showCarousel: number | null;
+  onShowCarousel: (val: number | null) => void;
 }
 
 export const AssetCard = ({ asset, mode, index, onShowCarousel, showCarousel }: AssetCardProps) => {
@@ -146,7 +146,7 @@ export const AssetCard = ({ asset, mode, index, onShowCarousel, showCarousel }: 
         </div>
         <div className="absolute top-2 right-2 z-20 flex flex-col gap-1">
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 opacity-70 group-hover:opacity-100 transition-opacity">
-            <Fullscreen className="cursor-pointer h-4 w-4" onClick={() => onShowCarousel(true)} />
+            <Fullscreen className="cursor-pointer h-4 w-4" onClick={() => onShowCarousel(index)} />
           </div>
         </div>
 

@@ -25,14 +25,6 @@ export function VaultsView() {
     skip: 0
   };
 
-  // Assuming SortBy.PostCreatedAt might work or default to CreatedAt.
-  // Actually let's check SortBy enum. If not available, use undefined or reliable one.
-  // Vaults don't have "PostCreatedAt". They have "CreatedAt"?
-  // Let's use SortBy.CreatedAt if exists, or check GraphQL.
-  // For now using SortBy.PostCreatedAt as placeholder or remove if fails.
-  // Actually useVaults uses "getCreatorVaultsQuery" which takes "PaginationInput".
-  // PaginationInput usually has "sortBy" as "SortBy" enum.
-
   const { vaults, loading, hasMore, handleLoadMore } = useVaults(params);
 
   // Mock deleting state
@@ -97,7 +89,6 @@ export function VaultsView() {
   const totalLikes = vaults.reduce((sum, v) => sum + v.likeCount, 0);
   const totalViews = vaults.reduce((sum, v) => sum + (v.viewCount || 0), 0);
   const totalEarnings = vaults.reduce((sum, v) => sum + (v.totalEarning || 0), 0);
-  // Note: v.totalEarning field exists in VaultsEntity? I saw it in Step 918. Yes.
 
   return (
     <div className="container max-w-7xl mx-auto p-4 sm:p-6 space-y-6">

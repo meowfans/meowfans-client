@@ -27,6 +27,7 @@ interface CarouselProps<T> {
   hasMore?: boolean;
   loading?: boolean;
   getPoster?: (item: T) => string;
+  currentIndex?: number | null;
 }
 
 export const Carousel = <T,>({
@@ -40,7 +41,8 @@ export const Carousel = <T,>({
   loadMore,
   hasMore,
   loading,
-  getPoster
+  getPoster,
+  currentIndex
 }: CarouselProps<T>) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -49,7 +51,7 @@ export const Carousel = <T,>({
     duration: 30
   });
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(currentIndex ?? 0);
   const [canScrollPrev, setCanScrollPrev] = useState<boolean>(false);
   const [canScrollNext, setCanScrollNext] = useState<boolean>(false);
   const [isHovering, setIsHovering] = useState<boolean>(false);

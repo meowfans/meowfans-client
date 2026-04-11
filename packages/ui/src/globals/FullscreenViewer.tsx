@@ -81,13 +81,24 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
   }, [isPlaying, currentIndex]);
 
   useEffect(() => {
+    if (!slideShow) return;
+
     const interval = setInterval(() => {
-      if (slideShow) {
-        handleNext();
-      }
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % items.length;
+
+        if (next === items.length - 1) {
+          setSlideShow(false);
+        }
+
+        return next;
+      });
+
+      setCurrentlyViewingIndex((prev) => (prev + 1) % items.length);
     }, 3000);
+
     return () => clearInterval(interval);
-  }, [slideShow, handleNext]);
+  }, [slideShow, items.length, setCurrentlyViewingIndex]);
 
   if (items.length === 0 || typeof document === 'undefined') return null;
 

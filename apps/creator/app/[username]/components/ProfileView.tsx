@@ -1,6 +1,5 @@
 'use client';
 
-import { useCreator } from '@/hooks/context/useCreator';
 import { useFollowers } from '@/hooks/useFollowers';
 import { usePosts } from '@/hooks/usePosts';
 import { useVaults } from '@/hooks/useVaults';
@@ -12,19 +11,9 @@ import { ProfileHeader } from './ProfileHeader';
 import { StatsCards } from './StatsCards';
 
 export function Profile() {
-  const { creator } = useCreator();
-
-  // Fetch real data using creator hooks
   const { followers } = useFollowers({ take: 1 });
   const { posts } = usePosts({ take: 1 });
   const { vaults } = useVaults({ take: 1 });
-
-  // In a real scenario, we would have specific count queries or stats hooks.
-  // For now, these lists just show we have access to the data buckets.
-  // We can pass derived lengths if we had full lists, but paginated lists don't give totals easily without a separate count query.
-  // Assuming 0 for now or mocking based on the requirement to use the hooks.
-
-  // Note: Detailed analytics would hook into usePostsAnalytics/useVaultsAnalytics
 
   return (
     <div className="flex-1 space-y-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6">

@@ -14,7 +14,7 @@ import { AssetsHeader } from './AssetsHeader';
 export const Assets = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { assets, loading, hasMore, onLoadMore } = useAssets({ take: 50 });
-  const [showCarousel, setShowCarousel] = useState<boolean>(false);
+  const [showCarousel, setShowCarousel] = useState<number | null>(null);
 
   // Carousel logic handled by layout now, removing body scroll lock
   useEffect(() => {
@@ -43,7 +43,7 @@ export const Assets = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setShowCarousel(false)}
+                  onClick={() => setShowCarousel(null)}
                   className="h-10 w-10 rounded-2xl bg-black/20 hover:bg-black/40 backdrop-blur-xl border border-white/10 text-white shadow-2xl transition-all hover:scale-110 active:scale-90"
                 >
                   <X className="h-4 w-4" />
@@ -62,6 +62,7 @@ export const Assets = () => {
                   loading={loading}
                   getPoster={(item) => item.blurredUrl || ''}
                   aspectRatio="video"
+                  currentIndex={showCarousel}
                 />
               </div>
 

@@ -32,12 +32,11 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Filter out any undefined or empty URLs and map to the format FullscreenViewer expects
   const validItems = urls
     .filter((url): url is string => !!url)
     .map((url) => ({
       url,
-      type: url.endsWith('.mp4') ? 'VIDEO' : 'IMAGE' // Basic detection, can be refined
+      type: url.endsWith('.mp4') ? 'VIDEO' : 'IMAGE'
     }));
 
   return (
