@@ -25,7 +25,7 @@ export function VaultsView() {
   const { onOpen } = useImpersonationStore();
   const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
-  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'importing'>('importing');
+  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'importing' | null>(null);
   const [cleanupModalData, setCleanupModalData] = useState<{ id: string; username: string } | null>(null);
 
   useEffect(() => {
