@@ -3,7 +3,7 @@
 import { Button } from '@workspace/ui/components/button';
 import { cn } from '@workspace/ui/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Pause, Play, Sparkles, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Pause, Play, Sparkles, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -22,6 +22,7 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [slideShow, setSlideShow] = useState<boolean>(false);
 
   useEffect(() => {
     const originalBodyOverflow = document.body.style.overflow;
@@ -79,6 +80,15 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
     }
   }, [isPlaying, currentIndex]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (slideShow) {
+        handleNext();
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [slideShow, handleNext]);
+
   if (items.length === 0 || typeof document === 'undefined') return null;
 
   const currentItem = items[currentIndex];
@@ -130,6 +140,14 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
               {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSlideShow((prev) => !prev)}
+            className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-3xl text-white hover:bg-white/10 hover:scale-110 active:scale-95 transition-all"
+          >
+            {slideShow ? <ChevronsRight className="h-5 w-5" /> : <CircleChevronRight className="h-5 w-5" />}
+          </Button>
           <Button
             variant="ghost"
             size="icon"

@@ -1,16 +1,21 @@
 'use client';
 
 import { useLazyQuery } from '@apollo/client/react';
-import { GET_CREATOR_ASSETS_QUERY, GET_FAN_ASSETS_QUERY, GET_PUBLIC_SHORTS_ASSETS_QUERY } from '@workspace/gql/api';
+import { GET_ALL_ASSETS_QUERY, GET_CREATOR_ASSETS_QUERY, GET_FAN_ASSETS_QUERY, GET_PUBLIC_SHORTS_ASSETS_QUERY } from '@workspace/gql/api';
 import { PaginationInput } from '@workspace/gql/generated/graphql';
 
 export const useAssetsActions = () => {
   const [getFanAssets] = useLazyQuery(GET_FAN_ASSETS_QUERY);
   const [getPublicShortsAssets] = useLazyQuery(GET_PUBLIC_SHORTS_ASSETS_QUERY);
   const [getCreatorAssets, { refetch: refetchCreatorAssets }] = useLazyQuery(GET_CREATOR_ASSETS_QUERY);
+  const [getAllAssets] = useLazyQuery(GET_ALL_ASSETS_QUERY);
 
   const privateGetFanAssetsQuery = (input: PaginationInput) => {
     return getFanAssets({ variables: { input } });
+  };
+
+  const getAllAssetsQuery = (input: PaginationInput) => {
+    return getAllAssets({ variables: { input } });
   };
 
   const publicGetShortsQuery = (input: PaginationInput) => {
@@ -25,6 +30,7 @@ export const useAssetsActions = () => {
     privateGetFanAssetsQuery,
     publicGetShortsQuery,
     refetchCreatorAssets,
-    getCreatorAssetsQuery
+    getCreatorAssetsQuery,
+    getAllAssetsQuery
   };
 };

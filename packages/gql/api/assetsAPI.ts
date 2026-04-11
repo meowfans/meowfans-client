@@ -5,21 +5,14 @@ export const GET_ALL_ASSETS_QUERY = graphql(`
     getAllAssetsByAdmin(input: $input) {
       count
       assets {
-        assetId
         createdAt
-        creatorId
-        deletedAt
+        fileType
         id
-        type
-        asset {
-          createdAt
-          fileType
-          id
-          mediaType
-          mimeType
-          rawUrl
-          updatedAt
-        }
+        mediaType
+        mimeType
+        rawUrl
+        blurredUrl
+        updatedAt
         creatorProfile {
           createdAt
           creatorId

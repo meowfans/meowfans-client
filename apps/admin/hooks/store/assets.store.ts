@@ -1,8 +1,9 @@
-import { GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
+import { GetAllAssetsOutput } from '@workspace/gql/generated/graphql';
+import { Updater } from '@workspace/ui/lib/types';
 import { create } from 'zustand';
 
 type AssetsStore = {
-  assets: GetCreatorAssetsOutput[];
+  assets: GetAllAssetsOutput | null;
   updated: boolean;
   deleteModal: boolean;
   openUploadModal: boolean;
@@ -11,33 +12,40 @@ type AssetsStore = {
   rangeSelection: boolean;
   option: boolean;
   toggleSelect: (assets: string) => void;
-  setAssets: (assets: GetCreatorAssetsOutput[]) => void;
-  setUpdated: (updated: boolean) => void;
-  setDeleteModal: (deleteModal: boolean) => void;
-  setCanSelect: (canSelect: boolean) => void;
-  setOpenUploadModal: (open: boolean) => void;
-  setRangeSelection: (rangeSelection: boolean) => void;
-  setSelectedAssets: (assets: string[]) => void;
-  setOption: (open: boolean) => void;
+  setAssets: (updater: Updater<GetAllAssetsOutput | null>) => void;
+  setUpdated: (updater: Updater<boolean>) => void;
+  setDeleteModal: (updater: Updater<boolean>) => void;
+  setCanSelect: (updater: Updater<boolean>) => void;
+  setOpenUploadModal: (updater: Updater<boolean>) => void;
+  setRangeSelection: (updater: Updater<boolean>) => void;
+  setSelectedAssets: (updater: Updater<string[]>) => void;
+  setOption: (updater: Updater<boolean>) => void;
 };
 
 export const useAssetsStore = create<AssetsStore>()((set) => ({
-  assets: [],
-  setAssets: (assets: GetCreatorAssetsOutput[]) => set({ assets }),
+  assets: null,
+  setAssets: (assets: Updater<GetAllAssetsOutput | null>) =>
+    set((state) => ({ assets: typeof assets === 'function' ? assets(state.assets) : assets })),
   updated: false,
-  setUpdated: (updated: boolean) => set(() => ({ updated })),
+  setUpdated: (updater: Updater<boolean>) =>
+    set((state) => ({ updated: typeof updater === 'function' ? updater(state.updated) : updater })),
   option: false,
-  setOption: (option: boolean) => set(() => ({ option })),
+  setOption: (updater: Updater<boolean>) => set((state) => ({ option: typeof updater === 'function' ? updater(state.option) : updater })),
   rangeSelection: false,
-  setRangeSelection: (rangeSelection: boolean) => set(() => ({ rangeSelection })),
+  setRangeSelection: (updater: Updater<boolean>) =>
+    set((state) => ({ rangeSelection: typeof updater === 'function' ? updater(state.rangeSelection) : updater })),
   deleteModal: false,
-  setDeleteModal: (deleteModal: boolean) => set(() => ({ deleteModal })),
+  setDeleteModal: (updater: Updater<boolean>) =>
+    set((state) => ({ deleteModal: typeof updater === 'function' ? updater(state.deleteModal) : updater })),
   canSelect: false,
-  setCanSelect: (canSelect: boolean) => set(() => ({ canSelect })),
+  setCanSelect: (updater: Updater<boolean>) =>
+    set((state) => ({ canSelect: typeof updater === 'function' ? updater(state.canSelect) : updater })),
   openUploadModal: false,
-  setOpenUploadModal: (openUploadModal: boolean) => set(() => ({ openUploadModal })),
+  setOpenUploadModal: (updater: Updater<boolean>) =>
+    set((state) => ({ openUploadModal: typeof updater === 'function' ? updater(state.openUploadModal) : updater })),
   selectedAssets: [],
-  setSelectedAssets: (assets: string[]) => set({ selectedAssets: assets }),
+  setSelectedAssets: (updater: Updater<string[]>) =>
+    set((state) => ({ selectedAssets: typeof updater === 'function' ? updater(state.selectedAssets) : updater })),
   toggleSelect: (assetId) =>
     set((state) => {
       const isSelected = state.selectedAssets.includes(assetId);
