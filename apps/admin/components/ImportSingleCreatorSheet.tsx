@@ -27,8 +27,6 @@ interface ImportSingleCreatorSheetProps {
 
 export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> = ({ user }) => {
   const [url, setUrl] = useState<string>('');
-  const [start, setStart] = useState<number>(0);
-  const [exclude, setExclude] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [exceptions, setExceptions] = useState<string[]>([]);
@@ -39,6 +37,10 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
   const [hasEditedSubDir, setHasEditedSubDir] = useState<boolean>(false);
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
   const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Profile);
+  const [branchStart, setBranchStart] = useState<number>(0);
+  const [branchEnd, setBranchEnd] = useState<number>(0);
+  const [pageStart, setPageStart] = useState<number>(0);
+  const [pageEnd, setPageEnd] = useState<number>(0);
   const [initiateImport] = useMutation(INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION);
   const [processType, setProcessType] = useState<ProcessType>(ProcessType.Generator);
   const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
@@ -57,11 +59,13 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
             qualityType,
             totalContent,
             subDirectory: subDirectory.trim(),
-            exclude,
             importType,
-            start,
             processType,
-            exceptions
+            exceptions,
+            branchStart,
+            branchEnd,
+            pageStart,
+            pageEnd
           }
         }
       });
@@ -89,8 +93,10 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
     setSubDirectory('');
     setImportType(ImportTypes.Profile);
     setHasEditedSubDir(false);
-    setStart(0);
-    setExclude(0);
+    setBranchStart(0);
+    setBranchEnd(0);
+    setPageStart(0);
+    setPageEnd(0);
     setExceptions([]);
     setIsOpen((prev) => !prev);
     setServiceType(ServiceType.Ras);
@@ -156,55 +162,89 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="exclude">Content interval</Label>
-            <Input
-              id="exclude"
-              type="text"
-              placeholder={'0'}
-              required
-              value={totalContent}
-              onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
-            />
-          </div>
+          <div className="grid grid-cols-2 space-x-2">
+            <div className="grid gap-2">
+              <Label htmlFor="exclude">Content interval</Label>
+              <Input
+                id="exclude"
+                type="text"
+                placeholder={'0'}
+                required
+                value={totalContent}
+                onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="subDirectory">Subdirectory</Label>
-            <Input
-              id="subDirectory"
-              type="text"
-              placeholder="chris"
-              required
-              autoComplete="subDirectory"
-              value={subDirectory}
-              onChange={(e) => {
-                setSubDirectory(e.target.value);
-                setHasEditedSubDir(e.target.value.trim() !== '');
-              }}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="subDirectory">Subdirectory</Label>
+              <Input
+                id="subDirectory"
+                type="text"
+                placeholder="chris"
+                required
+                autoComplete="subDirectory"
+                value={subDirectory}
+                onChange={(e) => {
+                  setSubDirectory(e.target.value);
+                  setHasEditedSubDir(e.target.value.trim() !== '');
+                }}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 space-x-2">
             <div className="grid gap-2">
-              <Label htmlFor="start">Start {start * 50}</Label>
+              <Label htmlFor="start" className="text-xs">
+                BRANCH START {branchStart * 50}
+              </Label>
               <Input
                 id="start"
                 type="text"
                 placeholder="0"
                 required
-                value={start}
-                onChange={(e) => setStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={branchStart}
+                onChange={(e) => setBranchStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="exclude">Exclude / Span {(exclude - 1) * 50}</Label>
+              <Label htmlFor="branchEnd" className="text-xs">
+                BRANCH SPAN {(branchEnd - 1) * 50}
+              </Label>
               <Input
-                id="exclude"
+                id="branchEnd"
                 type="text"
                 placeholder="0"
                 required
-                value={exclude}
-                onChange={(e) => setExclude(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={branchEnd}
+                onChange={(e) => setBranchEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 space-x-2">
+            <div className="grid gap-2">
+              <Label htmlFor="pageStart" className="text-xs">
+                PAGE START {pageStart}
+              </Label>
+              <Input
+                id="pageStart"
+                type="text"
+                placeholder="0"
+                required
+                value={pageStart}
+                onChange={(e) => setPageStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="pageEnd" className="text-xs">
+                PAGE SPAN
+              </Label>
+              <Input
+                id="pageEnd"
+                type="text"
+                placeholder="0"
+                required
+                value={pageEnd}
+                onChange={(e) => setPageEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             </div>
           </div>
@@ -261,26 +301,28 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
               ))}
             </ul>
 
-            <div className="grid gap-2">
-              <Label htmlFor="import-type">Import type</Label>
-              <Dropdown
-                enumValue={ImportTypes}
-                filterBy={importType}
-                onFilterBy={(val) => setImportType(val as ImportTypes)}
-                trigger={{ label: importType.replace(/_/g, ' ') }}
-                label="Import Types"
-              />
-            </div>
+            <div className="grid grid-cols-2 space-x-2">
+              <div className="grid gap-2">
+                <Label htmlFor="import-type">Import type</Label>
+                <Dropdown
+                  enumValue={ImportTypes}
+                  filterBy={importType}
+                  onFilterBy={(val) => setImportType(val as ImportTypes)}
+                  trigger={{ label: importType.replace(/_/g, ' ') }}
+                  label="Import Types"
+                />
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="file-type">PROCESS TYPE</Label>
-              <Dropdown
-                enumValue={ProcessType}
-                filterBy={processType}
-                onFilterBy={(val) => setProcessType(val as ProcessType)}
-                trigger={{ label: processType }}
-                label="Process types"
-              />
+              <div className="grid gap-2">
+                <Label htmlFor="file-type">PROCESS TYPE</Label>
+                <Dropdown
+                  enumValue={ProcessType}
+                  filterBy={processType}
+                  onFilterBy={(val) => setProcessType(val as ProcessType)}
+                  trigger={{ label: processType }}
+                  label="Process types"
+                />
+              </div>
             </div>
           </div>
         </div>

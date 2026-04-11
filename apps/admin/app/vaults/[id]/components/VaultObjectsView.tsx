@@ -11,26 +11,27 @@ import { DataFetchType, DownloadStates, FileType, UploadVaultQueueInput } from '
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Database, Users } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { VaultObjectsFilters } from './VaultObjectsFilters';
 import { VaultObjectsHeader } from './VaultObjectsHeader';
 import { VaultObjectsTable } from './VaultObjectsTable';
 import { VaultsList } from './VaultsList';
+import { VaultObjectsFilters } from './VaultObjectsFilters';
 
 interface VaultObjectsViewProps {
   id: string;
 }
 
 export function VaultObjectsView({ id }: VaultObjectsViewProps) {
-  const [activeTab, setActiveTab] = useState('objects');
+  const [activeTab, setActiveTab] = useState<'objects' | 'vaults'>('objects');
   const [status, setStatus] = useState<DownloadStates[]>(Object.values(DownloadStates));
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
-  const [isCleanupModalOpen, setIsCleanupModalOpen] = useState(false);
+  const [isCleanupModalOpen, setIsCleanupModalOpen] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab') as 'vaults' | 'objects' | null;
@@ -129,42 +130,59 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         />
       )}
 
+      {activeTab === 'objects' && (
+        <div className="w-full sm:w-auto">
+          <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
+        </div>
+      )}
+
       <Tabs
         value={activeTab}
         defaultValue="objects"
-        className="w-full space-y-6 md:space-y-8"
+        className="w-full space-y-4 md:space-y-6"
         onValueChange={(value) => handleTabChange(value as 'vaults' | 'objects')}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-primary/10 pb-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <TabsList className="bg-primary/5 border border-primary/10 p-1 h-11 shrink-0">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-primary/5 pb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+            <TabsList className="bg-primary/5 border border-primary/5 p-0.5 h-10 shrink-0">
               <TabsTrigger
                 value="objects"
-                className="px-4 md:px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black italic uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
               >
                 <Users className="h-4 w-4" />
                 Objects
               </TabsTrigger>
               <TabsTrigger
                 value="vaults"
-                className="px-4 md:px-6 h-9 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black italic uppercase tracking-tighter text-xs gap-2 transition-all"
+                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black italic uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
               >
                 <Database className="h-4 w-4" />
                 Vaults
               </TabsTrigger>
             </TabsList>
 
-            {activeTab === 'objects' && <div className="hidden sm:block h-6 w-px bg-primary/10 mx-2" />}
-
-            {activeTab === 'objects' && (
-              <VaultObjectsFilters status={status} setStatus={setStatus} fileTypes={fileTypes} setFileTypes={setFileTypes} />
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] whitespace-nowrap">
-              {activeTab === 'objects' ? `${vaultObjects.length} Objects Loaded` : 'Vault Discovery'}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab === 'objects' ? vaultObjects.length : 'discovery'}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  className="flex items-center gap-2 pl-2"
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[10px] md:text-xs text-primary font-black uppercase tracking-widest whitespace-nowrap">
+                    {activeTab === 'objects' ? (
+                      <>
+                        <span className="text-foreground">{vaultObjects.length}</span> Objects <span className="opacity-50">Loaded</span>
+                      </>
+                    ) : (
+                      'Vault Discovery'
+                    )}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 

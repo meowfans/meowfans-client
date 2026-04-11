@@ -26,8 +26,6 @@ import { toast } from 'sonner';
 export const ImportCreatorsSheet = () => {
   const { admin } = useAdmin();
   const [url, setUrl] = useState<string>('');
-  const [start, setStart] = useState<number>(0);
-  const [exclude, setExclude] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [exceptions, setExceptions] = useState<string[]>([]);
@@ -39,6 +37,12 @@ export const ImportCreatorsSheet = () => {
   const [hasEditedSubDir, setHasEditedSubDir] = useState<boolean>(false);
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
   const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Page);
+  const [profileStart, setProfileStart] = useState<number>(0);
+  const [profileEnd, setProfileEnd] = useState<number>(0);
+  const [branchStart, setBranchStart] = useState<number>(0);
+  const [branchEnd, setBranchEnd] = useState<number>(0);
+  const [pageStart, setPageStart] = useState<number>(0);
+  const [pageEnd, setPageEnd] = useState<number>(0);
   const [initiateImport] = useMutation(INITIATE_CREATORS_IMPORT_QUERY_MUTATION);
   const [processType, setProcessType] = useState<ProcessType>(ProcessType.Generator);
   const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
@@ -56,12 +60,16 @@ export const ImportCreatorsSheet = () => {
             qualityType,
             totalContent,
             subDirectory: subDirectory.trim(),
-            exclude,
             importType,
-            start,
             exceptions,
             isNewCreator,
-            processType
+            processType,
+            profileStart,
+            profileEnd,
+            branchEnd,
+            branchStart,
+            pageEnd,
+            pageStart
           }
         }
       });
@@ -89,10 +97,15 @@ export const ImportCreatorsSheet = () => {
     setSubDirectory('');
     setImportType(ImportTypes.Page);
     setHasEditedSubDir(false);
-    setStart(0);
-    setExclude(0);
     setIsNewCreator(false);
     setExceptions([]);
+    setBranchStart(0);
+    setBranchEnd(0);
+    setPageStart(0);
+    setPageEnd(0);
+    setProcessType(ProcessType.Generator);
+    setProfileStart(0);
+    setProfileEnd(0);
     setIsOpen((prev) => !prev);
     setServiceType(ServiceType.Ras);
   };
@@ -130,14 +143,14 @@ export const ImportCreatorsSheet = () => {
       <SheetTrigger asChild>
         <Button variant="outline">Import</Button>
       </SheetTrigger>
-      <SheetContent className="p-1">
+      <SheetContent className="p-1 overflow-y-scroll">
         <SheetHeader>
           <SheetTitle>Add new contents {admin && ' ✅🚀'}</SheetTitle>
           <SheetDescription>Be descriptive about site information</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-3 space-y-1">
           <div className="grid gap-2">
-            <Label htmlFor="url">URL</Label>
+            <Label className='text-xs' htmlFor="url">URL</Label>
             <Input
               id="site-url"
               type="url"
@@ -149,7 +162,7 @@ export const ImportCreatorsSheet = () => {
           </div>
           <div className="flex flex-row justify-between">
             <div className="grid gap-2">
-              <Label htmlFor="file-type">SERVICE TYPE</Label>
+              <Label className='text-xs' htmlFor="file-type">SERVICE TYPE</Label>
               <Dropdown
                 enumValue={ServiceType}
                 filterBy={serviceType}
@@ -159,21 +172,22 @@ export const ImportCreatorsSheet = () => {
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="exclude">Content interval</Label>
-              <Input
-                id="exclude"
-                type="text"
-                placeholder="0"
-                required
-                value={totalContent}
-                onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
+            <div className="flex flex-col gap-1 space-y-1 items-center content-center">
+              <Label className='text-xs' htmlFor="newUser">
+                NewCreator
+              </Label>
+              <Switch
+                checked={isNewCreator}
+                onCheckedChange={(checked: boolean) => {
+                  setIsNewCreator(checked);
+                  setImportType(ImportTypes.Profile);
+                }}
               />
             </div>
           </div>
           <div className="flex flex-row gap-3 space-y-1">
             <div className="grid gap-2">
-              <Label htmlFor="subDirectory">Subdirectory</Label>
+              <Label className='text-xs' htmlFor="subDirectory">Subdirectory</Label>
               <Input
                 id="subDirectory"
                 type="text"
@@ -187,41 +201,100 @@ export const ImportCreatorsSheet = () => {
                 }}
               />
             </div>
-            <div className="flex flex-col gap-1 space-y-1 items-center content-center">
-              <Label htmlFor="newUser" className="text-xs">
-                NewCreator
-              </Label>
-              <Switch
-                checked={isNewCreator}
-                onCheckedChange={(checked: boolean) => {
-                  setIsNewCreator(checked);
-                  setImportType(ImportTypes.Profile);
-                }}
+            <div className="grid gap-2">
+              <Label className='text-xs' htmlFor="exclude">Content interval</Label>
+              <Input
+                id="exclude"
+                type="text"
+                placeholder="0"
+                required
+                value={totalContent}
+                onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 space-x-2">
             <div className="grid gap-2">
-              <Label htmlFor="start">Start {start * 50}</Label>
+              <Label className='text-xs' htmlFor="profileStart">
+                PROFILE START {profileStart}
+              </Label>
+              <Input
+                id="profileStart"
+                type="text"
+                placeholder="0"
+                required
+                value={profileStart}
+                onChange={(e) => setProfileStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className='text-xs' htmlFor="profileEnd">
+                PROFILE SPAN {profileEnd}
+              </Label>
+              <Input
+                id="profileEnd"
+                type="text"
+                placeholder="0"
+                required
+                value={profileEnd}
+                onChange={(e) => setProfileEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 space-x-2">
+            <div className="grid gap-2">
+              <Label className='text-xs' htmlFor="start">
+                BRANCH START {branchStart * 50}
+              </Label>
               <Input
                 id="start"
                 type="text"
                 placeholder="0"
                 required
-                value={start}
-                onChange={(e) => setStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={branchStart}
+                onChange={(e) => setBranchStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="exclude">Exclude / Span {(exclude - 1) * 50}</Label>
+              <Label className='text-xs' htmlFor="branchStart">
+                BRANCH SPAN {(branchEnd - 1) * 50}
+              </Label>
               <Input
-                id="exclude"
+                id="branchStart"
                 type="text"
                 placeholder="0"
                 required
-                value={exclude}
-                onChange={(e) => setExclude(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={branchStart}
+                onChange={(e) => setBranchEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 space-x-2">
+            <div className="grid gap-2">
+              <Label className='text-xs' htmlFor="pageStart">
+                PAGE START {pageStart}
+              </Label>
+              <Input
+                id="pageStart"
+                type="text"
+                placeholder="0"
+                required
+                value={pageStart}
+                onChange={(e) => setPageStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className='text-xs' htmlFor="pageEnd">
+                PAGE SPAN
+              </Label>
+              <Input
+                id="pageEnd"
+                type="text"
+                placeholder="0"
+                required
+                value={pageEnd}
+                onChange={(e) => setPageEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
               />
             </div>
           </div>
@@ -229,7 +302,7 @@ export const ImportCreatorsSheet = () => {
           <div className="flex flex-col space-y-2">
             <div className="grid grid-cols-2 space-x-1">
               <div className="grid gap-2">
-                <Label htmlFor="quality-type">Quality type</Label>
+                <Label className='text-xs' htmlFor="quality-type">Quality type</Label>
                 <Dropdown
                   enumValue={DocumentQualityType}
                   filterBy={qualityType}
@@ -240,7 +313,7 @@ export const ImportCreatorsSheet = () => {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="file-type">File type</Label>
+                <Label className='text-xs' htmlFor="file-type">File type</Label>
                 <Dropdown
                   enumValue={FileType}
                   filterBy={fileType}
@@ -252,7 +325,7 @@ export const ImportCreatorsSheet = () => {
             </div>
 
             <div className="grid gap-3">
-              <Label htmlFor="features">Exceptions</Label>
+              <Label className='text-xs' htmlFor="features">Exceptions</Label>
               <div className="flex gap-2">
                 <Input
                   value={exceptionInput}
@@ -278,26 +351,28 @@ export const ImportCreatorsSheet = () => {
               ))}
             </ul>
 
-            <div className="grid gap-2">
-              <Label htmlFor="import-type">Import type</Label>
-              <Dropdown
-                enumValue={ImportTypes}
-                filterBy={importType}
-                onFilterBy={(val) => setImportType(val as ImportTypes)}
-                trigger={{ label: importType.replace(/_/g, ' ') }}
-                label="Import Types"
-              />
-            </div>
+            <div className="grid grid-cols-2 space-x-2">
+              <div className="grid gap-2">
+                <Label className='text-xs' htmlFor="import-type">Import type</Label>
+                <Dropdown
+                  enumValue={ImportTypes}
+                  filterBy={importType}
+                  onFilterBy={(val) => setImportType(val as ImportTypes)}
+                  trigger={{ label: importType.replace(/_/g, ' ') }}
+                  label="Import Types"
+                />
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="file-type">PROCESS TYPE</Label>
-              <Dropdown
-                enumValue={ProcessType}
-                filterBy={processType}
-                onFilterBy={(val) => setProcessType(val as ProcessType)}
-                trigger={{ label: processType }}
-                label="Process types"
-              />
+              <div className="grid gap-2">
+                <Label className='text-xs' htmlFor="file-type">PROCESS TYPE</Label>
+                <Dropdown
+                  enumValue={ProcessType}
+                  filterBy={processType}
+                  onFilterBy={(val) => setProcessType(val as ProcessType)}
+                  trigger={{ label: processType }}
+                  label="Process types"
+                />
+              </div>
             </div>
           </div>
         </div>

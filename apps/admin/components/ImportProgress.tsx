@@ -15,16 +15,29 @@ export function ImportProgress({ showChart = false }: ImportProgressProps) {
 
   if (!importProcess) return null;
 
-  const { method, username, processedBranches, totalBranches, processedPages, totalPages, processedUrls, totalUrls } = importProcess;
+  const {
+    method,
+    username,
+    processedBranches,
+    totalBranches,
+    processedPages,
+    totalPages,
+    processedUrls,
+    totalUrls,
+    processedProfiles,
+    totalProfiles
+  } = importProcess;
 
   const branchProgress = totalBranches > 0 ? (processedBranches / totalBranches) * 100 : 0;
   const pageProgress = totalPages > 0 ? (processedPages / totalPages) * 100 : 0;
   const urlProgress = totalUrls > 0 ? (processedUrls / totalUrls) * 100 : 0;
+  const profileProgress = totalProfiles > 0 ? (processedProfiles / totalProfiles) * 100 : 0;
 
   const chartData = [
+    { label: 'Profiles', count: processedProfiles, total: totalProfiles, percentage: Math.round(profileProgress) },
     { label: 'Branches', count: processedBranches, total: totalBranches, percentage: Math.round(branchProgress) },
     { label: 'Pages', count: processedPages, total: totalPages, percentage: Math.round(pageProgress) },
-    { label: 'Objects', count: processedUrls, total: totalUrls || processedUrls, percentage: Math.round(urlProgress) }
+    { label: 'Objects', count: processedUrls, total: totalUrls, percentage: Math.round(urlProgress) }
   ];
 
   if (showChart) {
@@ -52,9 +65,10 @@ export function ImportProgress({ showChart = false }: ImportProgressProps) {
 
             <div className="space-y-4 mt-2">
               {[
+                { label: 'Profiles', val: `${processedProfiles}/${totalProfiles}`, icon: User, p: profileProgress },
                 { label: 'Branches', val: `${processedBranches}/${totalBranches}`, icon: Database, p: branchProgress },
                 { label: 'Pages', val: `${processedPages}/${totalPages}`, icon: Files, p: pageProgress },
-                { label: 'Objects', val: processedUrls, icon: Activity, p: urlProgress }
+                { label: 'Objects', val: `${processedUrls}/${totalUrls}`, icon: Activity, p: urlProgress }
               ].map((item) => (
                 <div key={item.label} className="space-y-1.5">
                   <div className="flex justify-between items-center text-[10px] uppercase font-black italic tracking-tighter">
@@ -127,9 +141,10 @@ export function ImportProgress({ showChart = false }: ImportProgressProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
+            { label: 'Profiles', current: processedProfiles, total: totalProfiles, icon: User, p: profileProgress },
             { label: 'Branches', current: processedBranches, total: totalBranches, icon: Database, p: branchProgress },
             { label: 'Pages', current: processedPages, total: totalPages, icon: Files, p: pageProgress },
-            { label: 'Objects', current: processedUrls, total: totalUrls || '?', icon: Activity, p: urlProgress }
+            { label: 'Objects', current: processedUrls, total: totalUrls, icon: Activity, p: urlProgress }
           ].map((item) => (
             <div
               key={item.label}

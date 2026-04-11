@@ -2,7 +2,7 @@
 
 import { useCreatorsStore } from '@/hooks/store/creators.store';
 import { useImportStore } from '@/hooks/store/import.store';
-import { useVaultObjectsStore, useVaultsStore } from '@/hooks/store/vaults.store';
+import { useVaultObjectsStore } from '@/hooks/store/vaults.store';
 import { DownloadStates, GetAllObjectsCountOutput } from '@workspace/gql/generated/graphql';
 import { eventEmitter } from '@workspace/ui/hooks/EventsEmitter';
 import { EventTypes } from '@workspace/ui/lib';
@@ -81,10 +81,23 @@ export const Events = () => {
   };
 
   const updateImportProcess = (event: CustomEvent) => {
-    const { method, username, creatorId, totalBranches, processedBranches, totalPages, processedPages, totalUrls, processedUrls } =
-      event.detail.data;
+    const {
+      method,
+      username,
+      creatorId,
+      totalBranches,
+      processedBranches,
+      totalPages,
+      processedPages,
+      totalUrls,
+      processedUrls,
+      totalProfiles,
+      processedProfiles
+    } = event.detail.data;
 
     setImportProcess({
+      totalProfiles,
+      processedProfiles,
       method,
       username,
       creatorId,
@@ -104,7 +117,7 @@ export const Events = () => {
     const importStatusHandler = (e: Event) => updateImportStatus(e as CustomEvent);
     const importProcessHandler = (e: Event) => updateImportProcess(e as CustomEvent);
 
-    eventEmitter.addEventListener(EventTypes.VaultObjectStatus, updateHandler);
+    eventEmitter.addEventListener(EventTypes.VaultObjectStatus, countUpdateHandler);
     eventEmitter.addEventListener(EventTypes.CreatorObjectsCount, countUpdateHandler);
     eventEmitter.addEventListener(EventTypes.ObjectsCount, globalCountUpdateHandler);
     eventEmitter.addEventListener(EventTypes.ImportStatus, importStatusHandler);
