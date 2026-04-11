@@ -30,7 +30,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'all' | null>(null);
+  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'importing' | null>(null);
   const [isCleanupModalOpen, setIsCleanupModalOpen] = useState<boolean>(false);
 
   const searchParams = useSearchParams();

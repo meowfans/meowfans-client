@@ -11,7 +11,7 @@ import { useState } from 'react';
 interface TerminateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: 'downloading' | 'all';
+  type: 'downloading' | 'importing';
 }
 
 export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
@@ -20,21 +20,21 @@ export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
   const { successHandler } = useSuccessHandler();
   const [loading, setLoading] = useState(false);
 
-  const isAll = type === 'all';
-  const title = isAll ? 'Terminate All Jobs' : 'Terminate Downloading';
-  const description = isAll
-    ? 'Are you sure you want to completely stop ALL background jobs? This action cannot be undone and may leave tasks in an inconsistent state.'
-    : 'Are you sure you want to stop all active download tasks? Currenly downloading files will be interrupted.';
+  const title = type === 'importing' ? 'Terminate All Jobs' : 'Terminate Downloading';
+  const description =
+    type === 'importing'
+      ? 'Are you sure you want to completely stop ALL background jobs? This action cannot be undone and may leave tasks in an inconsistent state.'
+      : 'Are you sure you want to stop all active download tasks? Currenly downloading files will be interrupted.';
 
   const handleTerminate = async () => {
     setLoading(true);
     try {
-      if (isAll) {
+      if (type === 'importing') {
         await terminateAllJobsMutation();
       } else {
         await terminateDownloadingMutation();
       }
-      successHandler({ message: `${isAll ? 'All jobs' : 'Downloading tasks'} terminated successfully` });
+      successHandler({ message: `${type === 'importing' ? 'All jobs' : 'Downloading tasks'} terminated successfully` });
       onClose();
     } catch (error) {
       errorHandler({ error });
@@ -49,7 +49,7 @@ export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-full bg-destructive/10 text-destructive">
-              {isAll ? <Ban className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
+              {type === 'importing' ? <Ban className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
             </div>
             <DialogTitle className="text-xl">{title}</DialogTitle>
           </div>
@@ -59,7 +59,12 @@ export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
           <Button variant="outline" onClick={onClose} disabled={loading} className="w-full sm:w-auto order-2 sm:order-1 font-bold">
             Cancel
           </Button>
-          <Button onClick={handleTerminate} disabled={loading} variant="destructive" className="w-full sm:w-auto order-1 sm:order-2 font-bold">
+          <Button
+            onClick={handleTerminate}
+            disabled={loading}
+            variant="destructive"
+            className="w-full sm:w-auto order-1 sm:order-2 font-bold"
+          >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

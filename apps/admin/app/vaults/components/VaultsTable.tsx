@@ -140,7 +140,7 @@ export function VaultsTable({
                             onClick={() => router.push(`/vaults/${encodeURIComponent(creator.id)}?tab=objects`)}
                           >
                             <ExternalLink className="h-3.5 w-3.5 text-primary" />
-                            View Detailed Vault Objects
+                            View Vault Objects
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-xs font-bold uppercase tracking-wider gap-2 h-9 cursor-pointer"
