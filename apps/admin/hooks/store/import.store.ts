@@ -14,6 +14,8 @@ type ImportStore = {
     processedPages: number;
     totalUrls: number;
     processedUrls: number;
+    totalProfiles: number;
+    processedProfiles: number;
   } | null;
   setImportProcess: (updater: Updater<ImportStore['importProcess']>) => void;
 };

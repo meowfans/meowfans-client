@@ -174,16 +174,20 @@ export type CreateCommentInput = {
 
 export type CreateImportQueueInput = {
   adminId?: InputMaybe<Scalars['String']['input']>;
+  branchEnd?: Scalars['Int']['input'];
+  branchStart?: Scalars['Int']['input'];
   creatorId: Scalars['String']['input'];
   exceptions?: InputMaybe<Array<Scalars['String']['input']>>;
-  exclude?: Scalars['Int']['input'];
   fileType?: FileType;
   importType?: ImportTypes;
   isNewCreator?: Scalars['Boolean']['input'];
+  pageEnd?: Scalars['Int']['input'];
+  pageStart?: Scalars['Int']['input'];
   processType?: InputMaybe<ProcessType>;
+  profileEnd?: Scalars['Int']['input'];
+  profileStart?: Scalars['Int']['input'];
   qualityType?: DocumentQualityType;
   serviceType?: ServiceType;
-  start?: Scalars['Int']['input'];
   subDirectory: Scalars['String']['input'];
   totalContent?: Scalars['Int']['input'];
   url: Scalars['String']['input'];
