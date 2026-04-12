@@ -14,81 +14,81 @@ import { VaultsStats } from './VaultsStats';
 import { VaultsTable } from './VaultsTable';
 
 export function VaultsView() {
- const {
- creators,
- loading: creatorsLoading,
- hasMore: creatorsHasMore,
- handleLoadMore: creatorsLoadMore
- } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll, sortBy: SortBy.CreatorPendingCount, orderBy: SortOrder.Desc });
+  const {
+    creators,
+    loading: creatorsLoading,
+    hasMore: creatorsHasMore,
+    handleLoadMore: creatorsLoadMore
+  } = useCreators({ take: 50, dataFetchType: DataFetchType.InfiniteScroll, sortBy: SortBy.CreatorPendingCount, orderBy: SortOrder.Desc });
 
- const { objectsCount, fetchCounts } = useGetAllObjectsCount();
- const { onOpen } = useImpersonationStore();
- const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
- const [isBatchModalOpen, setIsBatchModalOpen] = useState<boolean>(false);
- const [cleanupModalData, setCleanupModalData] = useState<{ id: string; username: string } | null>(null);
+  const { objectsCount, fetchCounts } = useGetAllObjectsCount();
+  const { onOpen } = useImpersonationStore();
+  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
+  const [isBatchModalOpen, setIsBatchModalOpen] = useState<boolean>(false);
+  const [cleanupModalData, setCleanupModalData] = useState<{ id: string; username: string } | null>(null);
 
- useEffect(() => {
- fetchCounts();
- }, []); // eslint-disable-line
+  useEffect(() => {
+    fetchCounts();
+  }, []); // eslint-disable-line
 
- const handleSelectAll = (checked: boolean) => {
- if (checked) {
-  setSelectedCreators(creators.map((c) => c.id));
- } else {
-  setSelectedCreators([]);
- }
- };
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedCreators(creators.map((c) => c.id));
+    } else {
+      setSelectedCreators([]);
+    }
+  };
 
- const handleSelectCreator = (creatorId: string, checked: boolean) => {
- if (checked) {
-  setSelectedCreators((prev) => (prev ? [...prev, creatorId] : [creatorId]));
- } else {
-  setSelectedCreators((prev) => prev?.filter((id) => id !== creatorId) ?? null);
- }
- };
+  const handleSelectCreator = (creatorId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCreators((prev) => (prev ? [...prev, creatorId] : [creatorId]));
+    } else {
+      setSelectedCreators((prev) => prev?.filter((id) => id !== creatorId) ?? null);
+    }
+  };
 
- return (
- <div className="space-y-6 md:space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto flex flex-col min-h-full w-full min-w-0">
-  <VaultsHeader selectedCount={selectedCreators?.length ?? 0} onStartBatchDownload={() => setIsBatchModalOpen(true)} />
+  return (
+    <div className="space-y-6 md:space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto flex flex-col min-h-full w-full min-w-0">
+      <VaultsHeader selectedCount={selectedCreators?.length ?? 0} onStartBatchDownload={() => setIsBatchModalOpen(true)} />
 
-  <ImportProgress />
-  <VaultsStats objectsCount={objectsCount} />
-  <VaultsTable
-  creators={creators}
-  loading={creatorsLoading}
-  hasMore={creatorsHasMore}
-  onLoadMore={creatorsLoadMore}
-  selectedCreators={selectedCreators ?? []}
-  onSelectAll={handleSelectAll}
-  onSelectCreator={handleSelectCreator}
-  onOpenCleanup={(id, username) => setCleanupModalData({ id, username })}
-  onImpersonate={onOpen}
-  />
+      <ImportProgress />
+      <VaultsStats objectsCount={objectsCount} />
+      <VaultsTable
+        creators={creators}
+        loading={creatorsLoading}
+        hasMore={creatorsHasMore}
+        onLoadMore={creatorsLoadMore}
+        selectedCreators={selectedCreators ?? []}
+        onSelectAll={handleSelectAll}
+        onSelectCreator={handleSelectCreator}
+        onOpenCleanup={(id, username) => setCleanupModalData({ id, username })}
+        onImpersonate={onOpen}
+      />
 
-  <BatchDownloadModal
-  isOpen={!!selectedCreators?.length && isBatchModalOpen}
-  onClose={() => {
-   setIsBatchModalOpen(false);
-   setSelectedCreators([]);
-  }}
-  selectedIds={selectedCreators}
-  onSuccess={() => {
-   setIsBatchModalOpen(false);
-   setSelectedCreators([]);
-  }}
-  type="creator"
-  />
+      <BatchDownloadModal
+        isOpen={!!selectedCreators?.length && isBatchModalOpen}
+        onClose={() => {
+          setIsBatchModalOpen(false);
+          setSelectedCreators([]);
+        }}
+        selectedIds={selectedCreators}
+        onSuccess={() => {
+          setIsBatchModalOpen(false);
+          setSelectedCreators([]);
+        }}
+        type="creator"
+      />
 
-  <TerminateModal />
+      <TerminateModal />
 
-  {cleanupModalData && (
-  <CleanUpModal
-   isOpen={!!cleanupModalData}
-   onClose={() => setCleanupModalData(null)}
-   creatorId={cleanupModalData.id}
-   creatorUsername={cleanupModalData.username}
-  />
-  )}
- </div>
- );
+      {cleanupModalData && (
+        <CleanUpModal
+          isOpen={!!cleanupModalData}
+          onClose={() => setCleanupModalData(null)}
+          creatorId={cleanupModalData.id}
+          creatorUsername={cleanupModalData.username}
+        />
+      )}
+    </div>
+  );
 }

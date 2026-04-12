@@ -261,7 +261,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
         description: 'To turn it on, change it from Settings',
         action: {
           label: 'Settings',
-          onClick: () => window.location.href = '/settings'
+          onClick: () => (window.location.href = '/settings')
         }
       });
     } else {

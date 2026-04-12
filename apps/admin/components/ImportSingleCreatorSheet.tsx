@@ -123,7 +123,7 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
     <Sheet onOpenChange={handleClose} open={isOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" className="w-full" size={'sm'}>
-          <CloudDownload className='h-3 w-3' />
+          <CloudDownload className="h-3 w-3" />
           Import
         </Button>
       </SheetTrigger>

@@ -20,7 +20,11 @@ export function Dashboard({ initialFollowings, initialFanAssets, initialCreators
     <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-6 h-screen">
       <DashBoardHeader />
       <div className="py-6">
-        <DashboardStats followingLength={initialFollowings.length} fanAssetsLength={initialFanAssets.length} channelsLength={initialChannels.length} />
+        <DashboardStats
+          followingLength={initialFollowings.length}
+          fanAssetsLength={initialFanAssets.length}
+          channelsLength={initialChannels.length}
+        />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-7 items-start">

@@ -6,18 +6,18 @@ import { LogoutModal } from '@/components/LogoutModal';
 import { usePathname } from 'next/navigation';
 
 interface TemplateProps {
- children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Template({ children }: TemplateProps) {
- const pathname = usePathname();
+  const pathname = usePathname();
 
- return (
- <div className="flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4">
-  {children}
-  <AppBottomNav />
-  <LogoutModal />
-  <ImpersonationModal />
- </div>
- );
+  return (
+    <div className="flex flex-1 flex-col gap-4 p-4 pb-24 pt-0 md:pb-4">
+      {children}
+      <AppBottomNav />
+      <LogoutModal />
+      <ImpersonationModal />
+    </div>
+  );
 }

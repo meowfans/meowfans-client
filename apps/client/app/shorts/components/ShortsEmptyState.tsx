@@ -11,7 +11,7 @@ interface ShortsEmptyStateProps {
 export function ShortsEmptyState({ onRefresh }: ShortsEmptyStateProps) {
   return (
     <motion.div
-      key={"_empty_state"}
+      key={'_empty_state'}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="h-full flex flex-col items-center justify-center text-center p-8 space-y-6"

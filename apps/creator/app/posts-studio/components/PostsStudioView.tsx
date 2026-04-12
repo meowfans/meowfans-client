@@ -190,12 +190,7 @@ export function PostsStudioView() {
                                     }`}
                                   >
                                     {asset.fileType === FileType.Video ? (
-                                      <video
-                                        src={asset.rawUrl}
-                                        controls
-                                        autoPlay
-                                        className="w-full h-full max-h-[70vh] object-contain"
-                                      />
+                                      <video src={asset.rawUrl} controls autoPlay className="w-full h-full max-h-[70vh] object-contain" />
                                     ) : (
                                       <div className="relative w-full h-[60vh]">
                                         <NextImage src={asset.rawUrl} alt="Full Preview" fill className="object-contain" priority />

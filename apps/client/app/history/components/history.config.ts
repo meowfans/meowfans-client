@@ -11,10 +11,7 @@ export const HISTORY_TABS: { value: TabValue; label: string }[] = [
   { value: WatchHistoryType.Story, label: 'Stories' }
 ];
 
-export const TYPE_CONFIG: Record<
-  WatchHistoryType,
-  { label: string; icon: React.FC<{ className?: string }>; color: string; bg: string }
-> = {
+export const TYPE_CONFIG: Record<WatchHistoryType, { label: string; icon: React.FC<{ className?: string }>; color: string; bg: string }> = {
   [WatchHistoryType.Post]: {
     label: 'Post',
     icon: Clapperboard,

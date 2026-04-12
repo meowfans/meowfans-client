@@ -19,7 +19,13 @@ import {
   TERMINATE_IMPORT_JOBS_MUTATION,
   UPDATE_PREVIEW_OF_VAULTS_QUERY
 } from '@workspace/gql/api';
-import { CleanUpVaultInput, DownloadObjectsByCreatorIdsInput, DownloadObjectsByVaultObjectIdsQueueInput, PaginationInput, VaultStatsInput } from '@workspace/gql/generated/graphql';
+import {
+  CleanUpVaultInput,
+  DownloadObjectsByCreatorIdsInput,
+  DownloadObjectsByVaultObjectIdsQueueInput,
+  PaginationInput,
+  VaultStatsInput
+} from '@workspace/gql/generated/graphql';
 
 export const useVaultsActions = () => {
   const [getPublicVaultObjects] = useLazyQuery(GET_PUBLIC_VAULT_OBJECTS_QUERY);

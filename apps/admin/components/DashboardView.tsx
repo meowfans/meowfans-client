@@ -10,22 +10,22 @@ import { UpdateCreatorProfiles } from './dashboard/UpdateCreatorProfiles';
 import { UpdateVaultPreviews } from './dashboard/UpdateVaultPreviews';
 
 export function DashboardView() {
- const { admin } = useAdmin();
+  const { admin } = useAdmin();
 
- return (
- <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
-  <DashboardHeader admin={admin} />
-  <ImportProgress showChart={true} />
+  return (
+    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
+      <DashboardHeader admin={admin} />
+      <ImportProgress showChart={true} />
 
-  <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
-  <DashboardQuickImpersonation />
-  <DashboardObjectStatusOverview />
-  </div>
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+        <DashboardQuickImpersonation />
+        <DashboardObjectStatusOverview />
+      </div>
 
-  <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-  <UpdateVaultPreviews />
-  <UpdateCreatorProfiles />
-  </div>
- </div>
- );
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+        <UpdateVaultPreviews />
+        <UpdateCreatorProfiles />
+      </div>
+    </div>
+  );
 }

@@ -125,9 +125,7 @@ export const ApplyShadCnChart: React.FC<Props> = ({ chartType, dataTable, xDataK
           title="Chart type"
         />
       </div>
-      <div className="flex-1 min-h-0">
-        {renderChart()}
-      </div>
+      <div className="flex-1 min-h-0">{renderChart()}</div>
     </div>
   );
 };

@@ -28,8 +28,10 @@ export const usePostsStore = create<PostsStore>()(
       setPost: (updater) => set((state) => ({ post: typeof updater === 'function' ? updater(state.post) : updater })),
       setPosts: (updater) => set((state) => ({ posts: typeof updater === 'function' ? updater(state.posts) : updater })),
       setPostAssets: (updater) => set((state) => ({ postAssets: typeof updater === 'function' ? updater(state.postAssets) : updater })),
-      setOpenPostCreateModal: (updater) => set((state) => ({ openPostCreateModal: typeof updater === 'function' ? updater(state.openPostCreateModal) : updater })),
-      setPostsAnalytics: (updater) => set((state) => ({ postsAnalytics: typeof updater === 'function' ? updater(state.postsAnalytics) : updater }))
+      setOpenPostCreateModal: (updater) =>
+        set((state) => ({ openPostCreateModal: typeof updater === 'function' ? updater(state.openPostCreateModal) : updater })),
+      setPostsAnalytics: (updater) =>
+        set((state) => ({ postsAnalytics: typeof updater === 'function' ? updater(state.postsAnalytics) : updater }))
     }),
     {
       name: 'posts-store',

@@ -11,6 +11,7 @@ type UtilsStore = {
 export const useUtilsStore = create<UtilsStore>()((set) => ({
   clickedSearch: false,
   openLogoutModal: false,
-  setOpenLogoutModal: (updater) => set((state) => ({ openLogoutModal: typeof updater === 'function' ? updater(state.openLogoutModal) : updater })),
+  setOpenLogoutModal: (updater) =>
+    set((state) => ({ openLogoutModal: typeof updater === 'function' ? updater(state.openLogoutModal) : updater })),
   setClickedSearch: (updater) => set((state) => ({ clickedSearch: typeof updater === 'function' ? updater(state.clickedSearch) : updater }))
 }));
