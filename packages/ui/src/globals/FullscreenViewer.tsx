@@ -186,8 +186,8 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
                 <video
                   ref={videoRef}
                   src={currentItem.url}
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
-                  controls={false}
+                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl mb-5"
+                  controls
                   playsInline
                   loop
                   muted={false}
@@ -250,7 +250,7 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
 
       {/* Thumbnails Strip */}
       {items.length > 1 && (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[110] flex gap-3 p-3 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[110] flex gap-3 p-3 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
           {items.map((item, idx) => (
             <button
               key={`${item.url}-${idx}`}
@@ -266,12 +266,16 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
                   : 'border-transparent opacity-30 hover:opacity-100 hover:scale-105'
               )}
             >
-              {item.url && <img src={item.url} alt="" className="h-full w-full object-cover" />}
-              {item.type.toUpperCase() === 'VIDEO' && (
+              {item.type.toUpperCase() === 'VIDEO' ? (
+                <video controls={false} autoPlay={false} src={item.url} className="h-full w-full object-cover" />
+              ) : (
+                <img src={item.url} alt="" className="h-full w-full object-cover" />
+              )}
+              {item.type.toUpperCase() === 'VIDEO' ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                   <Play className="h-4 w-4 text-white fill-white" />
                 </div>
-              )}
+              ) : null}
             </button>
           ))}
         </div>

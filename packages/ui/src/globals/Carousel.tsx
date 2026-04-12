@@ -58,6 +58,44 @@ export const Carousel = <T,>({
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [slideShow, setSlideShow] = useState<boolean>(false);
 
+  const isVideoSlide = (index: number) => {
+    const item = items[index];
+    return item && getFileType(item) === FileType.Video;
+  };
+
+  const handleManualNav = (direction: 'prev' | 'next') => {
+    if (!emblaApi) return;
+
+    if (isVideoSlide(selectedIndex)) {
+      setSlideShow(false);
+
+      const emblaNode = emblaApi.rootNode();
+      if (emblaNode) {
+        const videos = emblaNode.querySelectorAll('video');
+        videos.forEach((video) => video.pause());
+      }
+    }
+    if (direction === 'prev') {
+      emblaApi.scrollPrev();
+    } else {
+      emblaApi.scrollNext();
+    }
+  };
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+
+    // Pause all videos when scrolling
+    const emblaNode = emblaApi.rootNode();
+    if (emblaNode) {
+      const videos = emblaNode.querySelectorAll('video');
+      videos.forEach((video) => video.pause());
+    }
+  }, [emblaApi]);
+
   useEffect(() => {
     if (slideShow) {
       const interval = setInterval(() => {
@@ -89,13 +127,6 @@ export const Carousel = <T,>({
       loadMore?.();
     }
   }, [emblaApi, selectedIndex, items.length, loadMore, hasMore, loading]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -134,7 +165,16 @@ export const Carousel = <T,>({
           className="absolute inset-0 pointer-events-none scale-125 blur-[100px] saturate-200"
         >
           {items[selectedIndex] && getUrl(items[selectedIndex]) && (
-            <img src={getUrl(items[selectedIndex])} alt="" className="h-full w-full object-cover" />
+            <img
+              onClick={() => {
+                if (isVideoSlide(selectedIndex)) {
+                  setSlideShow(false);
+                }
+              }}
+              src={getUrl(items[selectedIndex])}
+              alt=""
+              className="h-full w-full object-cover"
+            />
           )}
         </motion.div>
       </AnimatePresence>
@@ -167,9 +207,7 @@ export const Carousel = <T,>({
                     </div>
                   )
                 ) : (
-                  getUrl(item) && (
-                    <video src={getUrl(item)} poster={getPoster?.(item)} controls playsInline className="h-full w-full object-contain" />
-                  )
+                  getUrl(item) && <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
                 )}
               </div>
 
@@ -180,7 +218,7 @@ export const Carousel = <T,>({
                   setCurrentlyViewingIndex={setSelectedIndex}
                   loadMore={loadMore}
                   hasMore={hasMore}
-                  className="rounded-2xl border-white/10 bg-black/20 backdrop-blur-3xl hover:bg-black/40 transition-all"
+                  className="rounded-2xl border-white/10 mx-2"
                 />
 
                 <Button
@@ -215,7 +253,7 @@ export const Carousel = <T,>({
                     'h-12 w-12 rounded-[1.25rem] bg-black/20 hover:bg-black/40 border border-white/5 backdrop-blur-2xl text-white shadow-2xl transition-all active:scale-90',
                     !canScrollPrev && 'opacity-20 pointer-events-none'
                   )}
-                  onClick={() => emblaApi?.scrollPrev()}
+                  onClick={() => handleManualNav('prev')}
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </Button>
@@ -234,7 +272,7 @@ export const Carousel = <T,>({
                     'h-12 w-12 rounded-[1.25rem] bg-black/20 hover:bg-black/40 border border-white/10 backdrop-blur-2xl text-white shadow-2xl transition-all active:scale-90',
                     !canScrollNext && 'opacity-20 pointer-events-none'
                   )}
-                  onClick={() => emblaApi?.scrollNext()}
+                  onClick={() => handleManualNav('next')}
                 >
                   <ChevronRight className="h-6 w-6" />
                 </Button>
@@ -251,7 +289,9 @@ export const Carousel = <T,>({
             {items.map((_, index) => (
               <button
                 key={index}
-                onClick={() => emblaApi?.scrollTo(index)}
+                onClick={() => {
+                  emblaApi?.scrollTo(index);
+                }}
                 className="relative h-1.5 flex items-center justify-center transition-all group/dot"
                 aria-label={`Go to slide ${index + 1}`}
               >
