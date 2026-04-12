@@ -2,19 +2,26 @@
 import { useAdmin } from '@/hooks/context/AdminContextWrapper';
 import { useMutation } from '@apollo/client/react';
 import { INITIATE_CREATORS_IMPORT_QUERY_MUTATION } from '@workspace/gql/api/importAPI';
-import { DocumentQualityType, FileType, ImportTypes, ProcessType, ServiceType } from '@workspace/gql/generated/graphql';
+import {
+ CreateImportQueueInput,
+ DocumentQualityType,
+ FileType,
+ ImportTypes,
+ ProcessType,
+ ServiceType
+} from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
+ Sheet,
+ SheetClose,
+ SheetContent,
+ SheetDescription,
+ SheetFooter,
+ SheetHeader,
+ SheetTitle,
+ SheetTrigger
 } from '@workspace/ui/components/sheet';
 import { Switch } from '@workspace/ui/components/switch';
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
@@ -23,369 +30,369 @@ import { HostNames } from '@workspace/ui/lib';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+const emptyInput: CreateImportQueueInput = {
+ serviceType: ServiceType.Ras,
+ fileType: FileType.Image,
+ qualityType: DocumentQualityType.HighDefinition,
+ importType: ImportTypes.Profile,
+ processType: ProcessType.Generator,
+ totalContent: 10,
+ subDirectory: '',
+ exceptions: [],
+ branchStart: 0,
+ branchEnd: 0,
+ pageStart: 0,
+ pageEnd: 0,
+ profileEnd: 0,
+ profileStart: 0,
+ url: '',
+ creatorId: '',
+ isNewCreator: false
+};
+
 export const ImportCreatorsSheet = () => {
-  const { admin } = useAdmin();
-  const [url, setUrl] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [exceptions, setExceptions] = useState<string[]>([]);
-  const [totalContent, setTotalContent] = useState<number>(10);
-  const [subDirectory, setSubDirectory] = useState<string>('');
-  const [isNewCreator, setIsNewCreator] = useState<boolean>(false);
-  const [exceptionInput, setExceptionInput] = useState<string>('');
-  const [fileType, setFileType] = useState<FileType>(FileType.Image);
-  const [hasEditedSubDir, setHasEditedSubDir] = useState<boolean>(false);
-  const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
-  const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Page);
-  const [profileStart, setProfileStart] = useState<number>(0);
-  const [profileEnd, setProfileEnd] = useState<number>(0);
-  const [branchStart, setBranchStart] = useState<number>(0);
-  const [branchEnd, setBranchEnd] = useState<number>(0);
-  const [pageStart, setPageStart] = useState<number>(0);
-  const [pageEnd, setPageEnd] = useState<number>(0);
-  const [initiateImport] = useMutation(INITIATE_CREATORS_IMPORT_QUERY_MUTATION);
-  const [processType, setProcessType] = useState<ProcessType>(ProcessType.Generator);
-  const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
+ const { admin } = useAdmin();
+ const [input, setInput] = useState<CreateImportQueueInput>({ ...emptyInput, creatorId: admin.creatorId });
+ const [isOpen, setIsOpen] = useState<boolean>(false);
+ const [loading, setLoading] = useState<boolean>(false);
+ const [exceptionInput, setExceptionInput] = useState<string>('');
+ const [hasEditedSubDir, setHasEditedSubDir] = useState<boolean>(false);
+ const [initiateImport] = useMutation(INITIATE_CREATORS_IMPORT_QUERY_MUTATION);
 
-  const handleInitiate = async () => {
-    setLoading(true);
-    try {
-      await initiateImport({
-        variables: {
-          input: {
-            serviceType,
-            creatorId: admin.creatorId,
-            url: url.trim(),
-            fileType,
-            qualityType,
-            totalContent,
-            subDirectory: subDirectory.trim(),
-            importType,
-            exceptions,
-            isNewCreator,
-            processType,
-            profileStart,
-            profileEnd,
-            branchEnd,
-            branchStart,
-            pageEnd,
-            pageStart
-          }
-        }
-      });
-      toast.success('Job added, come back after a while');
-    } catch (error) {
-      toast.error('Something wrong happened!');
-    } finally {
-      handleClose();
-    }
-  };
+ const handleInitiate = async () => {
+ setLoading(true);
+ try {
+  await initiateImport({ variables: { input } });
+  toast.success('Job added, come back after a while');
+ } catch (error) {
+  toast.error('Something wrong happened!');
+ } finally {
+  handleClose();
+ }
+ };
 
-  const handleAddException = () => {
-    if (exceptionInput.trim() !== '') {
-      setExceptions([...exceptions, exceptionInput.trim()]);
-      setExceptionInput('');
-    }
-  };
+ const handleAddException = () => {
+ if (exceptionInput.trim() !== '') {
+  setInput((prev) => ({ ...prev, exceptions: [...(prev?.exceptions ?? []), exceptionInput.trim()] }));
+  setExceptionInput('');
+ }
+ };
 
-  const handleClose = () => {
-    setLoading(false);
-    setUrl('');
-    setFileType(FileType.Image);
-    setQualityType(DocumentQualityType.HighDefinition);
-    setTotalContent(10);
-    setSubDirectory('');
-    setImportType(ImportTypes.Page);
-    setHasEditedSubDir(false);
-    setIsNewCreator(false);
-    setExceptions([]);
-    setBranchStart(0);
-    setBranchEnd(0);
-    setPageStart(0);
-    setPageEnd(0);
-    setProcessType(ProcessType.Generator);
-    setProfileStart(0);
-    setProfileEnd(0);
-    setIsOpen((prev) => !prev);
-    setServiceType(ServiceType.Ras);
-  };
+ const handleChangeInput = ({ key, value }: { key: keyof CreateImportQueueInput; value: string | number | string[] | boolean }) => {
+ setInput((prev) => ({ ...prev, [key]: value }));
+ if (key === 'url') {
+  setHasEditedSubDir(false);
+ }
+ };
 
-  useEffect(() => {
-    if (!hasEditedSubDir && url) {
-      const parts = url.split('/').filter(Boolean);
-      setSubDirectory(parts.at(-1) ?? '');
-    }
-  }, [url, hasEditedSubDir]);
+ const handleClose = () => {
+ setLoading(false);
+ setHasEditedSubDir(false);
+ setIsOpen((prev) => !prev);
+ setInput(emptyInput);
+ };
 
-  useEffect(() => {
-    const regex = /^https:\/\/[^\s/$.?#].[^\s]*$/i;
-    if (url.length && regex.test(url)) {
-      switch (new URL(url).hostname) {
-        case HostNames.WALLHAVEN:
-          setQualityType(DocumentQualityType.LowDefinition);
-          setImportType(ImportTypes.Branch);
-          break;
-        case HostNames.OK:
-          setQualityType(DocumentQualityType.DivDefinition);
-          setImportType(ImportTypes.Ok);
-          break;
-        case HostNames.SHORTS:
-          setQualityType(DocumentQualityType.SourceDefinition);
-          setImportType(ImportTypes.Shorts);
-          setTotalContent(5);
-          break;
-      }
-    }
-  }, [url]);
+ useEffect(() => {
+ if (!hasEditedSubDir && input.url) {
+  const parts = input.url.split('/').filter(Boolean);
+  setInput((prev) => ({ ...prev, subDirectory: parts.at(-1) ?? '' }));
+ }
+ }, [input.url, hasEditedSubDir]);
 
-  return (
-    <Sheet onOpenChange={handleClose} open={isOpen}>
-      <SheetTrigger asChild>
-        <Button variant="outline">Import</Button>
-      </SheetTrigger>
-      <SheetContent className="p-1 overflow-y-scroll">
-        <SheetHeader>
-          <SheetTitle>Add new contents {admin && ' ✅🚀'}</SheetTitle>
-          <SheetDescription>Be descriptive about site information</SheetDescription>
-        </SheetHeader>
-        <div className="flex flex-col gap-3 space-y-1">
-          <div className="grid gap-2">
-            <Label className='text-xs' htmlFor="url">URL</Label>
-            <Input
-              id="site-url"
-              type="url"
-              placeholder="https://meow@example.com"
-              required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-row justify-between">
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="file-type">SERVICE TYPE</Label>
-              <Dropdown
-                enumValue={ServiceType}
-                filterBy={serviceType}
-                onFilterBy={(val) => setServiceType(val as ServiceType)}
-                trigger={{ label: serviceType }}
-                label="File types"
-              />
-            </div>
+ useEffect(() => {
+ const regex = /^https:\/\/[^\s/$.?#].[^\s]*$/i;
+ if (input.url.length && regex.test(input.url)) {
+  switch (new URL(input.url).hostname) {
+  case HostNames.WALLHAVEN:
+   handleChangeInput({ key: 'qualityType', value: DocumentQualityType.LowDefinition });
+   handleChangeInput({ key: 'importType', value: ImportTypes.Branch });
+   break;
+  case HostNames.OK:
+   handleChangeInput({ key: 'qualityType', value: DocumentQualityType.DivDefinition });
+   handleChangeInput({ key: 'importType', value: ImportTypes.Ok });
+   break;
+  case HostNames.SHORTS:
+   handleChangeInput({ key: 'qualityType', value: DocumentQualityType.SourceDefinition });
+   handleChangeInput({ key: 'importType', value: ImportTypes.Shorts });
+   handleChangeInput({ key: 'totalContent', value: 5 });
+   break;
+  }
+ }
+ }, [input.url]);
 
-            <div className="flex flex-col gap-1 space-y-1 items-center content-center">
-              <Label className='text-xs' htmlFor="newUser">
-                NewCreator
-              </Label>
-              <Switch
-                checked={isNewCreator}
-                onCheckedChange={(checked: boolean) => {
-                  setIsNewCreator(checked);
-                  setImportType(ImportTypes.Profile);
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row gap-3 space-y-1">
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="subDirectory">Subdirectory</Label>
-              <Input
-                id="subDirectory"
-                type="text"
-                placeholder="chris"
-                required
-                autoComplete="subDirectory"
-                value={subDirectory}
-                onChange={(e) => {
-                  setSubDirectory(e.target.value);
-                  setHasEditedSubDir(e.target.value.trim() !== '');
-                }}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="exclude">Content interval</Label>
-              <Input
-                id="exclude"
-                type="text"
-                placeholder="0"
-                required
-                value={totalContent}
-                onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-          </div>
+ return (
+ <Sheet onOpenChange={handleClose} open={isOpen}>
+  <SheetTrigger asChild>
+  <Button variant="outline">Import</Button>
+  </SheetTrigger>
+  <SheetContent className="p-1 overflow-y-scroll">
+  <SheetHeader>
+   <SheetTitle>Add new contents {admin && ' ✅🚀'}</SheetTitle>
+   <SheetDescription>Be descriptive about site information</SheetDescription>
+  </SheetHeader>
+  <div className="flex flex-col gap-3 space-y-1">
+   <div className="grid gap-2">
+   <Label className="text-xs"htmlFor="url">
+    URL
+   </Label>
+   <Input
+    id="site-url"
+    type="url"
+    placeholder="https://meow@example.com"
+    required
+    value={input.url}
+    onChange={(e) => handleChangeInput({ key: 'url', value: e.target.value })}
+   />
+   </div>
+   <div className="flex flex-row justify-between">
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="file-type">
+    SERVICE TYPE
+    </Label>
+    <Dropdown
+    enumValue={ServiceType}
+    filterBy={input.serviceType as ServiceType}
+    onFilterBy={(val) => handleChangeInput({ key: 'serviceType', value: val as ServiceType })}
+    trigger={{ label: input.serviceType }}
+    label="File types"
+    />
+   </div>
 
-          <div className="grid grid-cols-2 space-x-2">
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="profileStart">
-                PROFILE START {profileStart}
-              </Label>
-              <Input
-                id="profileStart"
-                type="text"
-                placeholder="0"
-                required
-                value={profileStart}
-                onChange={(e) => setProfileStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="profileEnd">
-                PROFILE SPAN {profileEnd}
-              </Label>
-              <Input
-                id="profileEnd"
-                type="text"
-                placeholder="0"
-                required
-                value={profileEnd}
-                onChange={(e) => setProfileEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 space-x-2">
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="start">
-                BRANCH START {branchStart * 50}
-              </Label>
-              <Input
-                id="start"
-                type="text"
-                placeholder="0"
-                required
-                value={branchStart}
-                onChange={(e) => setBranchStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="branchStart">
-                BRANCH SPAN {(branchEnd - 1) * 50}
-              </Label>
-              <Input
-                id="branchStart"
-                type="text"
-                placeholder="0"
-                required
-                value={branchStart}
-                onChange={(e) => setBranchEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 space-x-2">
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="pageStart">
-                PAGE START {pageStart}
-              </Label>
-              <Input
-                id="pageStart"
-                type="text"
-                placeholder="0"
-                required
-                value={pageStart}
-                onChange={(e) => setPageStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label className='text-xs' htmlFor="pageEnd">
-                PAGE SPAN
-              </Label>
-              <Input
-                id="pageEnd"
-                type="text"
-                placeholder="0"
-                required
-                value={pageEnd}
-                onChange={(e) => setPageEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
-              />
-            </div>
-          </div>
+   <div className="flex flex-col gap-1 space-y-1 items-center content-center">
+    <Label className="text-xs"htmlFor="newUser">
+    NewCreator
+    </Label>
+    <Switch
+    checked={input.isNewCreator}
+    onCheckedChange={(checked: boolean) => {
+     handleChangeInput({ key: 'isNewCreator', value: checked });
+     handleChangeInput({ key: 'importType', value: ImportTypes.Profile });
+    }}
+    />
+   </div>
+   </div>
+   <div className="flex flex-row gap-3 space-y-1">
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="subDirectory">
+    Subdirectory
+    </Label>
+    <Input
+    id="subDirectory"
+    type="text"
+    placeholder="chris"
+    required
+    autoComplete="subDirectory"
+    value={input.subDirectory}
+    onChange={(e) => {
+     handleChangeInput({ key: 'subDirectory', value: e.target.value });
+     setHasEditedSubDir(e.target.value.trim() !== '');
+    }}
+    />
+   </div>
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="exclude">
+    Content interval
+    </Label>
+    <Input
+    id="exclude"
+    type="text"
+    placeholder="0"
+    required
+    value={input.totalContent}
+    onChange={(e) => handleChangeInput({ key: 'totalContent', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   </div>
 
-          <div className="flex flex-col space-y-2">
-            <div className="grid grid-cols-2 space-x-1">
-              <div className="grid gap-2">
-                <Label className='text-xs' htmlFor="quality-type">Quality type</Label>
-                <Dropdown
-                  enumValue={DocumentQualityType}
-                  filterBy={qualityType}
-                  onFilterBy={(val) => setQualityType(val as DocumentQualityType)}
-                  trigger={{ label: qualityType.replace(/_/g, ' ') }}
-                  label={'Quality types'}
-                />
-              </div>
+   <div className="grid grid-cols-2 space-x-2">
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="profileStart">
+    PROFILE START {input.profileStart}
+    </Label>
+    <Input
+    id="profileStart"
+    type="text"
+    placeholder="0"
+    required
+    value={input.profileStart}
+    onChange={(e) => handleChangeInput({ key: 'profileStart', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="profileEnd">
+    PROFILE SPAN {input.profileEnd}
+    </Label>
+    <Input
+    id="profileEnd"
+    type="text"
+    placeholder="0"
+    required
+    value={input.profileEnd}
+    onChange={(e) => handleChangeInput({ key: 'profileEnd', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   </div>
+   <div className="grid grid-cols-2 space-x-2">
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="start">
+    BRANCH START {(input.branchStart ?? 0) * 50}
+    </Label>
+    <Input
+    id="start"
+    type="text"
+    placeholder="0"
+    required
+    value={input.branchStart}
+    onChange={(e) => handleChangeInput({ key: 'branchStart', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="branchStart">
+    BRANCH SPAN {(input.branchEnd ?? 0 - 1) * 50}
+    </Label>
+    <Input
+    id="branchStart"
+    type="text"
+    placeholder="0"
+    required
+    value={input.branchEnd}
+    onChange={(e) => handleChangeInput({ key: 'branchEnd', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   </div>
+   <div className="grid grid-cols-2 space-x-2">
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="pageStart">
+    PAGE START {input.pageStart}
+    </Label>
+    <Input
+    id="pageStart"
+    type="text"
+    placeholder="0"
+    required
+    value={input.pageStart}
+    onChange={(e) => handleChangeInput({ key: 'pageStart', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="pageEnd">
+    PAGE SPAN
+    </Label>
+    <Input
+    id="pageEnd"
+    type="text"
+    placeholder="0"
+    required
+    value={input.pageEnd}
+    onChange={(e) => handleChangeInput({ key: 'pageEnd', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
+    />
+   </div>
+   </div>
 
-              <div className="grid gap-2">
-                <Label className='text-xs' htmlFor="file-type">File type</Label>
-                <Dropdown
-                  enumValue={FileType}
-                  filterBy={fileType}
-                  onFilterBy={(val) => setFileType(val as FileType)}
-                  trigger={{ label: fileType.replace(/_/g, ' ') }}
-                  label="File types"
-                />
-              </div>
-            </div>
+   <div className="flex flex-col space-y-2">
+   <div className="grid grid-cols-2 space-x-1">
+    <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="quality-type">
+     Quality type
+    </Label>
+    <Dropdown
+     enumValue={DocumentQualityType}
+     filterBy={input.qualityType as DocumentQualityType}
+     onFilterBy={(val) => handleChangeInput({ key: 'qualityType', value: val as DocumentQualityType })}
+     trigger={{ label: input.qualityType?.replace(/_/g, ' ') }}
+     label={'Quality types'}
+    />
+    </div>
 
-            <div className="grid gap-3">
-              <Label className='text-xs' htmlFor="features">Exceptions</Label>
-              <div className="flex gap-2">
-                <Input
-                  value={exceptionInput}
-                  onChange={(e) => setExceptionInput(e.target.value)}
-                  placeholder="Add exceptions"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleAddException();
-                    }
-                  }}
-                />
-                <Button type="button" onClick={handleAddException}>
-                  Add
-                </Button>
-              </div>
-            </div>
-            <ul className="flex flex-row pl-2 text-xs space-x-1">
-              {exceptions.map((f, i) => (
-                <li key={i} className="cursor-pointer" onClick={() => setExceptions((prev) => prev.filter((feature) => f !== feature))}>
-                  {i + 1}.{f}
-                </li>
-              ))}
-            </ul>
+    <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="file-type">
+     File type
+    </Label>
+    <Dropdown
+     enumValue={FileType}
+     filterBy={input.fileType as FileType}
+     onFilterBy={(val) => handleChangeInput({ key: 'fileType', value: val as FileType })}
+     trigger={{ label: input.fileType?.replace(/_/g, ' ') }}
+     label="File types"
+    />
+    </div>
+   </div>
 
-            <div className="grid grid-cols-2 space-x-2">
-              <div className="grid gap-2">
-                <Label className='text-xs' htmlFor="import-type">Import type</Label>
-                <Dropdown
-                  enumValue={ImportTypes}
-                  filterBy={importType}
-                  onFilterBy={(val) => setImportType(val as ImportTypes)}
-                  trigger={{ label: importType.replace(/_/g, ' ') }}
-                  label="Import Types"
-                />
-              </div>
+   <div className="grid gap-3">
+    <Label className="text-xs"htmlFor="features">
+    Exceptions
+    </Label>
+    <div className="flex gap-2">
+    <Input
+     value={exceptionInput}
+     onChange={(e) => setExceptionInput(e.target.value)}
+     placeholder="Add exceptions"
+     onKeyDown={(e) => {
+     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleAddException();
+     }
+     }}
+    />
+    <Button type="button"onClick={handleAddException}>
+     Add
+    </Button>
+    </div>
+   </div>
+   <ul className="flex flex-row pl-2 text-xs space-x-1">
+    {input.exceptions &&
+    input.exceptions.map((f, i) => (
+     <li
+     key={i}
+     className="cursor-pointer"
+     onClick={() =>
+      handleChangeInput({ key: 'exceptions', value: input.exceptions?.filter((feature) => f !== feature) ?? [] })
+     }
+     >
+     {i + 1}.{f}
+     </li>
+    ))}
+   </ul>
 
-              <div className="grid gap-2">
-                <Label className='text-xs' htmlFor="file-type">PROCESS TYPE</Label>
-                <Dropdown
-                  enumValue={ProcessType}
-                  filterBy={processType}
-                  onFilterBy={(val) => setProcessType(val as ProcessType)}
-                  trigger={{ label: processType }}
-                  label="Process types"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+   <div className="grid grid-cols-2 space-x-2">
+    <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="import-type">
+     Import type
+    </Label>
+    <Dropdown
+     enumValue={ImportTypes}
+     filterBy={input.importType as ImportTypes}
+     onFilterBy={(val) => handleChangeInput({ key: 'importType', value: val as ImportTypes })}
+     trigger={{ label: input.importType?.replace(/_/g, ' ') }}
+     label="Import Types"
+    />
+    </div>
 
-        <SheetFooter>
-          <LoadingButton title="Submit" onClick={handleInitiate} disabled={!url} loading={loading} />
-          <SheetClose asChild>
-            <Button variant="outline" onClick={handleClose}>
-              Close
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  );
+    <div className="grid gap-2">
+    <Label className="text-xs"htmlFor="file-type">
+     PROCESS TYPE
+    </Label>
+    <Dropdown
+     enumValue={ProcessType}
+     filterBy={input.processType as ProcessType}
+     onFilterBy={(val) => handleChangeInput({ key: 'processType', value: val as ProcessType })}
+     trigger={{ label: input?.processType as ProcessType }}
+     label="Process types"
+    />
+    </div>
+   </div>
+   </div>
+  </div>
+
+  <SheetFooter>
+   <LoadingButton title="Submit"onClick={handleInitiate} disabled={!input.url} loading={loading} />
+   <SheetClose asChild>
+   <Button variant="outline"onClick={handleClose}>
+    Close
+   </Button>
+   </SheetClose>
+  </SheetFooter>
+  </SheetContent>
+ </Sheet>
+ );
 };

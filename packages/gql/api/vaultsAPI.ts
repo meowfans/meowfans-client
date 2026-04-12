@@ -202,15 +202,21 @@ export const GET_PUBLIC_VAULT_OBJECTS_QUERY = graphql(`
   }
 `);
 
-export const DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION = graphql(`
-  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {
-    downloadCreatorObjectsAsBatch(input: $input)
+export const DOWNLOAD_OBJECT_BY_VAULT_OBJECT_IDS_MUTATION = graphql(`
+  mutation DownloadObjectByVaultObjectIds($input: DownloadObjectsByVaultObjectIdsQueueInput!) {
+    downloadObjectByVaultObjectIds(input: $input)
   }
 `);
 
-export const TERMINATE_ALL_JOBS_MUTATION = graphql(`
+export const TERMINATE_IMPORT_JOBS_MUTATION = graphql(`
   mutation Terminate {
     terminate
+  }
+`);
+
+export const DOWNLOAD_OBJECTS_BY_CREATOR_IDS_MUTATION = graphql(`
+  mutation DownloadObjectsByCreatorIds($input: DownloadObjectsByCreatorIdsInput!) {
+    downloadObjectsByCreatorIds(input: $input)
   }
 `);
 

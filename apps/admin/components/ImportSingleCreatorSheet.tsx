@@ -1,7 +1,15 @@
 'use client';
 import { useMutation } from '@apollo/client/react';
-import { INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION } from '@workspace/gql/api/importAPI';
-import { DocumentQualityType, FileType, ImportTypes, ProcessType, ServiceType, UsersEntity } from '@workspace/gql/generated/graphql';
+import { INITIATE_CREATORS_IMPORT_QUERY_MUTATION } from '@workspace/gql/api/importAPI';
+import {
+  CreateImportQueueInput,
+  DocumentQualityType,
+  FileType,
+  ImportTypes,
+  ProcessType,
+  ServiceType,
+  UsersEntity
+} from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
@@ -18,6 +26,7 @@ import {
 import { Dropdown } from '@workspace/ui/globals/Dropdown';
 import { LoadingButton } from '@workspace/ui/globals/LoadingButton';
 import { HostNames } from '@workspace/ui/lib';
+import { CloudDownload } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -25,50 +34,36 @@ interface ImportSingleCreatorSheetProps {
   user: UsersEntity | null;
 }
 
+const emptyInput = {
+  serviceType: ServiceType.Ras,
+  fileType: FileType.Image,
+  qualityType: DocumentQualityType.HighDefinition,
+  importType: ImportTypes.Profile,
+  processType: ProcessType.Generator,
+  totalContent: 10,
+  subDirectory: '',
+  exceptions: [],
+  branchStart: 0,
+  branchEnd: 0,
+  pageStart: 0,
+  pageEnd: 0,
+  url: '',
+  creatorId: ''
+};
+
 export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> = ({ user }) => {
-  const [url, setUrl] = useState<string>('');
+  const [input, setInput] = useState<CreateImportQueueInput>({ ...emptyInput, creatorId: user?.id as string });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [exceptions, setExceptions] = useState<string[]>([]);
-  const [totalContent, setTotalContent] = useState<number>(10);
-  const [subDirectory, setSubDirectory] = useState<string>('');
   const [exceptionInput, setExceptionInput] = useState<string>('');
-  const [fileType, setFileType] = useState<FileType>(FileType.Image);
   const [hasEditedSubDir, setHasEditedSubDir] = useState<boolean>(false);
-  const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.Ras);
-  const [importType, setImportType] = useState<ImportTypes>(ImportTypes.Profile);
-  const [branchStart, setBranchStart] = useState<number>(0);
-  const [branchEnd, setBranchEnd] = useState<number>(0);
-  const [pageStart, setPageStart] = useState<number>(0);
-  const [pageEnd, setPageEnd] = useState<number>(0);
-  const [initiateImport] = useMutation(INITIATE_CREATOR_OBJECTS_IMPORT_MUTATION);
-  const [processType, setProcessType] = useState<ProcessType>(ProcessType.Generator);
-  const [qualityType, setQualityType] = useState<DocumentQualityType>(DocumentQualityType.HighDefinition);
+  const [initiateImport] = useMutation(INITIATE_CREATORS_IMPORT_QUERY_MUTATION);
 
   const handleInitiate = async () => {
     setLoading(true);
     try {
       if (!user?.id) return;
-      await initiateImport({
-        variables: {
-          input: {
-            serviceType,
-            creatorId: user?.id,
-            url: url.trim(),
-            fileType,
-            qualityType,
-            totalContent,
-            subDirectory: subDirectory.trim(),
-            importType,
-            processType,
-            exceptions,
-            branchStart,
-            branchEnd,
-            pageStart,
-            pageEnd
-          }
-        }
-      });
+      await initiateImport({ variables: { input } });
       toast.success('Job added, come back after a while');
     } catch {
       toast.error('Something wrong happened!');
@@ -79,60 +74,58 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
 
   const handleAddException = () => {
     if (exceptionInput.trim() !== '') {
-      setExceptions([...exceptions, exceptionInput.trim()]);
+      setInput((prev) => ({ ...prev, exceptions: [...(prev?.exceptions ?? []), exceptionInput.trim()] }));
       setExceptionInput('');
     }
   };
 
   const handleClose = () => {
     setLoading(false);
-    setUrl('');
-    setFileType(FileType.Image);
-    setQualityType(DocumentQualityType.HighDefinition);
-    setTotalContent(0);
-    setSubDirectory('');
-    setImportType(ImportTypes.Profile);
-    setHasEditedSubDir(false);
-    setBranchStart(0);
-    setBranchEnd(0);
-    setPageStart(0);
-    setPageEnd(0);
-    setExceptions([]);
     setIsOpen((prev) => !prev);
-    setServiceType(ServiceType.Ras);
+    setInput(emptyInput);
+  };
+
+  const handleChangeInput = ({ key, value }: { key: keyof CreateImportQueueInput; value: string | number | string[] }) => {
+    setInput((prev) => ({ ...prev, [key]: value }));
+    if (key === 'url') {
+      setHasEditedSubDir(false);
+    }
   };
 
   useEffect(() => {
-    if (!hasEditedSubDir && url) {
-      const parts = url.split('/').filter(Boolean);
-      setSubDirectory(parts.at(-1) ?? '');
+    if (!hasEditedSubDir && input.url) {
+      const parts = input.url.split('/').filter(Boolean);
+      setInput((prev) => ({ ...prev, subDirectory: parts.at(-1) ?? '' }));
     }
-  }, [url, hasEditedSubDir]);
+  }, [input.url, hasEditedSubDir]);
 
   useEffect(() => {
     const regex = /^https:\/\/[^\s/$.?#].[^\s]*$/i;
-    if (url.length && regex.test(url)) {
-      switch (new URL(url).hostname) {
+    if (input.url.length && regex.test(input.url)) {
+      switch (new URL(input.url).hostname) {
         case HostNames.WALLHAVEN:
-          setQualityType(DocumentQualityType.LowDefinition);
-          setImportType(ImportTypes.Branch);
+          handleChangeInput({ key: 'qualityType', value: DocumentQualityType.LowDefinition });
+          handleChangeInput({ key: 'importType', value: ImportTypes.Branch });
           break;
         case HostNames.OK:
-          setQualityType(DocumentQualityType.DivDefinition);
-          setImportType(ImportTypes.Ok);
+          handleChangeInput({ key: 'qualityType', value: DocumentQualityType.DivDefinition });
+          handleChangeInput({ key: 'importType', value: ImportTypes.Ok });
           break;
         case HostNames.SHORTS:
-          setQualityType(DocumentQualityType.SourceDefinition);
-          setImportType(ImportTypes.Shorts);
+          handleChangeInput({ key: 'qualityType', value: DocumentQualityType.SourceDefinition });
+          handleChangeInput({ key: 'importType', value: ImportTypes.Shorts });
           break;
       }
     }
-  }, [url]);
+  }, [input.url]);
 
   return (
     <Sheet onOpenChange={handleClose} open={isOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">Import</Button>
+        <Button variant="outline" className="w-full" size={'sm'}>
+          <CloudDownload className='h-3 w-3' />
+          Import
+        </Button>
       </SheetTrigger>
       <SheetContent className="p-1 overflow-y-auto">
         <SheetHeader>
@@ -147,17 +140,17 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
               type="url"
               placeholder="https://meow@example.com"
               required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={input.url}
+              onChange={(e) => handleChangeInput({ key: 'url', value: e.target.value })}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="file-type">SERVICE TYPE</Label>
             <Dropdown
               enumValue={ServiceType}
-              filterBy={serviceType}
-              onFilterBy={(val) => setServiceType(val as ServiceType)}
-              trigger={{ label: serviceType }}
+              filterBy={input.serviceType as ServiceType}
+              onFilterBy={(val) => handleChangeInput({ key: 'serviceType', value: val as ServiceType })}
+              trigger={{ label: input.serviceType }}
               label="File types"
             />
           </div>
@@ -170,8 +163,8 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 type="text"
                 placeholder={'0'}
                 required
-                value={totalContent}
-                onChange={(e) => setTotalContent(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={input.totalContent}
+                onChange={(e) => handleChangeInput({ key: 'totalContent', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
               />
             </div>
 
@@ -183,9 +176,9 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 placeholder="chris"
                 required
                 autoComplete="subDirectory"
-                value={subDirectory}
+                value={input.subDirectory}
                 onChange={(e) => {
-                  setSubDirectory(e.target.value);
+                  handleChangeInput({ key: 'subDirectory', value: e.target.value });
                   setHasEditedSubDir(e.target.value.trim() !== '');
                 }}
               />
@@ -195,43 +188,43 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
           <div className="grid grid-cols-2 space-x-2">
             <div className="grid gap-2">
               <Label htmlFor="start" className="text-xs">
-                BRANCH START {branchStart * 50}
+                BRANCH START {(input.branchStart ?? 0) * 50}
               </Label>
               <Input
                 id="start"
                 type="text"
                 placeholder="0"
                 required
-                value={branchStart}
-                onChange={(e) => setBranchStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={input.branchStart}
+                onChange={(e) => handleChangeInput({ key: 'branchStart', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="branchEnd" className="text-xs">
-                BRANCH SPAN {(branchEnd - 1) * 50}
+                BRANCH SPAN {((input.branchEnd ?? 0) - 1) * 50}
               </Label>
               <Input
                 id="branchEnd"
                 type="text"
                 placeholder="0"
                 required
-                value={branchEnd}
-                onChange={(e) => setBranchEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={input.branchEnd}
+                onChange={(e) => handleChangeInput({ key: 'branchEnd', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
               />
             </div>
           </div>
           <div className="grid grid-cols-2 space-x-2">
             <div className="grid gap-2">
               <Label htmlFor="pageStart" className="text-xs">
-                PAGE START {pageStart}
+                PAGE START {input.pageStart}
               </Label>
               <Input
                 id="pageStart"
                 type="text"
                 placeholder="0"
                 required
-                value={pageStart}
-                onChange={(e) => setPageStart(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={input.pageStart}
+                onChange={(e) => handleChangeInput({ key: 'pageStart', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
               />
             </div>
             <div className="grid gap-2">
@@ -243,8 +236,8 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 type="text"
                 placeholder="0"
                 required
-                value={pageEnd}
-                onChange={(e) => setPageEnd(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                value={input.pageEnd}
+                onChange={(e) => handleChangeInput({ key: 'pageEnd', value: Number(e.target.value.replace(/[^0-9]/g, '')) })}
               />
             </div>
           </div>
@@ -255,9 +248,9 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 <Label htmlFor="quality-type">Quality type</Label>
                 <Dropdown
                   enumValue={DocumentQualityType}
-                  filterBy={qualityType}
-                  onFilterBy={(val) => setQualityType(val as DocumentQualityType)}
-                  trigger={{ label: qualityType.replace(/_/g, ' ') }}
+                  filterBy={input.qualityType as DocumentQualityType}
+                  onFilterBy={(val) => handleChangeInput({ key: 'qualityType', value: val as DocumentQualityType })}
+                  trigger={{ label: input.qualityType?.replace(/_/g, ' ') }}
                   label={'Quality types'}
                 />
               </div>
@@ -266,9 +259,9 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 <Label htmlFor="file-type">File type</Label>
                 <Dropdown
                   enumValue={FileType}
-                  filterBy={fileType}
-                  onFilterBy={(val) => setFileType(val as FileType)}
-                  trigger={{ label: fileType.replace(/_/g, ' ') }}
+                  filterBy={input.fileType as FileType}
+                  onFilterBy={(val) => handleChangeInput({ key: 'fileType', value: val as FileType })}
+                  trigger={{ label: input.fileType?.replace(/_/g, ' ') }}
                   label="File types"
                 />
               </div>
@@ -294,11 +287,18 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
               </div>
             </div>
             <ul className="flex flex-row pl-2 text-xs space-x-1">
-              {exceptions.map((f, i) => (
-                <li key={i} className="cursor-pointer" onClick={() => setExceptions((prev) => prev.filter((feature) => f !== feature))}>
-                  {i + 1}.{f}
-                </li>
-              ))}
+              {input.exceptions?.length &&
+                input?.exceptions.map((f, i) => (
+                  <li
+                    key={i}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleChangeInput({ key: 'exceptions', value: input.exceptions?.filter((feature) => f !== feature) ?? [] })
+                    }
+                  >
+                    {i + 1}.{f}
+                  </li>
+                ))}
             </ul>
 
             <div className="grid grid-cols-2 space-x-2">
@@ -306,9 +306,9 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 <Label htmlFor="import-type">Import type</Label>
                 <Dropdown
                   enumValue={ImportTypes}
-                  filterBy={importType}
-                  onFilterBy={(val) => setImportType(val as ImportTypes)}
-                  trigger={{ label: importType.replace(/_/g, ' ') }}
+                  filterBy={input.importType as ImportTypes}
+                  onFilterBy={(val) => handleChangeInput({ key: 'importType', value: val as ImportTypes })}
+                  trigger={{ label: input.importType?.replace(/_/g, ' ') }}
                   label="Import Types"
                 />
               </div>
@@ -317,9 +317,9 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
                 <Label htmlFor="file-type">PROCESS TYPE</Label>
                 <Dropdown
                   enumValue={ProcessType}
-                  filterBy={processType}
-                  onFilterBy={(val) => setProcessType(val as ProcessType)}
-                  trigger={{ label: processType }}
+                  filterBy={input.processType as ProcessType}
+                  onFilterBy={(val) => handleChangeInput({ key: 'processType', value: val as ProcessType })}
+                  trigger={{ label: input.processType?.replace(/_/g, ' ') }}
                   label="Process types"
                 />
               </div>
@@ -328,7 +328,7 @@ export const ImportSingleCreatorSheet: React.FC<ImportSingleCreatorSheetProps> =
         </div>
 
         <SheetFooter>
-          <LoadingButton title="Submit" onClick={handleInitiate} disabled={!url} loading={loading} />
+          <LoadingButton title="Submit" onClick={handleInitiate} disabled={!input.url} loading={loading} />
           <SheetClose asChild>
             <Button variant="outline" onClick={handleClose}>
               Close

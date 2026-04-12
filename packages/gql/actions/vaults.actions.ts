@@ -3,8 +3,8 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION,
-  DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION,
-  DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION,
+  DOWNLOAD_OBJECT_BY_VAULT_OBJECT_IDS_MUTATION,
+  DOWNLOAD_OBJECTS_BY_CREATOR_IDS_MUTATION,
   GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE_QUERY,
   GET_CREATOR_VAULT_OBJECTS_QUERY,
   GET_CREATOR_VAULTS_BY_ADMIN_QUERY,
@@ -16,15 +16,10 @@ import {
   GET_TOTAL_VAULT_OBJECTS_COUNT_BY_TYPE_QUERY,
   GET_VAULTS_ANALYTICS_QUERY,
   TERMINATE_ALL_DOWNLOADING_MUTATION,
-  TERMINATE_ALL_JOBS_MUTATION
+  TERMINATE_IMPORT_JOBS_MUTATION,
+  UPDATE_PREVIEW_OF_VAULTS_QUERY
 } from '@workspace/gql/api';
-import {
-  CleanUpVaultInput,
-  DownloadAllCreatorObjectsAsBatchInput,
-  PaginationInput,
-  UploadVaultQueueInput,
-  VaultStatsInput
-} from '@workspace/gql/generated/graphql';
+import { CleanUpVaultInput, DownloadObjectsByCreatorIdsInput, DownloadObjectsByVaultObjectIdsQueueInput, PaginationInput, VaultStatsInput } from '@workspace/gql/generated/graphql';
 
 export const useVaultsActions = () => {
   const [getPublicVaultObjects] = useLazyQuery(GET_PUBLIC_VAULT_OBJECTS_QUERY);
@@ -33,15 +28,16 @@ export const useVaultsActions = () => {
   const [getCreatorVaults] = useLazyQuery(GET_CREATOR_VAULTS_QUERY);
   const [getVaultsAnalytics] = useLazyQuery(GET_VAULTS_ANALYTICS_QUERY);
   const [getTotalVaultObjectsCountByType] = useLazyQuery(GET_TOTAL_VAULT_OBJECTS_COUNT_BY_TYPE_QUERY);
-  const [getAllObjectsCountOfEachType] = useLazyQuery(GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE_QUERY);
+  const [getAllObjectsCountOfEachTypeQuery] = useLazyQuery(GET_ALL_OBJECTS_COUNT_OF_EACH_TYPE_QUERY);
   const [getCreatorVaultObjects] = useLazyQuery(GET_CREATOR_VAULT_OBJECTS_QUERY);
-  const [downloadAllCreatorObjects] = useMutation(DOWNLOAD_ALL_CREATOR_OBJECTS_MUTATION);
-  const [terminateDownloading] = useMutation(TERMINATE_ALL_DOWNLOADING_MUTATION);
-  const [terminateAllJobs] = useMutation(TERMINATE_ALL_JOBS_MUTATION);
+  const [downloadObjectsByCreatorIds] = useMutation(DOWNLOAD_OBJECTS_BY_CREATOR_IDS_MUTATION);
+  const [terminateDownloadingMutation] = useMutation(TERMINATE_ALL_DOWNLOADING_MUTATION);
+  const [terminateImportJobsMutation] = useMutation(TERMINATE_IMPORT_JOBS_MUTATION);
   const [cleanUpVaultObjectsOfACreator] = useMutation(CLEAN_UP_VAULT_OBJECTS_OF_A_CREATOR_MUTATION);
-  const [downloadCreatorObjectsAsBatch] = useMutation(DOWNLOAD_CREATOR_OBJECTS_AS_BATCH_MUTATION);
+  const [downloadObjectByVaultObjectIds] = useMutation(DOWNLOAD_OBJECT_BY_VAULT_OBJECT_IDS_MUTATION);
   const [getPublicVaultsByTags] = useLazyQuery(GET_PUBLIC_VAULTS_BY_TAGS_QUERY);
   const [getCreatorVaultsByAdmin] = useLazyQuery(GET_CREATOR_VAULTS_BY_ADMIN_QUERY);
+  const [updatePreviewOfVaultsMutation] = useMutation(UPDATE_PREVIEW_OF_VAULTS_QUERY);
 
   const getCreatorVaultsQuery = (input: PaginationInput) => {
     return getCreatorVaults({ variables: { input } });
@@ -63,32 +59,20 @@ export const useVaultsActions = () => {
     return getPublicVaults({ variables: { input } });
   };
 
-  const getAllObjectsCountOfEachTypeQuery = () => {
-    return getAllObjectsCountOfEachType();
-  };
-
   const getPublicVaultsByTagsQuery = (input: PaginationInput) => {
     return getPublicVaultsByTags({ variables: { input } });
   };
 
-  const downloadAllCreatorObjectsMutation = (input: DownloadAllCreatorObjectsAsBatchInput) => {
-    return downloadAllCreatorObjects({ variables: { input } });
-  };
-
-  const terminateDownloadingMutation = () => {
-    return terminateDownloading();
-  };
-
-  const terminateAllJobsMutation = () => {
-    return terminateAllJobs();
+  const downloadObjectsByCreatorIdsMutation = (input: DownloadObjectsByCreatorIdsInput) => {
+    return downloadObjectsByCreatorIds({ variables: { input } });
   };
 
   const cleanUpVaultObjectsOfACreatorMutation = (input: CleanUpVaultInput) => {
     return cleanUpVaultObjectsOfACreator({ variables: { input } });
   };
 
-  const downloadCreatorObjectsAsBatchMutation = (input: UploadVaultQueueInput) => {
-    return downloadCreatorObjectsAsBatch({ variables: { input } });
+  const downloadObjectByVaultObjectIdsMutation = (input: DownloadObjectsByVaultObjectIdsQueueInput) => {
+    return downloadObjectByVaultObjectIds({ variables: { input } });
   };
 
   const getSingleVaultQuery = (input: PaginationInput) => {
@@ -107,12 +91,13 @@ export const useVaultsActions = () => {
     getPublicVaultObjectsQuery,
     getCreatorVaultObjectsQuery,
     getAllObjectsCountOfEachTypeQuery,
-    downloadAllCreatorObjectsMutation,
+    downloadObjectsByCreatorIdsMutation,
     terminateDownloadingMutation,
-    terminateAllJobsMutation,
+    terminateImportJobsMutation,
     cleanUpVaultObjectsOfACreatorMutation,
-    downloadCreatorObjectsAsBatchMutation,
+    downloadObjectByVaultObjectIdsMutation,
     getPublicVaultsByTagsQuery,
-    getCreatorVaultsByAdminQuery
+    getCreatorVaultsByAdminQuery,
+    updatePreviewOfVaultsMutation
   };
 };
