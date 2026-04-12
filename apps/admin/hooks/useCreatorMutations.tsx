@@ -7,43 +7,59 @@ import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useState } from 'react';
 
 export const useCreatorMutations = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { successHandler } = useSuccessHandler();
-  const { errorHandler } = useErrorHandler();
-  const { updateCreatorApprovalStatusMutation } = useCreatorsActions();
-  const { deleteUserMutation } = useUserActions();
+ const [loading, setLoading] = useState<boolean>(false);
+ const { successHandler } = useSuccessHandler();
+ const { errorHandler } = useErrorHandler();
+ const { updateCreatorApprovalStatusMutation } = useCreatorsActions();
+ const { deleteUserMutation, updateAllCreatorProfilesMutation } = useUserActions();
 
-  const updateCreatorApprovalStatus = async (input: UpdateCreatorApprovalStatusInput) => {
-    setLoading(true);
-    let updatedStatus: CreatorApprovalStatus | null = null;
-    try {
-      const { data } = await updateCreatorApprovalStatusMutation(input);
-      updatedStatus = data?.updateCreatorApprovalStatus as CreatorApprovalStatus;
-      successHandler({ message: 'Creator approval status updated successfully', description: updatedStatus });
-      return updatedStatus;
-    } catch (error) {
-      errorHandler({ error });
-    } finally {
-      setLoading(false);
-    }
-    return updatedStatus;
-  };
+ const updateCreatorApprovalStatus = async (input: UpdateCreatorApprovalStatusInput) => {
+ setLoading(true);
+ let updatedStatus: CreatorApprovalStatus | null = null;
+ try {
+  const { data } = await updateCreatorApprovalStatusMutation(input);
+  updatedStatus = data?.updateCreatorApprovalStatus as CreatorApprovalStatus;
+  successHandler({ message: 'Creator approval status updated successfully', description: updatedStatus });
+  return updatedStatus;
+ } catch (error) {
+  errorHandler({ error });
+ } finally {
+  setLoading(false);
+ }
+ return updatedStatus;
+ };
 
-  const deleteAccount = async () => {
-    setLoading(true);
-    try {
-      await deleteUserMutation();
-      successHandler({ message: 'Your account has been deleted' });
-    } catch (error) {
-      errorHandler({ error });
-    } finally {
-      setLoading(false);
-    }
-  };
+ const deleteAccount = async () => {
+ setLoading(true);
+ try {
+  await deleteUserMutation();
+  successHandler({ message: 'Your account has been deleted' });
+ } catch (error) {
+  errorHandler({ error });
+ } finally {
+  setLoading(false);
+ }
+ };
 
-  return {
-    updateCreatorApprovalStatus,
-    loading,
-    deleteAccount
-  };
+ const updateAllCreatorProfiles = async () => {
+ setLoading(true);
+ try {
+  const { data } = await updateAllCreatorProfilesMutation();
+  if (data?.updateAllCreatorProfiles) {
+  successHandler({ message: data?.updateAllCreatorProfiles });
+  }
+  return data?.updateAllCreatorProfiles;
+ } catch (error) {
+  errorHandler({ error, msg: 'Failed to update creator profiles' });
+ } finally {
+  setLoading(false);
+ }
+ };
+
+ return {
+ updateCreatorApprovalStatus,
+ loading,
+ deleteAccount,
+ updateAllCreatorProfiles
+ };
 };

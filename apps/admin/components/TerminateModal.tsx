@@ -1,81 +1,111 @@
 'use client';
 
-import { useVaultsActions } from '@workspace/gql/actions';
+import { useVaultMutations } from '@/hooks/useVaults';
 import { Button } from '@workspace/ui/components/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
-import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
-import { AlertCircle, Ban, Loader2 } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group';
+import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
+import { Modal } from '@workspace/ui/modals/Modal';
+import { AlertTriangle, Ban, StopCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
-interface TerminateModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  type: 'downloading' | 'importing';
-}
+export function TerminateModal() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { terminateDownloading, terminateImportJobs, loading } = useVaultMutations();
+  const [terminationType, setTerminationType] = useState<'downloading' | 'importing'>('downloading');
 
-export function TerminateModal({ isOpen, onClose, type }: TerminateModalProps) {
-  const { terminateDownloadingMutation, terminateAllJobsMutation } = useVaultsActions();
-  const { errorHandler } = useErrorHandler();
-  const { successHandler } = useSuccessHandler();
-  const [loading, setLoading] = useState(false);
-
-  const title = type === 'importing' ? 'Terminate All Jobs' : 'Terminate Downloading';
+  const title = terminationType === 'importing' ? 'Terminate All Jobs' : 'Terminate Downloading';
   const description =
-    type === 'importing'
-      ? 'Are you sure you want to completely stop ALL background jobs? This action cannot be undone and may leave tasks in an inconsistent state.'
-      : 'Are you sure you want to stop all active download tasks? Currenly downloading files will be interrupted.';
+    terminationType === 'importing'
+      ? 'Are you sure you want to completely stop ALL background jobs? This action cannot be undone.'
+      : 'Are you sure you want to stop all active download tasks? Currently downloading files will be interrupted.';
 
   const handleTerminate = async () => {
-    setLoading(true);
-    try {
-      if (type === 'importing') {
-        await terminateAllJobsMutation();
-      } else {
-        await terminateDownloadingMutation();
-      }
-      successHandler({ message: `${type === 'importing' ? 'All jobs' : 'Downloading tasks'} terminated successfully` });
-      onClose();
-    } catch (error) {
-      errorHandler({ error });
-    } finally {
-      setLoading(false);
+    if (terminationType === 'importing') {
+      await terminateImportJobs();
+    } else {
+      await terminateDownloading();
     }
+    setIsOpen(false);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[106.25">
-        <DialogHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-full bg-destructive/10 text-destructive">
-              {type === 'importing' ? <Ban className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
-            </div>
-            <DialogTitle className="text-xl">{title}</DialogTitle>
+    <>
+      <Button variant="destructive" onClick={() => setIsOpen(true)} size={'sm'}>
+        <Ban className="h-3 w-3" />
+        Stop Tasks
+      </Button>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title={
+          <div className="flex items-center gap-2">
+            <StopCircleIcon className="h-5 w-5 text-destructive" />
+            <span className="font-black uppercase tracking-tighter">{title}</span>
           </div>
-          <DialogDescription className="pt-2">{description}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-6">
-          <Button variant="outline" onClick={onClose} disabled={loading} className="w-full sm:w-auto order-2 sm:order-1 font-bold">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleTerminate}
-            disabled={loading}
-            variant="destructive"
-            className="w-full sm:w-auto order-1 sm:order-2 font-bold"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Terminating...
-              </>
-            ) : (
-              'Confirm Termination'
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        }
+      >
+        <div className="flex flex-col gap-6 py-4">
+          <div className="space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Select Termination Level</p>
+            <RadioGroup
+              defaultValue="downloading"
+              onValueChange={(value) => setTerminationType(value as 'downloading' | 'importing')}
+              className="grid grid-cols-2 gap-4"
+            >
+              <div
+                className={`flex items-center space-x-2 p-3 rounded-xl border transition-all cursor-pointer ${
+                  terminationType === 'downloading' ? 'border-primary bg-primary/5' : 'border-border'
+                }`}
+                onClick={() => setTerminationType('downloading')}
+              >
+                <RadioGroupItem value="downloading" id="downloading" />
+                <label htmlFor="downloading" className="font-black uppercase tracking-tighter text-[10px] cursor-pointer w-full">
+                  Downloading
+                </label>
+              </div>
+
+              <div
+                className={`flex items-center space-x-2 p-3 rounded-xl border transition-all cursor-pointer ${
+                  terminationType === 'importing' ? 'border-destructive bg-destructive/5' : 'border-border'
+                }`}
+                onClick={() => setTerminationType('importing')}
+              >
+                <RadioGroupItem value="importing" id="importing" />
+                <label htmlFor="importing" className="font-black uppercase tracking-tighter text-[10px] cursor-pointer w-full">
+                  All Jobs
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="flex items-center gap-3 p-4 rounded-xl border border-destructive/10 bg-destructive/5 text-destructive/80">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <p className="text-xs font-semibold leading-relaxed uppercase tracking-tight">
+              {description} This action may leave some tasks in an inconsistent state.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => setIsOpen(false)}
+              disabled={loading}
+              className="flex-1 font-bold uppercase tracking-tight rounded-xl h-11"
+            >
+              Cancel
+            </Button>
+            <LoadingButtonV2
+              loading={loading}
+              onClick={handleTerminate}
+              className="flex-1 font-black uppercase tracking-tight shadow-lg shadow-destructive/20 rounded-xl h-11"
+              variant="destructive"
+            >
+              Confirm Terminate
+            </LoadingButtonV2>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }

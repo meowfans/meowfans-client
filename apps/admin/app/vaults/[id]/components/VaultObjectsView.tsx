@@ -1,24 +1,21 @@
 'use client';
 
 import { CleanUpModal } from '@/components/CleanUpModal';
+import { BatchDownloadModal } from '@/components/BatchDownloadModal';
 import { ImportProgress } from '@/components/ImportProgress';
-import { TerminateModal } from '@/components/TerminateModal';
 
 import { useUser } from '@/hooks/useUser';
 import { useVaultObjects } from '@/hooks/useVaults';
-import { useVaultsActions } from '@workspace/gql/actions';
-import { DataFetchType, DownloadStates, FileType, UploadVaultQueueInput } from '@workspace/gql/generated/graphql';
+import { DataFetchType, DownloadStates, FileType } from '@workspace/gql/generated/graphql';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
-import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
-import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Database, Users } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { VaultObjectsHeader } from './VaultObjectsHeader';
+import { VaultObjectsFilters } from './VaultObjectsFilters';
 import { VaultObjectsTable } from './VaultObjectsTable';
 import { VaultsList } from './VaultsList';
-import { VaultObjectsFilters } from './VaultObjectsFilters';
+import VaultObjectsHeader from './VaultObjectsHeader';
 
 interface VaultObjectsViewProps {
   id: string;
@@ -30,7 +27,7 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const [fileTypes, setFileTypes] = useState<FileType[]>(Object.values(FileType));
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [terminateModalType, setTerminateModalType] = useState<'downloading' | 'importing' | null>(null);
+  const [isBatchModalOpen, setIsBatchModalOpen] = useState<boolean>(false);
   const [isCleanupModalOpen, setIsCleanupModalOpen] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
@@ -38,9 +35,6 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { downloadCreatorObjectsAsBatchMutation } = useVaultsActions();
-  const { errorHandler } = useErrorHandler();
-  const { successHandler } = useSuccessHandler();
   const { user } = useUser({ userIdOrName: id });
 
   const queryArgs = useMemo(
@@ -72,24 +66,6 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
     }
   };
 
-  const handleBatchDownload = async () => {
-    if (selectedObjects.length === 0) return;
-    setIsProcessing(true);
-    try {
-      const input: UploadVaultQueueInput = {
-        creatorId: id,
-        vaultObjectIds: selectedObjects
-      };
-      await downloadCreatorObjectsAsBatchMutation(input);
-      successHandler({ message: 'Batch download initiated for selected objects.' });
-      setSelectedObjects([]);
-    } catch (error) {
-      errorHandler({ error });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   const handleTabChange = (tab: 'vaults' | 'objects') => {
     setActiveTab(tab);
     const params = new URLSearchParams(searchParams.toString());
@@ -110,16 +86,11 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
         selectedCount={selectedObjects.length}
         totalFetched={vaultObjects.length}
         isProcessing={isProcessing}
-        onBatchDownload={handleBatchDownload}
+        onBatchDownload={() => setIsBatchModalOpen(true)}
         onOpenCleanup={() => setIsCleanupModalOpen(true)}
-        onOpenTerminate={setTerminateModalType}
       />
 
       <ImportProgress />
-
-      {terminateModalType && (
-        <TerminateModal isOpen={!!terminateModalType} onClose={() => setTerminateModalType(null)} type={terminateModalType} />
-      )}
 
       {isCleanupModalOpen && (
         <CleanUpModal
@@ -129,6 +100,18 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
           creatorUsername={user?.username || ''}
         />
       )}
+
+      <BatchDownloadModal
+        isOpen={isBatchModalOpen}
+        onClose={() => setIsBatchModalOpen(false)}
+        selectedIds={selectedObjects}
+        onSuccess={() => {
+          setIsBatchModalOpen(false);
+          setSelectedObjects([]);
+        }}
+        type="vaultObject"
+        creatorId={user?.id || id}
+      />
 
       {activeTab === 'objects' && (
         <div className="w-full sm:w-auto">
@@ -147,14 +130,14 @@ export function VaultObjectsView({ id }: VaultObjectsViewProps) {
             <TabsList className="bg-primary/5 border border-primary/5 p-0.5 h-10 shrink-0">
               <TabsTrigger
                 value="objects"
-                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black italic uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
+                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
               >
                 <Users className="h-4 w-4" />
                 Objects
               </TabsTrigger>
               <TabsTrigger
                 value="vaults"
-                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black italic uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
+                className="flex-1 sm:flex-none px-4 md:px-6 h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:shadow-primary/10 font-black uppercase tracking-tighter text-[10px] gap-2 transition-all duration-300"
               >
                 <Database className="h-4 w-4" />
                 Vaults

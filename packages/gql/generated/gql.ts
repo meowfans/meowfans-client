@@ -51,13 +51,11 @@ type Documents = {
     "\n  mutation UnBlockFan($input: BlockFanInput!) {\n    blockFan(input: $input)\n  }\n": typeof types.UnBlockFanDocument,
     "\n  mutation RestrictFan($input: RestrictFanInput!) {\n    restrictFan(input: $input)\n  }\n": typeof types.RestrictFanDocument,
     "\n  mutation UnRestrictFan($input: RestrictFanInput!) {\n    restrictFan(input: $input)\n  }\n": typeof types.UnRestrictFanDocument,
-    "\n  mutation DownloadAllCreatorObjects($input: DownloadAllCreatorObjectsAsBatchInput!) {\n    downloadAllCreatorObjects(input: $input)\n  }\n": typeof types.DownloadAllCreatorObjectsDocument,
     "\n  mutation TerminateDownloading {\n    terminateDownloading\n  }\n": typeof types.TerminateDownloadingDocument,
     "\n  query getFanProfile {\n    getFanProfile {\n      fanId\n      appliedAt\n      hasZoneMembership\n      currentZone {\n        id\n        zoneType\n        startedAt\n        endsAt\n        updatedAt\n        fanId\n      }\n      user {\n        firstName\n        lastName\n        username\n        avatarUrl\n        bannerUrl\n      }\n    }\n  }\n": typeof types.GetFanProfileDocument,
     "\n  mutation UpdateFanProfile($input: UpdateUserProfileInput!) {\n    updateFanProfile(input: $input) {\n      appliedAt\n      createdAt\n      deletedAt\n      fanId\n      isBanned\n      updatedAt\n      user {\n        avatarUrl\n        bannerUrl\n        createdAt\n        deletedAt\n        firstName\n        id\n        lastLoginAt\n        lastName\n        roles\n        updatedAt\n        username\n      }\n    }\n  }\n": typeof types.UpdateFanProfileDocument,
     "\n  query GetWatchHistory($input: PaginationInput!) {\n    getWatchHistory(input: $input) {\n      id\n      userId\n      type\n      entityId\n      createdAt\n      deletedAt\n    }\n  }\n": typeof types.GetWatchHistoryDocument,
     "\n  mutation DeleteWatchHistory($input: DeleteWatchHistoryInput!) {\n    deleteWatchHistory(input: $input)\n  }\n": typeof types.DeleteWatchHistoryDocument,
-    "\n  mutation InitiateCreatorObjectsImport($input: CreateImportQueueInput!) {\n    initiateCreatorObjectsImport(input: $input)\n  }\n": typeof types.InitiateCreatorObjectsImportDocument,
     "\n  mutation Initiate($input: CreateImportQueueInput!) {\n    initiate(input: $input)\n  }\n": typeof types.InitiateDocument,
     "\n  query GetSingleChannel($input: PaginationInput!) {\n    getSingleChannel(input: $input) {\n      id\n      creatorId\n      creatorAvatarUrl\n      creatorFullname\n      creatorLastSeenAt\n      isCreatorOnline\n      fanId\n      fanAvatarUrl\n      fanFullname\n      fanLastSeenAt\n      isFanOnline\n      lastMessageId\n      label\n      initiatedByUserId\n      status\n      isFanOnline\n      isCreatorOnline\n      hasMutedThisChannel\n      hasRestrictedThisChannel\n      hasBlockedThisChannel\n      hasPinnedThisChannel\n      messages {\n        id\n        content\n        senderId\n        recipientUserId\n        channelId\n        unlockPrice\n        isExclusive\n        hasAccess\n        repliedToId\n        hasSeen\n        unlockedAt\n        createdAt\n        updatedAt\n        repliedTo {\n          id\n          content\n        }\n        messageAssets {\n          createdAt\n          fileType\n          id\n          mediaType\n          rawUrl\n        }\n      }\n    }\n  }\n": typeof types.GetSingleChannelDocument,
     "\n  mutation SendMessageFromCreator($input: SendMessageFromCreatorInput!) {\n    sendMessageFromCreator(input: $input) {\n      id\n      content\n      senderId\n      recipientUserId\n      channelId\n      unlockPrice\n      isExclusive\n      hasAccess\n      repliedToId\n      hasSeen\n      unlockedAt\n      createdAt\n      updatedAt\n      messageAssets {\n        createdAt\n        fileType\n        id\n        mediaType\n        rawUrl\n      }\n    }\n  }\n": typeof types.SendMessageFromCreatorDocument,
@@ -99,7 +97,7 @@ type Documents = {
     "\n  query SearchTags($input: PaginationInput!) {\n    searchTags(input: $input) {\n      id\n      label\n    }\n  }\n": typeof types.SearchTagsDocument,
     "\n  mutation DeleteUser {\n    deleteUser\n  }\n": typeof types.DeleteUserDocument,
     "\n  query GetUser($username: String!) {\n    getUser(username: $username) {\n      avatarUrl\n      bannerUrl\n      createdAt\n      deletedAt\n      firstName\n      id\n      lastLoginAt\n      lastName\n      roles\n      updatedAt\n      username\n      creatorProfile {\n        fulfilledObjectCount\n        pendingObjectCount\n        processingObjectCount\n        rejectedObjectCount\n      }\n    }\n  }\n": typeof types.GetUserDocument,
-    "\n  mutation UpdateAllCreatorProfiles($input: UpdateUsersInput!) {\n    updateAllCreatorProfiles(input: $input)\n  }\n": typeof types.UpdateAllCreatorProfilesDocument,
+    "\n  mutation UpdateAllCreatorProfiles {\n    updateAllCreatorProfiles\n  }\n": typeof types.UpdateAllCreatorProfilesDocument,
     "\n  query GetPublicSingleVault($input: PaginationInput!) {\n    getPublicSingleVault(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n      creatorId\n      username\n      avatarUrl\n      keywords\n      createdAt\n      updatedAt\n      vaultObjects {\n        id\n        rawUrl\n        creatorId\n        isPurchased\n        isLiked\n        unlockPrice\n      }\n    }\n  }\n": typeof types.GetPublicSingleVaultDocument,
     "\n  query GetCreatorVaults($input: PaginationInput!) {\n    getCreatorVaults(input: $input) {\n      createdAt\n      creatorId\n      deletedAt\n      description\n      id\n      keywords\n      preview\n      updatedAt\n      isLiked\n      likeCount\n      isPurchased\n      unlockPrice\n      objectCount\n    }\n  }\n": typeof types.GetCreatorVaultsDocument,
     "\n  query GetVaultsAnalytics($input: VaultStatsInput!) {\n    getVaultsAnalytics(input: $input) {\n      timestamp\n      id\n      likeCount\n      totalEarning\n      unlockPrice\n      viewCount\n    }\n  }\n": typeof types.GetVaultsAnalyticsDocument,
@@ -113,8 +111,9 @@ type Documents = {
     "\n  query GetPublicCreatorVaults($input: PaginationInput!) {\n    getPublicCreatorVaults(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n    }\n  }\n": typeof types.GetPublicCreatorVaultsDocument,
     "\n  query GetPublicVaultsByTags($input: PaginationInput!) {\n    getPublicVaultsByTags(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n    }\n  }\n": typeof types.GetPublicVaultsByTagsDocument,
     "\n  query GetPublicVaultObjects($input: PaginationInput!) {\n    getPublicVaultObjects(input: $input) {\n      id\n      rawUrl\n      creatorId\n      isPurchased\n      isLiked\n      unlockPrice\n      vaultId\n    }\n  }\n": typeof types.GetPublicVaultObjectsDocument,
-    "\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n": typeof types.DownloadCreatorObjectsAsBatchDocument,
+    "\n  mutation DownloadObjectByVaultObjectIds($input: DownloadObjectsByVaultObjectIdsQueueInput!) {\n    downloadObjectByVaultObjectIds(input: $input)\n  }\n": typeof types.DownloadObjectByVaultObjectIdsDocument,
     "\n  mutation Terminate {\n    terminate\n  }\n": typeof types.TerminateDocument,
+    "\n  mutation DownloadObjectsByCreatorIds($input: DownloadObjectsByCreatorIdsInput!) {\n    downloadObjectsByCreatorIds(input: $input)\n  }\n": typeof types.DownloadObjectsByCreatorIdsDocument,
     "\n  query GetTotalObjectsAsType($input: PaginationInput!) {\n    getTotalObjectsAsType(input: $input)\n  }\n": typeof types.GetTotalObjectsAsTypeDocument,
     "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n": typeof types.CleanUpVaultObjectsOfACreatorDocument,
     "\n  query GetCountOfObjectsOfEachType {\n    getCountOfObjectsOfEachType {\n      fulfilled\n      pending\n      processing\n      rejected\n    }\n  }\n": typeof types.GetCountOfObjectsOfEachTypeDocument,
@@ -159,13 +158,11 @@ const documents: Documents = {
     "\n  mutation UnBlockFan($input: BlockFanInput!) {\n    blockFan(input: $input)\n  }\n": types.UnBlockFanDocument,
     "\n  mutation RestrictFan($input: RestrictFanInput!) {\n    restrictFan(input: $input)\n  }\n": types.RestrictFanDocument,
     "\n  mutation UnRestrictFan($input: RestrictFanInput!) {\n    restrictFan(input: $input)\n  }\n": types.UnRestrictFanDocument,
-    "\n  mutation DownloadAllCreatorObjects($input: DownloadAllCreatorObjectsAsBatchInput!) {\n    downloadAllCreatorObjects(input: $input)\n  }\n": types.DownloadAllCreatorObjectsDocument,
     "\n  mutation TerminateDownloading {\n    terminateDownloading\n  }\n": types.TerminateDownloadingDocument,
     "\n  query getFanProfile {\n    getFanProfile {\n      fanId\n      appliedAt\n      hasZoneMembership\n      currentZone {\n        id\n        zoneType\n        startedAt\n        endsAt\n        updatedAt\n        fanId\n      }\n      user {\n        firstName\n        lastName\n        username\n        avatarUrl\n        bannerUrl\n      }\n    }\n  }\n": types.GetFanProfileDocument,
     "\n  mutation UpdateFanProfile($input: UpdateUserProfileInput!) {\n    updateFanProfile(input: $input) {\n      appliedAt\n      createdAt\n      deletedAt\n      fanId\n      isBanned\n      updatedAt\n      user {\n        avatarUrl\n        bannerUrl\n        createdAt\n        deletedAt\n        firstName\n        id\n        lastLoginAt\n        lastName\n        roles\n        updatedAt\n        username\n      }\n    }\n  }\n": types.UpdateFanProfileDocument,
     "\n  query GetWatchHistory($input: PaginationInput!) {\n    getWatchHistory(input: $input) {\n      id\n      userId\n      type\n      entityId\n      createdAt\n      deletedAt\n    }\n  }\n": types.GetWatchHistoryDocument,
     "\n  mutation DeleteWatchHistory($input: DeleteWatchHistoryInput!) {\n    deleteWatchHistory(input: $input)\n  }\n": types.DeleteWatchHistoryDocument,
-    "\n  mutation InitiateCreatorObjectsImport($input: CreateImportQueueInput!) {\n    initiateCreatorObjectsImport(input: $input)\n  }\n": types.InitiateCreatorObjectsImportDocument,
     "\n  mutation Initiate($input: CreateImportQueueInput!) {\n    initiate(input: $input)\n  }\n": types.InitiateDocument,
     "\n  query GetSingleChannel($input: PaginationInput!) {\n    getSingleChannel(input: $input) {\n      id\n      creatorId\n      creatorAvatarUrl\n      creatorFullname\n      creatorLastSeenAt\n      isCreatorOnline\n      fanId\n      fanAvatarUrl\n      fanFullname\n      fanLastSeenAt\n      isFanOnline\n      lastMessageId\n      label\n      initiatedByUserId\n      status\n      isFanOnline\n      isCreatorOnline\n      hasMutedThisChannel\n      hasRestrictedThisChannel\n      hasBlockedThisChannel\n      hasPinnedThisChannel\n      messages {\n        id\n        content\n        senderId\n        recipientUserId\n        channelId\n        unlockPrice\n        isExclusive\n        hasAccess\n        repliedToId\n        hasSeen\n        unlockedAt\n        createdAt\n        updatedAt\n        repliedTo {\n          id\n          content\n        }\n        messageAssets {\n          createdAt\n          fileType\n          id\n          mediaType\n          rawUrl\n        }\n      }\n    }\n  }\n": types.GetSingleChannelDocument,
     "\n  mutation SendMessageFromCreator($input: SendMessageFromCreatorInput!) {\n    sendMessageFromCreator(input: $input) {\n      id\n      content\n      senderId\n      recipientUserId\n      channelId\n      unlockPrice\n      isExclusive\n      hasAccess\n      repliedToId\n      hasSeen\n      unlockedAt\n      createdAt\n      updatedAt\n      messageAssets {\n        createdAt\n        fileType\n        id\n        mediaType\n        rawUrl\n      }\n    }\n  }\n": types.SendMessageFromCreatorDocument,
@@ -207,7 +204,7 @@ const documents: Documents = {
     "\n  query SearchTags($input: PaginationInput!) {\n    searchTags(input: $input) {\n      id\n      label\n    }\n  }\n": types.SearchTagsDocument,
     "\n  mutation DeleteUser {\n    deleteUser\n  }\n": types.DeleteUserDocument,
     "\n  query GetUser($username: String!) {\n    getUser(username: $username) {\n      avatarUrl\n      bannerUrl\n      createdAt\n      deletedAt\n      firstName\n      id\n      lastLoginAt\n      lastName\n      roles\n      updatedAt\n      username\n      creatorProfile {\n        fulfilledObjectCount\n        pendingObjectCount\n        processingObjectCount\n        rejectedObjectCount\n      }\n    }\n  }\n": types.GetUserDocument,
-    "\n  mutation UpdateAllCreatorProfiles($input: UpdateUsersInput!) {\n    updateAllCreatorProfiles(input: $input)\n  }\n": types.UpdateAllCreatorProfilesDocument,
+    "\n  mutation UpdateAllCreatorProfiles {\n    updateAllCreatorProfiles\n  }\n": types.UpdateAllCreatorProfilesDocument,
     "\n  query GetPublicSingleVault($input: PaginationInput!) {\n    getPublicSingleVault(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n      creatorId\n      username\n      avatarUrl\n      keywords\n      createdAt\n      updatedAt\n      vaultObjects {\n        id\n        rawUrl\n        creatorId\n        isPurchased\n        isLiked\n        unlockPrice\n      }\n    }\n  }\n": types.GetPublicSingleVaultDocument,
     "\n  query GetCreatorVaults($input: PaginationInput!) {\n    getCreatorVaults(input: $input) {\n      createdAt\n      creatorId\n      deletedAt\n      description\n      id\n      keywords\n      preview\n      updatedAt\n      isLiked\n      likeCount\n      isPurchased\n      unlockPrice\n      objectCount\n    }\n  }\n": types.GetCreatorVaultsDocument,
     "\n  query GetVaultsAnalytics($input: VaultStatsInput!) {\n    getVaultsAnalytics(input: $input) {\n      timestamp\n      id\n      likeCount\n      totalEarning\n      unlockPrice\n      viewCount\n    }\n  }\n": types.GetVaultsAnalyticsDocument,
@@ -221,8 +218,9 @@ const documents: Documents = {
     "\n  query GetPublicCreatorVaults($input: PaginationInput!) {\n    getPublicCreatorVaults(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n    }\n  }\n": types.GetPublicCreatorVaultsDocument,
     "\n  query GetPublicVaultsByTags($input: PaginationInput!) {\n    getPublicVaultsByTags(input: $input) {\n      id\n      preview\n      objectCount\n      isLiked\n      isPurchased\n      description\n      unlockPrice\n    }\n  }\n": types.GetPublicVaultsByTagsDocument,
     "\n  query GetPublicVaultObjects($input: PaginationInput!) {\n    getPublicVaultObjects(input: $input) {\n      id\n      rawUrl\n      creatorId\n      isPurchased\n      isLiked\n      unlockPrice\n      vaultId\n    }\n  }\n": types.GetPublicVaultObjectsDocument,
-    "\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n": types.DownloadCreatorObjectsAsBatchDocument,
+    "\n  mutation DownloadObjectByVaultObjectIds($input: DownloadObjectsByVaultObjectIdsQueueInput!) {\n    downloadObjectByVaultObjectIds(input: $input)\n  }\n": types.DownloadObjectByVaultObjectIdsDocument,
     "\n  mutation Terminate {\n    terminate\n  }\n": types.TerminateDocument,
+    "\n  mutation DownloadObjectsByCreatorIds($input: DownloadObjectsByCreatorIdsInput!) {\n    downloadObjectsByCreatorIds(input: $input)\n  }\n": types.DownloadObjectsByCreatorIdsDocument,
     "\n  query GetTotalObjectsAsType($input: PaginationInput!) {\n    getTotalObjectsAsType(input: $input)\n  }\n": types.GetTotalObjectsAsTypeDocument,
     "\n  mutation CleanUpVaultObjectsOfACreator($input: CleanUpVaultInput!) {\n    cleanUpVaultObjectsOfACreator(input: $input) {\n      affected\n      rejectedObjectCount\n      pendingObjectCount\n      processingObjectCount\n      fulfilledObjectCount\n    }\n  }\n": types.CleanUpVaultObjectsOfACreatorDocument,
     "\n  query GetCountOfObjectsOfEachType {\n    getCountOfObjectsOfEachType {\n      fulfilled\n      pending\n      processing\n      rejected\n    }\n  }\n": types.GetCountOfObjectsOfEachTypeDocument,
@@ -395,10 +393,6 @@ export function graphql(source: "\n  mutation UnRestrictFan($input: RestrictFanI
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation DownloadAllCreatorObjects($input: DownloadAllCreatorObjectsAsBatchInput!) {\n    downloadAllCreatorObjects(input: $input)\n  }\n"): (typeof documents)["\n  mutation DownloadAllCreatorObjects($input: DownloadAllCreatorObjectsAsBatchInput!) {\n    downloadAllCreatorObjects(input: $input)\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n  mutation TerminateDownloading {\n    terminateDownloading\n  }\n"): (typeof documents)["\n  mutation TerminateDownloading {\n    terminateDownloading\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -416,10 +410,6 @@ export function graphql(source: "\n  query GetWatchHistory($input: PaginationInp
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation DeleteWatchHistory($input: DeleteWatchHistoryInput!) {\n    deleteWatchHistory(input: $input)\n  }\n"): (typeof documents)["\n  mutation DeleteWatchHistory($input: DeleteWatchHistoryInput!) {\n    deleteWatchHistory(input: $input)\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  mutation InitiateCreatorObjectsImport($input: CreateImportQueueInput!) {\n    initiateCreatorObjectsImport(input: $input)\n  }\n"): (typeof documents)["\n  mutation InitiateCreatorObjectsImport($input: CreateImportQueueInput!) {\n    initiateCreatorObjectsImport(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -587,7 +577,7 @@ export function graphql(source: "\n  query GetUser($username: String!) {\n    ge
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation UpdateAllCreatorProfiles($input: UpdateUsersInput!) {\n    updateAllCreatorProfiles(input: $input)\n  }\n"): (typeof documents)["\n  mutation UpdateAllCreatorProfiles($input: UpdateUsersInput!) {\n    updateAllCreatorProfiles(input: $input)\n  }\n"];
+export function graphql(source: "\n  mutation UpdateAllCreatorProfiles {\n    updateAllCreatorProfiles\n  }\n"): (typeof documents)["\n  mutation UpdateAllCreatorProfiles {\n    updateAllCreatorProfiles\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -643,11 +633,15 @@ export function graphql(source: "\n  query GetPublicVaultObjects($input: Paginat
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n"): (typeof documents)["\n  mutation DownloadCreatorObjectsAsBatch($input: UploadVaultQueueInput!) {\n    downloadCreatorObjectsAsBatch(input: $input)\n  }\n"];
+export function graphql(source: "\n  mutation DownloadObjectByVaultObjectIds($input: DownloadObjectsByVaultObjectIdsQueueInput!) {\n    downloadObjectByVaultObjectIds(input: $input)\n  }\n"): (typeof documents)["\n  mutation DownloadObjectByVaultObjectIds($input: DownloadObjectsByVaultObjectIdsQueueInput!) {\n    downloadObjectByVaultObjectIds(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Terminate {\n    terminate\n  }\n"): (typeof documents)["\n  mutation Terminate {\n    terminate\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DownloadObjectsByCreatorIds($input: DownloadObjectsByCreatorIdsInput!) {\n    downloadObjectsByCreatorIds(input: $input)\n  }\n"): (typeof documents)["\n  mutation DownloadObjectsByCreatorIds($input: DownloadObjectsByCreatorIdsInput!) {\n    downloadObjectsByCreatorIds(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
