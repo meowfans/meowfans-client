@@ -171,7 +171,7 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
       </div>
 
       {/* Main Media Preview */}
-      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-20">
+      <div className="relative w-full h-full flex items-center justify-center p-6 md:p-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -250,7 +250,7 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
 
       {/* Thumbnails Strip */}
       {items.length > 1 && (
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[110] flex gap-3 p-3 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[110] flex gap-3 md:p-3 p-0 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
           {items.map((item, idx) => (
             <button
               key={`${item.url}-${idx}`}

@@ -4,7 +4,9 @@ import { useAssets } from '@/hooks/useAssets';
 import { AssetsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Carousel } from '@workspace/ui/globals/Carousel';
+import { FullscreenViewer } from '@workspace/ui/globals/FullscreenViewer';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Fragment, useState } from 'react';
@@ -15,6 +17,7 @@ export const Assets = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { assets, loading, hasMore, onLoadMore } = useAssets({ take: 50 });
   const [showCarousel, setShowCarousel] = useState<number | null>(null);
+  const isMobile = useIsMobile();
 
   return (
     <div className="max-w-[1600px] mx-auto flex flex-col w-full px-4 md:px-8 pb-12">
@@ -32,14 +35,12 @@ export const Assets = () => {
         >
           <div
             className={
-              viewMode === 'grid'
-                ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'
-                : 'flex flex-col gap-3'
+              viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' : 'flex flex-col gap-3'
             }
           >
             {assets?.assets.map((asset, index) => (
               <Fragment key={asset.id}>
-                <AssetCard showCarousel={showCarousel} onShowCarousel={setShowCarousel} asset={asset} mode={viewMode} index={index} />
+                <AssetCard onShowCarousel={setShowCarousel} asset={asset} mode={viewMode} index={index} />
 
                 <AnimatePresence>
                   {showCarousel === index && (
@@ -62,19 +63,32 @@ export const Assets = () => {
                           </Button>
                         </div>
 
-                        <Carousel
-                          items={assets?.assets as AssetsEntity[]}
-                          getKey={(asset) => asset.id}
-                          getUrl={(asset) => asset.rawUrl}
-                          getFileType={(asset) => asset.fileType}
-                          hasMore={hasMore}
-                          loadMore={onLoadMore}
-                          urls={assets?.assets.map((a) => a.rawUrl as string)}
-                          loading={loading}
-                          getPoster={(item) => item.blurredUrl || ''}
-                          aspectRatio="video"
-                          currentIndex={index}
-                        />
+                        {isMobile ? (
+                          <FullscreenViewer
+                            items={assets?.assets.map((a) => ({ type: a.fileType, url: a.rawUrl }))}
+                            hasMore={hasMore}
+                            loadMore={onLoadMore}
+                            loading={loading}
+                            initialIndex={showCarousel}
+                            isOpen={!!showCarousel}
+                            onClose={() => setShowCarousel(null)}
+                            setCurrentlyViewingIndex={(val) => setShowCarousel(val as number)}
+                          />
+                        ) : (
+                          <Carousel
+                            items={assets?.assets as AssetsEntity[]}
+                            getKey={(asset) => asset.id}
+                            getUrl={(asset) => asset.rawUrl}
+                            getFileType={(asset) => asset.fileType}
+                            hasMore={hasMore}
+                            loadMore={onLoadMore}
+                            urls={assets?.assets.map((a) => a.rawUrl as string)}
+                            loading={loading}
+                            getPoster={(item) => item.blurredUrl || ''}
+                            aspectRatio="video"
+                            currentIndex={index}
+                          />
+                        )}
                       </div>
                     </motion.div>
                   )}

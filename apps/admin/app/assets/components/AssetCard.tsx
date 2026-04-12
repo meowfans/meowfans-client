@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { AssetsEntity, FileType } from '@workspace/gql/generated/graphql';
@@ -13,37 +14,39 @@ interface AssetCardProps {
   asset: AssetsEntity;
   mode: 'grid' | 'list';
   index: number;
-  showCarousel: number | null;
   onShowCarousel: (val: number | null) => void;
 }
 
-export const AssetCard = ({ asset, mode, index, onShowCarousel, showCarousel }: AssetCardProps) => {
+export const AssetCard = ({ asset, mode, index, onShowCarousel }: AssetCardProps) => {
   const isVideo = asset.fileType === FileType.Video;
 
   if (mode === 'list') {
     return (
       <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (index % 10) * 0.05 }}>
         <Card className="p-2 md:p-3 border-primary/5 hover:border-primary/20 transition-all hover:bg-primary/[0.02] shadow-sm flex items-center gap-3 md:gap-4 overflow-hidden relative group">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-primary/10 relative">
-            {asset.rawUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={asset.rawUrl}
-                alt=""
-                className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            ) : (
-              getFileTypeIcon(asset.fileType)
-            )}
-            {isVideo && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                <PlayCircle className="h-5 w-5 text-white drop-shadow-lg" />
-              </div>
-            )}
-          </div>
+          {asset.rawUrl && (
+            <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-primary/10 relative">
+              {isVideo ? (
+                <video
+                  autoPlay={false}
+                  controls={false}
+                  src={asset.rawUrl}
+                  className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+                />
+              ) : (
+                <img
+                  src={asset.rawUrl}
+                  alt=""
+                  className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+                />
+              )}
+              {isVideo && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <PlayCircle className="h-5 w-5 text-white drop-shadow-lg" />
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1">
@@ -95,19 +98,19 @@ export const AssetCard = ({ asset, mode, index, onShowCarousel, showCarousel }: 
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         <div className="absolute inset-0">
-          {asset.rawUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+          {isVideo ? (
+            <video
+              autoPlay={false}
+              controls={false}
               src={asset.rawUrl}
-              alt=""
-              className="h-full w-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+              className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
             />
           ) : (
-            <div className="h-full w-full flex items-center justify-center bg-secondary/20 shadow-inner">
-              <div className="scale-150 opacity-20 group-hover:opacity-100 group-hover:scale-[2] transition-all duration-500">
-                {getFileTypeIcon(asset.fileType)}
-              </div>
-            </div>
+            <img
+              src={asset.rawUrl}
+              alt={asset.id}
+              className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+            />
           )}
         </div>
 
