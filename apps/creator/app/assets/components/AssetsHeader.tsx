@@ -1,44 +1,62 @@
 'use client';
 
 import { Button } from '@workspace/ui/components/button';
+import { pluralizeByCount } from '@workspace/ui/lib/helpers';
 import { motion } from 'framer-motion';
-import { Image as ImageIcon, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 interface AssetsHeaderProps {
   onUpload: () => void;
   isUploading: boolean;
   selectedCount: number;
   onBulkDelete: () => void;
+  onClearSelection?: () => void;
 }
 
-export function AssetsHeader({ onUpload, isUploading, selectedCount, onBulkDelete }: AssetsHeaderProps) {
+export function AssetsHeader({ onUpload, isUploading, selectedCount, onBulkDelete, onClearSelection }: AssetsHeaderProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      className="flex items-center justify-between gap-4 px-4 py-6"
     >
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-2">
-          <ImageIcon className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-          Assets Library
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage all your uploaded media</p>
+      <div className="flex flex-col">
+        <h1 className="text-3xl font-black tracking-tight flex items-center gap-2">Library</h1>
+        {selectedCount > 0 ? (
+          <p className="text-sm font-medium text-primary animate-in fade-in slide-in-from-left-1">
+            {selectedCount} {pluralizeByCount(selectedCount, 'item')} selected
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">Manage your media</p>
+        )}
       </div>
 
-      <div className="flex gap-2 w-full sm:w-auto">
-        {selectedCount > 0 && (
-          <Button variant="destructive" onClick={onBulkDelete} className="flex-1 sm:flex-none">
-            Delete ({selectedCount})
+      <div className="flex items-center gap-2">
+        {selectedCount > 0 ? (
+          <>
+            <Button variant="outline" size="sm" onClick={onClearSelection} className="h-9 px-3 rounded-full border-border/60">
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={onBulkDelete}
+              className="h-9 px-4 rounded-full shadow-lg shadow-destructive/20"
+            >
+              Delete
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={onUpload}
+            disabled={isUploading}
+            size="sm"
+            className="h-10 px-5 rounded-full shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+          >
+            <Plus className="mr-2 h-4 w-4 stroke-[3px]" />
+            Upload
           </Button>
         )}
-
-        <div className="relative flex-1 sm:flex-none">
-          <Button onClick={onUpload} disabled={isUploading} className="w-full">
-            <Plus className="mr-2 h-4 w-4" />
-            Upload New
-          </Button>
-        </div>
       </div>
     </motion.div>
   );

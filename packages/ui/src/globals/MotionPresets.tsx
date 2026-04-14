@@ -7,12 +7,14 @@ export type AnimationType = 'SlideLeftToRight' | 'SlideRightToLeft' | 'SlideBott
 interface MotionPresetsProps {
   children: React.ReactNode;
   motionType: AnimationType;
+  className?: string;
 }
 
 interface AwaitedMotionPresetsProps {
   children: React.ReactNode;
   motionType: AnimationType;
   mode?: 'sync' | 'popLayout' | 'wait';
+  className?: string;
 }
 
 export const effects: Record<AnimationType, MotionProps> = {
@@ -34,14 +36,14 @@ export const effects: Record<AnimationType, MotionProps> = {
   }
 };
 
-export const MotionPresets: React.FC<MotionPresetsProps> = ({ children, motionType }) => {
-  return <motion.div {...effects[motionType]}>{children}</motion.div>;
+export const MotionPresets: React.FC<MotionPresetsProps> = ({ children, motionType, className }) => {
+  return <motion.div {...effects[motionType]} className={className}>{children}</motion.div>;
 };
 
-export const AwaitedMotionPresets: React.FC<AwaitedMotionPresetsProps> = ({ children, motionType, mode }) => {
+export const AwaitedMotionPresets: React.FC<AwaitedMotionPresetsProps> = ({ children, motionType, mode, className }) => {
   return (
     <AnimatePresence mode={mode}>
-      <motion.div {...effects[motionType]}>{children}</motion.div>
+      <motion.div {...effects[motionType]} className={className}>{children}</motion.div>
     </AnimatePresence>
   );
 };

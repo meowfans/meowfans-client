@@ -1,12 +1,17 @@
 'use client';
 
-import { FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
+import { GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
+import { FullscreenViewer } from '@workspace/ui/globals/FullscreenViewer';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { Loading } from '@workspace/ui/globals/Loading';
+import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
+import { formatDate } from '@workspace/ui/lib/formatters';
+import { clamp } from '@workspace/ui/lib/helpers';
+import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Eye, Play, Trash2 } from 'lucide-react';
-import NextImage from 'next/image';
+import { X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AssetCard } from './AssetCard';
 
 interface AssetsGridProps {
   assets: GetCreatorAssetsOutput[];
@@ -14,122 +19,148 @@ interface AssetsGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   onDelete: (id: string) => void;
-  onView: (asset: GetCreatorAssetsOutput) => void;
   selectedAssets: string[];
   onToggleSelect: (id: string) => void;
 }
 
-export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, onView, selectedAssets, onToggleSelect }: AssetsGridProps) {
+interface Cols {
+  current: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}
+
+const BASE_COLS: Cols = {
+  current: 3,
+  sm: 4,
+  md: 5,
+  lg: 6,
+  xl: 7
+};
+
+export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, selectedAssets, onToggleSelect }: AssetsGridProps) {
+  const [activeAssetId, setActiveAssetId] = useState<string | null>(null);
+  const [zoom, setZoom] = useState<number>(1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const handleNativeWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        setZoom((prev) => {
+          const sensitivity = 0.01;
+          const next = prev - e.deltaY * sensitivity;
+          return clamp(next, 0.5, 2);
+        });
+      }
+    };
+
+    element.addEventListener('wheel', handleNativeWheel, { passive: false });
+    return () => element.removeEventListener('wheel', handleNativeWheel);
+  }, []);
+
+  const groupedAssets = useMemo(() => {
+    return Object.entries(
+      assets.reduce<Record<string, GetCreatorAssetsOutput[]>>((acc, asset) => {
+        const date = format(new Date(asset.createdAt), 'yyyy-MM-dd');
+        acc[date] ??= [];
+        acc[date].push(asset);
+        return acc;
+      }, {})
+    );
+  }, [assets]);
+
+  const handleAssetClick = (e: React.MouseEvent, asset: GetCreatorAssetsOutput) => {
+    e.stopPropagation();
+
+    if (selectedAssets.length > 0) {
+      onToggleSelect(asset.id);
+    } else {
+      setActiveAssetId(asset.id);
+    }
+  };
+
+  const gridClassNames = useMemo(() => {
+    const scale = 1 / zoom;
+    const current = Math.round(clamp(BASE_COLS.current * scale, 2, 5));
+    const sm = Math.round(clamp(BASE_COLS.sm * scale, 3, 6));
+    const md = Math.round(clamp(BASE_COLS.md * scale, 4, 8));
+    const lg = Math.round(clamp(BASE_COLS.lg * scale, 5, 10));
+    const xl = Math.round(clamp(BASE_COLS.xl * scale, 6, 12));
+
+    return `grid-cols-${current} sm:grid-cols-${sm} md:grid-cols-${md} lg:grid-cols-${lg} xl:grid-cols-${xl}`;
+  }, [zoom]);
+
   return (
-    <div className="p-2 sm:p-6">
+    <div className="bg-background flex flex-col" ref={containerRef}>
       <InfiniteScrollManager useWindowScroll dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
-          <AnimatePresence mode="popLayout">
-            {assets.map((asset, index) => {
-              const isSelected = selectedAssets.includes(asset.id);
-              const isVideo = asset.fileType === FileType.Video;
+        <div className="flex flex-col gap-4 pb-20">
+          {groupedAssets.map(([date, groupAssets]) => (
+            <div key={date}>
+              <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border/10">
+                <h3 className="text-sm font-bold tracking-tight text-muted-foreground uppercase">{formatDate(date)}</h3>
+              </div>
 
-              return (
-                <motion.div
-                  key={asset.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: index * 0.05, duration: 0.2 }}
-                  className={`relative group aspect-square rounded-lg overflow-hidden border transition-all ${
-                    isSelected ? 'border-primary ring-2 ring-primary ring-offset-1' : 'border-border'
-                  }`}
-                >
-                  {/* Main Content - Tap to View */}
-                  <div className="w-full h-full cursor-pointer" onClick={() => onView(asset)}>
-                    {asset.rawUrl ? (
-                      isVideo ? (
-                        <div className="relative w-full h-full bg-black">
-                          <video src={asset.rawUrl} className="w-full h-full object-cover" muted playsInline preload="metadata" />
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-black/50 rounded-full p-2">
-                              <Play className="h-6 w-6 text-white fill-white/50" />
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <NextImage
-                          src={asset.rawUrl}
-                          alt="Asset"
-                          fill
-                          className="object-cover transition-transform group-hover:scale-105"
-                        />
-                      )
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-muted-foreground text-xs">No Preview</div>
-                    )}
-                  </div>
-
-                  {/* Selection Checkbox - Always visible for accessibility/mobile */}
-                  <div
-                    className="absolute top-2 right-2 z-10 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleSelect(asset.id);
-                    }}
-                  >
-                    <div
-                      className={`
-                      h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all
-                      ${
-                        isSelected
-                          ? 'bg-primary border-primary text-primary-foreground'
-                          : 'bg-black/30 border-white/70 hover:bg-black/50 hover:border-white text-transparent'
-                      }
-                    `}
-                    >
-                      <Check className="h-3 w-3" />
-                    </div>
-                  </div>
-
-                  {/* Desktop Hover Actions */}
-                  <div className="absolute inset-x-0 bottom-0 p-2 bg-linear-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center gap-2 pointer-events-none">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-black pointer-events-auto"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onView(asset);
-                      }}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="h-8 w-8 rounded-full pointer-events-auto"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(asset.id);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+              <div className={`grid gap-[2px] ${gridClassNames}`}>
+                {groupAssets.map((asset) => {
+                  const isSelected = selectedAssets.includes(asset.id);
+                  return (
+                    <AssetCard
+                      key={asset.id}
+                      asset={asset}
+                      isSelected={isSelected}
+                      onAssetClick={handleAssetClick}
+                      onToggleSelect={onToggleSelect}
+                      setShowFullScreenIndex={setActiveAssetId}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
-
-        {loading && (
-          <div className="flex justify-center p-8">
-            <Loading />
-          </div>
-        )}
-
-        {!loading && assets.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-            <p>No assets found</p>
-          </div>
-        )}
       </InfiniteScrollManager>
+
+      <AnimatePresence>
+        {activeAssetId && (
+          <motion.div
+            className="col-span-full"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mt-4 relative bg-primary/[0.03] border border-primary/10 rounded-[2rem] md:rounded-[3rem] p-2 md:p-4">
+              <div className="absolute top-3 right-3 z-50">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setActiveAssetId(null)}
+                  className="h-10 w-10 rounded-2xl bg-black/20 hover:bg-black/40 backdrop-blur-xl border border-white/10 text-white"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <FullscreenViewer
+                items={assets.map((a) => ({ type: a.fileType, url: a.rawUrl }))}
+                hasMore={hasMore}
+                loadMore={onLoadMore}
+                loading={loading}
+                initialIndex={assets.findIndex((a) => a.id === activeAssetId)}
+                isOpen={!!activeAssetId}
+                onClose={() => setActiveAssetId(null)}
+                setCurrentlyViewingIndex={() => null}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

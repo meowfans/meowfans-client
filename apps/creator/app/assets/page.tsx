@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { AssetsView } from './components/AssetsView';
+import { Assets } from './components/Assets';
 
 export const metadata: Metadata = {
   title: 'Assets Library',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function AssetsPage() {
-  return <AssetsView />;
+  return <Assets />;
 }
