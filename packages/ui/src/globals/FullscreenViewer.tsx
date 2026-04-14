@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Pause, Play, Sparkles, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { MotionPresets } from './MotionPresets';
 
 interface FullscreenViewerProps {
   isOpen: boolean;
@@ -18,11 +19,26 @@ interface FullscreenViewerProps {
   loading?: boolean;
 }
 
-export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurrentlyViewingIndex }: FullscreenViewerProps) => {
+export const FullscreenViewer = ({
+  isOpen,
+  onClose,
+  items,
+  initialIndex,
+  setCurrentlyViewingIndex,
+  loadMore,
+  hasMore,
+  loading
+}: FullscreenViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [slideShow, setSlideShow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (currentIndex > items.length - 6 && hasMore && !loading) {
+      loadMore?.();
+    }
+  }, [currentIndex, items.length, loadMore, hasMore, loading]);
 
   useEffect(() => {
     const originalBodyOverflow = document.body.style.overflow;
@@ -171,48 +187,46 @@ export const FullscreenViewer = ({ isOpen, onClose, items, initialIndex, setCurr
       </div>
 
       {/* Main Media Preview */}
-      <div className="relative w-full h-full flex items-center justify-center p-6 md:p-20">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 1.05, y: -10 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full h-full flex items-center justify-center"
-          >
-            {isVideo ? (
-              currentItem.url ? (
-                <video
-                  ref={videoRef}
-                  src={currentItem.url}
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl mb-5"
-                  controls
-                  playsInline
-                  loop
-                  muted={false}
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-4 text-white/20">
-                  <Sparkles className="h-20 w-20" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">Video URL Missing</p>
-                </div>
-              )
-            ) : currentItem.url ? (
-              <img
+      <div
+        className="relative w-full h-full flex items-center justify-center p-6 md:p-20"
+        onClick={() => {
+          if (slideShow) {
+            setSlideShow(false);
+          }
+        }}
+      >
+        <MotionPresets motionType="SlideRightToLeft" className="relative w-full h-full flex items-center justify-center">
+          {isVideo ? (
+            currentItem.url ? (
+              <video
+                ref={videoRef}
                 src={currentItem.url}
-                alt="Fullscreen Preview"
-                className="max-w-full max-h-full object-contain shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-sm"
-                draggable={false}
+                className="max-w-full max-h-full object-contain rounded-xl shadow-2xl mb-5"
+                controls
+                playsInline
+                loop
+                muted={false}
               />
             ) : (
               <div className="flex flex-col items-center gap-4 text-white/20">
                 <Sparkles className="h-20 w-20" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Image URL Missing</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Video URL Missing</p>
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+            )
+          ) : currentItem.url ? (
+            <img
+              src={currentItem.url}
+              alt="Fullscreen Preview"
+              className="max-w-full max-h-full object-contain shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-sm"
+              draggable={false}
+            />
+          ) : (
+            <div className="flex flex-col items-center gap-4 text-white/20">
+              <Sparkles className="h-20 w-20" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em]">Image URL Missing</p>
+            </div>
+          )}
+        </MotionPresets>
       </div>
 
       {/* Navigation Arrows */}

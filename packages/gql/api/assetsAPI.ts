@@ -34,7 +34,6 @@ export const GET_CREATOR_ASSETS_QUERY = graphql(`
   query GetCreatorAssets($input: PaginationInput!) {
     getCreatorAssets(input: $input) {
       id
-      type
       rawUrl
       blurredUrl
       creatorId

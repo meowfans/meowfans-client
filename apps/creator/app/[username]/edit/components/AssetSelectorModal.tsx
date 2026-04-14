@@ -2,7 +2,6 @@
 
 import { useAssets } from '@/hooks/useAssets';
 import { AssetType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
-import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
@@ -47,7 +46,6 @@ export function AssetSelectorModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} description="Choose an image from your assets">
       <div className="space-y-4">
-        {/* Asset Type Tabs */}
         <Tabs value={assetType} onValueChange={(value) => setAssetType(value as AssetType)} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value={AssetType.Private}>Private</TabsTrigger>
@@ -94,24 +92,15 @@ export function AssetSelectorModal({
                             >
                               <NextImage src={asset.rawUrl} alt="Asset" fill className="object-cover" />
 
-                              {/* Overlay */}
                               <div
                                 className={`absolute inset-0 bg-black/50 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                               />
 
-                              {/* Selected Badge */}
                               {isSelected && (
                                 <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full p-1">
                                   <Check className="h-4 w-4" />
                                 </div>
                               )}
-
-                              {/* Asset Type Badge */}
-                              <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Badge variant="secondary" className="text-xs">
-                                  {asset.type}
-                                </Badge>
-                              </div>
                             </div>
                           </motion.div>
                         );

@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Film, Image as ImageIcon, Layers } from 'lucide-react';
 
 interface AssetsStatsProps {
@@ -8,44 +7,27 @@ interface AssetsStatsProps {
 }
 
 export function AssetsStats({ totalAssets, imageCount, videoCount }: AssetsStatsProps) {
+  const stats = [
+    { label: 'Total', value: totalAssets, icon: Layers, color: 'text-primary' },
+    { label: 'Images', value: imageCount, icon: ImageIcon, color: 'text-blue-500' },
+    { label: 'Videos', value: videoCount, icon: Film, color: 'text-red-500' },
+  ];
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-      <Card>
-        <CardHeader className="pb-2 sm:pb-3">
-          <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Assets</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl sm:text-3xl font-black flex items-center gap-2">
-            <Layers className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-            {totalAssets}
+    <div className="flex items-center gap-6 overflow-x-auto no-scrollbar py-2">
+      {stats.map((stat, i) => (
+        <div key={i} className="flex items-center gap-2 whitespace-nowrap group">
+          <div className={`p-1.5 rounded-lg bg-muted/50 transition-colors group-hover:bg-muted`}>
+            <stat.icon className={`h-3.5 w-3.5 ${stat.color}`} />
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Uploaded files</p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2 sm:pb-3">
-          <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Images</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl sm:text-3xl font-black flex items-center gap-2">
-            <ImageIcon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
-            {imageCount}
+          <div className="flex flex-col">
+            <span className="text-xs font-bold leading-tight">{stat.value}</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium leading-tight">
+              {stat.label}
+            </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Photos & Graphics</p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2 sm:pb-3">
-          <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Videos</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl sm:text-3xl font-black flex items-center gap-2">
-            <Film className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" />
-            {videoCount}
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">Clips & Recordings</p>
-        </CardContent>
-      </Card>
+        </div>
+      ))}
     </div>
   );
 }

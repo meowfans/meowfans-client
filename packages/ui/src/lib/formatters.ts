@@ -11,7 +11,7 @@ export const handleFormatNumberToKAndM = (digit: number) => {
   }).format(digit);
 };
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date | string) {
   const now = dayjs();
   const targetDate = dayjs(new Date(date));
 

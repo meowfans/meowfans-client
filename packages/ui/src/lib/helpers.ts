@@ -102,6 +102,10 @@ export const deleteImpersonationTokenAfterSessionEnds = async () => {
   }
 };
 
+export const clamp = (val: number, min = 1, max = 7) => {
+  return Math.max(min, Math.min(max, val));
+};
+
 export const resolveFileType = (url: string) => {
   if (url.endsWith('.png')) return FileType.IMAGE;
   if (url.endsWith('.jpg') || url.endsWith('.jpeg')) return FileType.IMAGE;
