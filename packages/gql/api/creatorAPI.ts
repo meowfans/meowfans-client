@@ -205,6 +205,10 @@ export const GET_CREATOR_PROFILE_QUERY = graphql(`
         updatedAt
         username
       }
+      payments {
+        total
+        month
+      }
     }
   }
 `);
