@@ -14,10 +14,6 @@ import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
 import { useEffect, useState } from 'react';
 
-/**
- * This hook is designed to fetch paginated posts belonging to a creator.
- * No visibility or purchase logic is applied.
- */
 export const usePosts = (params: PaginationInput) => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
@@ -55,24 +51,16 @@ export const usePosts = (params: PaginationInput) => {
   return { posts, handleLoadMore, loading, hasMore };
 };
 
-/**
- * This hook is designed to create a new post with attached assets.
- *
- * Business rules:
- * - Preview asset defaults to the first asset if not specified
- * - Post price is derived from post type
- *
- */
-export const useOnPostsUploadMutation = () => {
+export const useCreatePost = () => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { createPostQuery } = usePostsActions();
   const { successHandler } = useSuccessHandler();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [creating, setCreating] = useState<boolean>(false);
 
   const handleUploadPosts = async (input: CreatePostInput) => {
     if (!input.assetIds.length) return;
-    setLoading(true);
+    setCreating(true);
     try {
       const { data } = await createPostQuery(input);
       const newPost = data?.createPost as PostsEntity;
@@ -83,26 +71,22 @@ export const useOnPostsUploadMutation = () => {
     } catch (error) {
       errorHandler({ error });
     } finally {
-      setLoading(false);
+      setCreating(false);
     }
   };
 
-  return { handleUploadPosts, loading, setLoading };
+  return { handleUploadPosts, creating };
 };
 
-/**
- * This hook is designed to update editable post fields.
- * Only fields provided in input are updated.
- */
 export const useUpdatePost = () => {
   const { successHandler } = useSuccessHandler();
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { updatePostMutation } = usePostsActions();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
 
   const handleUpdatePost = async (input: UpdatePostInput) => {
-    setLoading(true);
+    setUpdating(true);
 
     try {
       const { data } = await updatePostMutation(input);
@@ -112,25 +96,22 @@ export const useUpdatePost = () => {
     } catch (error) {
       errorHandler({ error });
     } finally {
-      setLoading(false);
+      setUpdating(false);
     }
   };
 
-  return { loading, handleUpdatePost };
+  return { updating, handleUpdatePost };
 };
 
-/**
- * This hook is designed deletes a single post.
- */
 export const useDeletePost = () => {
   const { deletePostMutation } = usePostsActions();
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { successHandler } = useSuccessHandler();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
 
   const handleDeletePost = async (input: DeletePostInput) => {
-    setLoading(true);
+    setDeleting(true);
 
     try {
       const { data } = await deletePostMutation(input);
@@ -141,27 +122,21 @@ export const useDeletePost = () => {
     } catch (error) {
       errorHandler({ error });
     } finally {
-      setLoading(false);
+      setDeleting(false);
     }
   };
-  return { handleDeletePost, loading };
+  return { handleDeletePost, deleting };
 };
 
-/**
- * This hook is designed to delete posts in bulk
- *
- * Business logic:
- * - If the post is found and belongs to the creator then the post can be deleted
- */
 export const useBulkDeletePosts = () => {
   const { errorHandler } = useErrorHandler();
   const { posts, setPosts } = usePostsStore();
   const { successHandler } = useSuccessHandler();
   const { deletePostsMutation } = usePostsActions();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [bulkDeleting, setBulkDeleting] = useState<boolean>(false);
 
   const handleBulkDeletePosts = async (input: DeletePostsInput) => {
-    setLoading(true);
+    setBulkDeleting(true);
 
     try {
       const { data } = await deletePostsMutation(input);
@@ -172,18 +147,18 @@ export const useBulkDeletePosts = () => {
     } catch (error) {
       errorHandler({ error });
     } finally {
-      setLoading(false);
+      setBulkDeleting(false);
     }
   };
 
-  return { handleBulkDeletePosts, loading };
+  return { handleBulkDeletePosts, bulkDeleting };
 };
 
 interface SinglePostHookProps {
   postId: string;
 }
 
-export const useSinglePost = ({ postId }: SinglePostHookProps) => {
+export const useGetSinglePost = ({ postId }: SinglePostHookProps) => {
   const { errorHandler } = useErrorHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const { post, setPost } = usePostsStore();

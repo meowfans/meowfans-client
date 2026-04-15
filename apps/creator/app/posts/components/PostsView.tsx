@@ -26,9 +26,9 @@ export function PostsView() {
   };
 
   const { posts, loading, hasMore, handleLoadMore } = usePosts(params);
-  const { handleDeletePost, loading: deleting } = useDeletePost();
-  const { handleBulkDeletePosts, loading: bulkDeleting } = useBulkDeletePosts();
-  const { handleUpdatePost, loading: updating } = useUpdatePost();
+  const { handleDeletePost, deleting } = useDeletePost();
+  const { handleBulkDeletePosts, bulkDeleting } = useBulkDeletePosts();
+  const { handleUpdatePost, updating } = useUpdatePost();
 
   const handleToggleSelect = (postId: string) => {
     setSelectedPosts((prev) => (prev.includes(postId) ? prev.filter((id) => id !== postId) : [...prev, postId]));
