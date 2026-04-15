@@ -1,4 +1,4 @@
-import { Profile } from './components/ProfileView';
+import { Profile } from './components/Profile';
 
 export default function CreatorDashboardPage() {
   return <Profile />;

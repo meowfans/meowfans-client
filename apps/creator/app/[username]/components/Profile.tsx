@@ -1,8 +1,6 @@
 'use client';
 
-import { useFollowers } from '@/hooks/useFollowers';
-import { usePosts } from '@/hooks/usePosts';
-import { useVaults } from '@/hooks/useVaults';
+import { useCreator } from '@/hooks/context/useCreator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { ActionItems } from './ActionItems';
@@ -11,10 +9,7 @@ import { ProfileHeader } from './ProfileHeader';
 import { StatsCards } from './StatsCards';
 
 export function Profile() {
-  const { followers } = useFollowers({ take: 1 });
-  const { posts } = usePosts({ take: 1 });
-  const { vaults } = useVaults({ take: 1 });
-
+  const { creator } = useCreator();
   return (
     <div className="flex-1 space-y-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6">
       <div className="flex items-center justify-between">
@@ -31,18 +26,18 @@ export function Profile() {
         <TabsContent value="overview" className="space-y-4">
           <StatsCards
             totalRevenue={45231.89}
-            totalFollowers={followers.length > 0 ? 2350 : 0} // Mocked total, but conditional on data presence to be "real-ish"
-            totalPosts={posts.length > 0 ? 12 : 0}
-            activeVaults={vaults.length > 0 ? 5 : 0}
+            totalFollowers={creator.followersCount}
+            totalPosts={creator.totalPost}
+            activeVaults={creator.vaultCount ?? 0}
           />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <AnalyticsOverview />
+            <AnalyticsOverview payments={creator.payments} />
             <ActionItems />
           </div>
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <AnalyticsOverview />
+            <AnalyticsOverview payments={creator.payments} />
             <Card className="col-span-3">
               <CardHeader>
                 <CardTitle>Top Performing Posts</CardTitle>
