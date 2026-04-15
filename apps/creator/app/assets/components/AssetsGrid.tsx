@@ -4,7 +4,6 @@ import { GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { FullscreenViewer } from '@workspace/ui/globals/FullscreenViewer';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
-import { useIsMobile } from '@workspace/ui/hooks/useIsMobile';
 import { formatDate } from '@workspace/ui/lib/formatters';
 import { clamp } from '@workspace/ui/lib/helpers';
 import { format } from 'date-fns';
@@ -21,6 +20,7 @@ interface AssetsGridProps {
   onDelete: (id: string) => void;
   selectedAssets: string[];
   onToggleSelect: (id: string) => void;
+  useWindowScroll?: boolean;
 }
 
 interface Cols {
@@ -39,11 +39,10 @@ const BASE_COLS: Cols = {
   xl: 7
 };
 
-export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, selectedAssets, onToggleSelect }: AssetsGridProps) {
+export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, selectedAssets, onToggleSelect, useWindowScroll = true }: AssetsGridProps) {
   const [activeAssetId, setActiveAssetId] = useState<string | null>(null);
   const [zoom, setZoom] = useState<number>(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const element = containerRef.current;
@@ -97,13 +96,13 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, sel
   }, [zoom]);
 
   return (
-    <div className="bg-background flex flex-col" ref={containerRef}>
-      <InfiniteScrollManager useWindowScroll dataLength={assets.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
+    <div className={`flex flex-col ${useWindowScroll ? '' : ' h-full'}`} ref={containerRef}>
+      <InfiniteScrollManager loading={loading} hasMore={hasMore} onLoadMore={onLoadMore} dataLength={assets.length} useWindowScroll={useWindowScroll}>
         <div className="flex flex-col gap-4 pb-20">
           {groupedAssets.map(([date, groupAssets]) => (
             <div key={date}>
-              <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border/10">
-                <h3 className="text-sm font-bold tracking-tight text-muted-foreground uppercase">{formatDate(date)}</h3>
+              <div className="sticky top-0 z-10 backdrop-blur-md border-b border-border/10">
+                <h3 className="text-sm font-bold tracking-tight uppercase">{formatDate(date)}</h3>
               </div>
 
               <div className={`grid gap-[2px] ${gridClassNames}`}>

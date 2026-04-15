@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { PostsStudioView } from './components/PostsStudioView';
+import { PostsStudio } from './components/PostsStudio';
 
 export const metadata: Metadata = {
   title: 'Posts Studio',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function PostsStudioPage() {
-  return <PostsStudioView />;
+  return <PostsStudio />;
 }
