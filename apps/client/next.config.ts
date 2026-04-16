@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'supabase.clashperk.com'
+      },
+      {
+        protocol: 'https',
         hostname: 'meowfans-media.sfo3.cdn.digitaloceanspaces.com'
       },
       {

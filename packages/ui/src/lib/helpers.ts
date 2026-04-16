@@ -115,6 +115,10 @@ export const resolveFileType = (url: string) => {
   return FileType.IMAGE;
 };
 
+export const replaceUrl = (url: string) => {
+  return `${'https://supabase.clashperk.com/storage/v1/object/public/meowfans-media'}/${url}`;
+};
+
 export const handleFullScreen = (url: string, startIndex: number, mediaUrls: string[], type?: 'img' | 'video') => {
   let currentIndex = startIndex;
 

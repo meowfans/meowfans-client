@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Maximize2 } from 'lucide-react';
 import { ButtonHTMLAttributes, useState } from 'react';
 import { FullscreenViewer } from './FullscreenViewer';
+import { replaceUrl } from '../lib';
 
 export interface FullScreenButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   currentIdx: number;
@@ -35,7 +36,7 @@ export const FullScreenButton: React.FC<FullScreenButtonProps> = ({
   const validItems = urls
     .filter((url): url is string => !!url)
     .map((url) => ({
-      url,
+      url: replaceUrl(url),
       type: url.endsWith('.mp4') ? 'VIDEO' : 'IMAGE'
     }));
 

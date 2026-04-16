@@ -61,11 +61,12 @@ export const PostsList = ({
             <AnimatePresence mode="popLayout">
               {posts.map((post, index) => (
                 <ApplyAd
-                  key={post.id}
+                  key={`${post.id}-${index}`}
                   canApplyAd={true}
                   zoneIndex={index}
                   element={
                     <PostCard
+                      key={post.id}
                       post={post}
                       isBlurEnabled={isBlurEnabled}
                       isExpanded={expandedPostId === post.id}

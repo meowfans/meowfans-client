@@ -3,6 +3,7 @@
 import { InteractionButton } from '@/components/InteractionButton';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { Heart, Image as ImageIcon, Lock, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 
@@ -32,7 +33,7 @@ export function SingleVaultObjectCard({ obj, index, isVaultPurchased, onPurchase
               <Image
                 width={300}
                 height={400}
-                src={obj.rawUrl}
+                src={replaceUrl(obj.rawUrl)}
                 alt={`Content ${index + 1}`}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />

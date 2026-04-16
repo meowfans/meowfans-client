@@ -6,6 +6,7 @@ import { cn } from '@workspace/ui/lib/utils';
 import { Eye } from 'lucide-react';
 import { useState } from 'react';
 import { ContentSafetyDialog } from './ContentSafetyDialog';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 interface BlurImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   // Option to manually override the blur behavior
@@ -40,7 +41,7 @@ export function BlurImage({ src, alt, className, blur, ...props }: BlurImageProp
     <>
       <div className={cn('relative overflow-hidden', className)}>
         <img
-          src={src || '/placeholder-content.png'}
+          src={replaceUrl(src as string) || '/placeholder-content.png'}
           alt={alt}
           className={cn(
             'transition-all duration-500 w-full h-full object-cover',

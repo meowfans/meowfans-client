@@ -31,7 +31,6 @@ export function SingleVaultContent({
   const isMobile = useIsMobile();
   const [gridCols, setGridCols] = useState<number>(isMobile ? 1 : 3);
 
-  // Mapping gridCols to responsive classes
   const layouts = [
     { cols: 1, icon: Maximize, label: 'Single Column' },
     { cols: 3, icon: Grid3x3, label: '3 Columns' },
