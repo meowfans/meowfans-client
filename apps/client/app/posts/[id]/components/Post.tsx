@@ -18,6 +18,7 @@ import { PostDetailCreatorBar } from './PostDetailCreatorBar';
 import { PostDetailEngagement } from './PostDetailEngagement';
 import { PostDetailHeader } from './PostDetailHeader';
 import { PostDetailMedia } from './PostDetailMedia';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 interface SinglePostProps {
   initialPost: GetPublicSinglePostOutput | null;
@@ -72,11 +73,10 @@ export function SinglePost({ initialPost }: SinglePostProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-background">
-      {/* Immersive Background Blur */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {post.preview && (
           <Image
-            src={post.preview}
+            src={replaceUrl(post.preview)}
             alt="decorative-background"
             fill
             className="object-cover opacity-10 blur-[100px] saturate-200 scale-125"
@@ -88,10 +88,8 @@ export function SinglePost({ initialPost }: SinglePostProps) {
 
       <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar">
         <div className="mx-auto w-full max-w-2xl px-4 py-6 md:py-10">
-          {/* Header Navigation */}
           <PostDetailHeader unlockPrice={post.unlockPrice} isPurchased={post.isPurchased} onReport={() => setIsReportModalOpen(true)} />
 
-          {/* Post Card */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,7 +134,6 @@ export function SinglePost({ initialPost }: SinglePostProps) {
             <ExoAdProvider zoneId="5770578" zoneType={ExoAdZoneTypes.MobilePost} />
           </div>
 
-          {/* Comments Section */}
           <PostComments postId={post.id} isLocked={isLocked} />
         </div>
       </div>

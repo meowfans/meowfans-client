@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'supabase.clashperk.com'
+      },
+      {
+        protocol: 'https',
         hostname: 'media.meowfans.app'
       },
       {

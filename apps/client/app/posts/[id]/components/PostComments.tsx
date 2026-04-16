@@ -50,7 +50,6 @@ export function PostComments({ postId, isLocked }: PostCommentsProps) {
 
   return (
     <div className="mt-8 md:mt-12 space-y-8">
-      {/* Header */}
       <div className="flex items-center justify-between px-4 md:px-0">
         <h3 className="text-lg md:text-xl  flex items-center gap-3">
           <MessageSquare className="h-5 w-5 text-primary" />
@@ -61,9 +60,7 @@ export function PostComments({ postId, isLocked }: PostCommentsProps) {
         </h3>
       </div>
 
-      {/* Input Area */}
       <div className="space-y-4">
-        {/* Quick Emojis */}
         <div className="flex items-center gap-2 px-1 overflow-x-auto no-scrollbar">
           {QUICK_EMOJIS.map((emoji) => (
             <button
@@ -131,7 +128,6 @@ export function PostComments({ postId, isLocked }: PostCommentsProps) {
         </div>
       </div>
 
-      {/* Comments List */}
       <div className="space-y-4 md:space-y-6">
         <AnimatePresence mode="popLayout">
           {postComments.map((comment, idx) => (

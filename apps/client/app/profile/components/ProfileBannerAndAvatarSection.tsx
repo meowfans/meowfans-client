@@ -3,6 +3,7 @@ import { Card } from '@workspace/ui/components/card';
 import { motion } from 'framer-motion';
 import { Check, Image as ImageIcon, User as UserIcon } from 'lucide-react';
 import Image from 'next/image';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 interface ProfileBannerAndAvatarSectionProps {
   username: string;
@@ -18,7 +19,7 @@ export const ProfileBannerAndAvatarSection = ({ username, avatarUrl, bannerUrl, 
         <div className="relative h-48 md:h-72 bg-gradient-to-br from-primary/30 via-primary/10 to-background group">
           {bannerUrl ? (
             <Image
-              src={bannerUrl}
+              src={replaceUrl(bannerUrl)}
               alt="Banner"
               width={300}
               height={400}

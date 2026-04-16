@@ -20,7 +20,6 @@ export const ReportCard = ({ report, index }: ReportCardProps) => {
         <Card className="group overflow-hidden border-none bg-secondary/10 hover:bg-secondary/20 transition-all duration-300 rounded-[1.5rem] md:rounded-[2rem]">
           <CardContent className="p-0">
             <div className="flex flex-col md:flex-row md:items-center">
-              {/* Status Indicator */}
               <div
                 className={`w-full md:w-2 h-2 md:h-auto self-stretch ${report.status === 'RESOLVED' ? 'bg-emerald-500' : 'bg-amber-500'}`}
               />

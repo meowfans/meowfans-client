@@ -7,6 +7,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { FullScreenButton } from './FullScreenButton';
+import { replaceUrl } from '../lib';
+import { relative } from 'path';
 
 export enum FileType {
   Audio = 'AUDIO',
@@ -171,7 +173,7 @@ export const Carousel = <T,>({
                   setSlideShow(false);
                 }
               }}
-              src={getUrl(items[selectedIndex])}
+              src={replaceUrl(getUrl(items[selectedIndex]) as string)}
               alt=""
               className="h-full w-full object-cover"
             />
@@ -196,7 +198,7 @@ export const Carousel = <T,>({
                       initial={{ scale: 1.1, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      src={getUrl(item)}
+                      src={replaceUrl(getUrl(item) as string)}
                       alt="Content Media"
                       draggable={false}
                       className="h-full w-full object-contain pointer-events-none"
@@ -207,7 +209,7 @@ export const Carousel = <T,>({
                     </div>
                   )
                 ) : (
-                  getUrl(item) && <video src={getUrl(item)} controls playsInline className="h-full w-full object-contain" />
+                  getUrl(item) && <video src={replaceUrl(getUrl(item) as string)} controls playsInline className="h-full w-full object-contain" />
                 )}
               </div>
 

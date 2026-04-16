@@ -5,14 +5,12 @@ import { cn } from '@workspace/ui/lib/utils';
 import { Eye } from 'lucide-react';
 import React, { forwardRef, useState } from 'react';
 import { ContentSafetyDialog } from './ContentSafetyDialog';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 interface BlurVideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
   blur?: boolean;
 }
 
-/**
- * A custom video component that applies a blur effect based on user settings.
- */
 export const BlurVideo = forwardRef<HTMLVideoElement, BlurVideoProps>(({ src, className, blur, ...props }, ref) => {
   const { isBlurEnabled } = useContentBlur();
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -24,7 +22,7 @@ export const BlurVideo = forwardRef<HTMLVideoElement, BlurVideoProps>(({ src, cl
       <div className={cn('relative overflow-hidden w-full h-full', className)}>
         <video
           ref={ref}
-          src={src}
+          src={replaceUrl(src as string)}
           className={cn(
             'transition-all duration-500 w-full h-full object-cover',
             shouldBlur && 'blur-2xl scale-110 saturate-50 brightness-75'

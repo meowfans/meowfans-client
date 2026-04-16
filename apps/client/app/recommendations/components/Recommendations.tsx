@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { motion } from 'framer-motion';
 import { Code, Database, Eye, LayoutGrid, Loader2, RefreshCcw, Users } from 'lucide-react';
 import { useState } from 'react';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 export function Recommendations() {
   const [loading, setLoading] = useState(false);

@@ -2,8 +2,8 @@ import { Bug, Lightbulb, MessageSquare, Smile } from 'lucide-react';
 import { FeedbackType } from './enums';
 import { FeedbackCategory } from './types';
 
-export const MEOW_FANS_BANNER = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_banner.png';
-export const MEOW_FANS_AVATAR = 'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/meowfans_avatar.png';
+export const MEOW_FANS_BANNER = 'meowfans_banner.png';
+export const MEOW_FANS_AVATAR = 'meowfans_avatar.png';
 
 export const authRefreshCookieKey = '_rt';
 export const authCookieKey = '_at';
@@ -24,11 +24,11 @@ export const cookieConsentCookieKey = '_cookie_consent';
 export const OK_URI = 'https://ok.xxx/albums';
 
 export const AVATAR_OPTIONS = [
-  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random1.svg',
-  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random2.svg',
-  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random3.svg',
-  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random4.svg',
-  'https://meowfans-media.sfo3.cdn.digitaloceanspaces.com/random5.svg'
+  'random1.svg',
+  'random2.svg',
+  'random3.svg',
+  'random4.svg',
+  'random5.svg'
 ];
 
 export const QUICK_EMOJIS = ['🔥', '❤️', '😍', '🙌', '👏', '✨', '💯', '😂'];
