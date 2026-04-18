@@ -54,7 +54,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@graphql-codegen/cli": "^6.2.1",
-    "@graphql-codegen/client-preset": "^5.0.0",
+    "@graphql-codegen/client-preset": "^5.3.0",
     "@graphql-codegen/typescript": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^5.0.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.3",
