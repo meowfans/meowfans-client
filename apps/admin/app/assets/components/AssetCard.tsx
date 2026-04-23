@@ -4,8 +4,8 @@
 import { AssetsEntity, FileType } from '@workspace/gql/generated/graphql';
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Badge } from '@workspace/ui/components/badge';
-import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { motion } from 'framer-motion';
 import { ExternalLink, Fullscreen, PlayCircle } from 'lucide-react';
 import { getFileTypeIcon } from './AssetIcons';
@@ -19,47 +19,13 @@ interface AssetCardProps {
 
 export const AssetCard = ({ asset, mode, index, onShowCarousel }: AssetCardProps) => {
   const isVideo = asset.fileType === FileType.Video;
+  const url = replaceUrl(asset.rawUrl);
 
   if (mode === 'list') {
     return (
       <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (index % 10) * 0.05 }}>
-        <Card className="p-2 md:p-3 border-primary/5 hover:border-primary/20 transition-all hover:bg-primary/[0.02] shadow-sm flex items-center gap-3 md:gap-4 overflow-hidden relative group">
-          {asset.rawUrl && (
-            <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-primary/10 relative">
-              {isVideo ? (
-                <video
-                  autoPlay={false}
-                  controls={false}
-                  src={asset.rawUrl}
-                  className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                />
-              ) : (
-                <img
-                  src={asset.rawUrl}
-                  alt=""
-                  className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                />
-              )}
-              {isVideo && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <PlayCircle className="h-5 w-5 text-white drop-shadow-lg" />
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1">
-              <Badge
-                variant="outline"
-                className="text-[7px] md:text-[8px] h-3.5 md:h-4 px-1 md:px-1.5 font-black uppercase tracking-tighter bg-primary/5 text-primary/80 border-primary/10"
-              >
-                {asset.fileType}
-              </Badge>
-              <span className="text-[9px] md:text-[10px] text-muted-foreground/40 font-mono truncate max-w-[60px] md:max-w-none">
-                #{asset.id.slice(0, 6)}
-              </span>
-            </div>
+        <Card className="p-2 border-primary/5 hover:border-primary/20 transition-all hover:bg-primary/[0.02] shadow-sm flex flex-col gap-1 overflow-hidden relative group">
+          <div className="flex flex-row justify-between">
             <div className="flex items-center gap-2">
               <Avatar className="h-4 w-4 md:h-5 md:w-5 border border-primary/20">
                 <AvatarImage src={asset.creatorProfile?.user?.avatarUrl || ''} />
@@ -67,25 +33,44 @@ export const AssetCard = ({ asset, mode, index, onShowCarousel }: AssetCardProps
                   {asset.creatorProfile?.user?.username?.[0]}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-tight truncate max-w-[100px] sm:max-w-none">
-                {asset.creatorProfile?.user?.username}
-              </span>
+              <div className="flex flex-col gap-y-1">
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-tight truncate max-w-[100px] sm:max-w-none">
+                  {asset.creatorProfile?.user?.username}
+                </span>
+                <span className="text-[9px] md:text-[10px] text-muted-foreground/40 font-mono">{asset.id}</span>
+              </div>
             </div>
+            {asset.rawUrl && (
+              <div
+                onClick={() => onShowCarousel(index)}
+                className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-primary/10 relative"
+              >
+                {isVideo ? (
+                  <video
+                    autoPlay={false}
+                    controls={false}
+                    src={url}
+                    className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+                  />
+                ) : (
+                  <img
+                    src={url}
+                    alt=""
+                    className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+                  />
+                )}
+                {isVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <PlayCircle className="h-5 w-5 text-white drop-shadow-lg" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="text-right shrink-0 hidden sm:block">
             <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">{asset.mimeType}</p>
             <p className="text-[10px] font-mono text-muted-foreground/60">{new Date(asset.createdAt).toLocaleDateString()}</p>
-          </div>
-
-          <div className="shrink-0 flex items-center">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 rounded-full sm:opacity-0 sm:group-hover:opacity-100 transition-all translate-x-1 sm:translate-x-2 group-hover:translate-x-0"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-            </Button>
           </div>
         </Card>
       </motion.div>
@@ -102,12 +87,12 @@ export const AssetCard = ({ asset, mode, index, onShowCarousel }: AssetCardProps
             <video
               autoPlay={false}
               controls={false}
-              src={asset.rawUrl}
+              src={url}
               className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
             />
           ) : (
             <img
-              src={asset.rawUrl}
+              src={url}
               alt={asset.id}
               className="h-full w-full object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
             />

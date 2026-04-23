@@ -28,12 +28,12 @@ const LoadingComponent = () => {
   );
 };
 
-const DefaultEndMessage = () => {
+const DefaultEndMessage = ({ hasMore, dataLength }: { hasMore: boolean; dataLength: number }) => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="h-px w-12 bg-border/20 mb-6" />
       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 text-center">
-        You&apos;ve reached the end of the collection
+        {!hasMore && dataLength ? `You've reached the end of the collections` : 'NO COLLECTIONS FOUND'}
       </p>
     </div>
   );
@@ -50,7 +50,7 @@ export const InfiniteScrollManager: React.FC<InfiniteScrollManagerProps> = ({
   scrollThreshold = 0.7,
   customHeight = 'h-full',
   useWindowScroll,
-  endMessage = <DefaultEndMessage />
+  endMessage = <DefaultEndMessage hasMore={hasMore} dataLength={dataLength} />
 }) => {
   if (useWindowScroll) {
     return (

@@ -27,7 +27,7 @@ export const AssetsHeader = ({ count, viewMode, onViewModeChange }: AssetsHeader
             <motion.div key={count} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5">
               <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-                {count || 0} Global Assets <span className="opacity-50">Discovery</span>
+                {count || 0} Assets <span className="opacity-50">Loaded</span>
               </span>
             </motion.div>
           </AnimatePresence>
