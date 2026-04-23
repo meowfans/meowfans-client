@@ -7,8 +7,7 @@ import {
   creatorRefreshCookieKey,
   FetchMethods,
   FileType,
-  MediaType,
-  UploadMediaOutput
+  MediaType
 } from '@workspace/ui/lib';
 import { deleteCookie, getCookie } from 'cookies-next';
 
@@ -47,6 +46,7 @@ const useAPI = () => {
     deleteCookie(creatorRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    window.location.href = configService.NEXT_PUBLIC_AUTH_URL;
   };
 
   const upload = async (params: { mediaType: MediaType; formData: FormData; fileType: FileType; assetType: AssetType }) => {

@@ -119,7 +119,6 @@ export function VerificationFormView() {
 
   const handleSwitchAccount = () => {
     logout();
-    router.refresh();
   };
 
   return (

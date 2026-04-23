@@ -27,6 +27,7 @@ const logout = () => {
   deleteCookie(adminRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
   deleteCookie(authCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
   deleteCookie(authRefreshCookieKey, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+  window.location.href = configService.NEXT_PUBLIC_AUTH_URL;
 };
 
 const useAPI = () => {

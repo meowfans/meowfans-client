@@ -19,7 +19,6 @@ export function LogoutModal() {
     logout();
     setOpenLogoutModal(false);
     setIsLoggingOut(false);
-    router.refresh();
   };
 
   const handleCancel = () => {

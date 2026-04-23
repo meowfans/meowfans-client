@@ -3,23 +3,16 @@ import { useCreatorMutations } from '@/hooks/useCreatorMutations';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
 import { AlertTriangle, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export const SettingsAccountManageMent = () => {
-  const router = useRouter();
   const { logout } = useAPI();
   const { deleteAccount, loading } = useCreatorMutations();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
-  const handleLogout = () => {
-    logout();
-    router.refresh();
-  };
-
   const handleDeleteAccount = async () => {
     await deleteAccount();
-    handleLogout();
+    logout();
     setShowDeleteConfirm(false);
   };
 
