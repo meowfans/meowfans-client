@@ -34,7 +34,6 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 pt-8 pb-4">
-      {/* Top Section: Avatar & Stats */}
       <div className="flex items-center gap-8 md:gap-16 mb-6">
         <div className="shrink-0">
           <Avatar className="h-20 w-20 md:h-40 md:w-40 border-2 border-background ring-2 ring-primary/10 shadow-2xl">
@@ -75,7 +74,6 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
             </div>
           </div>
 
-          {/* Desktop Stats */}
           <div className="hidden md:flex items-center gap-10">
             {stats.map((stat) => (
               <div key={stat.label} className="flex items-center gap-1.5">
@@ -87,7 +85,6 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
         </div>
       </div>
 
-      {/* Bio Section */}
       <div className="space-y-1 mb-8">
         <div className="flex items-center gap-2">
           <span className="font-bold text-sm md:text-base">{profile.fullName}</span>
@@ -100,7 +97,6 @@ export function CreatorProfileHeader({ profile }: CreatorProfileHeaderProps) {
         {profile.bio && <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap max-w-xl">{profile.bio}</p>}
       </div>
 
-      {/* Mobile Stats Row */}
       <div className="md:hidden flex items-center justify-around py-4 border-y border-white/5">
         {stats.map((stat) => (
           <div key={stat.label} className="flex flex-col items-center">

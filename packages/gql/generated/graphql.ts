@@ -336,6 +336,7 @@ export type CreatorProfilesEntity = {
   totalExclusivePost: Scalars['Float']['output'];
   totalPost: Scalars['Float']['output'];
   totalPublicPost: Scalars['Float']['output'];
+  totalRevenue?: Maybe<Scalars['Int']['output']>;
   totalSubscriber: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   user: UsersEntity;
@@ -693,7 +694,7 @@ export type GetPostInput = {
 };
 
 export type GetPublicCreatorProfileInput = {
-  userId: Scalars['String']['input'];
+  userIdOrName: Scalars['String']['input'];
 };
 
 export type GetPublicCreatorProfileOutput = {
@@ -1998,6 +1999,7 @@ export type SocialAccountsEntity = {
   instagram?: Maybe<Scalars['String']['output']>;
   twitter?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
+  username: Scalars['String']['output'];
   website?: Maybe<Scalars['String']['output']>;
 };
 
