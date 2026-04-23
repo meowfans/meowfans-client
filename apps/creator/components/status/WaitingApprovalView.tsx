@@ -1,11 +1,9 @@
 'use client';
 
 import useAPI from '@/hooks/useAPI';
-import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
 import { Card } from '@workspace/ui/components/card';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
-import { buildSafeUrl } from '@workspace/ui/lib';
 import { motion } from 'framer-motion';
 import { Clock, Loader2, Mail, ShieldCheck, Sparkles, TrendingUp, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -16,12 +14,10 @@ export function WaitingApprovalView() {
 
   const handleSwitch = () => {
     logout();
-    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL }));
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-12 flex items-center justify-center overflow-x-hidden relative">
-      {/* Animated purely decorative background elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(220,38,38,0.05),_transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,_rgba(59,130,246,0.05),_transparent_50%)]" />
 

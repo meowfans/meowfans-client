@@ -6,19 +6,16 @@ import { Card } from '@workspace/ui/components/card';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Mail, RefreshCw, XCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface RejectedViewProps {
   reason?: string;
 }
 
 export function RejectedView({ reason = 'Your profile did not meet our current community guidelines.' }: RejectedViewProps) {
-  const router = useRouter();
   const { logout } = useAPI();
 
   const handleSwitch = () => {
     logout();
-    router.refresh();
   };
 
   return (

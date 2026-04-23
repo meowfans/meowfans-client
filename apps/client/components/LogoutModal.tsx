@@ -2,22 +2,17 @@
 
 import { useAPI } from '@/hooks/client/useAPI';
 import { useUtilsStore } from '@/hooks/store/utils.store';
-import { configService } from '@/util/config';
 import { Button } from '@workspace/ui/components/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@workspace/ui/components/dialog';
-import { buildSafeUrl } from '@workspace/ui/lib/helpers';
 import { LogOut, ShieldAlert } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 export function LogoutModal() {
   const { openLogoutModal, setOpenLogoutModal } = useUtilsStore();
-  const router = useRouter();
   const { logout } = useAPI();
 
   const handleLogout = () => {
-    logout();
-    router.push(buildSafeUrl({ host: configService.NEXT_PUBLIC_AUTH_URL, pathname: '/login' }));
     setOpenLogoutModal(false);
+    logout();
   };
 
   return (

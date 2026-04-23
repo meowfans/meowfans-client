@@ -43,7 +43,6 @@ export function VaultsView() {
   const handleDelete = async (vaultId: string) => {
     if (confirm('Are you sure you want to delete this vault?')) {
       setDeleting(true);
-      // Mock delete
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success('Vault deleted');
       setSelectedVaults((prev) => prev.filter((id) => id !== vaultId));
@@ -79,7 +78,6 @@ export function VaultsView() {
     return matchesSearch && matchesTab;
   });
 
-  // Calculate stats from loaded vaults
   const totalVaults = vaults.length;
   const totalLikes = vaults.reduce((sum, v) => sum + v.likeCount, 0);
   const totalViews = vaults.reduce((sum, v) => sum + (v.viewCount || 0), 0);
