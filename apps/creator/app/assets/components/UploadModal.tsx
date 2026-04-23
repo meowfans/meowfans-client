@@ -1,5 +1,6 @@
 'use client';
 
+import { NextImage } from '@/components/NextImage';
 import { useAssetsStore } from '@/hooks/store/assets.store';
 import useAPI from '@/hooks/useAPI';
 import { AssetType } from '@workspace/gql/generated/graphql';
@@ -11,7 +12,6 @@ import { resolveFileType } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FileVideo, Upload, X } from 'lucide-react';
-import NextImage from 'next/image';
 import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 

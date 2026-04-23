@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { VaultsStudioView } from './components/VaultsStudioView';
+import { VaultsStudio } from './components/VaultsStudio';
 
 export const metadata: Metadata = {
   title: 'Vaults Studio',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function VaultsStudioPage() {
-  return <VaultsStudioView />;
+  return <VaultsStudio />;
 }

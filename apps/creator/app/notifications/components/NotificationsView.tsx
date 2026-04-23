@@ -209,7 +209,6 @@ export function NotificationsView() {
                   {!notification.isRead && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />}
 
                   <div className="p-4 md:p-6 flex items-start gap-4 md:gap-6">
-                    {/* Icon/Avatar Container */}
                     <div className="relative shrink-0">
                       {notification.user ? (
                         <Avatar className="h-12 w-12 border-2 border-background shadow-lg">

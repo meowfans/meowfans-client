@@ -8,6 +8,7 @@ import { ChannelsOutput, FileType } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { LoadingButtonV2 } from '@workspace/ui/globals/LoadingButtonV2';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CornerDownRight, DollarSign, Image as ImageIcon, Lock, Send, X } from 'lucide-react';
 import Image from 'next/image';
@@ -144,7 +145,7 @@ export function SingleChannelInputArea({ channel }: { channel: ChannelsOutput | 
                   {asset.fileType === FileType.Image ? (
                     <Image width={48} height={48} src={asset.rawUrl} alt={`Selected ${idx + 1}`} className="h-full w-full object-cover" />
                   ) : (
-                    <video src={asset.rawUrl} className="h-full w-full object-cover" muted playsInline preload="metadata" />
+                    <video src={replaceUrl(asset.rawUrl)} className="h-full w-full object-cover" muted playsInline preload="metadata" />
                   )}
                 </div>
                 <Button

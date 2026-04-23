@@ -1,5 +1,6 @@
 'use client';
 
+import { NextImage } from '@/components/NextImage';
 import { useAssets } from '@/hooks/useAssets';
 import { AssetType, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
@@ -9,7 +10,6 @@ import { Loading } from '@workspace/ui/globals/Loading';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Image as ImageIcon } from 'lucide-react';
-import NextImage from 'next/image';
 import { useState } from 'react';
 
 interface AssetSelectorModalProps {

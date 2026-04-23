@@ -60,7 +60,6 @@ export function DashboardView() {
 
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto pb-20 w-full">
-      {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -117,9 +116,7 @@ export function DashboardView() {
         </div>
       </motion.div>
 
-      {/* Grid Content */}
       <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Stats Section */}
         <div className="lg:col-span-8 space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.map((stat, i) => (
@@ -170,9 +167,7 @@ export function DashboardView() {
           </motion.div>
         </div>
 
-        {/* Sidebar Widgets */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Quick Actions Widget */}
           <motion.div variants={item}>
             <Card className="border-none bg-primary text-primary-foreground p-6 rounded-[2rem] shadow-xl shadow-primary/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-24 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -206,7 +201,6 @@ export function DashboardView() {
             </Card>
           </motion.div>
 
-          {/* Entertainment Feed Widget */}
           <motion.div variants={item}>
             <Card className="border-none bg-secondary/30 p-6 rounded-[2rem] ring-1 ring-white/5">
               <div className="flex items-center justify-between mb-6">

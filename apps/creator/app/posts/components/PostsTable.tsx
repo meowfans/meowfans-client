@@ -1,5 +1,6 @@
 'use client';
 
+import { NextImage } from '@/components/NextImage';
 import { PostsEntity, PostTypes } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
@@ -15,7 +16,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { AnimatePresence } from 'framer-motion';
 import { Eye, Heart, MessageCircle, MoreVertical, Share2, Trash2, TrendingUp } from 'lucide-react';
-import NextImage from 'next/image';
 
 interface PostsTableProps {
   posts: PostsEntity[];
