@@ -16,9 +16,8 @@ interface TrendingCreatorCardProps {
 export function TrendingCreatorCard({ creator, index }: TrendingCreatorCardProps) {
   return (
     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(index * 0.05, 0.5) }}>
-      <Link href={`/creators/${creator.id}`}>
+      <Link href={`/creators/${creator.username}`}>
         <Card className="group relative p-3 md:p-6 border-none bg-secondary/15 hover:bg-secondary/25 transition-all duration-300 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-between cursor-pointer overflow-hidden shadow-none hover:shadow-xl hover:shadow-primary/5">
-          {/* Background glow for top 3 */}
           {index < 3 && (
             <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-primary/5 blur-[80px] md:blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           )}

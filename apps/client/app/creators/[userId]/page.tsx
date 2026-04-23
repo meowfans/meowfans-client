@@ -5,6 +5,7 @@ import { ROUTE_METADATA } from '@/lib/metadata-config';
 import { GetPublicCreatorProfileOutput, SortBy, SortOrder } from '@workspace/gql/generated/graphql';
 import { Metadata } from 'next';
 import { SingleCreatorProfile } from './components/SingleCreatorProfile';
+import { notFound, redirect } from 'next/navigation';
 
 interface SingleCreatorProfilePageProps {
   params: Promise<{ userId: string }>;
@@ -34,6 +35,10 @@ export const dynamic = 'force-dynamic';
 export default async function SingleCreatorProfilePage({ params }: SingleCreatorProfilePageProps) {
   const { userId } = await params;
   const profile = (await getPublicCreatorProfile(userId)) as GetPublicCreatorProfileOutput;
+
+  if (!profile) notFound();
+
+  if (profile && userId !== profile.username) redirect(`/creators/${profile.username}`);
 
   const [initialPosts, initialVaults] = await Promise.all([
     getPublicCreatorPosts({

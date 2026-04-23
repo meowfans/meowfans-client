@@ -19,7 +19,7 @@ export default async function Image({ params }: { params: Promise<{ userId: stri
   const { userId } = await params;
 
   const client = await createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan).getClient();
-  const { data } = await client.query({ query: GET_PUBLIC_CREATOR_PROFILE_QUERY, variables: { input: { userId } } });
+  const { data } = await client.query({ query: GET_PUBLIC_CREATOR_PROFILE_QUERY, variables: { input: { userIdOrName: userId } } });
 
   const profile = data?.getPublicCreatorProfile;
   return new ImageResponse(<img src={profile?.avatarUrl} alt={profile?.fullName} width={1024} height={1024} />, { ...size });

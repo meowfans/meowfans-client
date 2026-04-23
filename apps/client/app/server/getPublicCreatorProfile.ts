@@ -10,12 +10,12 @@ import { cache } from 'react';
 
 const { getClient } = createApolloClient(configService.NEXT_PUBLIC_API_GRAPHQL_URL, UserRoles.Fan);
 
-export const getPublicCreatorProfile = cache(async (userId: string) => {
+export const getPublicCreatorProfile = cache(async (userIdOrName: string) => {
   try {
     const client = await getClient();
     const { data } = await client.query({
       query: GET_PUBLIC_CREATOR_PROFILE_QUERY,
-      variables: { input: { userId } },
+      variables: { input: { userIdOrName } },
       fetchPolicy: 'no-cache'
     });
     return data?.getPublicCreatorProfile || null;
