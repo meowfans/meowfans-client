@@ -74,7 +74,7 @@ export function ImpersonationTimer() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-amber-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg flex items-center gap-2 md:gap-3 font-bold border-2 border-white/20 backdrop-blur-md mx-auto"
+        className="bg-amber-500 text-white px-3 py-1.5 md:px-4 md:py-1 rounded-full shadow-lg flex items-center gap-2 md:gap-3 font-bold border-2 border-white/20 backdrop-blur-md mx-auto"
       >
         <div className="bg-white/20 p-1.5 rounded-full animate-pulse shrink-0">
           <ShieldAlert className="w-3 h-3 md:w-4 md:h-4" />

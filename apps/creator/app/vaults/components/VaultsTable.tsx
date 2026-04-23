@@ -42,7 +42,7 @@ export function VaultsTable({
 }: VaultsTableProps) {
   return (
     <div className="border rounded-md">
-      <InfiniteScrollManager dataLength={vaults.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
+      <InfiniteScrollManager useWindowScroll dataLength={vaults.length} loading={loading} hasMore={hasMore} onLoadMore={onLoadMore}>
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-card">
             <TableRow className="hover:bg-transparent">
@@ -105,7 +105,7 @@ function VaultTableRow({ vault, isSelected, onToggleSelect, onDelete, onShare, d
       <TableCell>
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <Layers className="h-4 w-4" />
-          {vault.objectCount} items
+          {vault.objectCount}
         </div>
       </TableCell>
       <TableCell>
@@ -151,7 +151,6 @@ function VaultTableRow({ vault, isSelected, onToggleSelect, onDelete, onShare, d
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              {/* Assuming we might have an edit page or studio with pre-fill */}
               <Link href={`/vaults-studio?id=${vault.id}`} className="cursor-pointer">
                 <Eye className="h-4 w-4 mr-2" />
                 View Details

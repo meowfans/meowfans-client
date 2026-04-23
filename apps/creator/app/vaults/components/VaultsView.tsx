@@ -2,7 +2,6 @@
 
 import { useVaults } from '@/hooks/useVaults';
 import { PaginationInput, SortBy, SortOrder, VaultsEntity } from '@workspace/gql/generated/graphql';
-import { Card, CardContent } from '@workspace/ui/components/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -19,7 +18,7 @@ export function VaultsView() {
   const params: PaginationInput = {
     sortBy: SortBy.VaultCreatedAt,
     orderBy: SortOrder.Desc,
-    take: 20,
+    take: 30,
     skip: 0
   };
 
@@ -89,44 +88,40 @@ export function VaultsView() {
 
       <VaultsStats totalVaults={totalVaults} totalLikes={totalLikes} totalViews={totalViews} totalEarnings={totalEarnings} />
 
-      <Card>
-        <VaultsFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedCount={selectedVaults.length}
-          totalFiltered={filteredVaults.length}
-          onSelectAll={() => handleSelectAll(filteredVaults)}
-        />
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="all" className="text-xs sm:text-sm">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="paid" className="text-xs sm:text-sm">
-                Paid
-              </TabsTrigger>
-              <TabsTrigger value="free" className="text-xs sm:text-sm">
-                Free
-              </TabsTrigger>
-            </TabsList>
+      <VaultsFilters
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedCount={selectedVaults.length}
+        totalFiltered={filteredVaults.length}
+        onSelectAll={() => handleSelectAll(filteredVaults)}
+      />
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="all" className="text-xs sm:text-sm">
+            All
+          </TabsTrigger>
+          <TabsTrigger value="paid" className="text-xs sm:text-sm">
+            Paid
+          </TabsTrigger>
+          <TabsTrigger value="free" className="text-xs sm:text-sm">
+            Free
+          </TabsTrigger>
+        </TabsList>
 
-            <TabsContent value={activeTab} className="mt-4 sm:mt-6">
-              <VaultsTable
-                vaults={filteredVaults}
-                loading={loading}
-                hasMore={hasMore}
-                onLoadMore={handleLoadMore}
-                selectedVaults={selectedVaults}
-                onToggleSelect={handleToggleSelect}
-                onDelete={handleDelete}
-                onShare={handleShare}
-                deleting={deleting}
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+        <TabsContent value={activeTab} className="mt-4 sm:mt-6">
+          <VaultsTable
+            vaults={filteredVaults}
+            loading={loading}
+            hasMore={hasMore}
+            onLoadMore={handleLoadMore}
+            selectedVaults={selectedVaults}
+            onToggleSelect={handleToggleSelect}
+            onDelete={handleDelete}
+            onShare={handleShare}
+            deleting={deleting}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

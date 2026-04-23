@@ -38,7 +38,7 @@ export function AppHeader() {
         <SidebarTrigger className="-ml-1" />
       </div>
 
-      <div className="flex-1 flex justify-center px-1 md:px-4">
+      <div className="flex-1 flex sticky top-3 justify-center items-center min-w-32 w-30">
         <ImpersonationTimer />
       </div>
 
