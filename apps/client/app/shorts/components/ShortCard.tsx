@@ -23,7 +23,7 @@ export function ShortCard({ short, isActive, globalMute, onSetGlobalMute }: Shor
   const [isLiked, setIsLiked] = useState<boolean>(short?.vaultObjectIsLiked ?? false);
   const [showHeartAnim, setShowHeartAnim] = useState<boolean>(false);
   const { likeVaultObject } = useLikeMutations();
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const { isBlurEnabled } = useContentBlur();
 

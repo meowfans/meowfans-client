@@ -1,4 +1,5 @@
 import Loading from '@/app/loading';
+import { BlurImage } from '@/components/BlurImage';
 import { GetFanAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
@@ -48,7 +49,7 @@ export const DashboardFanAssets = ({ fanAssets, assetsLoading }: DashboardFanAss
             <Link key={asset.id} href={`/vaults`} className="group">
               <Card className="overflow-hidden border-none bg-secondary/20 transition-all hover:bg-secondary/40">
                 <div className="aspect-video relative overflow-hidden bg-muted">
-                  <Image
+                  <BlurImage
                     src={asset.rawUrl}
                     alt="Asset"
                     width={300}

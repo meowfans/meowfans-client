@@ -34,7 +34,6 @@ export function Shorts({ initialShorts }: ShortsProps) {
       setActiveIndex(index);
     }
 
-    // Load more when reaching near the end
     if (scrollPos + itemHeight * 2 >= e.currentTarget.scrollHeight && hasMore && !loading) {
       loadMore();
     }
