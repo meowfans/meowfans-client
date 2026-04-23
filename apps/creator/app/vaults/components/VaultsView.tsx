@@ -4,8 +4,6 @@ import { useVaults } from '@/hooks/useVaults';
 import { PaginationInput, SortBy, SortOrder, VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Card, CardContent } from '@workspace/ui/components/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs';
-import { Loading } from '@workspace/ui/globals/Loading';
-import { Archive } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { VaultsFilters } from './VaultsFilters';
@@ -27,7 +25,6 @@ export function VaultsView() {
 
   const { vaults, loading, hasMore, handleLoadMore } = useVaults(params);
 
-  // Mock deleting state
   const [deleting, setDeleting] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
@@ -75,10 +72,8 @@ export function VaultsView() {
     toast.success('Link copied to clipboard!');
   };
 
-  // Filter vaults
   const filteredVaults = vaults.filter((vault) => {
     const matchesSearch = vault.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? true;
-    // Tabs logic: All, Paid, Free?
     const isPaid = (vault.unlockPrice || 0) > 0;
     const matchesTab = activeTab === 'all' || (activeTab === 'paid' && isPaid) || (activeTab === 'free' && !isPaid);
     return matchesSearch && matchesTab;
@@ -119,32 +114,17 @@ export function VaultsView() {
             </TabsList>
 
             <TabsContent value={activeTab} className="mt-4 sm:mt-6">
-              {loading && vaults.length === 0 ? (
-                <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px] gap-4">
-                  <Loading />
-                  <p className="text-sm text-muted-foreground">Loading vaults...</p>
-                </div>
-              ) : filteredVaults.length === 0 ? (
-                <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px] gap-4 border-2 border-dashed rounded-lg">
-                  <Archive className="h-12 w-12 text-muted-foreground" />
-                  <div className="text-center space-y-1">
-                    <p className="text-sm font-medium">No vaults found</p>
-                    <p className="text-xs text-muted-foreground">Create your first vault in &quot;Vaults Studio&quot; to get started</p>
-                  </div>
-                </div>
-              ) : (
-                <VaultsTable
-                  vaults={filteredVaults}
-                  loading={loading}
-                  hasMore={hasMore}
-                  onLoadMore={handleLoadMore}
-                  selectedVaults={selectedVaults}
-                  onToggleSelect={handleToggleSelect}
-                  onDelete={handleDelete}
-                  onShare={handleShare}
-                  deleting={deleting}
-                />
-              )}
+              <VaultsTable
+                vaults={filteredVaults}
+                loading={loading}
+                hasMore={hasMore}
+                onLoadMore={handleLoadMore}
+                selectedVaults={selectedVaults}
+                onToggleSelect={handleToggleSelect}
+                onDelete={handleDelete}
+                onShare={handleShare}
+                deleting={deleting}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

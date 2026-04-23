@@ -1,5 +1,6 @@
 'use client';
 
+import { NextImage } from '@/components/NextImage';
 import { useUtilsStore } from '@/hooks/store/utils.store';
 import { useAssets } from '@/hooks/useAssets';
 import { AssetType, FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
@@ -7,6 +8,7 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Skeleton } from '@workspace/ui/components/skeleton';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { Check, Search, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -67,7 +69,6 @@ export function ChannelsSidebarAssets() {
           </Button>
         </div>
 
-        {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -78,16 +79,15 @@ export function ChannelsSidebarAssets() {
           />
         </div>
 
-        {/* Selected Preview Inside Picker */}
         {selectedAssets.length > 0 && (
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none animate-in fade-in slide-in-from-top-1 duration-200">
             {selectedAssets.map((asset, idx) => (
               <div key={asset.id} className="relative shrink-0">
                 <div className="h-12 w-12 rounded-lg overflow-hidden border border-primary/20 bg-muted">
                   {asset.fileType === FileType.Image ? (
-                    <Image width={48} height={48} src={asset.rawUrl} alt="Selected" className="h-full w-full object-cover" />
+                    <NextImage width={48} height={48} src={asset.rawUrl} alt="Selected" className="h-full w-full object-cover" />
                   ) : (
-                    <video src={asset.rawUrl} className="h-full w-full object-cover" />
+                    <video src={replaceUrl(asset.rawUrl)} className="h-full w-full object-cover" />
                   )}
                 </div>
                 <button
@@ -123,17 +123,15 @@ export function ChannelsSidebarAssets() {
                     }`}
                   >
                     {asset.fileType === FileType.Image ? (
-                      <Image fill src={asset.rawUrl} alt="Asset" className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
+                      <NextImage fill src={asset.rawUrl} alt="Asset" className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
                     ) : (
-                      <video src={asset.rawUrl} className="w-full h-full object-cover" />
+                      <video src={replaceUrl(asset.rawUrl)} className="w-full h-full object-cover" />
                     )}
 
-                    {/* Overlay */}
                     <div
                       className={`absolute inset-0 transition-opacity ${isSelected ? 'bg-primary/20' : 'bg-black/0 group-hover:bg-black/10'}`}
                     />
 
-                    {/* Selection Indicator */}
                     {isSelected && (
                       <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full p-1 shadow-sm">
                         <Check className="h-3 w-3" />

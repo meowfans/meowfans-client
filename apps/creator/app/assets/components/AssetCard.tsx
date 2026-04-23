@@ -1,9 +1,10 @@
+import { NextImage } from '@/components/NextImage';
 import { FileType, GetCreatorAssetsOutput } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
 import { Check, Maximize2, Play } from 'lucide-react';
-import Image from 'next/image';
 
 interface AssetCardProps {
   isSelected: boolean;
@@ -33,13 +34,13 @@ export const AssetCard = ({ isSelected, asset, onToggleSelect, onAssetClick, set
           {asset.rawUrl ? (
             isVideo ? (
               <div className="relative w-full h-full bg-black">
-                <video src={asset.rawUrl} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+                <video src={replaceUrl(asset.rawUrl)} className="w-full h-full object-cover" muted playsInline preload="metadata" />
                 <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md rounded-md p-1">
                   <Play className="h-3 w-3 text-white fill-white" />
                 </div>
               </div>
             ) : (
-              <Image
+              <NextImage
                 src={asset.rawUrl}
                 alt="Asset"
                 fill

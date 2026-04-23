@@ -1,5 +1,6 @@
 'use client';
 
+import { NextImage } from '@/components/NextImage';
 import { VaultsEntity } from '@workspace/gql/generated/graphql';
 import { Button } from '@workspace/ui/components/button';
 import { Checkbox } from '@workspace/ui/components/checkbox';
@@ -14,7 +15,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { AnimatePresence } from 'framer-motion';
 import { DollarSign, Eye, Heart, Layers, MoreVertical, Share2, Trash2 } from 'lucide-react';
-import NextImage from 'next/image';
 import Link from 'next/link';
 
 interface VaultsTableProps {

@@ -12,7 +12,7 @@ import { Textarea } from '@workspace/ui/components/textarea';
 import { ApplyTheme } from '@workspace/ui/globals/ApplyTheme';
 import { useErrorHandler } from '@workspace/ui/hooks/useErrorHandler';
 import { useSuccessHandler } from '@workspace/ui/hooks/useSuccessHandler';
-import { FileType, MediaType } from '@workspace/ui/lib';
+import { FileType, MediaType, replaceUrl } from '@workspace/ui/lib';
 import { motion } from 'framer-motion';
 import { CheckCircle2, ClipboardCheck, Globe, Loader2, LogOut, MessageSquare, Sparkles, Upload, User, Video, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -265,7 +265,7 @@ export function VerificationFormView() {
               {videoPreviewUrl ? (
                 <div className="space-y-3">
                   <div className="relative rounded-xl sm:rounded-2xl overflow-hidden bg-muted/50 border border-border/50">
-                    <video src={videoPreviewUrl} controls className="w-full max-h-[300px] sm:max-h-[400px] object-contain">
+                    <video src={replaceUrl(videoPreviewUrl)} controls className="w-full max-h-[300px] sm:max-h-[400px] object-contain">
                       Your browser does not support the video tag.
                     </video>
                     <Button
