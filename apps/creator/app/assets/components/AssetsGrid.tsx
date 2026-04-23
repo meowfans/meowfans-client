@@ -5,7 +5,7 @@ import { Button } from '@workspace/ui/components/button';
 import { FullscreenViewer } from '@workspace/ui/globals/FullscreenViewer';
 import { InfiniteScrollManager } from '@workspace/ui/globals/InfiniteScrollManager';
 import { formatDate } from '@workspace/ui/lib/formatters';
-import { clamp } from '@workspace/ui/lib/helpers';
+import { clamp, replaceUrl } from '@workspace/ui/lib/helpers';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -39,7 +39,16 @@ const BASE_COLS: Cols = {
   xl: 7
 };
 
-export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, selectedAssets, onToggleSelect, useWindowScroll = true }: AssetsGridProps) {
+export function AssetsGrid({
+  assets,
+  loading,
+  hasMore,
+  onLoadMore,
+  onDelete,
+  selectedAssets,
+  onToggleSelect,
+  useWindowScroll = true
+}: AssetsGridProps) {
   const [activeAssetId, setActiveAssetId] = useState<string | null>(null);
   const [zoom, setZoom] = useState<number>(1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -97,7 +106,13 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, sel
 
   return (
     <div className={`flex flex-col ${useWindowScroll ? '' : ' h-full'}`} ref={containerRef}>
-      <InfiniteScrollManager loading={loading} hasMore={hasMore} onLoadMore={onLoadMore} dataLength={assets.length} useWindowScroll={useWindowScroll}>
+      <InfiniteScrollManager
+        loading={loading}
+        hasMore={hasMore}
+        onLoadMore={onLoadMore}
+        dataLength={assets.length}
+        useWindowScroll={useWindowScroll}
+      >
         <div className="flex flex-col gap-4 pb-20">
           {groupedAssets.map(([date, groupAssets]) => (
             <div key={date}>
@@ -147,7 +162,7 @@ export function AssetsGrid({ assets, loading, hasMore, onLoadMore, onDelete, sel
               </div>
 
               <FullscreenViewer
-                items={assets.map((a) => ({ type: a.fileType, url: a.rawUrl }))}
+                items={assets.map((a) => ({ type: a.fileType, url: replaceUrl(a.rawUrl) }))}
                 hasMore={hasMore}
                 loadMore={onLoadMore}
                 loading={loading}

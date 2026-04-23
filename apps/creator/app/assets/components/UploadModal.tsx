@@ -12,6 +12,7 @@ import { resolveFileType } from '@workspace/ui/lib/helpers';
 import { Modal } from '@workspace/ui/modals/Modal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FileVideo, Upload, X } from 'lucide-react';
+import Image from 'next/image';
 import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -222,7 +223,7 @@ export function UploadModal({ isOpen, onClose, isUploading, setIsUploading }: Up
                           <FileVideo className="h-6 w-6" />
                         </div>
                       ) : (
-                        <NextImage src={file.preview} alt="Preview" fill className="object-cover" />
+                        <Image src={file.preview} alt="Preview" fill className="object-cover" />
                       )}
                     </div>
 
