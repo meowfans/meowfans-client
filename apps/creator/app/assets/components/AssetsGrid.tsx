@@ -120,7 +120,7 @@ export function AssetsGrid({
                 <h3 className="text-sm font-bold tracking-tight uppercase">{formatDate(date)}</h3>
               </div>
 
-              <div className={`grid gap-[2px] ${gridClassNames}`}>
+              <div className={`grid gap-0.5 ${gridClassNames}`}>
                 {groupAssets.map((asset) => {
                   const isSelected = selectedAssets.includes(asset.id);
                   return (
@@ -149,7 +149,7 @@ export function AssetsGrid({
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="mt-4 relative bg-primary/[0.03] border border-primary/10 rounded-[2rem] md:rounded-[3rem] p-2 md:p-4">
+            <div className="mt-4 relative bg-primary/3 border border-primary/10 rounded-4xl md:rounded-[3rem] p-2 md:p-4">
               <div className="absolute top-3 right-3 z-50">
                 <Button
                   variant="ghost"

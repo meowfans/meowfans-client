@@ -6,9 +6,8 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { FullScreenButton } from './FullScreenButton';
 import { replaceUrl } from '../lib';
-import { relative } from 'path';
+import { FullScreenButton } from './FullScreenButton';
 
 export enum FileType {
   Audio = 'AUDIO',
@@ -209,7 +208,9 @@ export const Carousel = <T,>({
                     </div>
                   )
                 ) : (
-                  getUrl(item) && <video src={replaceUrl(getUrl(item) as string)} controls playsInline className="h-full w-full object-contain" />
+                  getUrl(item) && (
+                    <video src={replaceUrl(getUrl(item) as string)} controls playsInline className="h-full w-full object-contain" />
+                  )
                 )}
               </div>
 

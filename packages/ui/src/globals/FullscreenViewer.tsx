@@ -130,7 +130,7 @@ export const FullscreenViewer = ({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        'fixed inset-0 z-[10000] flex items-center justify-center bg-black/98 backdrop-blur-2xl',
+        'fixed inset-0 z-10000 flex items-center justify-center bg-black/98 backdrop-blur-2xl',
         !isOpen && 'pointer-events-none'
       )}
     >
@@ -149,7 +149,7 @@ export const FullscreenViewer = ({
       </AnimatePresence>
 
       {/* Top Controls */}
-      <div className="absolute top-0 left-0 right-0 z-[110] flex items-center justify-between p-6 md:p-10 pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 z-110 flex items-center justify-between p-6 md:p-10 pointer-events-none">
         <div className="px-5 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-3xl pointer-events-auto">
           <span className="text-[10px] md:text-xs font-black tracking-[0.3em] text-white/90 uppercase">
             {currentIndex + 1} <span className="text-white/30 mx-2">/</span> {items.length}
@@ -232,7 +232,7 @@ export const FullscreenViewer = ({
       {/* Navigation Arrows */}
       {items.length > 1 && (
         <>
-          <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-[110]">
+          <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-110">
             <Button
               variant="ghost"
               size="icon"
@@ -246,7 +246,7 @@ export const FullscreenViewer = ({
             </Button>
           </div>
 
-          <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-[110]">
+          <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-110">
             <Button
               variant="ghost"
               size="icon"
@@ -264,7 +264,7 @@ export const FullscreenViewer = ({
 
       {/* Thumbnails Strip */}
       {items.length > 1 && (
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[110] flex gap-3 md:p-3 p-0 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-110 flex gap-3 md:p-3 p-0 rounded-4xl bg-white/5 border border-white/10 backdrop-blur-3xl max-w-[90vw] overflow-x-auto no-scrollbar pointer-events-auto">
           {items.map((item, idx) => (
             <button
               key={`${item.url}-${idx}`}
@@ -274,7 +274,7 @@ export const FullscreenViewer = ({
                 setCurrentlyViewingIndex(idx);
               }}
               className={cn(
-                'relative h-14 w-14 md:h-16 md:w-16 rounded-2xl overflow-hidden transition-all duration-300 flex-shrink-0 border-2',
+                'relative h-14 w-14 md:h-16 md:w-16 rounded-2xl overflow-hidden transition-all duration-300 shrink-0 border-2',
                 currentIndex === idx
                   ? 'border-primary scale-110 shadow-[0_15px_30px_-5px_rgba(var(--primary),0.3)]'
                   : 'border-transparent opacity-30 hover:opacity-100 hover:scale-105'
