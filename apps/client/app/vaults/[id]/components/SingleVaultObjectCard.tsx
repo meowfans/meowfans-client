@@ -1,11 +1,10 @@
 'use client';
 
+import { BlurImage } from '@/components/BlurImage';
 import { InteractionButton } from '@/components/InteractionButton';
 import { Badge } from '@workspace/ui/components/badge';
 import { Card, CardContent } from '@workspace/ui/components/card';
-import { replaceUrl } from '@workspace/ui/lib/helpers';
 import { Heart, Image as ImageIcon, Lock, ShoppingCart } from 'lucide-react';
-import Image from 'next/image';
 
 interface SingleVaultObjectCardProps {
   obj: {
@@ -30,10 +29,10 @@ export function SingleVaultObjectCard({ obj, index, isVaultPurchased, onPurchase
         <div className="relative aspect-square overflow-hidden bg-muted">
           {isObjectUnlocked ? (
             obj.rawUrl ? (
-              <Image
+              <BlurImage
                 width={300}
                 height={400}
-                src={replaceUrl(obj.rawUrl)}
+                src={obj.rawUrl as string}
                 alt={`Content ${index + 1}`}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
@@ -43,7 +42,7 @@ export function SingleVaultObjectCard({ obj, index, isVaultPurchased, onPurchase
               </div>
             )
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-linear from-muted to-muted/50">
               <Lock className="h-12 w-12 text-muted-foreground/30" />
             </div>
           )}

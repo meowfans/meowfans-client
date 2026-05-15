@@ -96,7 +96,7 @@ export function SingleVaultContent({
           </div>
         </InfiniteScrollManager>
       ) : (
-        <div className="flex min-h-[300px] items-center justify-center rounded-lg border-2 border-dashed">
+        <div className="flex min-h-75 items-center justify-center rounded-lg border-2 border-dashed">
           <div className="text-center">
             <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground/50" />
             <p className="mt-4 text-sm text-muted-foreground">No objects in this vault yet</p>
