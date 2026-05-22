@@ -105,6 +105,7 @@ export const ExoAdProvider = <TZone extends ExoAdZoneTypes>({
     switch (configService.NEXT_PUBLIC_NODE_ENV) {
       case 'dev_production':
       case 'development':
+      case 'production':
         return true;
       default:
         return !!fan?.hasZoneMembership;
