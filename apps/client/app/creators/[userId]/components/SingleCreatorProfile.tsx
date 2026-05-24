@@ -39,7 +39,7 @@ export function SingleCreatorProfile({ profile, initialPosts, initialVaults }: S
 
   return (
     <PageHandler isEmpty={!profile} isLoading={loading && !profile}>
-      <div className="flex min-h-screen flex-col bg-black text-white">
+      <div className="flex min-h-screen flex-col">
         <CreatorProfileHeader profile={profile} />
         <SingleCreatorProfileTabs
           profile={profile}
