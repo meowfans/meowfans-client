@@ -17,7 +17,7 @@ export function AuthVisual() {
   );
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center rounded-[3rem] overflow-hidden bg-[#0a0a0a]">
+    <div className="relative flex h-full w-full items-center justify-center rounded-[3rem] overflow-hidden">
       {/* Background Layer: Mesh Gradients & Particle Effects */}
       <div className="absolute inset-0 z-0">
         <motion.div
@@ -31,9 +31,7 @@ export function AuthVisual() {
             ease: 'linear'
           }}
           className="absolute -left-[10%] -top-[10%] h-[120%] w-[120%] opacity-40 blur-[120px]"
-          style={{
-            background: 'radial-gradient(circle at center, #FF3131 0%, transparent 70%)'
-          }}
+
         />
         <motion.div
           animate={{
@@ -46,14 +44,12 @@ export function AuthVisual() {
             ease: 'linear'
           }}
           className="absolute -right-[10%] -bottom-[10%] h-[120%] w-[120%] opacity-40 blur-[120px]"
-          style={{
-            background: 'radial-gradient(circle at center, #FF914D 0%, transparent 70%)'
-          }}
+
         />
 
         {/* Animated Grid Overlay */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/20 via-transparent to-[#0a0a0a]/60" />
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" />
+        <div className="absolute inset-0 bg-linear-to-b from-[#0a0a0a]/20 via-transparent to-[#0a0a0a]/60" />
       </div>
 
       {/* Content Layer */}
@@ -64,7 +60,7 @@ export function AuthVisual() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 1, type: 'spring', bounce: 0.4 }}
-            className="group relative flex h-40 w-40 items-center justify-center rounded-[2.5rem] bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] transition-all hover:border-white/20"
+            className="group relative flex h-40 w-40 items-center justify-center rounded-[2.5rem] bg-white/30 backdrop-blur-2xl border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] transition-all hover:border-white/20"
           >
             {/* Pulsing Outer Ring */}
             <motion.div
@@ -74,7 +70,7 @@ export function AuthVisual() {
             />
 
             {/* Inner Glow */}
-            <div className="absolute inset-4 rounded-[2rem] bg-gradient-to-br from-primary/20 via-transparent to-primary/10 blur-xl opacity-50" />
+            <div className="absolute inset-4 rounded-4xl bg-linear-to-br from-primary/20 via-transparent to-primary/10 blur-xl opacity-50" />
 
             <AnimatedLogo className="h-20 w-20 z-10 drop-shadow-[0_0_20px_rgba(255,49,49,0.4)]" />
           </motion.div>
@@ -138,9 +134,9 @@ export function AuthVisual() {
           </div>
 
           <div className="flex items-center gap-6 opacity-20">
-            <span className="h-px w-8 bg-gradient-to-r from-transparent to-white" />
+            <span className="h-px w-8 bg-linear-to-r from-transparent to-white" />
             <Sparkles size={12} className="text-white" />
-            <span className="h-px w-8 bg-gradient-to-l from-transparent to-white" />
+            <span className="h-px w-8 bg-linear-to-l from-transparent to-white" />
           </div>
         </motion.div>
       </div>
