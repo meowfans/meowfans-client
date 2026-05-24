@@ -1,11 +1,11 @@
 import { cn } from '@workspace/ui/lib/utils';
 import * as React from 'react';
 
-export function Logo({ className, ...props }: React.ComponentProps<'svg'>) {
-  const g1 = `g1-left-vertical`;
-  const g2 = `g2-left-diagonal`;
-  const g3 = `g3-right-diagonal`;
-  const g4 = `g4-right-vertical`;
+export function Logo({ className, 'aria-label': ariaLabel = 'Logo', ...props }: React.ComponentProps<'svg'>) {
+  const g1 = `g1-left-vertical_${ariaLabel}`;
+  const g2 = `g2-left-diagonal_${ariaLabel}`;
+  const g3 = `g3-right-diagonal_${ariaLabel}`;
+  const g4 = `g4-right-vertical_${ariaLabel}`;
 
   return (
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={cn('h-10 w-10', className)} {...props}>
