@@ -29,7 +29,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.2",
     "framer-motion": "^12.23.12",
-    "graphql": "^16.11.0",
+    "graphql": "^16.14.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.562.0",
     "moment": "^2.30.1",

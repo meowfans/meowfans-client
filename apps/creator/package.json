@@ -29,7 +29,7 @@
     "embla-carousel-react": "^8.6.0",
     "emotion": "^11.0.0",
     "framer-motion": "^12.23.12",
-    "graphql": "^16.11.0",
+    "graphql": "^16.14.0",
     "jwt-decode": "^4.0.0",
     "lucide": "^0.539.0",
     "lucide-react": "^0.562.0",
