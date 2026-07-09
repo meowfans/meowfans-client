@@ -15,7 +15,6 @@ export function VaultCard({ vault }: VaultCardProps) {
   return (
     <Link href={`/vaults/${vault.id}`}>
       <Card className="group overflow-hidden border-none bg-secondary/20 shadow-none transition-all hover:bg-secondary/40 hover:shadow-lg hover:shadow-primary/5">
-        {/* Preview Image */}
         <div className="relative aspect-square overflow-hidden bg-muted">
           <BlurImage
             width={300}
@@ -25,7 +24,6 @@ export function VaultCard({ vault }: VaultCardProps) {
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
-          {/* Overlay badges */}
           <div className="absolute left-2 top-2 flex flex-wrap gap-2">
             {vault.unlockPrice && (
               <Badge variant="secondary" className="gap-1 bg-background/80 backdrop-blur-sm">
@@ -40,7 +38,6 @@ export function VaultCard({ vault }: VaultCardProps) {
             )}
           </div>
 
-          {/* Object count badge */}
           <div className="absolute bottom-2 right-2">
             <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
               <GalleryHorizontalEnd />
@@ -48,12 +45,9 @@ export function VaultCard({ vault }: VaultCardProps) {
           </div>
         </div>
 
-        {/* Vault Details */}
         <CardContent className="p-4">
-          {/* Description */}
           {vault.description && <p className="mb-2 line-clamp-2 text-sm text-foreground">{vault.description}</p>}
 
-          {/* Like indicator */}
           {vault.isLiked && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Heart className="h-3 w-3 fill-red-500 text-red-500" />

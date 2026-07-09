@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'supabase.meowfans.app'
+      },
+      {
+        protocol: 'https',
         hostname: 'meowfans-media.sfo3.cdn.digitaloceanspaces.com'
       },
       {

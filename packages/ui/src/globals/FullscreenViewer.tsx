@@ -29,16 +29,19 @@ export const FullscreenViewer = ({
   hasMore,
   loading
 }: FullscreenViewerProps) => {
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState<number>(initialIndex);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [slideShow, setSlideShow] = useState<boolean>(false);
 
+  const requestedLength = useRef(0);
+
   useEffect(() => {
-    if (currentIndex > items.length - 6 && hasMore && !loading) {
+    if (currentIndex >= items.length - 5 && hasMore && !loading && requestedLength.current !== items.length) {
+      requestedLength.current = items.length;
       loadMore?.();
     }
-  }, [currentIndex, items.length, loadMore, hasMore, loading]);
+  }, [currentIndex, items.length, hasMore, loading, loadMore]);
 
   useEffect(() => {
     const originalBodyOverflow = document.body.style.overflow;
@@ -80,19 +83,16 @@ export const FullscreenViewer = ({
         setIsPlaying((prev) => !prev);
       }
     };
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
+
+    if (isOpen) window.addEventListener('keydown', handleKeyDown);
+
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, handleNext, handlePrev, onClose]);
 
   useEffect(() => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.play().catch(() => {});
-      } else {
-        videoRef.current.pause();
-      }
+      if (isPlaying) videoRef.current.play().catch(() => {});
+      else videoRef.current.pause();
     }
   }, [isPlaying, currentIndex]);
 
@@ -103,9 +103,7 @@ export const FullscreenViewer = ({
       setCurrentIndex((prev) => {
         const next = (prev + 1) % items.length;
 
-        if (next === items.length - 1) {
-          setSlideShow(false);
-        }
+        if (next === items.length - 1) setSlideShow(false);
 
         return next;
       });

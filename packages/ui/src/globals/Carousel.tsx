@@ -5,7 +5,7 @@ import { cn } from '@workspace/ui/lib/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ChevronsRight, CircleChevronRight, Sparkles } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { replaceUrl } from '../lib';
 import { FullScreenButton } from './FullScreenButton';
 
@@ -123,11 +123,14 @@ export const Carousel = <T,>({
     }
   }, [emblaApi, selectedIndex]);
 
+  const requestedLength = useRef(0);
+
   useEffect(() => {
-    if (emblaApi && selectedIndex > items.length - 6 && hasMore && !loading) {
+    if (selectedIndex >= items.length - 5 && hasMore && !loading && requestedLength.current !== items.length) {
+      requestedLength.current = items.length;
       loadMore?.();
     }
-  }, [emblaApi, selectedIndex, items.length, loadMore, hasMore, loading]);
+  }, [selectedIndex, items.length, hasMore, loading, loadMore]);
 
   useEffect(() => {
     if (!emblaApi) return;

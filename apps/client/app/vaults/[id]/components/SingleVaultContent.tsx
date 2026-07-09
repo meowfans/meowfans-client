@@ -76,7 +76,7 @@ export function SingleVaultContent({
 
       {vaultObjects && vaultObjects.length > 0 ? (
         <InfiniteScrollManager dataLength={vaultObjects.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>
-          <div className={cn('grid gap-4', gridClasses)}>
+          <div className={cn('grid gap-1', gridClasses)}>
             {vaultObjects.map((obj, index) => (
               <ApplyAd
                 element={

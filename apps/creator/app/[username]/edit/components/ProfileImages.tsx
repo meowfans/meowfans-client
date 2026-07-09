@@ -12,6 +12,7 @@ import NextImage from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { AssetSelectorModal } from './AssetSelectorModal';
+import { replaceUrl } from '@workspace/ui/lib/helpers';
 
 type ImageType = 'avatar' | 'banner';
 
@@ -148,7 +149,7 @@ export function ProfileImages() {
           <CardContent className="space-y-4">
             <div className="relative aspect-21/9 rounded-lg overflow-hidden bg-secondary/20 border-2 border-dashed border-border group hover:border-primary transition-colors">
               {bannerUrl ? (
-                <NextImage src={bannerUrl} alt="Banner" fill className="object-cover" />
+                <NextImage src={replaceUrl(bannerUrl)} alt="Banner" fill className="object-cover" />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center space-y-2">
