@@ -21,7 +21,7 @@ export function ShortsEmptyState({ onRefresh }: ShortsEmptyStateProps) {
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold tracking-tight">End of the line</h2>
-        <p className="text-sm text-muted-foreground max-w-[200px]">You&apos;ve seen all the shorts we have for now. Check back later!</p>
+        <p className="text-sm text-muted-foreground max-w-50">You&apos;ve seen all the shorts we have for now. Check back later!</p>
       </div>
       <Button onClick={onRefresh} variant="outline" className="rounded-full gap-2 transition-all">
         <RefreshCcw className="h-4 w-4" />

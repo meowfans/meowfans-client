@@ -26,7 +26,7 @@ export function Following({ initialFollowings }: FollowingProps) {
   }, [followings]);
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden">
+    <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-2 h-screen">
       <FollowingHeader />
       <FollowingGrid initialCreators={creators} creators={creators} loading={loading} hasMore={hasMore} loadMore={loadMore} />
     </div>

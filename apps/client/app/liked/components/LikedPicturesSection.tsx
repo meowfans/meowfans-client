@@ -39,7 +39,7 @@ export const LikedPicturesSection = ({ vaultObjectLikes }: LikedPicturesSectionP
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="group relative aspect-video xs:aspect-[3/4] overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-secondary/10"
+            className="group relative aspect-video xs:aspect-[3/4] overflow-hidden rounded-3xl md:rounded-4xl border border-white/5 bg-secondary/10"
           >
             {item.fileType === FileType.Video ? (
               <BlurVideo
@@ -57,7 +57,7 @@ export const LikedPicturesSection = ({ vaultObjectLikes }: LikedPicturesSectionP
                 alt="Liked capture teaser"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex items-end pointer-events-none">
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex items-end pointer-events-none">
               <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center">
                 <Sparkles className="h-3 md:h-3.5 w-3 md:w-3.5 text-white" />
               </div>

@@ -30,7 +30,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
       </header>
 
       <div className="grid grid-cols-1 gap-6">
-        <Card className="border-none bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+        <Card className="border-none bg-secondary/5 p-8 rounded-4xl ring-1 ring-white/5 space-y-6">
           <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">
             <Moon className="h-5 w-5 text-primary" />
             Theme Preference
@@ -45,7 +45,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
                 key={mode.id}
                 onClick={() => setTheme(mode.id)}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-3 p-6 rounded-[1.5rem] border-2 transition-all font-black uppercase text-[10px] tracking-widest',
+                  'flex flex-col items-center justify-center gap-3 p-6 rounded-3xl border-2 transition-all font-black uppercase text-[10px] tracking-widest',
                   theme === mode.id || (!theme && mode.id === 'system')
                     ? 'border-primary bg-primary/5 text-primary'
                     : 'border-border/50 hover:bg-secondary/40 text-muted-foreground'
@@ -58,7 +58,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
           </div>
         </Card>
 
-        <Card className="border-none bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+        <Card className="border-none bg-secondary/5 p-8 rounded-4xl ring-1 ring-white/5 space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">
@@ -85,7 +85,7 @@ export function SettingsDisplay({ theme, setTheme, isBlurEnabled, toggleBlur }: 
             </div>
           </div>
         </Card>
-        <Card className="border-none hidden md:block bg-secondary/5 p-8 rounded-[2rem] ring-1 ring-white/5 space-y-6">
+        <Card className="border-none bg-secondary/5 p-8 rounded-4xl ring-1 ring-white/5 space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h4 className="font-black italic uppercase tracking-tight flex items-center gap-2">

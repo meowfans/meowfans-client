@@ -42,8 +42,8 @@ export function Settings() {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 p-4">
-      <div className="lg:w-80 lg:sticky lg:top-8 h-fit self-start">
+    <div className="flex flex-col lg:flex-row gap-3 p-2 bg-background/50 backdrop-blur-3xl">
+      <div className="sticky h-fit self-start">
         <SettingsSidebar activeTab={activeTab} tabs={tabs} onTabChange={handleTabChange} />
       </div>
 

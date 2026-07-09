@@ -21,7 +21,7 @@ interface SettingsSidebarProps {
 
 export function SettingsSidebar({ activeTab, tabs, onTabChange }: SettingsSidebarProps) {
   return (
-    <aside className="lg:w-80 shrink-0 space-y-8">
+    <aside className="flex flex-1 flex-col space-y-4">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-2">
         <h1 className="text-4xl leading-none">App Settings</h1>
         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest opacity-60">Customize your experience</p>

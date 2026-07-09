@@ -31,7 +31,7 @@ export function Profile() {
     }
   }, [fan]);
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     await updateProfile({ username, avatarUrl, bannerUrl });
   };

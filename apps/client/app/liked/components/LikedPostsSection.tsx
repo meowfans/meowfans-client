@@ -35,7 +35,7 @@ export const LikedPostsSection = ({ postLikes }: LikedPostsSectionProps) => {
       <div className="space-y-3 md:space-y-4">
         {postLikes.slice(0, 3).map((item, i) => (
           <motion.div key={item.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
-            <Card className="p-3 md:p-4 border-none bg-secondary/15 hover:bg-secondary/25 transition-all rounded-[1.25rem] md:rounded-[1.5rem] flex gap-3 md:gap-4 items-center group cursor-pointer shadow-none">
+            <Card className="p-3 md:p-4 border-none bg-secondary/15 hover:bg-secondary/25 transition-all rounded-[1.25rem] md:rounded-3xl flex gap-3 md:gap-4 items-center group cursor-pointer shadow-none">
               <Link
                 href={`/posts/${item.id}`}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden shrink-0 border border-white/5 bg-muted"

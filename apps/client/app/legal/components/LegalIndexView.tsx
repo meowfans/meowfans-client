@@ -16,7 +16,7 @@ export function LegalIndexView() {
   ];
 
   return (
-    <div className="flex flex-1 flex-col bg-background min-h-screen p-6 md:p-12 lg:p-20">
+    <div className="flex flex-1 flex-col bg-background/50 backdrop-blur-3xl p-2 h-screen">
       <div className="max-w-4xl mx-auto w-full space-y-12">
         <div className="space-y-4">
           <h1 className="text-4xl md:text-6xl font-black tracking-tight uppercase italic bg-linear-to-r from-foreground to-foreground/50 bg-clip-text text-transparent">

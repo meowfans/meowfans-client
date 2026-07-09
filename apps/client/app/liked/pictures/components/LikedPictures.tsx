@@ -18,7 +18,7 @@ export function LikedPictures({ initialVaultObjectLikes }: LikedPicturesProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   return (
-    <div className="flex flex-1 flex-col gap-6 md:gap-8 p-2 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col gap-3 p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <LikedPicturesHeader count={vaultObjectLikes.length} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <div className="w-full flex flex-col items-center justify-center my-4 gap-4">
         <div className="hidden md:block">

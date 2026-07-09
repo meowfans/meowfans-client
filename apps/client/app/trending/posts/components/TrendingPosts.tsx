@@ -23,7 +23,7 @@ export function TrendingPosts({ initialPosts }: TrendingPostsProps) {
   );
 
   return (
-    <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-4xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col gap-3 p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <TrendingPostsHeader />
       <PageHandler isEmpty={!posts.length} isLoading={loading && !initialPosts.length}>
         <InfiniteScrollManager dataLength={posts.length} loading={loading} hasMore={hasMore} useWindowScroll onLoadMore={loadMore}>

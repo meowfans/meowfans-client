@@ -8,7 +8,7 @@ export const DashBoardHeader = () => {
     <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <div className="space-y-1">
         <h1 className="text-3xl font-bold tracking-tight">Welcome back, {fan?.user?.username || 'Fan'}! ✨</h1>
-        <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your favorite creators today.</p>
+        <p className="text-[10px] md:text-sm font-medium text-muted-foreground/60 uppercase tracking-widest">Here&apos;s what&apos;s happening with your favorite creators today.</p>
       </div>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" asChild>

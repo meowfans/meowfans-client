@@ -21,7 +21,7 @@ export function Liked({ initialPostLikes, initialVaultObjectLikes, initialVaultL
   const { vaultLikes } = useServerLikedVaults({ take: 4 }, initialVaultLikes);
 
   return (
-    <div className="flex flex-1 flex-col gap-8 md:gap-12 p-4 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col gap-3 p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <LikedHeader />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12">
         {vaultObjectLikes.length > 0 && <LikedPicturesSection vaultObjectLikes={vaultObjectLikes} />}

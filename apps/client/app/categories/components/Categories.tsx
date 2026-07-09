@@ -19,7 +19,7 @@ export function Categories({ initialTags }: CategoriesProps) {
   }, [tags, searchQuery]);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6">
+    <div className="flex flex-1 flex-col p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <CategoriesHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} tags={tags} filteredTags={filteredTags} />
       <CategoriesGrid
         filteredTags={filteredTags}

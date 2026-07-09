@@ -41,7 +41,7 @@ export function Search() {
   };
 
   return (
-    <div className="flex flex-col gap-12 p-4 md:p-10 lg:p-16 min-h-screen max-w-7xl mx-auto w-full">
+    <div className="flex flex-1 flex-col p-2 screen bg-background/50 backdrop-blur-3xl">
       <div className="w-full">
         <SearchBar onSearch={handleSearch} focused />
       </div>

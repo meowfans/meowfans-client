@@ -4,7 +4,7 @@ import { BlurImage } from '@/components/BlurImage';
 import { Badge } from '@workspace/ui/components/badge';
 import { Button } from '@workspace/ui/components/button';
 import { motion } from 'framer-motion';
-import { ChevronLeft, Clock, Play, Share2 } from 'lucide-react';
+import { Clock, Play, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
@@ -17,23 +17,14 @@ interface TutorialPageViewProps {
   children: ReactNode;
 }
 
-export function TutorialPageView({ title, category, duration, level, image, children }: TutorialPageViewProps) {
+export function Tutorial({ title, category, duration, level, image, children }: TutorialPageViewProps) {
   return (
     <div className="flex flex-1 flex-col bg-background min-h-screen">
-      {/* Tutorial Header */}
       <div className="relative overflow-hidden bg-secondary/10 pt-12 pb-20 border-b border-white/5">
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px]" />
 
         <div className="max-w-5xl mx-auto px-6 relative z-10">
-          <Link
-            href="/tutorials"
-            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-8 group"
-          >
-            <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Academy
-          </Link>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <div className="flex items-center gap-3">
@@ -52,7 +43,7 @@ export function TutorialPageView({ title, category, duration, level, image, chil
                 </div>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase italic bg-gradient-to-r from-foreground to-foreground/50 bg-clip-text text-transparent leading-[1.1]">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase italic bg-linear-to-r from-foreground to-foreground/50 bg-clip-text text-transparent leading-[1.1]">
                 {title}
               </h1>
 
@@ -86,7 +77,6 @@ export function TutorialPageView({ title, category, duration, level, image, chil
         </div>
       </div>
 
-      {/* Tutorial Content */}
       <div className="max-w-4xl mx-auto px-6 py-16 md:py-24 w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -96,7 +86,6 @@ export function TutorialPageView({ title, category, duration, level, image, chil
           {children}
         </motion.div>
 
-        {/* Footer Navigation */}
         <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center text-center space-y-6">
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Finished this tutorial?</p>
           <Link href="/tutorials">

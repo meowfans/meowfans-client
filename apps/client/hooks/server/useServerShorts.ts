@@ -41,6 +41,15 @@ export const useServerShorts = (params: PaginationInput, initialShorts: GetPubli
     }
   }, [initialShorts, setPublicShorts]);
 
+  if (!initialShorts.length) {
+    return {
+      publicShorts: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+  }
+
   return {
     publicShorts,
     loading,

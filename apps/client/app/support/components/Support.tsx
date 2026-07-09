@@ -14,13 +14,9 @@ export function Support() {
     <div className="min-h-screen bg-background p-4 md:p-8 lg:p-12 overflow-y-auto">
       <div className="max-w-4xl mx-auto space-y-12">
         <SupportHeader />
-
         <SupportSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
         <SupportQuickActions />
-
         <SupportFAQ searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
         <SupportContactCTA />
       </div>
     </div>
