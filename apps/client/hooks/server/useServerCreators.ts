@@ -42,6 +42,15 @@ export const useServerCreators = (params: PaginationInput, initialCreators: GetD
     }
   }, [initialCreators, setCreators]);
 
+  if (!initialCreators.length) {
+    return {
+      creators: [],
+      loading: false,
+      hasMore: false,
+      loadMore: () => {}
+    };
+  }
+
   return {
     creators,
     loading,

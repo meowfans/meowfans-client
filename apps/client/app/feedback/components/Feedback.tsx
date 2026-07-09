@@ -45,7 +45,7 @@ export function Feedback() {
           <FeedbackHeader />
 
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
-            <Card className="border-none bg-secondary/10 backdrop-blur-3xl shadow-2xl rounded-[2rem] overflow-hidden relative">
+            <Card className="border-none bg-secondary/10 backdrop-blur-3xl shadow-2xl rounded-4xl overflow-hidden relative">
               <div className="absolute top-0 right-0 p-32 bg-primary/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
               <CardContent className="p-8 md:p-10 relative z-10">
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -56,7 +56,7 @@ export function Feedback() {
                   <LoadingButtonV2
                     type="submit"
                     disabled={loading}
-                    className="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-white font-black uppercase text-sm tracking-widest shadow-lg shadow-primary/25 transition-all hover:translate-y-[-2px]"
+                    className="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-white font-black uppercase text-sm tracking-widest shadow-lg shadow-primary/25 transition-all hover:translate-y-0.5"
                     loading={loading}
                     variant="default"
                   >

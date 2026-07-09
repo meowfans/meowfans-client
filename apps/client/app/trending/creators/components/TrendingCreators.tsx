@@ -24,7 +24,7 @@ export function TrendingCreators({ initialCreators }: TrendingCreatorsProps) {
   );
 
   return (
-    <div className="flex flex-1 flex-col gap-6 md:gap-8 p-3 md:p-8 pt-4 md:pt-0 max-w-6xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col gap-3 p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <div className="flex flex-col gap-4 px-1">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 shrink-0">

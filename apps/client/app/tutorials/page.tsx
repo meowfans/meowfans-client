@@ -1,11 +1,11 @@
 import { ROUTE_METADATA } from '@/lib/metadata-config';
 import { Metadata } from 'next';
-import { TutorialsView } from './components/TutorialsView';
+import { Tutorials } from './components/Tutorials';
 
 export const metadata: Metadata = {
   ...ROUTE_METADATA.tutorials
 };
 
 export default function TutorialsPage() {
-  return <TutorialsView />;
+  return <Tutorials />;
 }

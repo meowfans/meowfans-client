@@ -9,7 +9,7 @@ import { cn } from '@workspace/ui/lib/utils';
 import { motion } from 'framer-motion';
 import { Check, Crown, Sparkles, Zap } from 'lucide-react';
 
-export function UpgradeView() {
+export function Upgrade() {
   const { zonePlans, loading } = useZones();
 
   if (loading) {

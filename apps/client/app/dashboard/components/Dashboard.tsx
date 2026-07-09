@@ -17,7 +17,7 @@ interface DashboardProps {
 
 export function Dashboard({ initialFollowings, initialFanAssets, initialCreators, initialChannels }: DashboardProps) {
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-6 h-screen">
+    <div className="flex flex-1 flex-col overflow-y-auto bg-background/50 backdrop-blur-3xl p-2 h-screen">
       <DashBoardHeader />
       <div className="py-6">
         <DashboardStats

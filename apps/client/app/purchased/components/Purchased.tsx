@@ -14,7 +14,7 @@ export function Purchased({ initialData }: PurchasedProps) {
   const { fanAssets, loading, hasMore, loadMore } = useServerPurchased({ take: 30 }, initialData);
 
   return (
-    <div className="flex flex-1 flex-col gap-8 md:gap-12 p-4 md:p-8 pt-4 md:pt-0 max-w-7xl mx-auto w-full pb-20">
+    <div className="flex flex-1 flex-col p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <PurchasedHeader />
 
       <div className="w-full flex justify-center my-2">

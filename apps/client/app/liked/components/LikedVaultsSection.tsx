@@ -34,14 +34,14 @@ export const LikedVaultsSection = ({ vaultLikes }: LikedVaultsSectionProps) => {
       <div className="space-y-3 md:space-y-4">
         {vaultLikes.slice(0, 2).map((item, i) => (
           <motion.div key={item.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
-            <Card className="p-0 border-none bg-secondary/15 hover:bg-secondary/25 transition-all rounded-[1.5rem] md:rounded-[2rem] overflow-hidden group cursor-pointer shadow-none relative">
+            <Card className="p-0 border-none bg-secondary/15 hover:bg-secondary/25 transition-all rounded-3xl md:rounded-4xl overflow-hidden group cursor-pointer shadow-none relative">
               <Link href={`/vaults/${item.id}`} className="h-20 md:h-24 w-full relative">
                 <BlurImage
                   src={item.preview as string}
                   className="h-full w-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
                   alt="Teaser collection banner"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-r from-background via-background/80 to-transparent pointer-events-none" />
                 <div className="absolute inset-0 p-4 md:p-5 flex flex-col justify-center min-w-0 pointer-events-none">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="h-4 w-4 rounded-full bg-white/10 shrink-0" />

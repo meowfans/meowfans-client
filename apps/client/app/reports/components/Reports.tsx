@@ -23,7 +23,7 @@ export function Reports({ initialReports }: ReportsProps) {
   );
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden bg-background">
+    <div className="flex flex-1 flex-col p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <ReportsHeader reportStatus={reportStatus} onStatusChange={setReportStatus} />
 
       <ReportsList initialReports={initialReports} reports={reports} loading={loading} hasMore={hasMore} onLoadMore={loadMore} />

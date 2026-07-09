@@ -44,7 +44,7 @@ export function Subscriptions() {
   const expiredSubs = MOCK_SUBSCRIPTIONS.filter((s) => s.status === 'expired');
 
   return (
-    <div className="flex flex-1 flex-col gap-8 p-4 md:p-8 pt-0 max-w-7xl mx-auto w-full">
+    <div className="flex flex-1 flex-col p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <SubscriptionsHeader />
 
       <Tabs defaultValue="active" className="w-full">

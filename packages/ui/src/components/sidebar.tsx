@@ -253,10 +253,10 @@ function Sidebar({
 }
 
 function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, toggle } = useSidebar();
+  const { toggleSidebar, toggle, isMobile } = useSidebar();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (toggle) {
+    if (toggle && !isMobile) {
       toast.warning('Toggle mode is off', {
         description: 'To turn it on, change it from Settings',
         action: {

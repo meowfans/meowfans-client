@@ -2,7 +2,7 @@
 
 import { notFound } from 'next/navigation';
 import { use } from 'react';
-import { TutorialPageView } from '../components/TutorialPageView';
+import { Tutorial } from './components/Tutorial';
 import { TUTORIALS } from '../constants';
 
 export default function TutorialPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -14,7 +14,7 @@ export default function TutorialPage({ params }: { params: Promise<{ slug: strin
   }
 
   return (
-    <TutorialPageView
+    <Tutorial
       title={tutorial.title}
       category={tutorial.category}
       duration={tutorial.duration}
@@ -22,7 +22,7 @@ export default function TutorialPage({ params }: { params: Promise<{ slug: strin
       image={tutorial.image}
     >
       {getContentForSlug(slug)}
-    </TutorialPageView>
+    </Tutorial>
   );
 }
 

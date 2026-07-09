@@ -23,7 +23,7 @@ export function Vaults({ initialVaults }: VaultsProps) {
   );
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-3">
+    <div className="flex flex-1 flex-col p-2 bg-background/50 backdrop-blur-3xl h-screen">
       <VaultsHeader />
       <PageHandler isEmpty={!vaults.length} isLoading={loading && !initialVaults?.length}>
         <InfiniteScrollManager dataLength={vaults.length} loading={loading} useWindowScroll hasMore={hasMore} onLoadMore={loadMore}>

@@ -48,11 +48,11 @@ export function Shorts({ initialShorts }: ShortsProps) {
         onScroll={handleScroll}
         className="h-full w-full max-w-100 md:rounded-[2.5rem] md:my-4 md:h-[calc(100%-2rem)] md:border-8 md:border-white/5 md:shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-y relative"
       >
-        <AnimatePresence key={'_animate_presence'} mode="popLayout">
-          {publicShorts.length === 0 ? (
-            <ShortsEmptyState onRefresh={() => window.location.reload()} />
-          ) : (
-            publicShorts.map((short, index) => (
+        {publicShorts.length === 0 ? (
+          <ShortsEmptyState onRefresh={() => window.location.reload()} />
+        ) : (
+          <AnimatePresence key={'_animate_presence_'} mode="popLayout">
+            {publicShorts.map((short, index) => (
               <div key={`${short.id}-${index}`} className="h-full w-full snap-start snap-always relative">
                 <ShortCard globalMute={globalMute} onSetGlobalMute={setGlobalMute} short={short} isActive={index === activeIndex} />
 
@@ -64,10 +64,10 @@ export function Shorts({ initialShorts }: ShortsProps) {
                   </div>
                 )}
               </div>
-            ))
-          )}
-          {loading && <Loader className="animate-spin w-10 h-10" />}
-        </AnimatePresence>
+            ))}
+          </AnimatePresence>
+        )}
+        {loading && <Loader className="animate-spin w-10 h-10" />}
       </div>
 
       {publicShorts.length > 0 && <ShortsOverlay activeIndex={activeIndex} totalShorts={publicShorts.length} />}
